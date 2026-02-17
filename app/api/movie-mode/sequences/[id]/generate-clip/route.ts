@@ -92,12 +92,17 @@ export async function POST(
     let finalReferenceImages: string[] = [];
 
     if (isFirstClip) {
-      // First clip: Use user-provided reference images (if any)
+      // First clip: Use user-provided reference images (character references)
       if (reference_images && Array.isArray(reference_images)) {
         finalReferenceImages = reference_images;
       }
+
+      console.log('[generate-clip] First clip with character references:', {
+        sequenceId,
+        characterCount: finalReferenceImages.length,
+      });
     } else {
-      // Subsequent clips: AUTOMATICALLY use last frame of previous clip
+      // Subsequent clips: Combine automatic continuity + character references
       const previousFrameUrl = lastClip.last_frame_url;
 
       if (!previousFrameUrl) {
@@ -106,12 +111,21 @@ export async function POST(
         }, { status: 400 });
       }
 
+      // Start with the last frame (for visual continuity)
       finalReferenceImages = [previousFrameUrl];
 
-      console.log('[generate-clip] Using automatic continuity from previous clip:', {
+      // Add character references if provided (up to 7 more, since we already have 1)
+      if (reference_images && Array.isArray(reference_images) && reference_images.length > 0) {
+        const characterRefs = reference_images.slice(0, 7); // Max 7 + 1 continuity frame = 8 total
+        finalReferenceImages = [...finalReferenceImages, ...characterRefs];
+      }
+
+      console.log('[generate-clip] Subsequent clip with automatic continuity + characters:', {
         sequenceId,
         previousClipOrder: lastClip.clip_order,
         previousFrameUrl,
+        characterRefsCount: reference_images?.length || 0,
+        totalReferences: finalReferenceImages.length,
       });
     }
 

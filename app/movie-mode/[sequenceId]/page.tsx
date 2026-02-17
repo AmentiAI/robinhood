@@ -37,10 +37,18 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
   const [videoSpeech, setVideoSpeech] = useState('');
   const [generatingJobId, setGeneratingJobId] = useState<string | null>(null);
 
+  // Collection images for character references
+  const [collections, setCollections] = useState<any[]>([]);
+  const [selectedCollection, setSelectedCollection] = useState<string>('');
+  const [collectionImages, setCollectionImages] = useState<any[]>([]);
+  const [selectedCharacterImages, setSelectedCharacterImages] = useState<string[]>([]);
+  const [showImageSelector, setShowImageSelector] = useState(false);
+
   useEffect(() => {
     if (isConnected && currentAddress) {
       loadSequence();
       loadAvailableVideos();
+      loadCollections();
     }
   }, [isConnected, currentAddress, resolvedParams.sequenceId]);
 
@@ -106,6 +114,51 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
     } catch (error) {
       console.error('Error loading videos:', error);
     }
+  };
+
+  const loadCollections = async () => {
+    if (!currentAddress) return;
+
+    try {
+      const response = await fetch(`/api/collections?wallet=${encodeURIComponent(currentAddress)}`);
+      if (response.ok) {
+        const data = await response.json();
+        setCollections(data.collections || []);
+      }
+    } catch (error) {
+      console.error('Error loading collections:', error);
+    }
+  };
+
+  const loadCollectionImages = async (collectionId: string) => {
+    if (!collectionId) return;
+
+    try {
+      const response = await fetch(`/api/collections/${collectionId}/ordinals`);
+      if (response.ok) {
+        const data = await response.json();
+        // Filter to only show images that have been generated
+        const images = (data.ordinals || []).filter((img: any) => img.image_url);
+        setCollectionImages(images);
+      }
+    } catch (error) {
+      console.error('Error loading collection images:', error);
+    }
+  };
+
+  const toggleImageSelection = (imageUrl: string) => {
+    setSelectedCharacterImages(prev => {
+      if (prev.includes(imageUrl)) {
+        return prev.filter(url => url !== imageUrl);
+      } else {
+        // Limit to 8 images (Kie AI max)
+        if (prev.length >= 8) {
+          alert('Maximum 8 character reference images allowed');
+          return prev;
+        }
+        return [...prev, imageUrl];
+      }
+    });
   };
 
   const checkCompositionStatus = async () => {
@@ -258,6 +311,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
             video_scene: videoScene,
             video_actions: videoActions,
             video_speech: videoSpeech || undefined,
+            reference_images: selectedCharacterImages.length > 0 ? selectedCharacterImages : undefined,
             transition_type: 'none',
           }),
         }
@@ -271,6 +325,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
         setVideoScene('');
         setVideoActions('');
         setVideoSpeech('');
+        setSelectedCharacterImages([]);
 
         // Start polling for completion
         alert(data.message || 'Clip generation started! This may take 5-10 minutes.');
@@ -506,6 +561,101 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                       </div>
                     </div>
                   )}
+
+                  {/* Character Reference Images Selector */}
+                  <div className="p-3 bg-[var(--background)] border border-[var(--border)] rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="text-sm font-medium text-white">
+                        👥 Character References {selectedCharacterImages.length > 0 && `(${selectedCharacterImages.length}/8)`}
+                      </div>
+                      <button
+                        onClick={() => setShowImageSelector(!showImageSelector)}
+                        className="text-xs text-[var(--solana-purple)] hover:underline"
+                      >
+                        {showImageSelector ? 'Hide' : 'Select'}
+                      </button>
+                    </div>
+
+                    {selectedCharacterImages.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {selectedCharacterImages.map((url, idx) => (
+                          <div key={idx} className="relative group">
+                            <img
+                              src={url}
+                              alt={`Character ${idx + 1}`}
+                              className="w-12 h-12 object-cover rounded border border-[var(--solana-purple)]"
+                            />
+                            <button
+                              onClick={() => toggleImageSelection(url)}
+                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {showImageSelector && (
+                      <div className="space-y-2 mt-2">
+                        <select
+                          value={selectedCollection}
+                          onChange={(e) => {
+                            setSelectedCollection(e.target.value);
+                            loadCollectionImages(e.target.value);
+                          }}
+                          disabled={generating || sequence.status !== 'draft'}
+                          className="w-full bg-[var(--surface)] border border-[var(--border)] rounded px-2 py-1 text-white text-xs"
+                        >
+                          <option value="">Select a collection...</option>
+                          {collections.map((col) => (
+                            <option key={col.id} value={col.id}>
+                              {col.name} ({col.ordinal_count || 0} images)
+                            </option>
+                          ))}
+                        </select>
+
+                        {collectionImages.length > 0 && (
+                          <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto p-2 bg-[var(--surface)] rounded">
+                            {collectionImages.map((img) => (
+                              <div
+                                key={img.id}
+                                onClick={() => toggleImageSelection(img.image_url)}
+                                className={`relative cursor-pointer rounded border-2 transition-all ${
+                                  selectedCharacterImages.includes(img.image_url)
+                                    ? 'border-[var(--solana-purple)] ring-2 ring-[var(--solana-purple)]/50'
+                                    : 'border-transparent hover:border-[var(--border)]'
+                                }`}
+                              >
+                                <img
+                                  src={img.image_url}
+                                  alt={`Ordinal #${img.ordinal_number}`}
+                                  className="w-full h-16 object-cover rounded"
+                                />
+                                {selectedCharacterImages.includes(img.image_url) && (
+                                  <div className="absolute top-0 right-0 bg-[var(--solana-purple)] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                                    ✓
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {selectedCollection && collectionImages.length === 0 && (
+                          <div className="text-xs text-[var(--text-secondary)] text-center p-2">
+                            No images in this collection yet
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="text-xs text-[var(--text-secondary)] mt-2">
+                      {clips.length === 0
+                        ? 'Select up to 8 images to define the characters in your video'
+                        : 'Character references will be combined with the last frame for continuity'}
+                    </div>
+                  </div>
 
                   <div>
                     <label className="block text-sm text-[var(--text-secondary)] mb-1">
