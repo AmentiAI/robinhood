@@ -312,7 +312,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
     }
   };
 
-  const triggerComposition = async () {
+  const triggerComposition = async () => {
     if (!currentAddress || clips.length < 2) {
       alert('You need at least 2 clips to compose a video');
       return;
