@@ -173,7 +173,7 @@ export function AppHeader() {
                 onClick={() => setToolsOpen((v) => !v)}
                 onBlur={() => setTimeout(() => setToolsOpen(false), 120)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 inline-flex items-center gap-1.5 ${
-                  pathname === '/promotion' || pathname === '/sticker-maker'
+                  pathname === '/promotion' || pathname === '/sticker-maker' || pathname?.startsWith('/movie-mode')
                     ? 'text-white bg-gradient-to-r from-[var(--solana-purple)]/20 to-[var(--solana-green)]/20 border border-[var(--solana-purple)]/30'
                     : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface)]'
                 }`}
@@ -196,11 +196,20 @@ export function AppHeader() {
                   </Link>
                   <Link
                     href="/promotion"
-                    className="block px-5 py-3 text-sm font-medium text-[var(--text-secondary)] hover:text-white hover:bg-[var(--solana-purple)]/10 transition-all duration-200"
+                    className="block px-5 py-3 text-sm font-medium text-[var(--text-secondary)] hover:text-white hover:bg-[var(--solana-purple)]/10 transition-all duration-200 border-b border-[var(--border)]"
                   >
                     <div className="flex items-center gap-2">
                       <span className="text-lg">📢</span>
                       <span>Ad/Marketing Maker</span>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/movie-mode"
+                    className="block px-5 py-3 text-sm font-medium text-[var(--text-secondary)] hover:text-white hover:bg-[var(--solana-purple)]/10 transition-all duration-200"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🎬</span>
+                      <span>Movie Mode</span>
                     </div>
                   </Link>
                 </div>
@@ -330,6 +339,16 @@ export function AppHeader() {
                     <div className="flex items-center gap-2">
                       <span className="text-base">📢</span>
                       <span>Ad/Marketing Maker</span>
+                    </div>
+                  </Link>
+                  <Link
+                    href="/movie-mode"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface)] rounded-lg transition-all duration-300"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-base">🎬</span>
+                      <span>Movie Mode</span>
                     </div>
                   </Link>
                 </div>

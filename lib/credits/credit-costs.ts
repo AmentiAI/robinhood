@@ -80,6 +80,13 @@ function getDefaultCost(actionType: string): number {
     'image_generation': 1.0,
     'trait_generation': 0.05, // 1 credit = 20 traits
     'collection_generation': 1.0,
+    // Movie Mode composition costs
+    'video_composition': 2.0, // Base composition cost
+    'video_composition_simple': 2.0, // Simple mode base
+    'video_composition_transitions': 2.0, // Transition mode base
+    'video_clip': 0.5, // Per clip cost
+    'video_frame_extraction': 0.1, // Frame extraction per clip
+    'video_ai_transition': 4.0, // AI transition between clips (via Kie AI)
   };
   return defaults[actionType] ?? 1.0;
 }

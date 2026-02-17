@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { 
+import {
   Home,
   ShoppingBag,
   Layers,
@@ -17,7 +17,8 @@ import {
   Megaphone,
   Sticker,
   Coins,
-  TrendingUp
+  TrendingUp,
+  Film
 } from 'lucide-react'
 import { WalletConnect } from './wallet-connect'
 import { useWallet } from '@/lib/wallet/compatibility'
@@ -33,6 +34,7 @@ const navigation = [
 const tools = [
   { name: 'Sticker Maker', href: '/sticker-maker', icon: Sticker },
   { name: 'Promotion', href: '/promotion', icon: Megaphone },
+  { name: 'Movie Mode', href: '/movie-mode', icon: Film },
 ]
 
 export function SidebarNav() {

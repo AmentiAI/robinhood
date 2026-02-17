@@ -2191,12 +2191,18 @@ If orientation is incorrect, CENTER the character so they face DIRECTLY FRONT.
 Front-facing orientation takes absolute priority over all other pose details.`,
       
 
-'right-front': `POSE & ORIENTATION (HARD LOCK):
-Character is facing toward the front + RIGHT side of the image.
-Nose, gaze, head, chest, and hips are aligned and pointing right.
-RIGHT shoulder is closest to the camera and leads the pose.
-LEFT shoulder is farther from the camera and slightly receding.
-No torso twist or counter-rotation between head and shoulders, no exceptions.`,
+'right-front': `ORIENTATION LOCK (CRITICAL):
+The character is facing camera and rotated 20 degrees toward camera-right (viewer's right side of the image).
+The character's nose and gaze point toward the right edge of the image.
+The character's RIGHT shoulder (the shoulder on the right side of the image) is closest to the camera.
+The LEFT shoulder (on the left side of the image) is farther from the camera.
+Head, chest, hips aligned — no twisting.
+Do NOT mirror or flip orientation.
+Do NOT face camera-left.
+
+The character is positioned slightly left of center in the frame, facing toward the empty space on the right side of the image. The character is NOT facing left.
+Do NOT mirror the image.
+Do NOT flip orientation.`,
  
 
 

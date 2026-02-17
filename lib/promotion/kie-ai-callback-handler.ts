@@ -2,6 +2,32 @@ import { sql } from '@/lib/database';
 import { getOrCreateCredits } from '@/lib/credits/credits';
 
 /**
+ * Extract last frame URL from a video using Cloudinary transformation
+ * This is used for Movie Mode to ensure visual continuity between clips
+ */
+function extractLastFrameUrl(videoUrl: string): string {
+  if (!videoUrl || !videoUrl.includes('cloudinary.com')) {
+    // Not a Cloudinary URL, return as-is (will fail continuity but won't crash)
+    console.warn('[extractLastFrameUrl] Not a Cloudinary URL:', videoUrl);
+    return videoUrl;
+  }
+
+  try {
+    // Cloudinary transformation to extract last frame
+    // Method 1: Use fl_getframe,pg_last to get the last frame
+    const transformedUrl = videoUrl.replace(
+      /\/upload\//,
+      '/upload/fl_getframe,pg_last/'
+    ).replace(/\.(mp4|mov)$/i, '.jpg');
+
+    return transformedUrl;
+  } catch (error) {
+    console.error('[extractLastFrameUrl] Error transforming URL:', error);
+    return videoUrl; // Return original on error
+  }
+}
+
+/**
  * Restore credits to a user when a job fails due to content policy violation
  */
 async function restoreCreditsForFailedJob(walletAddress: string, amount: number, reason: string) {
@@ -110,11 +136,39 @@ export async function handleKieAiCallback(
       // The history endpoint fetches video jobs directly from promotion_jobs table.
 
       console.log('[Kie AI Callback Handler] Promotion job completed successfully:', jobId);
+
+      // MOVIE MODE: Extract last frame if this is a sequence clip
+      try {
+        const clipResult = await sql`
+          SELECT * FROM video_sequence_clips
+          WHERE promotion_job_id = ${jobId}::uuid
+        `;
+
+        if (Array.isArray(clipResult) && clipResult.length > 0) {
+          const clip = clipResult[0] as any;
+          console.log('[Movie Mode] Detected sequence clip, extracting last frame...');
+
+          // Extract last frame using Cloudinary transformation
+          const lastFrameUrl = extractLastFrameUrl(videoUrl);
+
+          // Update clip with last frame URL
+          await sql`
+            UPDATE video_sequence_clips
+            SET last_frame_url = ${lastFrameUrl}
+            WHERE id = ${clip.id}::uuid
+          `;
+
+          console.log('[Movie Mode] Last frame extracted:', lastFrameUrl);
+        }
+      } catch (frameError: any) {
+        console.error('[Movie Mode] Failed to extract last frame:', frameError);
+        // Don't fail the whole job if frame extraction fails
+      }
     } catch (error: any) {
       console.error('[Kie AI Callback Handler] Error saving video URL:', error);
       await sql`
         UPDATE promotion_jobs
-        SET status = 'failed', 
+        SET status = 'failed',
             error_message = ${'Failed to save video URL: ' + (error.message || String(error))}
         WHERE id = ${jobId}::uuid
       `;

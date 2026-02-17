@@ -308,33 +308,17 @@ If orientation is incorrect, CENTER the character so they face DIRECTLY FRONT.
 Front-facing orientation takes absolute priority over all other pose details.`,
       
 'right-front': `ORIENTATION LOCK (CRITICAL):
-Character is facing FRONT-RIGHT (↗).
-Body rotated 15–25° toward the RIGHT edge of the image.
-Face turned slightly RIGHT, nose pointing toward right image boundary.
-Right shoulder is closer to the viewer than the left.
-Camera positioned front-right of the character.
+The character is facing camera and rotated 20 degrees toward camera-right (viewer's right side of the image).
+The character's nose and gaze point toward the right edge of the image.
+The character's RIGHT shoulder (the shoulder on the right side of the image) is closest to the camera.
+The LEFT shoulder (on the left side of the image) is farther from the camera.
+Head, chest, hips aligned — no twisting.
+Do NOT mirror or flip orientation.
+Do NOT face camera-left.
 
-TORSO & PELVIS ORIENTATION LOCK (CRITICAL):
-Torso, chest, AND pelvis all face the SAME direction (front-right).
-Spine aligned with body rotation — no twist.
-Chest plane angled 15–25° toward the RIGHT image edge.
-Left shoulder closest to camera
-Right-facing orientation takes absolute priority over all other pose details.
-
-NEGATIVE ORIENTATION:
-NOT facing left.
-NOT body turned left.
-NOT angled toward left edge.
-NOT mirrored.
-NOT left-leaning.
-
-NOT shoulders facing left while head faces right.
-
-YOU MUST FLIP THAT BODY HORIZONTALLY TO BE FACING TO MY RIGHT.
-YOU MUST FLIP THAT BODY HORIZONTALLY TO BE FACING TO MY RIGHT.
-YOU MUST FLIP THAT BODY HORIZONTALLY TO BE FACING TO MY RIGHT.
-YOU MUST FLIP THAT BODY HORIZONTALLY TO BE FACING TO MY RIGHT.
- `,
+The character is positioned slightly left of center in the frame, facing toward the empty space on the right side of the image. The character is NOT facing left.
+Do NOT mirror the image.
+Do NOT flip orientation.`,
       'right': `ORIENTATION LOCK (CRITICAL):
 Character is facing RIGHT (→).
 Body rotated 70–90° toward the RIGHT edge of the image.
