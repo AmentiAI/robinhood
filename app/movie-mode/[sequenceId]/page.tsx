@@ -42,7 +42,8 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
   const [selectedCollection, setSelectedCollection] = useState<string>('');
   const [collectionImages, setCollectionImages] = useState<any[]>([]);
   const [selectedCharacterImages, setSelectedCharacterImages] = useState<string[]>([]);
-  const [showImageSelector, setShowImageSelector] = useState(false);
+  const [showImageSelector, setShowImageSelector] = useState(true); // Start expanded
+  const [loadingImages, setLoadingImages] = useState(false);
 
   useEffect(() => {
     if (isConnected && currentAddress) {
@@ -134,15 +135,20 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
   };
 
   const loadCollectionImages = async (collectionId: string) => {
-    if (!collectionId) return;
+    if (!collectionId) {
+      setCollectionImages([]);
+      return;
+    }
 
     try {
+      setLoadingImages(true);
       const response = await fetch(`/api/collections/${collectionId}/ordinals`);
       if (response.ok) {
         const data = await response.json();
         // Filter to only show images that have been generated
         const images = (data.ordinals || []).filter((img: any) => img.image_url);
         console.log('[Movie Mode] Loaded images for collection:', collectionId, 'Count:', images.length);
+        console.log('[Movie Mode] Sample image:', images[0]);
         setCollectionImages(images);
       } else {
         console.error('[Movie Mode] Failed to load collection images:', response.status, response.statusText);
@@ -151,6 +157,8 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
     } catch (error) {
       console.error('[Movie Mode] Error loading collection images:', error);
       setCollectionImages([]);
+    } finally {
+      setLoadingImages(false);
     }
   };
 
@@ -571,16 +579,21 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                   )}
 
                   {/* Character Reference Images Selector */}
-                  <div className="p-3 bg-[var(--background)] border border-[var(--border)] rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
+                  <div className="p-3 bg-[var(--background)] border border-[var(--solana-purple)]/30 rounded-lg">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="text-sm font-medium text-white">
-                        👥 Character References {selectedCharacterImages.length > 0 && `(${selectedCharacterImages.length}/8)`}
+                        👥 Character References
+                        {selectedCharacterImages.length > 0 && (
+                          <span className="ml-2 text-[var(--solana-purple)]">
+                            ({selectedCharacterImages.length}/{clips.length > 0 ? '7' : '8'})
+                          </span>
+                        )}
                       </div>
                       <button
                         onClick={() => setShowImageSelector(!showImageSelector)}
-                        className="text-xs text-[var(--solana-purple)] hover:underline"
+                        className="text-xs text-[var(--solana-purple)] hover:underline font-medium"
                       >
-                        {showImageSelector ? 'Hide' : 'Select'}
+                        {showImageSelector ? '▲ Hide' : '▼ Show'}
                       </button>
                     </div>
 
@@ -605,54 +618,100 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                     )}
 
                     {showImageSelector && (
-                      <div className="space-y-2 mt-2">
-                        <select
-                          value={selectedCollection}
-                          onChange={(e) => {
-                            setSelectedCollection(e.target.value);
-                            loadCollectionImages(e.target.value);
-                          }}
-                          disabled={generating || sequence.status !== 'draft'}
-                          className="w-full bg-[var(--surface)] border border-[var(--border)] rounded px-2 py-1 text-white text-xs"
-                        >
-                          <option value="">Select a collection...</option>
-                          {collections.map((col) => (
-                            <option key={col.id} value={col.id}>
-                              {col.name} ({col.ordinal_count || 0} images)
-                            </option>
-                          ))}
-                        </select>
-
-                        {collectionImages.length > 0 && (
-                          <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto p-2 bg-[var(--surface)] rounded">
-                            {collectionImages.map((img) => (
-                              <div
-                                key={img.id}
-                                onClick={() => toggleImageSelection(img.image_url)}
-                                className={`relative cursor-pointer rounded border-2 transition-all ${
-                                  selectedCharacterImages.includes(img.image_url)
-                                    ? 'border-[var(--solana-purple)] ring-2 ring-[var(--solana-purple)]/50'
-                                    : 'border-transparent hover:border-[var(--border)]'
-                                }`}
-                              >
-                                <img
-                                  src={img.image_url}
-                                  alt={`Ordinal #${img.ordinal_number}`}
-                                  className="w-full h-16 object-cover rounded"
-                                />
-                                {selectedCharacterImages.includes(img.image_url) && (
-                                  <div className="absolute top-0 right-0 bg-[var(--solana-purple)] text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                                    ✓
-                                  </div>
-                                )}
-                              </div>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-xs text-[var(--text-secondary)] mb-1">
+                            Select Collection
+                          </label>
+                          <select
+                            value={selectedCollection}
+                            onChange={(e) => {
+                              setSelectedCollection(e.target.value);
+                              loadCollectionImages(e.target.value);
+                            }}
+                            disabled={generating || sequence.status !== 'draft'}
+                            className="w-full bg-[var(--surface)] border border-[var(--border)] rounded px-3 py-2 text-white text-sm"
+                          >
+                            <option value="">Choose a collection...</option>
+                            {collections.length === 0 && (
+                              <option disabled>No collections found</option>
+                            )}
+                            {collections.map((col) => (
+                              <option key={col.id} value={col.id}>
+                                {col.name}
+                              </option>
                             ))}
+                          </select>
+                        </div>
+
+                        {loadingImages && (
+                          <div className="text-center py-4">
+                            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--solana-purple)]"></div>
+                            <p className="text-xs text-[var(--text-secondary)] mt-2">Loading images...</p>
                           </div>
                         )}
 
-                        {selectedCollection && collectionImages.length === 0 && (
-                          <div className="text-xs text-[var(--text-secondary)] text-center p-2">
-                            No images in this collection yet
+                        {!loadingImages && collectionImages.length > 0 && (
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <label className="text-xs text-[var(--text-secondary)]">
+                                Click to select ({collectionImages.length} available)
+                              </label>
+                              {selectedCharacterImages.length > 0 && (
+                                <button
+                                  onClick={() => setSelectedCharacterImages([])}
+                                  className="text-xs text-red-400 hover:underline"
+                                >
+                                  Clear all
+                                </button>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-4 gap-2 max-h-64 overflow-y-auto p-2 bg-[var(--surface)] rounded border border-[var(--border)]">
+                              {collectionImages.map((img) => (
+                                <div
+                                  key={img.id}
+                                  onClick={() => toggleImageSelection(img.image_url)}
+                                  className={`relative cursor-pointer rounded border-2 transition-all hover:scale-105 ${
+                                    selectedCharacterImages.includes(img.image_url)
+                                      ? 'border-[var(--solana-purple)] ring-2 ring-[var(--solana-purple)]/50'
+                                      : 'border-transparent hover:border-[var(--border)]'
+                                  }`}
+                                >
+                                  <img
+                                    src={img.image_url}
+                                    alt={`#${img.ordinal_number || 'N/A'}`}
+                                    className="w-full h-20 object-cover rounded"
+                                  />
+                                  {selectedCharacterImages.includes(img.image_url) && (
+                                    <div className="absolute top-0 right-0 bg-[var(--solana-purple)] text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                                      ✓
+                                    </div>
+                                  )}
+                                  {selectedCharacterImages.includes(img.image_url) && (
+                                    <div className="absolute bottom-0 left-0 right-0 bg-[var(--solana-purple)]/90 text-white text-xs text-center py-1">
+                                      #{selectedCharacterImages.indexOf(img.image_url) + 1}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {!loadingImages && selectedCollection && collectionImages.length === 0 && (
+                          <div className="text-center p-4 bg-[var(--surface)] rounded border border-[var(--border)]">
+                            <p className="text-sm text-[var(--text-secondary)]">No generated images in this collection yet</p>
+                            <p className="text-xs text-[var(--text-secondary)] mt-1">
+                              Generate some images in this collection first
+                            </p>
+                          </div>
+                        )}
+
+                        {!selectedCollection && (
+                          <div className="text-center p-4 bg-[var(--surface)] rounded border border-dashed border-[var(--border)]">
+                            <p className="text-sm text-[var(--text-secondary)]">
+                              👆 Select a collection above to see images
+                            </p>
                           </div>
                         )}
                       </div>
