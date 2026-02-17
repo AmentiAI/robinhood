@@ -120,13 +120,16 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
     if (!currentAddress) return;
 
     try {
-      const response = await fetch(`/api/collections?wallet=${encodeURIComponent(currentAddress)}`);
+      const response = await fetch(`/api/collections?wallet_address=${encodeURIComponent(currentAddress)}`);
       if (response.ok) {
         const data = await response.json();
+        console.log('[Movie Mode] Loaded collections:', data.collections?.length || 0);
         setCollections(data.collections || []);
+      } else {
+        console.error('[Movie Mode] Failed to load collections:', response.status, response.statusText);
       }
     } catch (error) {
-      console.error('Error loading collections:', error);
+      console.error('[Movie Mode] Error loading collections:', error);
     }
   };
 
@@ -139,10 +142,15 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
         const data = await response.json();
         // Filter to only show images that have been generated
         const images = (data.ordinals || []).filter((img: any) => img.image_url);
+        console.log('[Movie Mode] Loaded images for collection:', collectionId, 'Count:', images.length);
         setCollectionImages(images);
+      } else {
+        console.error('[Movie Mode] Failed to load collection images:', response.status, response.statusText);
+        setCollectionImages([]);
       }
     } catch (error) {
-      console.error('Error loading collection images:', error);
+      console.error('[Movie Mode] Error loading collection images:', error);
+      setCollectionImages([]);
     }
   };
 
