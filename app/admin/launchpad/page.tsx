@@ -114,12 +114,13 @@ export default function AdminLaunchpadHubPage() {
     }
   }
 
-  const formatSol = (lamports: number) => {
-    const sol = lamports / 1_000_000_000
-    if (sol === 0) return '0 SOL'
-    if (sol < 0.001) return `${lamports.toLocaleString()} lamports`
-    return `${sol.toFixed(4)} SOL`
+  const formatEth = (wei: number) => {
+    const eth = wei / 1e18
+    if (eth === 0) return '0 ETH'
+    if (eth < 0.0001) return `${eth.toExponential(2)} ETH`
+    return `${eth.toFixed(4)} ETH`
   }
+  const formatSol = formatEth
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '\u2014'
@@ -191,9 +192,9 @@ export default function AdminLaunchpadHubPage() {
     }
   }
 
-  // Solana explorer URL helper
+  // ETHana explorer URL helper
   const explorerUrl = (signature: string) =>
-    `https://explorer.solana.com/tx/${signature}?cluster=devnet`
+    `https://explorer.Robinhood.com/tx/${signature}?cluster=devnet`
 
   if (!isConnected || !isAdminUser) {
     return (
@@ -212,8 +213,9 @@ export default function AdminLaunchpadHubPage() {
         <div className="max-w-[1800px] mx-auto">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#00E5FF] via-[#FFD60A] to-[#00E5FF] bg-clip-text text-transparent">Launchpad Hub</h1>
-            <p className="text-[#b4b4c8] mt-1">Solana launchpad management - mints, collections, and transactions</p>
+            <h1 className="text-3xl font-black text-white">Launchpad Hub</h1>
+            <p className="text-[#a8aab2] text-sm mt-1">Robinhood Chain mint monitoring</p>
+            <p className="text-[#b4b4c8] mt-1">Robinhood launchpad management - mints, collections, and transactions</p>
           </div>
 
           {/* Error Message */}
@@ -250,14 +252,14 @@ export default function AdminLaunchpadHubPage() {
               </div>
               <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 border border-[#00E5FF]/20 rounded-lg shadow p-4">
                 <div className="text-sm text-[#b4b4c8]">Platform Fees</div>
-                <div className="text-2xl font-bold text-[#D4AF37]">{formatSol(overallStats.total_platform_fees_lamports || 0)}</div>
+                <div className="text-2xl font-bold text-[#00C805]">{formatSol(overallStats.total_platform_fees_lamports || 0)}</div>
                 <div className="text-xs text-[#b4b4c8] mt-1">
                   {overallStats.unique_minters || 0} unique minters
                 </div>
               </div>
               <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 border border-[#00E5FF]/20 rounded-lg shadow p-4">
                 <div className="text-sm text-[#b4b4c8]">Collections</div>
-                <div className="text-2xl font-bold text-[#9945FF]">{overallStats.collections_with_mints || 0}</div>
+                <div className="text-2xl font-bold text-[#00C805]">{overallStats.collections_with_mints || 0}</div>
                 <div className="text-xs text-[#b4b4c8] mt-1">
                   with mints
                 </div>
@@ -280,7 +282,7 @@ export default function AdminLaunchpadHubPage() {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${
                     activeTab === tab.id
-                      ? 'border-[#9945FF] text-[#9945FF]'
+                      ? 'border-[#00C805] text-[#00C805]'
                       : 'border-transparent text-[#b4b4c8] hover:text-white'
                   }`}
                 >
@@ -301,9 +303,9 @@ export default function AdminLaunchpadHubPage() {
                           <span className="text-sm font-medium text-[#b4b4c8]">Confirmed</span>
                           <span className="text-lg font-bold text-green-400">{overallStats.confirmed_mints || 0}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-lg">
+                        <div className="flex justify-between items-center p-3 bg-[#00C805]/10 border border-[#00C805]/20 rounded-lg">
                           <span className="text-sm font-medium text-[#b4b4c8]">Total Mints (all statuses)</span>
-                          <span className="text-lg font-bold text-[#9945FF]">{overallStats.total_mints || 0}</span>
+                          <span className="text-lg font-bold text-[#00C805]">{overallStats.total_mints || 0}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
                           <span className="text-sm font-medium text-[#b4b4c8]">Pending / In-Progress</span>
@@ -326,13 +328,13 @@ export default function AdminLaunchpadHubPage() {
                           <span className="text-sm font-medium text-[#b4b4c8]">Creator Revenue</span>
                           <span className="text-lg font-bold text-green-400">{formatSol(overallStats.total_revenue_lamports || 0)}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-lg">
+                        <div className="flex justify-between items-center p-3 bg-[#00C805]/10 border border-[#00C805]/20 rounded-lg">
                           <span className="text-sm font-medium text-[#b4b4c8]">Platform Fees Collected</span>
-                          <span className="text-lg font-bold text-[#D4AF37]">{formatSol(overallStats.total_platform_fees_lamports || 0)}</span>
+                          <span className="text-lg font-bold text-[#00C805]">{formatSol(overallStats.total_platform_fees_lamports || 0)}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-[#9945FF]/10 border border-[#9945FF]/20 rounded-lg">
+                        <div className="flex justify-between items-center p-3 bg-[#00C805]/10 border border-[#00C805]/20 rounded-lg">
                           <span className="text-sm font-medium text-[#b4b4c8]">Unique Minters</span>
-                          <span className="text-lg font-bold text-[#9945FF]">{overallStats.unique_minters || 0}</span>
+                          <span className="text-lg font-bold text-[#00C805]">{overallStats.unique_minters || 0}</span>
                         </div>
                       </div>
                     </div>
@@ -348,7 +350,7 @@ export default function AdminLaunchpadHubPage() {
                     <div className="flex gap-2">
                       <Link
                         href="/admin/collections"
-                        className="px-4 py-2 bg-[#9945FF] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium"
+                        className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium"
                       >
                         Admin Collections Manager
                       </Link>
@@ -401,7 +403,7 @@ export default function AdminLaunchpadHubPage() {
                                 <div className="flex items-center gap-3">
                                   <Link
                                     href={`/admin/launchpad/transactions?collection_id=${collection.id}`}
-                                    className="text-[#9945FF] hover:text-[#7C3AED] text-sm font-medium"
+                                    className="text-[#00C805] hover:text-[#7C3AED] text-sm font-medium"
                                   >
                                     View Mints
                                   </Link>
@@ -431,7 +433,7 @@ export default function AdminLaunchpadHubPage() {
                     <h3 className="font-bold text-white">All Transactions</h3>
                     <Link
                       href="/admin/launchpad/transactions"
-                      className="px-4 py-2 bg-[#9945FF] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium"
+                      className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium"
                     >
                       Full Transaction Manager
                     </Link>
@@ -449,13 +451,13 @@ export default function AdminLaunchpadHubPage() {
                     <div>
                       <h3 className="font-bold text-white">All Minted Collections</h3>
                       <p className="text-sm text-[#b4b4c8] mt-1">
-                        Collections with Solana mint activity
+                        Collections with ETHana mint activity
                       </p>
                     </div>
                     <button
                       onClick={loadCompletedCollections}
                       disabled={loadingCompleted}
-                      className="px-4 py-2 bg-[#9945FF] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-all"
+                      className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-all"
                     >
                       {loadingCompleted ? 'Loading...' : 'Refresh'}
                     </button>
@@ -550,7 +552,7 @@ export default function AdminLaunchpadHubPage() {
                                 href={explorerUrl(mint.mint_tx_signature)}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs text-[#9945FF] hover:text-[#7C3AED]"
+                                className="text-xs text-[#00C805] hover:text-[#7C3AED]"
                               >
                                 View Tx
                               </a>

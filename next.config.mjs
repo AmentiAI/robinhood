@@ -26,9 +26,13 @@ const nextConfig = {
     }
     
     // Fix for pino-pretty optional dependency issue with WalletConnect
+    // Stub Coinbase x402 optional deps that break webpack when @wagmi/connectors is pulled in
     config.resolve.alias = {
       ...config.resolve.alias,
       'pino-pretty': false,
+      '@x402/evm/upto/client': false,
+      '@x402/evm/exact/client': false,
+      '@x402/core/client': false,
     }
     
     return config

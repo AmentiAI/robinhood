@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useWallet } from '@/lib/wallet/compatibility'
-import { useSolanaWallet } from '@/lib/wallet/solana-wallet-context'
+import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
 import { MarketplaceReviewsDisplay } from '@/components/marketplace-reviews-display'
 
 interface MarketplaceListing {
@@ -126,14 +126,14 @@ export function ProfileMarketplace() {
         <h3 className="text-xl font-bold text-white">My Marketplace</h3>
         <Link
           href="/marketplace"
-          className="px-4 py-2 bg-[#00d4ff] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors text-sm shadow-lg shadow-[#00d4ff]/20"
+          className="px-4 py-2 bg-[#39FF14] hover:bg-[#00C805] text-white rounded-lg font-semibold transition-colors text-sm shadow-lg shadow-[#39FF14]/20"
         >
           Browse Marketplace
         </Link>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
+        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
           {error}
         </div>
       )}
@@ -144,7 +144,7 @@ export function ProfileMarketplace() {
           <p className="text-sm text-[#a8a8b8]/80 mb-4">List your collections to start selling!</p>
           <Link
             href="/marketplace"
-            className="inline-block px-6 py-2 bg-[#00d4ff] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors shadow-lg shadow-[#00d4ff]/20"
+            className="inline-block px-6 py-2 bg-[#39FF14] hover:bg-[#00C805] text-white rounded-lg font-semibold transition-colors shadow-lg shadow-[#39FF14]/20"
           >
             List a Collection →
           </Link>
@@ -154,7 +154,7 @@ export function ProfileMarketplace() {
           {/* Active Listings */}
           {activeListings.length > 0 && (
             <div>
-              <h4 className="text-lg font-semibold text-[#00d4ff] mb-3 flex items-center gap-2">
+              <h4 className="text-lg font-semibold text-[#39FF14] mb-3 flex items-center gap-2">
                 <span>✓</span>
                 Active Listings ({activeListings.length})
               </h4>
@@ -162,7 +162,7 @@ export function ProfileMarketplace() {
                 {activeListings.map((listing) => (
                   <div
                     key={listing.id}
-                    className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#00d4ff]/50 rounded-xl overflow-hidden hover:shadow-lg transition-all"
+                    className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#39FF14]/50 rounded-xl overflow-hidden hover:shadow-lg transition-all"
                   >
                     {/* Sample Image */}
                     {listing.sample_image && (
@@ -178,7 +178,7 @@ export function ProfileMarketplace() {
                     <div className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-bold text-lg text-white flex-1">{listing.title}</h4>
-                        <span className="px-2 py-1 bg-[#00d4ff]/20 text-[#00d4ff] text-xs font-bold rounded-full border border-[#00d4ff]/30">
+                        <span className="px-2 py-1 bg-[#39FF14]/20 text-[#39FF14] text-xs font-bold rounded-full border border-[#39FF14]/30">
                           Active
                         </span>
                       </div>
@@ -190,7 +190,7 @@ export function ProfileMarketplace() {
 
                         <div className="flex flex-wrap gap-2">
                           {(listing.payment_type === 'credits' || listing.payment_type === 'both') && (
-                            <span className="px-2 py-1 bg-[#00d4ff]/20 text-[#00d4ff] rounded text-xs font-semibold border border-[#00d4ff]/30">
+                            <span className="px-2 py-1 bg-[#39FF14]/20 text-[#39FF14] rounded text-xs font-semibold border border-[#39FF14]/30">
                               {listing.price_credits} Credits
                             </span>
                           )}
@@ -202,7 +202,7 @@ export function ProfileMarketplace() {
                         </div>
 
                         {listing.has_pending_payment && (
-                          <div className="px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#DC1FFF]/50 rounded-lg">
+                          <div className="px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#DC1FFF]/50 rounded-lg">
                             <p className="text-xs text-[#DC1FFF] font-medium">
                               ⏳ Pending BTC Payment
                             </p>
@@ -213,7 +213,7 @@ export function ProfileMarketplace() {
                       <div className="flex gap-2">
                         <Link
                           href={`/marketplace/${listing.id}`}
-                          className="flex-1 px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 hover:border-[#00d4ff]/50 text-white/70 hover:text-white rounded-lg text-sm font-semibold text-center transition-colors"
+                          className="flex-1 px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#39FF14]/30 hover:border-[#39FF14]/50 text-white/70 hover:text-white rounded-lg text-sm font-semibold text-center transition-colors"
                         >
                           View
                         </Link>
@@ -242,7 +242,7 @@ export function ProfileMarketplace() {
                 {soldListings.map((listing) => (
                   <div
                     key={listing.id}
-                    className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-white/20 rounded-xl overflow-hidden opacity-75"
+                    className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-white/20 rounded-xl overflow-hidden opacity-75"
                   >
                     {/* Sample Image */}
                     {listing.sample_image && (
@@ -284,7 +284,7 @@ export function ProfileMarketplace() {
 
                       <Link
                         href={`/marketplace/${listing.id}`}
-                        className="block w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-white/20 hover:border-white/30 text-white/70 hover:text-white rounded-lg text-sm font-semibold text-center transition-colors"
+                        className="block w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-white/20 hover:border-white/30 text-white/70 hover:text-white rounded-lg text-sm font-semibold text-center transition-colors"
                       >
                         View Details
                       </Link>
@@ -299,7 +299,7 @@ export function ProfileMarketplace() {
 
       {/* Seller Reviews Section */}
       {activeWalletAddress && (
-        <div className="mt-8 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-xl p-6">
+        <div className="mt-8 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#39FF14]/30 rounded-xl p-6">
           <h3 className="text-xl font-bold text-white mb-4">My Seller Reviews</h3>
           <MarketplaceReviewsDisplay
             sellerWallet={activeWalletAddress}

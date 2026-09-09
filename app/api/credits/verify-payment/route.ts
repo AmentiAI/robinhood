@@ -1,187 +1,92 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { addCredits } from '@/lib/credits/credits'
 import { sql } from '@/lib/database'
-import { getPlatformWalletAddress } from '@/lib/solana/platform-wallet'
-import { getConnectionAsync } from '@/lib/solana/connection'
+import { getPublicClient } from '@/lib/robinhood/client'
+import { getPlatformWalletAddress } from '@/lib/robinhood/platform-wallet'
+import { formatEther, type Hex, type Address } from 'viem'
 
-// Get Solana payment address (may be null during build)
-function getSolPaymentAddress(): string {
-  const address = getPlatformWalletAddress()
-  if (!address) {
-    throw new Error('Solana payment address not configured')
-  }
-  return address
-}
-
-/**
- * Check Solana transaction using RPC - requires on-chain finality.
- * Uses getConnectionAsync() which reads the active network from site_settings.
- */
-async function checkSolTransaction(txid: string): Promise<{
+async function checkRhEthTransaction(txid: string, expectedTo: string): Promise<{
   txid: string
   confirmations: number
   confirmed: boolean
   amount?: number
-  blockHeight?: number
 } | null> {
   try {
-    const connection = await getConnectionAsync()
-    const rpcUrl = connection.rpcEndpoint
+    const client = getPublicClient()
+    const receipt = await client.getTransactionReceipt({ hash: txid as Hex })
+    if (!receipt) return { txid, confirmations: 0, confirmed: false }
 
-    // Check if transaction is confirmed (confirmed = 66%+ validators, safe for credit awards)
-    const statusResponse = await fetch(rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'getSignatureStatuses',
-        params: [[txid], { searchTransactionHistory: true }],
-      }),
-      signal: AbortSignal.timeout(10000),
-    })
-
-    let isConfirmed = false
-    if (statusResponse.ok) {
-      const statusData = await statusResponse.json()
-      if (statusData.result?.value?.[0]) {
-        const status = statusData.result.value[0]
-        // Accept both 'confirmed' and 'finalized' — confirmed is sufficient for credit purchases
-        isConfirmed = (status?.confirmationStatus === 'confirmed' || status?.confirmationStatus === 'finalized') && !status?.err
-      }
-    }
-
-    // Get transaction details
-    const response = await fetch(rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 2,
-        method: 'getTransaction',
-        params: [txid, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 0 }],
-      }),
-      signal: AbortSignal.timeout(10000),
-    })
-
-    if (!response.ok) return null
-
-    const data = await response.json()
-    if (data.error || !data.result) return null
-
-    const tx = data.result
-    if (!tx || !tx.slot) {
+    if (receipt.status !== 'success') {
       return { txid, confirmations: 0, confirmed: false }
     }
 
-    const confirmed = isConfirmed && tx.meta?.err === null
-
-    // Calculate amount sent to our address
-    let amount = 0
-    const paymentPubkey = getSolPaymentAddress()
-
-    if (tx.meta?.preBalances && tx.meta?.postBalances && tx.transaction?.message?.accountKeys) {
-      const accountKeys = tx.transaction.message.accountKeys
-
-      for (let i = 0; i < accountKeys.length; i++) {
-        const key = typeof accountKeys[i] === 'string' ? accountKeys[i] : accountKeys[i].pubkey
-        if (key === paymentPubkey) {
-          const preBalance = tx.meta.preBalances[i] || 0
-          const postBalance = tx.meta.postBalances[i] || 0
-          const balanceChange = postBalance - preBalance
-          if (balanceChange > 0) {
-            amount = balanceChange / 1e9
-          }
-          break
-        }
-      }
-
-      // Check instructions if not found in balance changes
-      if (amount === 0) {
-        const allInstructions = [
-          ...(tx.transaction?.message?.instructions || []),
-          ...(tx.meta?.innerInstructions?.flatMap((ii: any) => ii.instructions || []) || []),
-        ]
-        for (const instruction of allInstructions) {
-          if (instruction.parsed?.type === 'transfer' && instruction.parsed.info?.destination === paymentPubkey) {
-            amount = (instruction.parsed.info.lamports || 0) / 1e9
-            break
-          }
-        }
-      }
-    }
+    const tx = await client.getTransaction({ hash: txid as Hex })
+    const to = (tx.to || '').toLowerCase()
+    const amount = Number(formatEther(tx.value || 0n))
+    const matches = !expectedTo || to === expectedTo.toLowerCase()
 
     return {
       txid,
-      confirmations: confirmed ? 1 : 0,
-      confirmed,
-      amount,
-      blockHeight: tx.slot,
+      confirmations: 1,
+      confirmed: matches,
+      amount: matches ? amount : 0,
     }
-  } catch (error: any) {
-    console.error('Error checking SOL transaction:', error)
+  } catch (error) {
+    console.error('Error checking RH ETH tx:', error)
     return null
   }
 }
 
-/**
- * Award credits with fallback mechanism
- */
 async function awardCredits(
   walletAddress: string,
   creditsAmount: number,
-  txid: string,
-  paymentId: string
+  txid: string
 ): Promise<boolean> {
   try {
-    await addCredits(walletAddress, creditsAmount, `Credit purchase - ${creditsAmount} credits (SOL)`, txid)
+    await addCredits(
+      walletAddress,
+      creditsAmount,
+      `Credit purchase - ${creditsAmount} credits (ETH/RH)`,
+      txid
+    )
     return true
   } catch (creditError: any) {
     console.error(`[Payment Verification] Error via addCredits:`, creditError?.message)
-
-    // Fallback: direct SQL
     try {
       const { getOrCreateCredits } = await import('@/lib/credits/credits')
       await getOrCreateCredits(walletAddress)
-
-      const existingTx = await sql`
+      const existingTx = (await sql`
         SELECT id FROM credit_transactions
         WHERE payment_txid = ${txid} AND wallet_address = ${walletAddress} AND amount > 0
         LIMIT 1
-      ` as any[]
-
+      `) as any[]
       if (existingTx.length > 0) return true
-
       await sql`
         UPDATE credits SET credits = credits + ${creditsAmount}, updated_at = CURRENT_TIMESTAMP
         WHERE wallet_address = ${walletAddress}
       `
       await sql`
         INSERT INTO credit_transactions (wallet_address, amount, transaction_type, description, payment_txid)
-        VALUES (${walletAddress}, ${creditsAmount}, 'purchase', ${`Credit purchase - ${creditsAmount} credits (SOL)`}, ${txid})
+        VALUES (${walletAddress}, ${creditsAmount}, 'purchase', ${`Credit purchase - ${creditsAmount} credits (ETH/RH)`}, ${txid})
       `
       return true
-    } catch (fallbackError: any) {
-      console.error(`[Payment Verification] Fallback also failed:`, fallbackError?.message)
+    } catch {
       return false
     }
   }
 }
 
-/**
- * Process a pending payment verification
- */
 async function verifyAndProcessPayment(payment: any, walletAddress: string) {
   if (!payment.payment_txid) {
     return { status: 'pending', confirmations: 0, message: 'Waiting for payment...' }
   }
 
-  const tx = await checkSolTransaction(payment.payment_txid)
+  const platform = payment.payment_address || getPlatformWalletAddress() || ''
+  const tx = await checkRhEthTransaction(payment.payment_txid, platform)
   if (!tx) {
     return { status: 'pending', confirmations: 0, message: 'Waiting for transaction...' }
   }
 
-  // Update confirmations
   await sql`UPDATE pending_payments SET confirmations = ${tx.confirmations} WHERE id = ${payment.id}::uuid`
 
   const expectedAmount = parseFloat(payment.payment_amount || payment.bitcoin_amount)
@@ -189,17 +94,16 @@ async function verifyAndProcessPayment(payment: any, walletAddress: string) {
   const amountMatches = receivedAmount >= expectedAmount * 0.99
 
   if (tx.confirmed && payment.status === 'pending' && (amountMatches || receivedAmount === 0)) {
-    // Ensure txid is saved
     if (!payment.payment_txid || payment.payment_txid !== tx.txid) {
       await sql`UPDATE pending_payments SET payment_txid = ${tx.txid} WHERE id = ${payment.id}::uuid`
     }
 
-    const credited = await awardCredits(walletAddress, payment.credits_amount, tx.txid, payment.id)
-
+    await awardCredits(walletAddress, payment.credits_amount, tx.txid)
     await sql`UPDATE pending_payments SET status = 'completed' WHERE id = ${payment.id}::uuid`
 
     return {
       status: 'completed',
+      success: true,
       confirmations: tx.confirmations,
       txid: tx.txid,
       creditsAwarded: payment.credits_amount,
@@ -211,13 +115,10 @@ async function verifyAndProcessPayment(payment: any, walletAddress: string) {
     confirmations: tx.confirmations,
     txid: tx.txid,
     requiredConfirmations: 1,
-    message: tx.confirmations > 0
-      ? 'Waiting for finalization...'
-      : 'Transaction detected, waiting for confirmation...',
+    message: 'Transaction detected, waiting for confirmation...',
   }
 }
 
-// POST /api/credits/verify-payment
 export async function POST(request: NextRequest) {
   if (!sql) {
     return NextResponse.json({ error: 'Database connection not available' }, { status: 500 })
@@ -225,17 +126,18 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json()
-    const { payment_id, wallet_address, txid } = body
+    const { payment_id, wallet_address, txid, tx_hash } = body
+    const hash = tx_hash || txid
 
     if (!payment_id || !wallet_address) {
       return NextResponse.json({ error: 'Payment ID and wallet address are required' }, { status: 400 })
     }
 
-    const pendingPayments = await sql`
+    const pendingPayments = (await sql`
       SELECT * FROM pending_payments
       WHERE id = ${payment_id}::uuid AND wallet_address = ${wallet_address} AND status = 'pending'
       LIMIT 1
-    ` as any[]
+    `) as any[]
 
     if (!Array.isArray(pendingPayments) || pendingPayments.length === 0) {
       return NextResponse.json({ error: 'Payment not found or already processed' }, { status: 404 })
@@ -248,10 +150,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Payment has expired' }, { status: 400 })
     }
 
-    // Save txid if provided
-    if (txid && typeof txid === 'string' && !payment.payment_txid) {
-      await sql`UPDATE pending_payments SET payment_txid = ${txid} WHERE id = ${payment.id}::uuid`
-      payment.payment_txid = txid
+    if (hash && typeof hash === 'string' && !payment.payment_txid) {
+      await sql`UPDATE pending_payments SET payment_txid = ${hash} WHERE id = ${payment.id}::uuid`
+      payment.payment_txid = hash
     }
 
     const result = await verifyAndProcessPayment(payment, wallet_address)
@@ -262,7 +163,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET /api/credits/verify-payment
 export async function GET(request: NextRequest) {
   if (!sql) {
     return NextResponse.json({ error: 'Database connection not available' }, { status: 500 })
@@ -277,11 +177,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Payment ID and wallet address are required' }, { status: 400 })
     }
 
-    const paymentsResult = await sql`
+    const paymentsResult = (await sql`
       SELECT * FROM pending_payments
       WHERE id = ${payment_id}::uuid AND wallet_address = ${wallet_address}
       LIMIT 1
-    ` as any[]
+    `) as any[]
 
     if (!Array.isArray(paymentsResult) || paymentsResult.length === 0) {
       return NextResponse.json({ error: 'Payment not found' }, { status: 404 })
@@ -292,24 +192,20 @@ export async function GET(request: NextRequest) {
     if (payment.status === 'completed') {
       return NextResponse.json({
         status: 'completed',
+        success: true,
         confirmations: payment.confirmations || 0,
         txid: payment.payment_txid,
         creditsAwarded: payment.credits_amount,
       })
     }
 
-    if (payment.status === 'pending' && payment.payment_txid) {
-      const result = await verifyAndProcessPayment(payment, wallet_address)
-      return NextResponse.json(result)
+    if (new Date(payment.expires_at) < new Date()) {
+      return NextResponse.json({ status: 'expired', message: 'Payment expired' })
     }
 
-    return NextResponse.json({
-      status: payment.status,
-      confirmations: payment.confirmations || 0,
-      txid: payment.payment_txid,
-    })
+    const result = await verifyAndProcessPayment(payment, wallet_address)
+    return NextResponse.json(result)
   } catch (error: any) {
-    console.error('Error checking payment status:', error)
-    return NextResponse.json({ error: error?.message || 'Failed to check payment status' }, { status: 500 })
+    return NextResponse.json({ error: error?.message || 'Failed to verify payment' }, { status: 500 })
   }
 }

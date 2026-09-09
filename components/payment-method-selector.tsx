@@ -39,7 +39,7 @@ export function PaymentMethodSelector({
               ${
                 selectedMethod === method.id
                   ? 'border-[#4561ad] bg-[#4561ad]/10 shadow-lg shadow-[#4561ad]/20'
-                  : 'border-[#9945FF]/20 bg-[#1a1a24]/50 hover:border-[#9945FF]/30'
+                  : 'border-[#00C805]/20 bg-[#1a1a24]/50 hover:border-[#00C805]/30'
               }
               ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
             `}

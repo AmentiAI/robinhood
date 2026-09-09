@@ -1,15 +1,15 @@
 'use client'
 
 import { createContext, useContext, useMemo, ReactNode } from 'react'
-import { useSolanaWallet } from '@/lib/wallet/solana-wallet-context'
+import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
 
 interface ActiveWalletContextType {
   activeWalletAddress: string | null
   activeWalletConnected: boolean
-  activeWalletType: 'sol' | null
+  activeWalletType: 'eth' | null
   activeWalletVerified: boolean
 
-  sol: {
+  eth: {
     isConnected: boolean
     address: string | null
     isVerified: boolean
@@ -20,20 +20,23 @@ interface ActiveWalletContextType {
     sendTransaction: (to: string, amount: number) => Promise<string>
     getBalance: () => Promise<number>
   }
+
+  /** @deprecated alias for eth */
+  sol: ActiveWalletContextType['eth']
 }
 
 const ActiveWalletContext = createContext<ActiveWalletContextType | undefined>(undefined)
 
 export function ActiveWalletProvider({ children }: { children: ReactNode }) {
-  const solana = useSolanaWallet()
+  const evm = useEvmWallet()
 
   const { activeWalletAddress, activeWalletConnected, activeWalletType, activeWalletVerified } = useMemo(() => {
-    if (solana.address && solana.isConnected) {
+    if (evm.address && evm.isConnected) {
       return {
-        activeWalletAddress: solana.address,
+        activeWalletAddress: evm.address,
         activeWalletConnected: true,
-        activeWalletType: 'sol' as const,
-        activeWalletVerified: solana.isVerified,
+        activeWalletType: 'eth' as const,
+        activeWalletVerified: evm.isVerified,
       }
     }
 
@@ -43,25 +46,27 @@ export function ActiveWalletProvider({ children }: { children: ReactNode }) {
       activeWalletType: null,
       activeWalletVerified: false,
     }
-  }, [solana.address, solana.isConnected, solana.isVerified])
+  }, [evm.address, evm.isConnected, evm.isVerified])
+
+  const eth = {
+    isConnected: evm.isConnected,
+    address: evm.address,
+    isVerified: evm.isVerified,
+    isVerifying: evm.isVerifying,
+    verifyWallet: evm.verifyWallet,
+    connect: evm.connect,
+    disconnect: evm.disconnect,
+    sendTransaction: evm.sendTransaction,
+    getBalance: evm.getBalance,
+  }
 
   const value: ActiveWalletContextType = {
     activeWalletAddress,
     activeWalletConnected,
     activeWalletType,
     activeWalletVerified,
-
-    sol: {
-      isConnected: solana.isConnected,
-      address: solana.address,
-      isVerified: solana.isVerified,
-      isVerifying: solana.isVerifying,
-      verifyWallet: solana.verifyWallet,
-      connect: solana.connect,
-      disconnect: solana.disconnect,
-      sendTransaction: solana.sendTransaction,
-      getBalance: solana.getBalance,
-    },
+    eth,
+    sol: eth,
   }
 
   return (

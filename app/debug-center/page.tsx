@@ -98,7 +98,7 @@ export default function DebugCenterPage() {
             <h2 className="text-xl font-bold text-blue-300 mb-3">💡 Key Insight: How OpenAI Image Generation Pricing Works</h2>
             <div className="space-y-2 text-white">
               <p>
-                <strong className="text-[#FBBF24]">Important:</strong> OpenAI's image generation API (gpt-image-1, DALL-E) charges 
+                <strong className="text-[#FBBF24]">Important:</strong> OpenAI's image generation API (gpt-image-2, DALL-E) charges
                 <strong className="text-green-400"> per image generated</strong>, NOT per token or prompt length.
               </p>
               <p>
@@ -118,7 +118,7 @@ export default function DebugCenterPage() {
           {/* Comparison Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Short Prompt */}
-            <div className="bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg p-6">
+            <div className="bg-[#1a1a24] border border-[#00C805]/20 rounded-lg p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-white">Short Prompt (~400 words)</h2>
                 <span className="px-3 py-1 bg-green-500/30 text-green-300 rounded text-sm font-semibold">
@@ -134,7 +134,7 @@ export default function DebugCenterPage() {
                   value={shortPrompt}
                   onChange={(e) => setShortPrompt(e.target.value)}
                   placeholder="Enter a short description..."
-                  className="w-full h-24 p-3 border border-[#9945FF]/30 rounded-lg bg-[#14141e] text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none resize-none"
+                  className="w-full h-24 p-3 border border-[#00C805]/30 rounded-lg bg-[#14141e] text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none resize-none"
                 />
               </div>
 
@@ -152,7 +152,7 @@ export default function DebugCenterPage() {
                     <span className="text-[#a8a8b8]">Estimated Tokens:</span>
                     <span className="text-white font-mono">{Math.ceil(shortFullPrompt.length / 4).toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between border-t border-[#9945FF]/20 pt-2 mt-2">
+                  <div className="flex justify-between border-t border-[#00C805]/20 pt-2 mt-2">
                     <span className="text-white font-semibold">Cost per Image:</span>
                     <span className="text-green-400 font-mono font-bold text-lg">
                       {formatCost(shortCost.perImage)}
@@ -171,7 +171,7 @@ export default function DebugCenterPage() {
             </div>
 
             {/* Long Prompt */}
-            <div className="bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg p-6">
+            <div className="bg-[#1a1a24] border border-[#00C805]/20 rounded-lg p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-white">Long Prompt (~1000 words)</h2>
                 <span className="px-3 py-1 bg-orange-500/30 text-orange-300 rounded text-sm font-semibold">
@@ -187,7 +187,7 @@ export default function DebugCenterPage() {
                   value={longPrompt}
                   onChange={(e) => setLongPrompt(e.target.value)}
                   placeholder="Enter a detailed, long description..."
-                  className="w-full h-24 p-3 border border-[#9945FF]/30 rounded-lg bg-[#14141e] text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none resize-none"
+                  className="w-full h-24 p-3 border border-[#00C805]/30 rounded-lg bg-[#14141e] text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none resize-none"
                 />
               </div>
 
@@ -205,7 +205,7 @@ export default function DebugCenterPage() {
                     <span className="text-[#a8a8b8]">Estimated Tokens:</span>
                     <span className="text-white font-mono">{Math.ceil(longFullPrompt.length / 4).toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between border-t border-[#9945FF]/20 pt-2 mt-2">
+                  <div className="flex justify-between border-t border-[#00C805]/20 pt-2 mt-2">
                     <span className="text-white font-semibold">Cost per Image:</span>
                     <span className="text-green-400 font-mono font-bold text-lg">
                       {formatCost(longCost.perImage)}
@@ -228,12 +228,12 @@ export default function DebugCenterPage() {
           <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 border-2 border-purple-600 rounded-lg p-6 mb-8">
             <h2 className="text-2xl font-bold text-white mb-4">💰 Cost Comparison</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-black/40 rounded-lg p-4 border border-[#9945FF]/20">
+              <div className="bg-black/40 rounded-lg p-4 border border-[#00C805]/20">
                 <p className="text-[#a8a8b8] text-sm mb-2">Short Prompt Cost</p>
                 <p className="text-3xl font-bold text-green-400">{formatCost(shortCost.perImage)}</p>
                 <p className="text-xs text-[#a8a8b8]/80 mt-1">{getWordCount(shortFullPrompt)} words</p>
               </div>
-              <div className="bg-black/40 rounded-lg p-4 border border-[#9945FF]/20">
+              <div className="bg-black/40 rounded-lg p-4 border border-[#00C805]/20">
                 <p className="text-[#a8a8b8] text-sm mb-2">Long Prompt Cost</p>
                 <p className="text-3xl font-bold text-green-400">{formatCost(longCost.perImage)}</p>
                 <p className="text-xs text-[#a8a8b8]/80 mt-1">{getWordCount(longFullPrompt)} words</p>
@@ -257,7 +257,7 @@ export default function DebugCenterPage() {
           </div>
 
           {/* Settings */}
-          <div className="bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg p-6 mb-8">
+          <div className="bg-[#1a1a24] border border-[#00C805]/20 rounded-lg p-6 mb-8">
             <h2 className="text-xl font-bold text-white mb-4">⚙️ Test Settings</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -267,7 +267,7 @@ export default function DebugCenterPage() {
                 <select
                   value={imageSize}
                   onChange={(e) => setImageSize(e.target.value as '1024x1024' | '1024x1792' | '1792x1024')}
-                  className="w-full p-3 border border-[#9945FF]/30 rounded-lg bg-[#14141e] text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full p-3 border border-[#00C805]/30 rounded-lg bg-[#14141e] text-white focus:border-purple-500 focus:outline-none"
                 >
                   <option value="1024x1024">1024x1024 (Square) - $0.040/$0.080</option>
                   <option value="1024x1792">1024x1792 (Portrait) - $0.080/$0.120</option>
@@ -281,7 +281,7 @@ export default function DebugCenterPage() {
                 <select
                   value={quality}
                   onChange={(e) => setQuality(e.target.value as 'standard' | 'hd')}
-                  className="w-full p-3 border border-[#9945FF]/30 rounded-lg bg-[#14141e] text-white focus:border-purple-500 focus:outline-none"
+                  className="w-full p-3 border border-[#00C805]/30 rounded-lg bg-[#14141e] text-white focus:border-purple-500 focus:outline-none"
                 >
                   <option value="standard">Standard - Lower cost</option>
                   <option value="hd">HD - Higher quality, higher cost</option>
@@ -325,11 +325,11 @@ export default function DebugCenterPage() {
 
           {/* Test Results History */}
           {testResults.length > 0 && (
-            <div className="bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg p-6">
+            <div className="bg-[#1a1a24] border border-[#00C805]/20 rounded-lg p-6">
               <h2 className="text-xl font-bold text-white mb-4">📊 Test Results History</h2>
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {testResults.map((result, index) => (
-                  <div key={index} className="bg-[#14141e] rounded-lg p-4 border border-[#9945FF]/20">
+                  <div key={index} className="bg-[#14141e] rounded-lg p-4 border border-[#00C805]/20">
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <p className="text-sm text-[#a8a8b8]">
@@ -369,14 +369,14 @@ export default function DebugCenterPage() {
           )}
 
           {/* Full Explanation */}
-          <div className="bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg p-6 mt-8">
+          <div className="bg-[#1a1a24] border border-[#00C805]/20 rounded-lg p-6 mt-8">
             <h2 className="text-2xl font-bold text-white mb-4">📚 Complete Explanation</h2>
             <div className="prose prose-invert max-w-none space-y-4 text-white">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-2">How OpenAI Image Generation Pricing Works</h3>
                 <p>
                   Unlike text generation models (GPT-4, etc.) that charge per token, OpenAI's image generation models 
-                  (gpt-image-1, DALL-E 2, DALL-E 3) use a <strong>per-image pricing model</strong>. This means:
+                  (gpt-image-2, DALL-E 2, DALL-E 3) use a <strong>per-image pricing model</strong>. This means:
                 </p>
                 <ul className="list-disc list-inside ml-4 space-y-1 mt-2">
                   <li>Each image costs a fixed amount based on size and quality</li>
@@ -391,7 +391,7 @@ export default function DebugCenterPage() {
                 <div className="bg-[#14141e] rounded-lg p-4 mt-2">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b border-[#9945FF]/20">
+                      <tr className="border-b border-[#00C805]/20">
                         <th className="text-left py-2 text-white">Size</th>
                         <th className="text-right py-2 text-white">Standard</th>
                         <th className="text-right py-2 text-white">HD</th>

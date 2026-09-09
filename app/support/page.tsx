@@ -210,15 +210,15 @@ export default function SupportPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'open':
-        return 'bg-[#9945FF]/20 text-[#9945FF] border-[#9945FF]/30'
+        return 'bg-[#00C805]/20 text-[#00C805] border-[#00C805]/30'
       case 'in_progress':
         return 'bg-[#DC1FFF]/20 text-[#DC1FFF] border-[#DC1FFF]/30'
       case 'resolved':
-        return 'bg-[#9945FF]/20 text-[#9945FF] border-[#9945FF]/30'
+        return 'bg-[#00C805]/20 text-[#00C805] border-[#00C805]/30'
       case 'closed':
-        return 'bg-white/10 text-white/70 border-[#9945FF]/30'
+        return 'bg-white/10 text-white/70 border-[#00C805]/30'
       default:
-        return 'bg-white/10 text-white/70 border-[#9945FF]/30'
+        return 'bg-white/10 text-white/70 border-[#00C805]/30'
     }
   }
 
@@ -226,7 +226,7 @@ export default function SupportPage() {
     return (
       <div className="min-h-screen">
         {/* Hero Header */}
-        <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#9945FF]/30">
+        <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#00C805]/30">
           <div className="container mx-auto px-6 py-8">
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
               <div>
@@ -241,7 +241,7 @@ export default function SupportPage() {
 
         <div className="container mx-auto px-6 py-12">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#9945FF]/30 rounded-xl p-8 text-center shadow-xl">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#00C805]/30 rounded-xl p-8 text-center shadow-xl">
               <div className="text-6xl mb-4">🔐</div>
               <h2 className="text-2xl font-bold text-white mb-4">Connect Your Wallet</h2>
               <p className="text-white/70 mb-6">
@@ -263,7 +263,7 @@ export default function SupportPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#9945FF]/30">
+      <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#00C805]/30">
         <div className="container mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
@@ -280,13 +280,13 @@ export default function SupportPage() {
         <div className="max-w-7xl mx-auto">
 
           {error && (
-            <div className="mb-6 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#EF4444]/50 rounded-lg text-[#EF4444]">
+            <div className="mb-6 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#EF4444]/50 rounded-lg text-[#EF4444]">
               {error}
             </div>
           )}
 
           {rateLimitError && (
-            <div className="mb-6 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#DC1FFF]/50 rounded-lg text-[#DC1FFF]">
+            <div className="mb-6 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#DC1FFF]/50 rounded-lg text-[#DC1FFF]">
               {rateLimitError}
             </div>
           )}
@@ -294,7 +294,7 @@ export default function SupportPage() {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Tickets List */}
             <div className="lg:col-span-1">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#9945FF]/30 rounded-xl p-6 shadow-xl">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#00C805]/30 rounded-xl p-6 shadow-xl">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-bold text-white">Your Tickets</h2>
                   <button
@@ -319,7 +319,7 @@ export default function SupportPage() {
                         type="text"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
-                        className="w-full border-2 border-[#9945FF]/30 rounded-lg px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-gray-400 focus:border-[#e27d0f] focus:ring-2 focus:ring-[#e27d0f]/20 focus:outline-none"
+                        className="w-full border-2 border-[#00C805]/30 rounded-lg px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md text-white placeholder-gray-400 focus:border-[#e27d0f] focus:ring-2 focus:ring-[#e27d0f]/20 focus:outline-none"
                         placeholder="What do you need help with?"
                         required
                       />
@@ -331,7 +331,7 @@ export default function SupportPage() {
                       <textarea
                         value={initialMessage}
                         onChange={(e) => setInitialMessage(e.target.value)}
-                        className="w-full border-2 border-[#9945FF]/30 rounded-lg px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-gray-400 focus:border-[#e27d0f] focus:ring-2 focus:ring-[#e27d0f]/20 focus:outline-none"
+                        className="w-full border-2 border-[#00C805]/30 rounded-lg px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md text-white placeholder-gray-400 focus:border-[#e27d0f] focus:ring-2 focus:ring-[#e27d0f]/20 focus:outline-none"
                         placeholder="Describe your issue or question..."
                         rows={4}
                         required
@@ -353,7 +353,7 @@ export default function SupportPage() {
                           setInitialMessage('')
                           setError(null)
                         }}
-                        className="px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-[#a8a8b8] rounded-lg font-semibold transition-all duration-200"
+                        className="px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md text-[#a8a8b8] rounded-lg font-semibold transition-all duration-200"
                       >
                         Cancel
                       </button>
@@ -384,7 +384,7 @@ export default function SupportPage() {
                         className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
                           selectedTicket?.id === ticket.id
                             ? 'border-[#00E5FF] bg-[#00E5FF]/10'
-                            : 'border-[#00E5FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md hover:border-[#00E5FF]/50'
+                            : 'border-[#00E5FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md hover:border-[#00E5FF]/50'
                         }`}
                       >
                         <div className="flex justify-between items-start mb-2">
@@ -411,8 +411,8 @@ export default function SupportPage() {
             {/* Chat Interface */}
             <div className="lg:col-span-2">
               {selectedTicket ? (
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#9945FF]/30 rounded-xl shadow-xl flex flex-col h-[700px]">
-                  <div className="p-6 border-b border-[#9945FF]/30">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#00C805]/30 rounded-xl shadow-xl flex flex-col h-[700px]">
+                  <div className="p-6 border-b border-[#00C805]/30">
                     <div className="flex justify-between items-start">
                       <div>
                         <h2 className="text-xl font-bold text-white">{selectedTicket.subject}</h2>
@@ -436,7 +436,7 @@ export default function SupportPage() {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md">
+                  <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md">
                     {messages.map((message) => (
                       <div
                         key={message.id}
@@ -446,7 +446,7 @@ export default function SupportPage() {
                           className={`max-w-[80%] rounded-lg p-4 ${
                             message.sender_type === 'user'
                               ? 'bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] text-white'
-                              : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#00E5FF]/30 text-white'
+                              : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#00E5FF]/30 text-white'
                           }`}
                         >
                           <p className="text-sm whitespace-pre-wrap">{message.message}</p>
@@ -459,7 +459,7 @@ export default function SupportPage() {
                     <div ref={messagesEndRef} />
                   </div>
 
-                  <form onSubmit={handleSendMessage} className="p-6 border-t border-[#9945FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md">
+                  <form onSubmit={handleSendMessage} className="p-6 border-t border-[#00C805]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md">
                     <div className="flex gap-2">
                       <textarea
                         value={newMessage}
@@ -470,7 +470,7 @@ export default function SupportPage() {
                             handleSendMessage(e)
                           }
                         }}
-                        className="flex-1 border-2 border-[#9945FF]/30 rounded-lg px-4 py-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-gray-400 focus:border-[#e27d0f] focus:ring-2 focus:ring-[#e27d0f]/20 focus:outline-none resize-none"
+                        className="flex-1 border-2 border-[#00C805]/30 rounded-lg px-4 py-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md text-white placeholder-gray-400 focus:border-[#e27d0f] focus:ring-2 focus:ring-[#e27d0f]/20 focus:outline-none resize-none"
                         placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
                         rows={2}
                         required
@@ -486,7 +486,7 @@ export default function SupportPage() {
                   </form>
                 </div>
               ) : (
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#9945FF]/30 rounded-xl p-12 shadow-xl text-center h-[700px] flex items-center justify-center">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#00C805]/30 rounded-xl p-12 shadow-xl text-center h-[700px] flex items-center justify-center">
                   <div>
                     <div className="text-6xl mb-4">💬</div>
                     <h3 className="text-xl font-bold text-white mb-2">Select a Ticket</h3>

@@ -201,7 +201,7 @@ export default function RemixPage() {
                     accept="image/*"
                     multiple
                     onChange={handleImageUpload}
-                    className="w-full p-3 border border-[#9945FF]/30 rounded-lg bg-[#14141e] text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
+                    className="w-full p-3 border border-[#00C805]/30 rounded-lg bg-[#14141e] text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700"
                   />
                 </div>
 
@@ -214,7 +214,7 @@ export default function RemixPage() {
                     <div className="grid grid-cols-2 gap-3">
                       {images.map((img, index) => (
                         <div key={img.id} className="relative group">
-                          <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-[#9945FF]/20">
+                          <div className="relative aspect-square rounded-lg overflow-hidden border-2 border-[#00C805]/20">
                             <Image
                               src={img.preview}
                               alt={img.name}
@@ -246,7 +246,7 @@ export default function RemixPage() {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder='Example: "Use the art style of image 2 but keep the character, background, and all elements from image 1 exactly the same"'
-                    className="w-full h-32 p-3 border border-[#9945FF]/30 rounded-lg bg-[#14141e] text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none resize-none"
+                    className="w-full h-32 p-3 border border-[#00C805]/30 rounded-lg bg-[#14141e] text-white placeholder-gray-500 focus:border-indigo-500 focus:outline-none resize-none"
                     disabled={isGenerating}
                   />
                   <p className="text-xs text-[#a8a8b8]/80 mt-2">
@@ -302,7 +302,7 @@ export default function RemixPage() {
                   {generatedImages.map((image, index) => (
                     <div
                       key={image.id}
-                      className="bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg overflow-hidden shadow-lg"
+                      className="bg-[#1a1a24] border border-[#00C805]/20 rounded-lg overflow-hidden shadow-lg"
                     >
                       <div className="relative aspect-square">
                         <Image
@@ -341,7 +341,7 @@ export default function RemixPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-20 bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg">
+                <div className="text-center py-20 bg-[#1a1a24] border border-[#00C805]/20 rounded-lg">
                   <div className="text-6xl mb-4">🎨</div>
                   <p className="text-xl text-[#a8a8b8] mb-2">No images generated yet</p>
                   <p className="text-[#a8a8b8]/80">Upload images and write a prompt to get started!</p>

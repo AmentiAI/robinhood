@@ -76,14 +76,14 @@ export function ProfileCollections() {
         <h3 className="text-xl font-bold text-white">My Collections</h3>
         <Link
           href="/collections/create"
-          className="px-4 py-2 bg-[#00d4ff] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors text-sm shadow-lg shadow-[#00d4ff]/20"
+          className="px-4 py-2 bg-[#39FF14] hover:bg-[#00C805] text-white rounded-lg font-semibold transition-colors text-sm shadow-lg shadow-[#39FF14]/20"
         >
           Create Collection
         </Link>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
+        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
           {error}
         </div>
       )}
@@ -93,7 +93,7 @@ export function ProfileCollections() {
           <p>No collections yet.</p>
           <Link
             href="/collections/create"
-            className="text-[#00d4ff] hover:text-[#14F195] mt-2 inline-block"
+            className="text-[#39FF14] hover:text-[#00C805] mt-2 inline-block"
           >
             Create your first collection →
           </Link>
@@ -103,10 +103,10 @@ export function ProfileCollections() {
           {collections.map((collection) => (
             <div
               key={collection.id}
-              className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 rounded-lg p-4 ${
+              className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 rounded-lg p-4 ${
                 collection.is_active 
-                  ? 'border-[#00d4ff]/50' 
-                  : 'border-[#00d4ff]/30'
+                  ? 'border-[#39FF14]/50' 
+                  : 'border-[#39FF14]/30'
               }`}
             >
               <div className="flex justify-between items-start">
@@ -114,7 +114,7 @@ export function ProfileCollections() {
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-semibold text-lg text-white">{collection.name}</h4>
                     {collection.is_active && (
-                      <span className="px-2 py-1 bg-[#00d4ff]/20 text-[#00d4ff] text-xs rounded font-semibold border border-[#00d4ff]/30">
+                      <span className="px-2 py-1 bg-[#39FF14]/20 text-[#39FF14] text-xs rounded font-semibold border border-[#39FF14]/30">
                         Active
                       </span>
                     )}
@@ -134,13 +134,13 @@ export function ProfileCollections() {
                 <div className="flex gap-2 ml-4">
                   <Link
                     href={`/collections/${collection.id}`}
-                    className="px-3 py-1 text-sm bg-[#00d4ff] hover:bg-[#14F195] text-white rounded font-semibold transition-colors"
+                    className="px-3 py-1 text-sm bg-[#39FF14] hover:bg-[#00C805] text-white rounded font-semibold transition-colors"
                   >
                     View
                   </Link>
                   <Link
                     href={`/collections/${collection.id}/edit`}
-                    className="px-3 py-1 text-sm bg-[#DC1FFF] hover:bg-[#9945FF] text-white rounded font-semibold transition-colors"
+                    className="px-3 py-1 text-sm bg-[#DC1FFF] hover:bg-[#00C805] text-white rounded font-semibold transition-colors"
                   >
                     Edit
                   </Link>

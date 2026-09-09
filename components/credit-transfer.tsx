@@ -142,11 +142,11 @@ export function CreditTransfer() {
   }
 
   return (
-    <div className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#00d4ff]/30 rounded-xl shadow-lg p-6">
+    <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#39FF14]/30 rounded-xl shadow-lg p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-white mb-2">💳 Credits</h2>
         <div className="flex items-baseline gap-2">
-          <span className="text-4xl font-black text-[#00d4ff]">
+          <span className="text-4xl font-black text-[#39FF14]">
             {creditsLoading ? '...' : credits ?? 0}
           </span>
           <span className="text-white/70 text-sm">credits</span>
@@ -166,16 +166,16 @@ export function CreditTransfer() {
               value={recipientUsername}
               onChange={(e) => setRecipientUsername(e.target.value)}
               placeholder="@username"
-              className="w-full px-4 py-2 bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] text-white placeholder:text-white/50"
+              className="w-full px-4 py-2 bg-[#15181a] border border-[#00C805]/30 rounded-xl border border-[#39FF14]/30 rounded-lg focus:ring-2 focus:ring-[#39FF14] focus:border-[#39FF14] text-white placeholder:text-white/50"
             />
             {lookingUp && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <div className="w-4 h-4 border-2 border-[#00d4ff] border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-[#39FF14] border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
           {recipientProfile && (
-            <div className="mt-2 p-2 bg-[#00d4ff]/10 border border-[#00d4ff]/30 rounded text-sm">
+            <div className="mt-2 p-2 bg-[#39FF14]/10 border border-[#39FF14]/30 rounded text-sm">
               <p className="text-white">
                 <span className="font-semibold">@{recipientProfile.username}</span>
                 {recipientProfile.displayName && (
@@ -200,7 +200,7 @@ export function CreditTransfer() {
             placeholder="0"
             min={1}
             max={credits || 0}
-            className="w-full px-4 py-2 bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] text-white placeholder:text-white/50"
+            className="w-full px-4 py-2 bg-[#15181a] border border-[#00C805]/30 rounded-xl border border-[#39FF14]/30 rounded-lg focus:ring-2 focus:ring-[#39FF14] focus:border-[#39FF14] text-white placeholder:text-white/50"
           />
           {amount && parseInt(amount) > 0 && (
             <p className="mt-1 text-xs text-[#a8a8b8]/80">
@@ -219,7 +219,7 @@ export function CreditTransfer() {
             parseInt(amount) > (credits || 0) ||
             !isConnected
           }
-          className="w-full px-4 py-3 bg-[#00d4ff] hover:bg-[#14F195] text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-4 py-3 bg-[#39FF14] hover:bg-[#00C805] text-white font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {transferring ? 'Transferring...' : 'Send Credits'}
         </button>

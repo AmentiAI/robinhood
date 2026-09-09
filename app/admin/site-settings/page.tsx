@@ -23,14 +23,13 @@ export default function SiteSettingsPage() {
 
   const loadSettings = async () => {
     if (!activeWalletAddress) return
-    
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(`/api/admin/site-settings?wallet_address=${encodeURIComponent(activeWalletAddress)}`)
-      if (!response.ok) {
-        throw new Error('Failed to load settings')
-      }
+      const response = await fetch(
+        `/api/admin/site-settings?wallet_address=${encodeURIComponent(activeWalletAddress)}`
+      )
+      if (!response.ok) throw new Error('Failed to load settings')
       const data = await response.json()
       setSettings(data.settings || [])
     } catch (err: any) {
@@ -42,7 +41,6 @@ export default function SiteSettingsPage() {
 
   const updateSetting = async (key: string, value: any) => {
     if (!activeWalletAddress) return
-    
     setSaving(true)
     setError(null)
     setSuccess(null)
@@ -53,23 +51,20 @@ export default function SiteSettingsPage() {
         body: JSON.stringify({
           wallet_address: activeWalletAddress,
           key,
-          value
-        })
+          value,
+        }),
       })
-      
       if (!response.ok) {
         const err = await response.json()
         throw new Error(err.error || 'Failed to update setting')
       }
-      
       const data = await response.json()
       setSuccess(`Setting "${key}" updated successfully`)
-      
-      // Update local state
-      setSettings(prev => prev.map((s: any) => 
-        s.key === key ? { ...s, value: data.value, updated_at: data.updated_at } : s
-      ))
-      
+      setSettings((prev) =>
+        prev.map((s: any) =>
+          s.key === key ? { ...s, value: data.value, updated_at: data.updated_at } : s
+        )
+      )
       setTimeout(() => setSuccess(null), 3000)
     } catch (err: any) {
       setError(err.message || 'Failed to update setting')
@@ -79,178 +74,159 @@ export default function SiteSettingsPage() {
   }
 
   if (adminLoading) {
-    return (
-      <div className="p-8">
-        <div className="text-center text-[#b4b4c8]">Checking access...</div>
-      </div>
-    )
+    return <div className="p-8 text-[#a8aab2]">Checking access...</div>
   }
 
   if (!authorized) {
     return (
-      <div className="p-8">
-        <div className="flex items-center justify-center min-h-[50vh]">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent mb-4">Access Denied</h1>
-            <p className="text-[#b4b4c8]">You must be an admin to access this page.</p>
-          </div>
-        </div>
+      <div className="p-8 text-center">
+        <h1 className="text-2xl font-black text-white mb-2">Access Denied</h1>
+        <p className="text-[#a8aab2]">Admin wallet required.</p>
       </div>
     )
   }
 
   const showCreditPurchase = settings.find((s: any) => s.key === 'show_credit_purchase')?.value ?? true
-  const solanaNetwork = settings.find((s: any) => s.key === 'solana_network')?.value ?? 'devnet'
-  const solanaRpcMainnet = settings.find((s: any) => s.key === 'solana_rpc_mainnet')?.value ?? 'https://api.mainnet-beta.solana.com'
-  const solanaRpcDevnet = settings.find((s: any) => s.key === 'solana_rpc_devnet')?.value ?? 'https://api.devnet.solana.com'
+  const rhNetwork =
+    settings.find((s: any) => s.key === 'rh_network')?.value ??
+    process.env.NEXT_PUBLIC_RH_NETWORK ??
+    'testnet'
+  const rhTestnetRpc =
+    settings.find((s: any) => s.key === 'rh_testnet_rpc_url')?.value ??
+    'https://rpc.testnet.chain.robinhood.com'
+  const rhMainnetRpc =
+    settings.find((s: any) => s.key === 'rh_mainnet_rpc_url')?.value ??
+    'https://rpc.mainnet.chain.robinhood.com'
+
+  const networkLabel = typeof rhNetwork === 'string' ? rhNetwork.replace(/"/g, '') : 'testnet'
 
   return (
     <div className="p-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-[#00E5FF] via-[#FFD60A] to-[#00E5FF] bg-clip-text text-transparent mb-2">Site Settings</h1>
-          <p className="text-[#b4b4c8] mb-8">Manage site-wide configuration settings</p>
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-black text-white mb-2">Site Settings</h1>
+        <p className="text-[#a8aab2] mb-8">Robinhood Chain platform configuration</p>
 
-          {error && (
-            <div className="mb-4 p-4 bg-gradient-to-br from-red-900/50 to-red-800/30 border border-red-500/50 rounded-lg text-red-200">
-              {error}
-            </div>
-          )}
+        {error && (
+          <div className="mb-4 p-4 rounded-xl border border-[#ff5052]/40 bg-[#ff5052]/10 text-[#ff5052]">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="mb-4 p-4 rounded-xl border border-[#00C805]/40 bg-[#00C805]/10 text-[#00C805]">
+            {success}
+          </div>
+        )}
 
-          {success && (
-            <div className="mb-4 p-4 bg-gradient-to-br from-green-900/50 to-green-800/30 border border-green-500/50 rounded-lg text-green-200">
-              {success}
-            </div>
-          )}
-
-          {loading ? (
-            <div className="text-[#b4b4c8]">Loading settings...</div>
-          ) : (
-            <div className="space-y-6">
-              {/* Solana Network Settings */}
-              <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 border border-[#9945FF]/20 rounded-xl p-6">
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold bg-gradient-to-r from-[#9945FF] to-[#DC1FFF] bg-clip-text text-transparent mb-1">◎ Solana Network Configuration</h2>
-                  <p className="text-sm text-[#b4b4c8]">
-                    Switch between devnet (testing) and mainnet-beta (production). All deployments and mints will use the selected network.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  {/* Network Selector */}
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-2">Active Network</label>
-                    <div className="flex gap-4">
-                      <button
-                        onClick={() => updateSetting('solana_network', 'devnet')}
-                        disabled={saving}
-                        className={`flex-1 px-6 py-4 rounded-lg font-semibold transition-all ${
-                          solanaNetwork === 'devnet'
-                            ? 'bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] text-[#050510]'
-                            : 'bg-[#0f0f1e] border border-[#00E5FF]/30 text-white hover:border-[#00E5FF]/50'
-                        } disabled:opacity-50 disabled:cursor-not-allowed`}
-                      >
-                        <div className="text-lg">🧪 Devnet</div>
-                        <div className="text-xs mt-1 opacity-80">Testing Network</div>
-                      </button>
-                      <button
-                        onClick={() => updateSetting('solana_network', 'mainnet-beta')}
-                        disabled={saving}
-                        className={`flex-1 px-6 py-4 rounded-lg font-semibold transition-all ${
-                          solanaNetwork === 'mainnet-beta'
-                            ? 'bg-gradient-to-r from-[#9945FF] to-[#DC1FFF] text-white'
-                            : 'bg-[#0f0f1e] border border-[#9945FF]/30 text-white hover:border-[#9945FF]/50'
-                        } disabled:opacity-50 disabled:cursor-not-allowed`}
-                      >
-                        <div className="text-lg">🚀 Mainnet</div>
-                        <div className="text-xs mt-1 opacity-80">Production Network</div>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* RPC Endpoints */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[#9945FF]/20">
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">Devnet RPC Endpoint</label>
-                      <input
-                        type="text"
-                        value={solanaRpcDevnet}
-                        onChange={(e) => updateSetting('solana_rpc_devnet', e.target.value)}
-                        disabled={saving}
-                        className="w-full px-4 py-2 bg-[#050510] border border-[#00E5FF]/30 rounded-lg text-white text-sm font-mono focus:border-[#00E5FF] focus:outline-none disabled:opacity-50"
-                        placeholder="https://api.devnet.solana.com"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">Mainnet RPC Endpoint</label>
-                      <input
-                        type="text"
-                        value={solanaRpcMainnet}
-                        onChange={(e) => updateSetting('solana_rpc_mainnet', e.target.value)}
-                        disabled={saving}
-                        className="w-full px-4 py-2 bg-[#050510] border border-[#9945FF]/30 rounded-lg text-white text-sm font-mono focus:border-[#9945FF] focus:outline-none disabled:opacity-50"
-                        placeholder="https://api.mainnet-beta.solana.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Info Box */}
-                  <div className="mt-4 p-4 bg-[#050510] rounded-lg border border-[#9945FF]/20">
-                    <p className="text-sm text-[#b4b4c8] mb-2">
-                      <strong className="text-white">Current Network:</strong> {solanaNetwork === 'mainnet-beta' ? '🚀 Mainnet-Beta (Production)' : '🧪 Devnet (Testing)'}
-                    </p>
-                    <p className="text-sm text-[#b4b4c8] mb-2">
-                      <strong className="text-white">Active RPC:</strong> <span className="font-mono text-xs">{solanaNetwork === 'mainnet-beta' ? solanaRpcMainnet : solanaRpcDevnet}</span>
-                    </p>
-                    <p className="text-xs text-yellow-500 mt-3">
-                      ⚠️ Changing networks will affect all new deployments and mints. Existing deployed collections remain on their original network.
-                    </p>
-                  </div>
-                </div>
+        {loading ? (
+          <div className="text-[#a8aab2]">Loading settings...</div>
+        ) : (
+          <div className="space-y-6">
+            <div className="bg-[#15181a] border border-[#00C805]/25 rounded-xl p-6">
+              <div className="mb-6">
+                <h2 className="text-xl font-black text-[#00C805] mb-1">Robinhood Chain Network</h2>
+                <p className="text-sm text-[#a8aab2]">
+                  Switch between testnet and mainnet. Deployments and mints use env + these settings.
+                  Contract addresses are configured in <code className="text-[#CCFF00]">.env</code>.
+                </p>
               </div>
 
-              {/* Credit Purchase Visibility */}
-              <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 border border-[#00E5FF]/20 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-xl font-semibold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent mb-1">Credit Purchase Visibility</h2>
-                    <p className="text-sm text-[#b4b4c8]">
-                      Control whether credit purchase functionality is visible across the site
-                    </p>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={showCreditPurchase}
-                      onChange={(e) => updateSetting('show_credit_purchase', e.target.checked)}
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">Active Network</label>
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      onClick={() => updateSetting('rh_network', 'testnet')}
                       disabled={saving}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-[#0f0f1e] peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#00E5FF]/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#00E5FF]/30 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-[#00E5FF] peer-checked:to-[#FFD60A]"></div>
-                    <span className="ml-3 text-sm font-medium text-white">
-                      {showCreditPurchase ? 'Visible' : 'Hidden'}
-                    </span>
-                  </label>
+                      className={`flex-1 px-6 py-4 rounded-xl font-semibold transition-all ${
+                        networkLabel === 'testnet'
+                          ? 'bg-[#00C805] text-black'
+                          : 'bg-[#0a0c0d] border border-[#00C805]/30 text-white hover:border-[#00C805]'
+                      } disabled:opacity-50`}
+                    >
+                      <div className="text-lg">Testnet</div>
+                      <div className="text-xs mt-1 opacity-80">Chain ID 46630</div>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => updateSetting('rh_network', 'mainnet')}
+                      disabled={saving}
+                      className={`flex-1 px-6 py-4 rounded-xl font-semibold transition-all ${
+                        networkLabel === 'mainnet'
+                          ? 'bg-[#00C805] text-black'
+                          : 'bg-[#0a0c0d] border border-[#00C805]/30 text-white hover:border-[#00C805]'
+                      } disabled:opacity-50`}
+                    >
+                      <div className="text-lg">Mainnet</div>
+                      <div className="text-xs mt-1 opacity-80">Chain ID 4663</div>
+                    </button>
+                  </div>
                 </div>
-                
-                <div className="mt-4 p-4 bg-[#050510] rounded-lg border border-[#00E5FF]/20">
-                  <p className="text-sm text-[#b4b4c8] mb-2">When hidden, the following will be hidden:</p>
-                  <ul className="text-sm text-[#b4b4c8] list-disc list-inside space-y-1">
-                    <li>Credit purchase component on homepage</li>
-                    <li>"Buy Credits" links in navigation</li>
-                    <li>Credit purchase mentions in error messages</li>
-                    <li>Credit purchase buttons and modals</li>
-                  </ul>
-                  <p className="text-sm text-[#b4b4c8] mt-3">
-                    Note: Users can still access the standalone <code className="text-[#00E5FF]">/buy-credits</code> page directly if they know the URL.
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[#00C805]/20">
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">Testnet RPC</label>
+                    <input
+                      type="text"
+                      value={String(rhTestnetRpc).replace(/^"|"$/g, '')}
+                      onChange={(e) => updateSetting('rh_testnet_rpc_url', e.target.value)}
+                      disabled={saving}
+                      className="w-full px-4 py-2 bg-[#0a0c0d] border border-[#00C805]/30 rounded-xl text-white text-sm font-mono focus:border-[#00C805] outline-none disabled:opacity-50"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-white mb-2">Mainnet RPC</label>
+                    <input
+                      type="text"
+                      value={String(rhMainnetRpc).replace(/^"|"$/g, '')}
+                      onChange={(e) => updateSetting('rh_mainnet_rpc_url', e.target.value)}
+                      disabled={saving}
+                      className="w-full px-4 py-2 bg-[#0a0c0d] border border-[#00C805]/30 rounded-xl text-white text-sm font-mono focus:border-[#00C805] outline-none disabled:opacity-50"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-4 p-4 bg-[#0a0c0d] rounded-xl border border-[#00C805]/20 text-sm text-[#a8aab2] space-y-2">
+                  <p>
+                    <strong className="text-white">Env network:</strong>{' '}
+                    {process.env.NEXT_PUBLIC_RH_NETWORK || 'testnet'}
+                  </p>
+                  <p>
+                    <strong className="text-white">Also set in .env:</strong>{' '}
+                    <code className="text-[#00C805]">RH_FACTORY_ADDRESS</code>,{' '}
+                    <code className="text-[#00C805]">RH_MARKETPLACE_ADDRESS</code>,{' '}
+                    <code className="text-[#00C805]">RH_PLATFORM_WALLET</code>
                   </p>
                 </div>
               </div>
-
-              {/* Add more settings here in the future */}
             </div>
-          )}
-        </div>
+
+            <div className="bg-[#15181a] border border-white/10 rounded-xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-black text-white mb-1">Credit Purchase Visibility</h2>
+                  <p className="text-sm text-[#a8aab2]">
+                    Control whether credit purchase UI is visible across the site
+                  </p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={!!showCreditPurchase}
+                    onChange={(e) => updateSetting('show_credit_purchase', e.target.checked)}
+                    disabled={saving}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-[#0a0c0d] rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00C805]" />
+                  <span className="ml-3 text-sm font-medium text-white">
+                    {showCreditPurchase ? 'Visible' : 'Hidden'}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
-

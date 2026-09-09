@@ -12,7 +12,7 @@ async function downloadImageToBlob(url: string): Promise<Blob> {
 const flyerPrompts = {
   'what-is-solmaker': {
     title: 'What is SolMaker.Fun',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#D4AF37 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
 
 Main headline: "SOLMAKER.FUN - Become an Artist. Create High-Quality Art."
 
@@ -31,7 +31,7 @@ The flyer should feel high-end, empowering, and accessible to beginners.`
 
   'launchpad': {
     title: 'Launchpad Features',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#D4AF37 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
 
 Main headline: "LAUNCHPAD - Mint Fresh NFT Collections"
 
@@ -51,7 +51,7 @@ The flyer should feel exciting and trustworthy.`
 
   'marketplace': {
     title: 'Marketplace Features',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#D4AF37 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
 
 Main headline: "MARKETPLACE - Buy, Sell & Trade NFTs"
 
@@ -71,7 +71,7 @@ The flyer should feel secure and professional.`
 
   'collection-creator': {
     title: 'Collection Creator',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#D4AF37 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
 
 Main headline: "COLLECTION CREATOR - Build Your NFT Empire"
 
@@ -91,7 +91,7 @@ The flyer should feel empowering and creative.`
 
   'ai-tools': {
     title: 'AI-Powered Tools',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#D4AF37 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
 
 Main headline: "AI-POWERED TOOLS - Create Like a Professional"
 
@@ -111,7 +111,7 @@ The flyer should feel innovative and powerful.`
 
   'founder-vision': {
     title: 'Founder Vision - The SolMaker Story',
-    prompt: `Create an inspiring, professional founder's vision flyer with luxury gold and black color scheme (#D4AF37 gold, black background).
+    prompt: `Create an inspiring, professional founder's vision flyer with luxury gold and black color scheme (#00C805 gold, black background).
 
 MAIN HEADLINE: "REVOLUTIONIZING NFT CREATION"
 Subheading: "Making Everyone an Artist & Community Leader"
@@ -187,6 +187,7 @@ export async function POST(request: Request) {
       throw new Error('OpenAI API key not configured')
     }
 
+    const imageModel = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2'
     const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
@@ -194,7 +195,7 @@ export async function POST(request: Request) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-image-1.5',
+        model: imageModel,
         prompt: flyer.prompt,
         n: 1,
         size: '1024x1536',

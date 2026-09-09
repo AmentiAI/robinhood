@@ -3,7 +3,6 @@
 interface LaunchpadTickerProps {
   activeCollectionsCount: number
   totalMintsCount: number
-  completedCollectionsCount: number
   isConnected: boolean
   onLaunchClick: () => void
 }
@@ -11,40 +10,40 @@ interface LaunchpadTickerProps {
 export function LaunchpadTicker({
   activeCollectionsCount,
   totalMintsCount,
-  completedCollectionsCount,
   isConnected,
   onLaunchClick,
 }: LaunchpadTickerProps) {
   return (
-    <div className="bg-[#1a1a1a] border-b border-[#D4AF37]/40 py-3 overflow-hidden">
-      <div className="flex items-center gap-8 animate-scroll whitespace-nowrap">
-        {/* Repeat content for seamless loop */}
+    <div className="bg-[#0a0c0d] border-b border-[#00C805]/30 py-3 overflow-hidden relative">
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(0,200,5,0.06),transparent)] pointer-events-none" />
+      <div className="flex items-center gap-8 animate-scroll whitespace-nowrap relative">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="flex items-center gap-8">
             <div className="flex items-center gap-2">
-              <span className="w-1 h-1 bg-[#D4AF37]"></span>
-              <span className="text-xs text-[#808080] uppercase tracking-wider">
+              <span className="w-1.5 h-1.5 bg-[#00C805] shadow-[0_0_8px_#00C805]" />
+              <span className="text-xs text-[#a8aab2] uppercase tracking-wider font-medium">
+                Robinhood Chain
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-[#00C805]" />
+              <span className="text-xs text-[#a8aab2] uppercase tracking-wider">
                 {activeCollectionsCount} Live Mints
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-1 h-1 bg-[#D4AF37]"></span>
-              <span className="text-xs text-[#808080] uppercase tracking-wider">
+              <span className="w-1.5 h-1.5 bg-[#CCFF00]" />
+              <span className="text-xs text-[#a8aab2] uppercase tracking-wider">
                 {totalMintsCount} Total Mints
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="w-1 h-1 bg-[#D4AF37]"></span>
-              <span className="text-xs text-[#808080] uppercase tracking-wider">
-                {completedCollectionsCount} Completed Collections
               </span>
             </div>
             {isConnected && (
               <div className="flex items-center gap-2">
-                <span className="w-1 h-1 bg-[#D4AF37]"></span>
+                <span className="w-1.5 h-1.5 bg-[#00C805]" />
                 <button
+                  type="button"
                   onClick={onLaunchClick}
-                  className="text-xs text-[#D4AF37] hover:text-white uppercase tracking-wider transition-colors"
+                  className="text-xs text-[#00C805] hover:text-[#CCFF00] uppercase tracking-wider font-bold transition-colors"
                 >
                   Launch Your Collection →
                 </button>

@@ -3,8 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { useWalletModal } from '@solana/wallet-adapter-react-ui'
-import { useSolanaWallet } from '@/lib/wallet/solana-wallet-context'
+import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
 import { useProfile } from '@/lib/profile/useProfile'
 import { useCredits } from '@/lib/credits-context'
 
@@ -19,8 +18,7 @@ export function WalletConnect() {
     verifyWallet,
     connect,
     disconnect,
-  } = useSolanaWallet()
-  const { setVisible } = useWalletModal()
+  } = useEvmWallet()
   const { profile, loading: profileLoading, refreshProfile } = useProfile()
   const [pendingInvitations, setPendingInvitations] = useState(0)
 
@@ -88,7 +86,7 @@ export function WalletConnect() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             wallet_address: walletAddress,
-            wallet_type: 'sol',
+            wallet_type: 'eth',
           }),
         })
 
@@ -96,18 +94,18 @@ export function WalletConnect() {
           setTimeout(() => {
             if (isMountedRef.current) {
               refreshProfile()
-              window.dispatchEvent(new CustomEvent('profileCreated', { detail: { address: walletAddress, walletType: 'sol' } }))
+              window.dispatchEvent(new CustomEvent('profileCreated', { detail: { address: walletAddress, walletType: 'eth' } }))
             }
           }, 500)
         }
       } else {
-        if (data.profile.walletType !== 'sol') {
+        if (data.profile.walletType !== 'eth') {
           await fetch('/api/profile', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               wallet_address: walletAddress,
-              wallet_type: 'sol',
+              wallet_type: 'eth',
             }),
           })
         }
@@ -180,7 +178,8 @@ export function WalletConnect() {
     setIsConnecting(true)
     setIsOpen(false)
     try {
-      setVisible(true)
+      const ok = await connect()
+      if (!ok) toast.error('Failed to connect wallet')
     } catch (error) {
       console.error('Connection error:', error)
       toast.error('Failed to connect wallet')
@@ -213,7 +212,7 @@ export function WalletConnect() {
     return (
       <button
         disabled
-        className="w-full px-4 py-3 bg-[#1a1a1a] border border-[#D4AF37] text-white text-sm font-bold transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide"
+        className="w-full px-4 py-3 rounded-xl bg-[#00C805]/80 text-black text-sm font-black transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide opacity-80"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -227,7 +226,7 @@ export function WalletConnect() {
     return (
       <button
         disabled
-        className="w-full px-4 py-3 bg-[#1a1a1a] text-white text-sm font-bold opacity-50 cursor-not-allowed border border-[#404040] uppercase tracking-wide"
+        className="w-full px-4 py-3 bg-[#15181a] text-white text-sm font-bold opacity-50 cursor-not-allowed border border-[#404040] uppercase tracking-wide"
       >
         Connecting...
       </button>
@@ -253,14 +252,14 @@ export function WalletConnect() {
       <div className="relative flex flex-col w-full" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-3 bg-[#1a1a1a] hover:bg-[#252525] text-white text-sm font-bold transition-all duration-200 flex items-center justify-between gap-3 border border-[#D4AF37]/40 hover:border-[#D4AF37]"
+          className="w-full px-4 py-3 bg-[#15181a] hover:bg-[#252525] text-white text-sm font-bold transition-all duration-200 flex items-center justify-between gap-3 border border-[#00C805]/40 hover:border-[#00C805]"
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <span className="w-1 h-1 bg-[#D4AF37] flex-shrink-0"></span>
+            <span className="w-1 h-1 bg-[#00C805] flex-shrink-0"></span>
             <span className="truncate text-xs uppercase tracking-wide">{buttonText}</span>
           </div>
           <svg
-            className={`w-3 h-3 transition-transform text-[#D4AF37] flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-3 h-3 transition-transform text-[#00C805] flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -270,17 +269,17 @@ export function WalletConnect() {
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full mt-1 bg-[#0a0a0a] border border-[#D4AF37]/40 shadow-xl z-[9999] overflow-hidden">
+          <div className="absolute left-0 right-0 top-full mt-1 bg-[#0a0c0d] border border-[#00C805]/40 shadow-xl z-[9999] overflow-hidden">
             <div className="p-4 border-b border-[#404040]">
               <div className="flex items-center gap-3">
                 {profile?.avatarUrl ? (
                   <img
                     src={profile.avatarUrl}
                     alt={profile.displayName || profile.username || 'Avatar'}
-                    className="w-10 h-10 object-cover border border-[#D4AF37]"
+                    className="w-10 h-10 object-cover border border-[#00C805]"
                   />
                 ) : (
-                  <div className="w-10 h-10 bg-[#1a1a1a] border border-[#D4AF37] flex items-center justify-center text-[#D4AF37] font-bold text-base">
+                  <div className="w-10 h-10 bg-[#15181a] border border-[#00C805] flex items-center justify-center text-[#00C805] font-bold text-base">
                     {profile?.username?.charAt(0).toUpperCase() || activeAddress.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -291,7 +290,7 @@ export function WalletConnect() {
                   <p className="text-[#808080] text-xs font-mono truncate" title={activeAddress}>
                     {formatAddress(activeAddress)}
                   </p>
-                  <p className="text-[#D4AF37] text-xs mt-1 font-semibold uppercase tracking-wide">Solana</p>
+                  <p className="text-[#00C805] text-xs mt-1 font-semibold uppercase tracking-wide">Robinhood Chain</p>
                 </div>
               </div>
             </div>
@@ -301,50 +300,50 @@ export function WalletConnect() {
                 <>
                   <button
                     onClick={handleVerify}
-                    className="w-full px-4 py-2 bg-[#1a1a1a] border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-black text-white text-xs font-bold transition-colors mb-2 uppercase tracking-wide"
+                    className="w-full px-4 py-2 bg-[#15181a] border border-[#00C805] hover:bg-[#00C805] hover:text-black text-white text-xs font-bold transition-colors mb-2 uppercase tracking-wide"
                   >
                     Verify Wallet
                   </button>
                   {verificationRejected && (
-                    <p className="text-xs text-[#D4AF37] text-center mb-2">
+                    <p className="text-xs text-[#00C805] text-center mb-2">
                       Verification cancelled. Click above to retry.
                     </p>
                   )}
                 </>
               )}
               {isVerifying && (
-                <div className="w-full px-4 py-2 bg-[#1a1a1a] border border-[#404040] text-white text-xs font-bold text-center mb-2 opacity-50 uppercase tracking-wide">
+                <div className="w-full px-4 py-2 bg-[#15181a] border border-[#404040] text-white text-xs font-bold text-center mb-2 opacity-50 uppercase tracking-wide">
                   Verifying...
                 </div>
               )}
               {isVerified && (
-                <div className="w-full px-4 py-2 bg-[#1a1a1a] border border-[#D4AF37] text-[#D4AF37] text-xs font-bold text-center mb-2 flex items-center justify-center gap-2 uppercase tracking-wide">
+                <div className="w-full px-4 py-2 bg-[#15181a] border border-[#00C805] text-[#00C805] text-xs font-bold text-center mb-2 flex items-center justify-center gap-2 uppercase tracking-wide">
                   <span>&#10003;</span>
                   Verified
                 </div>
               )}
               <div className="border-t border-[#404040] pt-2 mt-2">
-                <Link href="/profile" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#1a1a1a] transition-colors relative font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#D4AF37]">
+                <Link href="/profile" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors relative font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
                   Profile
                   {pendingInvitations > 0 && (
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#D4AF37] text-black text-[10px] font-bold border border-[#D4AF37]">
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#00C805] text-black text-[10px] font-bold border border-[#00C805]">
                       {pendingInvitations > 9 ? '9+' : pendingInvitations}
                     </span>
                   )}
                 </Link>
-                <Link href="/collections" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#1a1a1a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#D4AF37]">
+                <Link href="/collections" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
                   Collections
                 </Link>
-                <Link href="/my-mints" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#1a1a1a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#D4AF37]">
+                <Link href="/my-mints" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
                   Transactions
                 </Link>
-                <Link href="/transactions" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#1a1a1a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#D4AF37]">
+                <Link href="/transactions" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
                   Credit Usage
                 </Link>
-                <Link href="/guide" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#1a1a1a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#D4AF37]">
+                <Link href="/guide" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
                   Guide
                 </Link>
-                <Link href="/support" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#1a1a1a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#D4AF37]">
+                <Link href="/support" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
                   Support
                 </Link>
               </div>
@@ -352,7 +351,7 @@ export function WalletConnect() {
               <div className="border-t border-[#404040] pt-2 mt-2">
                 <button
                   onClick={handleDisconnect}
-                  className="w-full px-4 py-2 bg-[#1a1a1a] hover:bg-[#404040] text-[#808080] hover:text-white text-xs font-bold transition-colors border border-[#404040] uppercase tracking-wide"
+                  className="w-full px-4 py-2 bg-[#15181a] hover:bg-[#404040] text-[#808080] hover:text-white text-xs font-bold transition-colors border border-[#404040] uppercase tracking-wide"
                 >
                   Disconnect
                 </button>
@@ -368,7 +367,7 @@ export function WalletConnect() {
     <div className="relative w-full" ref={dropdownRef}>
       <button
         onClick={handleConnect}
-        className="w-full px-4 py-3 bg-[#1a1a1a] border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-black text-white text-sm font-bold transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide"
+        className="w-full px-4 py-3 rounded-xl bg-[#00C805] hover:bg-[#CCFF00] text-black text-sm font-black transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide shadow-[0_0_24px_rgba(0,200,5,0.35)]"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

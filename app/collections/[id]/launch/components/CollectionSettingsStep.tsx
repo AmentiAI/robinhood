@@ -342,7 +342,7 @@ export function CollectionSettingsStep({
 
       <div>
         <label className="block text-sm font-medium text-white/70 mb-2">
-          Creator Payment Wallet (Solana Address) *
+          Creator Payment Wallet (EVM Address) *
         </label>
         <p className="text-xs text-white/40 mb-2">
           Mint payments go to this address. Defaults to your connected wallet.
@@ -351,7 +351,7 @@ export function CollectionSettingsStep({
           type="text"
           value={creatorRoyaltyWallet}
           onChange={(e) => setCreatorRoyaltyWallet(e.target.value)}
-          placeholder="Your Solana wallet address (e.g., D3SNZ...GiLJ)"
+          placeholder="Your Robinhood Chain wallet (0x...)"
           className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] font-mono text-sm text-white placeholder:text-white/50"
         />
       </div>

@@ -234,7 +234,7 @@ export function NftChoicesMint({
       <div className="text-center">
         <h2 className="text-2xl font-bold text-[#D4AF37] mb-2">Browse Collection</h2>
         <p className="text-[#808080]">
-          Preview the NFTs in this collection. The Candy Machine assigns NFTs sequentially on mint.
+          Preview the NFTs in this collection. Items are assigned when you mint on Robinhood Chain.
           {activePhase?.max_per_wallet === 1 && (
             <span className="block mt-1 text-sm text-[#D4AF37]">1 per wallet</span>
           )}
@@ -289,8 +289,8 @@ export function NftChoicesMint({
           {(() => {
             if (!activePhase) return null
 
-            const platformFeeSol = parseFloat(process.env.NEXT_PUBLIC_SOLANA_PLATFORM_FEE_SOL || '0.01')
-            const platformFeeLamports = Math.floor(platformFeeSol * 1_000_000_000)
+            const platformFeeEth = parseFloat(process.env.NEXT_PUBLIC_RH_PLATFORM_FEE_ETH || '0.001')
+            const platformFeeLamports = Math.floor(platformFeeEth * 1e18)
             const rentPerNft = 2_039_280
             const networkFees = (priorityFee + 5000)
 

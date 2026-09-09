@@ -134,7 +134,7 @@ export function CollaborationInvitations() {
 
   if (loading) {
     return (
-      <div className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#DC1FFF]/30 rounded-xl p-6 shadow-lg">
+      <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#DC1FFF]/30 rounded-xl p-6 shadow-lg">
         <h3 className="text-xl font-bold text-white mb-4">Collaboration Invitations</h3>
         <div className="flex items-center gap-3">
           <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#DC1FFF] border-t-transparent"></div>
@@ -149,7 +149,7 @@ export function CollaborationInvitations() {
   }
 
   return (
-    <div className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#DC1FFF]/30 rounded-xl p-6 shadow-lg">
+    <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#DC1FFF]/30 rounded-xl p-6 shadow-lg">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-xl font-bold text-white">Collaboration Invitations</h3>
         <span className="px-3 py-1 bg-[#DC1FFF]/20 text-[#DC1FFF] text-sm font-semibold rounded-full border border-[#DC1FFF]/30">
@@ -158,7 +158,7 @@ export function CollaborationInvitations() {
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
+        <div className="mb-4 p-3 bg-[#15181a] border border-[#00C805]/30 rounded-xl border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
           {error}
         </div>
       )}
@@ -167,7 +167,7 @@ export function CollaborationInvitations() {
         {invitations.map((invitation) => (
           <div
             key={invitation.id}
-            className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#DC1FFF]/30 rounded-xl p-4"
+            className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#DC1FFF]/30 rounded-xl p-4"
           >
             <div className="flex justify-between items-start mb-3">
               <div className="flex-1">
@@ -194,20 +194,20 @@ export function CollaborationInvitations() {
               <button
                 onClick={() => handleAccept(invitation.id)}
                 disabled={processing === invitation.id}
-                className="px-4 py-2 bg-[#00d4ff] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[#39FF14] hover:bg-[#00C805] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {processing === invitation.id ? 'Processing...' : 'Accept'}
               </button>
               <button
                 onClick={() => handleDecline(invitation.id)}
                 disabled={processing === invitation.id}
-                className="px-4 py-2 bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border border-[#00d4ff]/30 hover:border-[#00d4ff]/50 text-white/70 hover:text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-[#15181a] border border-[#00C805]/30 rounded-xl border border-[#39FF14]/30 hover:border-[#39FF14]/50 text-white/70 hover:text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {processing === invitation.id ? 'Processing...' : 'Decline'}
               </button>
               <Link
                 href={`/collections/${invitation.collection_id}`}
-                className="px-4 py-2 bg-[#DC1FFF] hover:bg-[#9945FF] text-white rounded-lg font-semibold transition-colors"
+                className="px-4 py-2 bg-[#DC1FFF] hover:bg-[#00C805] text-white rounded-lg font-semibold transition-colors"
               >
                 View Collection
               </Link>

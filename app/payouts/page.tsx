@@ -206,7 +206,7 @@ export default function PayoutsPage() {
   if (!isConnected) {
     return (
       <div className="max-w-7xl mx-auto p-8">
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg shadow p-6 text-center border border-[#9945FF]/30">
+        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg shadow p-6 text-center border border-[#00C805]/30">
           <p className="text-white/70">Please connect your wallet to view payouts</p>
         </div>
       </div>
@@ -216,7 +216,7 @@ export default function PayoutsPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Header */}
-      <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#9945FF]/30">
+      <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#00C805]/30">
         <div className="container mx-auto px-6 py-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
@@ -233,14 +233,14 @@ export default function PayoutsPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-red-500/50 rounded-lg">
+          <div className="mb-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-red-500/50 rounded-lg">
             <p className="text-[#EF4444]">{error}</p>
           </div>
         )}
 
         {/* Opt-In Card */}
         {profile && (profile.optIn !== true) && (
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
+          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
             <h2 className="text-xl font-bold text-white mb-2">🔔 Opt-In Required</h2>
             {loadingOwed ? (
               <div className="flex items-center gap-3 mb-4">
@@ -282,14 +282,14 @@ export default function PayoutsPage() {
         {/* Live Preview Card - Shows what you'd get in the NEXT payout */}
         {profile?.optIn && (
           loadingPreview ? (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-green-500/30">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-green-500/30">
               <div className="flex items-center gap-3">
                 <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
                 <p className="text-white/70">Loading live preview...</p>
               </div>
             </div>
           ) : previewData && previewData.in_preview && previewData.preview_data && previewData.user_data ? (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-green-500/50 rounded-lg shadow-lg p-6 mb-6">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-green-500/50 rounded-lg shadow-lg p-6 mb-6">
               <h2 className="text-xl font-bold text-white mb-2">🔮 Next Payout Preview</h2>
               <p className="text-sm text-[#a8a8b8]/80 mb-4">Live estimate based on current holders and accumulated revenue since last payout</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -342,7 +342,7 @@ export default function PayoutsPage() {
               )}
             </div>
           ) : previewData && !previewData.in_preview ? (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
               <h2 className="text-xl font-bold text-white mb-2">🔮 Next Payout Preview</h2>
               <p className="text-white/70 mb-4">{previewData.message || 'Unable to calculate preview'}</p>
               {previewData.preview_data && (
@@ -365,19 +365,19 @@ export default function PayoutsPage() {
 
         {/* Loading State */}
         {loading ? (
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg shadow p-12 text-center border border-[#9945FF]/30">
-            <div className="w-16 h-16 border-4 border-[#9945FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg shadow p-12 text-center border border-[#00C805]/30">
+            <div className="w-16 h-16 border-4 border-[#00C805] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-white/70">Loading payouts...</p>
           </div>
         ) : payoutsData ? (
           <>
             {/* Summary Card */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-[#9945FF]/30">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-[#00C805]/30">
               <h2 className="text-xl font-bold text-white mb-4">Payout History</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <div className="text-sm text-white/70">Total Received</div>
-                  <div className="text-2xl font-semibold text-[#9945FF]">
+                  <div className="text-2xl font-semibold text-[#00C805]">
                     {formatSats(payoutsData.total_received_sats)}
                   </div>
                 </div>
@@ -392,17 +392,17 @@ export default function PayoutsPage() {
 
             {/* Payouts List */}
             {payoutsData.payouts.length === 0 ? (
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg shadow p-12 text-center border border-[#9945FF]/30">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg shadow p-12 text-center border border-[#00C805]/30">
                 <p className="text-white text-lg">No payouts yet</p>
                 <p className="text-[#a8a8b8]/80 text-sm mt-2">
                   Payouts will appear here once you receive community revenue distributions.
                 </p>
               </div>
             ) : (
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg shadow overflow-hidden border border-[#9945FF]/30">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg shadow overflow-hidden border border-[#00C805]/30">
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-[#9945FF]/20">
-                    <thead className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md">
+                  <table className="min-w-full divide-y divide-[#00C805]/20">
+                    <thead className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md">
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">
                           Date
@@ -421,13 +421,13 @@ export default function PayoutsPage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#9945FF]/20">
+                    <tbody className="divide-y divide-[#00C805]/20">
                       {payoutsData.payouts.map((payout) => (
                         <tr key={payout.id} className="hover:bg-[#1a1f3a]">
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                             {formatDate(payout.created_at)}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#9945FF]">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-[#00C805]">
                             {formatSats(payout.amount_sats)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
@@ -441,7 +441,7 @@ export default function PayoutsPage() {
                               href={`https://mempool.space/tx/${payout.tx_id}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-[#9945FF] hover:text-[#14F195] font-mono text-xs"
+                              className="text-[#00C805] hover:text-[#00C805] font-mono text-xs"
                             >
                               {payout.tx_id.substring(0, 16)}...
                             </a>

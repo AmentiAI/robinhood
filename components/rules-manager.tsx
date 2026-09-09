@@ -31,7 +31,7 @@ export function RulesManager({ onRuleAdded }: RulesManagerProps) {
   }
 
   return (
-    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#9945FF]/20 rounded-lg p-4">
+    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#00C805]/20 rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Custom Rules Manager
@@ -53,7 +53,7 @@ export function RulesManager({ onRuleAdded }: RulesManagerProps) {
             <select
               value={newRule.type}
               onChange={(e) => setNewRule({ ...newRule, type: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-[#9945FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
               required
             >
               <option value="">Select Rule Type</option>
@@ -72,7 +72,7 @@ export function RulesManager({ onRuleAdded }: RulesManagerProps) {
             <textarea
               value={newRule.content}
               onChange={(e) => setNewRule({ ...newRule, content: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-[#9945FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
               rows={4}
               placeholder="Enter your custom rule (this will be added to the generation prompt)"
               required

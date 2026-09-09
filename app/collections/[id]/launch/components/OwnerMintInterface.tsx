@@ -12,7 +12,7 @@ export default function OwnerMintInterface({ collectionId, totalSupply, mintedCo
       <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-xl p-6">
         <h3 className="text-xl font-bold text-white mb-4">Owner Mint</h3>
         <p className="text-white/70 mb-6">
-          Mint NFTs from your collection to specific Solana wallet addresses. 
+          Mint NFTs from your collection to specific wallet addresses on Robinhood Chain. 
           Perfect for team allocation, giveaways, or pre-launch distribution.
         </p>
         
@@ -30,11 +30,11 @@ export default function OwnerMintInterface({ collectionId, totalSupply, mintedCo
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-white/70 mb-2">
-              Recipient Wallet Address (Solana)
+              Recipient Wallet Address (EVM)
             </label>
             <input
               type="text"
-              placeholder="Enter Solana wallet address..."
+              placeholder="Enter 0x wallet address..."
               className="w-full px-4 py-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg text-white placeholder:text-white/50 font-mono text-sm"
             />
           </div>

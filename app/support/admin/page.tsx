@@ -194,9 +194,9 @@ export default function AdminSupportPage() {
       case 'resolved':
         return 'bg-green-900/30 text-green-300 border-green-700'
       case 'closed':
-        return 'bg-[#1a1a24] text-[#a8a8b8] border-[#9945FF]/20'
+        return 'bg-[#1a1a24] text-[#a8a8b8] border-[#00C805]/20'
       default:
-        return 'bg-[#1a1a24] text-[#a8a8b8] border-[#9945FF]/20'
+        return 'bg-[#1a1a24] text-[#a8a8b8] border-[#00C805]/20'
     }
   }
 
@@ -317,7 +317,7 @@ export default function AdminSupportPage() {
                         className={`w-full text-left p-4 rounded-lg border transition-all duration-200 ${
                           selectedTicket?.id === ticket.id
                             ? 'border-purple-500 bg-purple-900/20'
-                            : 'border-gray-800 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 hover:border-[#9945FF]/20'
+                            : 'border-gray-800 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 hover:border-[#00C805]/20'
                         }`}
                       >
                         <div className="flex justify-between items-start mb-2">
@@ -372,7 +372,7 @@ export default function AdminSupportPage() {
                       <select
                         value={selectedTicket.status}
                         onChange={(e) => handleUpdateStatus(e.target.value)}
-                        className="px-3 py-1 bg-[#1a1a24] border border-[#9945FF]/20 rounded-lg text-white text-sm"
+                        className="px-3 py-1 bg-[#1a1a24] border border-[#00C805]/20 rounded-lg text-white text-sm"
                       >
                         <option value="open">Open</option>
                         <option value="in_progress">In Progress</option>
@@ -416,7 +416,7 @@ export default function AdminSupportPage() {
                             handleSendMessage(e)
                           }
                         }}
-                        className="flex-1 border border-[#9945FF]/20 rounded-lg px-4 py-3 bg-slate-950/50 text-gray-100 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none resize-none"
+                        className="flex-1 border border-[#00C805]/20 rounded-lg px-4 py-3 bg-slate-950/50 text-gray-100 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none resize-none"
                         placeholder="Type your response... (Press Enter to send, Shift+Enter for new line)"
                         rows={2}
                         required

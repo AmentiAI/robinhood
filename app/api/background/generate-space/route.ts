@@ -17,12 +17,13 @@ export async function POST(request: NextRequest) {
 - Deep dark space with rich purples and blues (#0a0e27, #1a1f3a, #0f172a)
 - Thousands of sparkling stars scattered throughout
 - Glowing translucent purple and blue cubic shapes floating in space
-- Subtle nebula clouds in purple (#8b5cf6) and blue (#00d4ff) tones
+- Subtle nebula clouds in purple (#8b5cf6) and blue (#39FF14) tones
 - Mysterious cosmic atmosphere with depth and dimension
 - No text, no objects, just pure cosmic space background
 - High quality, detailed, 4K resolution, cinematic lighting
 - Perfect for web background, seamless and tileable if possible`
 
+    const imageModel = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2'
     const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-image-1',
+        model: imageModel,
         prompt: prompt,
         n: 1,
         size: '1024x1024',

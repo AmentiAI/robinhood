@@ -195,7 +195,7 @@ export function CollectionCollaborators({
         {canInvite && (
           <button
             onClick={() => setShowInviteForm(!showInviteForm)}
-            className="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-[#9945FF] text-sm"
+            className="px-3 py-1.5 bg-blue-500 text-white rounded hover:bg-[#00C805] text-sm"
           >
             {showInviteForm ? 'Cancel' : '+ Invite'}
           </button>
@@ -287,10 +287,10 @@ export function CollectionCollaborators({
         {collaborators.map((collaborator) => (
           <div
             key={collaborator.id}
-            className="flex items-center justify-between p-2 bg-[#14141e] rounded border border-[#9945FF]/20"
+            className="flex items-center justify-between p-2 bg-[#14141e] rounded border border-[#00C805]/20"
           >
             <div className="flex items-center gap-2">
-              <span className="text-[#14F195]">
+              <span className="text-[#00C805]">
                 {collaborator.role === 'editor' ? '✏️' : '👁️'}
               </span>
               <div>

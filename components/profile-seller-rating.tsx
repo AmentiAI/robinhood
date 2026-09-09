@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { useWallet } from '@/lib/wallet/compatibility'
-import { useSolanaWallet } from '@/lib/wallet/solana-wallet-context'
+import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
 import { MarketplaceReviewsDisplay } from '@/components/marketplace-reviews-display'
 
 interface ReviewStats {
@@ -78,9 +78,9 @@ export function ProfileSellerRating() {
 
   if (loading) {
     return (
-      <div className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#00d4ff]/30 rounded-xl p-6 shadow-lg">
+      <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#39FF14]/30 rounded-xl p-6 shadow-lg">
         <div className="flex items-center gap-2">
-          <div className="w-5 h-5 border-2 border-[#00d4ff] border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-[#39FF14] border-t-transparent rounded-full animate-spin" />
           <span className="text-white/70">Loading seller rating...</span>
         </div>
       </div>
@@ -89,7 +89,7 @@ export function ProfileSellerRating() {
 
   if (error) {
     return (
-      <div className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#EF4444]/50 rounded-xl p-6 shadow-lg">
+      <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#EF4444]/50 rounded-xl p-6 shadow-lg">
         <p className="text-[#EF4444]">Error loading rating: {error}</p>
       </div>
     )
@@ -97,7 +97,7 @@ export function ProfileSellerRating() {
 
   if (!stats || stats.total_reviews === 0) {
     return (
-      <div className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#00d4ff]/30 rounded-xl p-6 shadow-lg">
+      <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#39FF14]/30 rounded-xl p-6 shadow-lg">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-bold text-white mb-1">Seller Rating</h3>
@@ -110,14 +110,14 @@ export function ProfileSellerRating() {
   }
 
   return (
-    <div className="bg-[#1a1a1a] border border-[#D4AF37]/30 rounded-xl border-2 border-[#00d4ff]/30 rounded-xl p-6 shadow-lg">
+    <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl border-2 border-[#39FF14]/30 rounded-xl p-6 shadow-lg">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-xl font-bold text-white mb-2">Seller Rating</h3>
           <div className="flex items-center gap-3">
             {renderStars(Math.round(stats.average_rating))}
             <div>
-              <div className="text-2xl font-bold text-[#00d4ff]">
+              <div className="text-2xl font-bold text-[#39FF14]">
                 {stats.average_rating.toFixed(1)}
               </div>
               <div className="text-sm text-white/70">
@@ -154,7 +154,7 @@ export function ProfileSellerRating() {
       </div>
 
       {/* Show recent reviews preview */}
-      <div className="mt-4 pt-4 border-t border-[#00d4ff]/30">
+      <div className="mt-4 pt-4 border-t border-[#39FF14]/30">
         <MarketplaceReviewsDisplay
           sellerWallet={activeWalletAddress}
           showStats={false}

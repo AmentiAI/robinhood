@@ -3,9 +3,9 @@
 import { useState, useEffect, use, useRef, useCallback, useMemo, startTransition } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useWallet } from '@solana/wallet-adapter-react'
-import { useConnection } from '@solana/wallet-adapter-react'
-import { VersionedTransaction } from '@solana/web3.js'
+import { useWalletClient, useAccount } from 'wagmi'
+import { encodeFunctionData } from 'viem'
+import { ordMakerCollectionAbi } from '@/lib/robinhood/abis'
 import { MAX_PER_TRANSACTION } from '@/lib/minting-constants'
 import { validateMintQuantity } from '@/lib/minting-utils'
 import { getAdaptivePollInterval } from '@/lib/polling-optimization'
@@ -22,9 +22,9 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
   const resolvedParams = use(params)
   const collectionId = resolvedParams.collectionId
   const pathname = usePathname()
-  const { connected: isConnected, publicKey, sendTransaction, signTransaction } = useWallet()
-  const { connection } = useConnection()
-  const currentAddress = publicKey?.toBase58() || null
+  const { address, isConnected } = useAccount()
+  const { data: walletClient } = useWalletClient()
+  const currentAddress = address || null
 
   const [collection, setCollection] = useState<Collection | null>(null)
   const [loading, setLoading] = useState(true)
@@ -36,7 +36,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
   const [checkingWhitelist, setCheckingWhitelist] = useState(false)
   const [checkingWhitelistPhaseId, setCheckingWhitelistPhaseId] = useState<string | null>(null)
 
-  // Minting state (Solana)
+  // Minting state (Robinhood Chain)
   const [priorityFee, setPriorityFee] = useState(0)
   const [priorityFeeInput, setPriorityFeeInput] = useState('0')
   const [mintQuantity, setMintQuantity] = useState(1)
@@ -745,7 +745,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
     }
   }, [collectionId])
 
-  // Solana minting flow for choices mint
+  // Robinhood / ETH minting flow for choices mint
   const handleChoicesMint = useCallback(async (nftIds: string[]) => {
     if (!currentAddress || !collection || !isConnected) {
       setError('Please connect your wallet')
@@ -773,16 +773,15 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
     setTxSignature('')
 
     try {
-      // Build Solana mint transaction
-      setMintStatus(`Building mint transaction for ${nftIds.length} NFT${nftIds.length > 1 ? 's' : ''}...`)
+      setMintStatus(`Building mint for ${nftIds.length} NFT${nftIds.length > 1 ? 's' : ''}...`)
       const buildRes = await fetch(`/api/launchpad/${collectionId}/mint/build`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           wallet_address: currentAddress,
           phase_id: activePhase.id,
-          quantity: nftIds.length,
-          ordinal_ids: nftIds,
+          quantity: 1,
+          ordinal_id: nftIds[0],
         }),
       })
 
@@ -792,26 +791,41 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
       }
 
       const buildData = await buildRes.json()
-      if (!buildData.transaction) {
-        throw new Error('No transaction returned from server')
+      if (!buildData.mint || !walletClient) {
+        throw new Error('No mint payload or wallet client unavailable')
       }
 
-      // Deserialize and sign the transaction
-      setMintStatus('Please approve the transaction in your wallet...')
-      const txBytes = Buffer.from(buildData.transaction, 'base64')
-      const tx = VersionedTransaction.deserialize(txBytes)
+      const m = buildData.mint
+      setMintStatus('Please approve the mint in your wallet...')
+      const data = encodeFunctionData({
+        abi: ordMakerCollectionAbi,
+        functionName: 'mint',
+        args: [
+          m.to as `0x${string}`,
+          BigInt(m.tokenId),
+          m.tokenURI,
+          BigInt(m.price),
+          BigInt(m.deadline),
+          m.signature as `0x${string}`,
+        ],
+      })
 
-      const signature = await sendTransaction(tx, connection)
-      setTxSignature(signature)
+      const txHash = await walletClient.sendTransaction({
+        to: buildData.contractAddress as `0x${string}`,
+        data,
+        value: BigInt(m.value),
+        chain: undefined,
+      })
+      setTxSignature(txHash)
       setMintStatus('Transaction sent! Confirming...')
 
-      // Confirm the mint with backend
       const confirmRes = await fetch(`/api/launchpad/${collectionId}/mint/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          signature,
-          nft_mint_address: buildData.nftMint,
+          tx_hash: txHash,
+          mint_id: buildData.mintId,
+          token_id: m.tokenId,
           wallet_address: currentAddress,
         }),
       })
@@ -823,18 +837,23 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
 
       let confirmData = await confirmRes.json()
 
-      // If not confirmed yet, poll for up to 30 seconds
-      if (!confirmData.confirmed && signature) {
+      if (!confirmData.confirmed && txHash) {
         setMintStatus('Transaction sent! Waiting for on-chain confirmation...')
         for (let poll = 0; poll < 10; poll++) {
           await new Promise(r => setTimeout(r, 3000))
           try {
-            const pollRes = await fetch(
-              `/api/launchpad/${collectionId}/mint/confirm?signature=${signature}`
-            )
+            const pollRes = await fetch(`/api/launchpad/${collectionId}/mint/confirm`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                tx_hash: txHash,
+                mint_id: buildData.mintId,
+                wallet_address: currentAddress,
+              }),
+            })
             if (pollRes.ok) {
               const pollData = await pollRes.json()
-              if (pollData.mint?.confirmed || pollData.confirmed) {
+              if (pollData.confirmed) {
                 confirmData = { ...confirmData, confirmed: true }
                 break
               }
@@ -847,7 +866,6 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
 
       if (confirmData.confirmed) {
         setMintStatus('Successfully minted NFT!')
-        // Refresh credits display
         window.dispatchEvent(new CustomEvent('refreshCredits'))
       } else {
         setMintStatus('Mint transaction sent! It may take a moment to confirm on-chain.')
@@ -882,9 +900,9 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
     } finally {
       setMinting(false)
     }
-  }, [currentAddress, collection, isConnected, collectionId, sendTransaction, connection, whitelistStatus, userMintStatus])
+  }, [currentAddress, collection, isConnected, collectionId, walletClient, whitelistStatus, userMintStatus])
 
-  // Solana minting flow for hidden (random) mint
+  // Robinhood Chain minting flow for hidden (random) mint
   const handleMint = async () => {
     if (!currentAddress || !collection || !isConnected) {
       setError('Please connect your wallet')
@@ -941,7 +959,6 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
     setTxSignature('')
 
     try {
-      // Build Solana mint transaction (server handles phase/wallet limits atomically)
       setMintStatus('Building mint transaction...')
       const buildRes = await fetch(`/api/launchpad/${collectionId}/mint/build`, {
         method: 'POST',
@@ -949,7 +966,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
         body: JSON.stringify({
           wallet_address: currentAddress,
           phase_id: activePhase.id,
-          quantity: mintQuantity,
+          quantity: 1,
         }),
       })
 
@@ -959,47 +976,40 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
       }
 
       const buildData = await buildRes.json()
-      if (!buildData.transaction) {
-        throw new Error('No transaction returned from server')
+      if (!buildData.mint || !walletClient) {
+        throw new Error('No mint payload or wallet client unavailable')
       }
 
-      // Decode transaction
-      const txBytes = Buffer.from(buildData.transaction, 'base64')
-      const tx = VersionedTransaction.deserialize(txBytes)
-
-      // Sign and send transaction
-      // Use signTransaction + sendRawTransaction instead of sendTransaction
-      // to avoid the wallet's internal RPC which may fail with partially-signed txs
-      // No setState before wallet popup — re-renders kill the popup
-      if (!signTransaction) {
-        throw new Error('Wallet does not support signTransaction')
-      }
-
-      const signed = await signTransaction(tx)
-      setMintStatus('Transaction signed, sending...')
-      const rawTx = signed.serialize()
-
-      // Use our own RPC connection (not wallet adapter's) to avoid blockhash mismatch
-      const networkRes = await fetch('/api/solana/network')
-      const networkData = await networkRes.json()
-      const rpcUrl = networkData.rpcUrl || 'https://api.devnet.solana.com'
-      const { Connection: Web3Connection } = await import('@solana/web3.js')
-      const mintConnection = new Web3Connection(rpcUrl, 'confirmed')
-
-      const signature = await mintConnection.sendRawTransaction(rawTx, {
-        skipPreflight: true, // Already simulated on server
-        preflightCommitment: 'confirmed',
+      const m = buildData.mint
+      const data = encodeFunctionData({
+        abi: ordMakerCollectionAbi,
+        functionName: 'mint',
+        args: [
+          m.to as `0x${string}`,
+          BigInt(m.tokenId),
+          m.tokenURI,
+          BigInt(m.price),
+          BigInt(m.deadline),
+          m.signature as `0x${string}`,
+        ],
       })
-      setTxSignature(signature)
+
+      const txHash = await walletClient.sendTransaction({
+        to: buildData.contractAddress as `0x${string}`,
+        data,
+        value: BigInt(m.value),
+        chain: undefined,
+      })
+      setTxSignature(txHash)
       setMintStatus('Transaction sent! Confirming...')
 
-      // Confirm with backend
       const confirmRes = await fetch(`/api/launchpad/${collectionId}/mint/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          signature,
-          nft_mint_address: buildData.nftMint,
+          tx_hash: txHash,
+          mint_id: buildData.mintId,
+          token_id: m.tokenId,
           wallet_address: currentAddress,
         }),
       })
@@ -1011,65 +1021,61 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
 
       let confirmData = await confirmRes.json()
 
-      // If not confirmed yet, poll for up to 30 seconds
-      if (!confirmData.confirmed && signature) {
+      if (!confirmData.confirmed && txHash) {
         setMintStatus('Transaction sent! Waiting for on-chain confirmation...')
         for (let poll = 0; poll < 10; poll++) {
           await new Promise(r => setTimeout(r, 3000))
           try {
-            const pollRes = await fetch(
-              `/api/launchpad/${collectionId}/mint/confirm?signature=${signature}`
-            )
+            const pollRes = await fetch(`/api/launchpad/${collectionId}/mint/confirm`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                tx_hash: txHash,
+                mint_id: buildData.mintId,
+                wallet_address: currentAddress,
+              }),
+            })
             if (pollRes.ok) {
               const pollData = await pollRes.json()
-              if (pollData.mint?.confirmed || pollData.confirmed) {
+              if (pollData.confirmed) {
                 confirmData = { ...confirmData, confirmed: true }
                 break
               }
             }
           } catch {
-            // ignore poll errors
+            // ignore
           }
         }
       }
 
       if (confirmData.confirmed) {
-        setMintStatus(`Successfully minted ${mintQuantity} NFT${mintQuantity > 1 ? 's' : ''}!`)
-        // Refresh credits display
+        setMintStatus('Successfully minted!')
         window.dispatchEvent(new CustomEvent('refreshCredits'))
       } else {
-        // Even if not confirmed yet, the tx was sent - show optimistic success
-        setMintStatus(`Mint transaction sent! It may take a moment to confirm on-chain.`)
+        setMintStatus('Mint transaction sent! It may take a moment to confirm on-chain.')
       }
 
-      // Update local state (optimistic - tx was sent successfully)
-      if (activePhase?.whitelist_only && whitelistStatus) {
+      if (activePhase.whitelist_only && whitelistStatus) {
         setWhitelistStatus(prev => prev ? {
           ...prev,
           minted_count: (prev.minted_count || 0) + mintQuantity,
           remaining_allocation: Math.max(0, (prev.remaining_allocation || 0) - mintQuantity),
         } : prev)
-      } else if (userMintStatus) {
-        setUserMintStatus(prev => prev ? {
-          ...prev,
-          minted_count: prev.minted_count + mintQuantity,
-          remaining: Math.max(0, prev.remaining - mintQuantity),
-        } : prev)
       }
 
-      if (collection) {
-        setCollection(prev => prev ? {
-          ...prev,
-          total_minted: (prev.total_minted || 0) + mintQuantity,
-        } : prev)
-      }
+      setUserMintStatus(prev => prev ? {
+        ...prev,
+        minted_count: (prev.minted_count || 0) + mintQuantity,
+      } : { minted_count: mintQuantity, max_per_wallet: 0, remaining: 0 })
 
-      setMintQuantity(1)
-      setMintQuantityInput('1')
-
-    } catch (err: any) {
-      console.error('Mint error:', err)
-      setError(err.message || 'Failed to mint')
+      setCollection(prev => prev ? {
+        ...prev,
+        total_minted: (prev.total_minted || 0) + mintQuantity,
+      } : prev)
+    } catch (error: any) {
+      console.error('Mint error:', error)
+      setError(error.message || 'Failed to mint')
+      setMintStatus('')
     } finally {
       setMinting(false)
     }
@@ -1077,9 +1083,9 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
 
   const formatLamports = (lamports: number): string => {
     const sol = lamports / 1_000_000_000
-    if (sol >= 1) return `${sol.toFixed(4)} SOL`
-    if (sol >= 0.01) return `${sol.toFixed(4)} SOL`
-    return `${sol.toFixed(6)} SOL`
+    if (sol >= 1) return `${sol.toFixed(4)} ETH`
+    if (sol >= 0.01) return `${sol.toFixed(4)} ETH`
+    return `${sol.toFixed(6)} ETH`
   }
 
   const getPhaseStatus = useCallback((phase: Phase) => {

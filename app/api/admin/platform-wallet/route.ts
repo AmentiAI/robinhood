@@ -21,9 +21,9 @@ export async function GET() {
       wallet: {
         address: verification.address,
         balance: verification.balance,
-        balanceFormatted: `${verification.balance?.toFixed(4)} SOL`,
+        balanceFormatted: `${verification.balance?.toFixed(4)} ETH`,
       },
-      message: 'Platform wallet configured and accessible',
+      message: 'Platform wallet configured on Robinhood Chain',
     })
 
   } catch (error: any) {

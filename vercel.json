@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/cron/monitor-solana-mints",
+      "path": "/api/cron/monitor-rh-mints",
       "schedule": "*/1 * * * *"
     },
     {

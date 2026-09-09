@@ -1010,40 +1010,30 @@ export function LaunchStep({
         ) : null}
       </div>
 
-      {/* Solana Deployment - Show if not deployed yet (even if live, must deploy first) */}
-      {!collection.candy_machine_address && (
+      {/* Robinhood Chain Deployment - Show if not deployed yet */}
+      {!collection.contract_address && !collection.candy_machine_address && (
         <div className="mb-6">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/30 backdrop-blur-md p-6 mb-4">
+          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#D4AF37]/30 backdrop-blur-md p-6 mb-4">
             <div className="flex items-start gap-4 mb-4">
               <div className="text-4xl">🚀</div>
               <div>
-                <h3 className="font-bold text-[#9945FF] text-xl mb-2">Deploy to Solana First</h3>
-                <div className="mb-2 inline-block px-3 py-1 rounded-lg text-sm font-semibold" style={{
-                  background: solanaNetwork === 'mainnet-beta' 
-                    ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
-                    : 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                  color: 'white'
-                }}>
-                  {solanaNetwork === 'mainnet-beta' ? '🚀 Mainnet (Production)' : '🧪 Devnet (Testing)'}
-                </div>
+                <h3 className="font-bold text-[#D4AF37] text-xl mb-2">Deploy to Robinhood Chain First</h3>
                 <p className="text-white/70 text-sm mb-3">
-                  Before launching, you need to deploy your collection as a Candy Machine on Solana blockchain.
-                  This is a one-time cost of approximately <span className="text-[#00d4ff] font-semibold">
-                    {solanaNetwork === 'mainnet-beta' ? '~0.16 SOL (~$32)' : '~0.16 devnet SOL (free from faucet)'}
-                  </span>.
+                  Before launching, deploy your collection as an ERC-721 via the platform factory.
+                  Gas is paid in ETH on Robinhood Chain (testnet ETH is free from the faucet).
                 </p>
                 <div className="bg-black/30 rounded-lg p-4 space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-white/50">1.</span>
-                    <span className="text-white/70">Upload metadata & images (free)</span>
+                    <span className="text-white/70">Connect an EVM wallet</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-white/50">2.</span>
-                    <span className="text-white/70">Create collection NFT (~0.01 SOL)</span>
+                    <span className="text-white/70">Deploy collection contract via factory</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-white/50">3.</span>
-                    <span className="text-white/70">Deploy Candy Machine (~0.15 SOL)</span>
+                    <span className="text-white/70">Go live on the launchpad</span>
                   </div>
                 </div>
               </div>
@@ -1053,7 +1043,7 @@ export function LaunchStep({
           <SolanaDeploymentWizard
             collectionId={collection.id}
             onComplete={() => {
-              toast.success('Collection deployed to Solana!')
+              toast.success('Collection deployed to Robinhood Chain!')
               window.location.reload()
             }}
           />
@@ -1061,18 +1051,18 @@ export function LaunchStep({
       )}
 
       {/* Deployment Success - Show if deployed */}
-      {collection.candy_machine_address && (
+      {(collection.contract_address || collection.candy_machine_address) && (
         <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-green-500/50 backdrop-blur-md p-6 mb-6">
           <div className="flex items-start gap-4">
             <div className="text-4xl">✅</div>
             <div>
-              <h3 className="font-bold text-green-500 text-xl mb-2">Deployed to Solana!</h3>
+              <h3 className="font-bold text-green-500 text-xl mb-2">Deployed to Robinhood Chain!</h3>
               <p className="text-white/70 text-sm mb-3">
-                Your collection is deployed and ready to mint on Solana.
+                Your collection is deployed and ready to mint on Robinhood Chain.
               </p>
               <div className="bg-black/30 rounded-lg p-3 font-mono text-sm break-all">
-                <span className="text-white/50">Candy Machine:</span>{' '}
-                <span className="text-[#00d4ff]">{collection.candy_machine_address}</span>
+                <span className="text-white/50">Contract:</span>{' '}
+                <span className="text-[#00d4ff]">{collection.contract_address || collection.candy_machine_address}</span>
               </div>
             </div>
           </div>
@@ -1102,7 +1092,7 @@ export function LaunchStep({
             Once you launch, your collection will be live on the launchpad and collectors can start minting.
             {!collection.candy_machine_address && (
               <span className="block mt-2 text-yellow-500 text-xs">
-                ⚠️ Note: You must deploy to Solana first (see above)
+                ⚠️ Note: You must deploy to Robinhood Chain first (see above)
               </span>
             )}
           </p>
@@ -1112,7 +1102,7 @@ export function LaunchStep({
             className="px-6 py-3 bg-[#e27d0f] hover:bg-[#c96a0a] text-white rounded-lg font-bold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {!collection.candy_machine_address 
-              ? 'Deploy to Solana First ↑' 
+              ? 'Deploy to Robinhood Chain First ↑' 
               : collection.launch_status === 'live' 
               ? 'Already Live' 
               : 'Launch Collection'}

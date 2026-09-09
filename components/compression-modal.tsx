@@ -29,10 +29,10 @@ export function CompressionModal({ isOpen, ordinal, sliderValue, onClose, onSlid
       onClick={onClose}
     >
       <div 
-        className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-auto"
+        className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#39FF14]/30 rounded-lg shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-4 border-b border-[#00d4ff]/30 flex justify-between items-center">
+        <div className="p-4 border-b border-[#39FF14]/30 flex justify-between items-center">
           <h2 className="text-xl font-bold text-white">
             {hasCompressed ? `Compression Comparison - NFT #${displayNumber}` : `Image View - NFT #${displayNumber}`}
           </h2>
@@ -46,7 +46,7 @@ export function CompressionModal({ isOpen, ordinal, sliderValue, onClose, onSlid
         
         <div className="p-6">
           {/* Large Image Comparison Slider or Single Image View */}
-          <div className="relative bg-[#0a0e27] rounded-lg overflow-hidden border border-[#00d4ff]/20" style={{ aspectRatio: '1/1', maxHeight: '80vh' }}>
+          <div className="relative bg-[#0a0e27] rounded-lg overflow-hidden border border-[#39FF14]/20" style={{ aspectRatio: '1/1', maxHeight: '80vh' }}>
             <div className="relative w-full h-full">
               {hasCompressed ? (
                 <>
@@ -84,11 +84,11 @@ export function CompressionModal({ isOpen, ordinal, sliderValue, onClose, onSlid
                       fill
                       className="object-contain"
                     />
-                    <div className="absolute top-4 right-4 bg-[#9945FF]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
+                    <div className="absolute top-4 right-4 bg-[#00C805]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
                       Original
                     </div>
                     {ordinal.original_size_kb != null && (
-                      <div className="absolute bottom-4 right-4 bg-[#9945FF]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
+                      <div className="absolute bottom-4 right-4 bg-[#00C805]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
                         Original: {(() => {
                           const size = Number(ordinal.original_size_kb)
                           return isNaN(size) ? '0.0' : size.toFixed(1)
@@ -99,7 +99,7 @@ export function CompressionModal({ isOpen, ordinal, sliderValue, onClose, onSlid
                   
                   {/* Slider Handle */}
                   <div
-                    className="absolute top-0 bottom-0 w-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-l-4 border-r-4 border-[#00d4ff] cursor-ew-resize z-10 shadow-lg"
+                    className="absolute top-0 bottom-0 w-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-l-4 border-r-4 border-[#39FF14] cursor-ew-resize z-10 shadow-lg"
                     style={{
                       left: `${sliderValue}%`,
                       transform: 'translateX(-50%)'
@@ -127,7 +127,7 @@ export function CompressionModal({ isOpen, ordinal, sliderValue, onClose, onSlid
                       document.addEventListener('mouseup', handleUp)
                     }}
                   >
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-[#00d4ff] rounded-full border-4 border-[#0a0e27] shadow-lg flex items-center justify-center">
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-[#39FF14] rounded-full border-4 border-[#0a0e27] shadow-lg flex items-center justify-center">
                       <div className="flex gap-1">
                         <div className="w-1 h-3 bg-[#0a0e27]"></div>
                         <div className="w-1 h-3 bg-[#0a0e27]"></div>
@@ -136,12 +136,12 @@ export function CompressionModal({ isOpen, ordinal, sliderValue, onClose, onSlid
                   </div>
                   
                   {/* Labels */}
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#00d4ff]/30 text-white text-base px-4 py-2 rounded flex gap-4 z-20 shadow-lg">
-                    <span className={sliderValue < 50 ? 'font-bold text-[#00d4ff]' : 'text-white/70'}>
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#39FF14]/30 text-white text-base px-4 py-2 rounded flex gap-4 z-20 shadow-lg">
+                    <span className={sliderValue < 50 ? 'font-bold text-[#39FF14]' : 'text-white/70'}>
                       ← Compressed
                     </span>
                     <span className="text-white/40">|</span>
-                    <span className={sliderValue >= 50 ? 'font-bold text-[#00d4ff]' : 'text-white/70'}>
+                    <span className={sliderValue >= 50 ? 'font-bold text-[#39FF14]' : 'text-white/70'}>
                       Original →
                     </span>
                   </div>
@@ -156,11 +156,11 @@ export function CompressionModal({ isOpen, ordinal, sliderValue, onClose, onSlid
                       fill
                       className="object-contain"
                     />
-                    <div className="absolute top-4 left-4 bg-[#9945FF]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
+                    <div className="absolute top-4 left-4 bg-[#00C805]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
                       Original Image
                     </div>
                     {ordinal.original_size_kb != null && (
-                      <div className="absolute bottom-4 left-4 bg-[#9945FF]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
+                      <div className="absolute bottom-4 left-4 bg-[#00C805]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
                         Size: {(() => {
                           const size = Number(ordinal.original_size_kb)
                           return isNaN(size) ? '0.0' : size.toFixed(1)

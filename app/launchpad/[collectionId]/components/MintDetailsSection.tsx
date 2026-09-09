@@ -288,19 +288,17 @@ export function MintDetailsSection({
 
           {/* Estimated Cost Breakdown */}
           {isConnected && (() => {
-            const platformFeeSol = parseFloat(process.env.NEXT_PUBLIC_SOLANA_PLATFORM_FEE_SOL || '0.01')
-            const platformFeeLamports = Math.floor(platformFeeSol * 1_000_000_000)
-            const rentPerNft = 2_039_280 // ~0.00204 SOL rent for Core Asset account
-            const networkFees = (priorityFee + 5000) * mintQuantity // priority fee + base tx fee
+            const platformFeeEth = parseFloat(process.env.NEXT_PUBLIC_RH_PLATFORM_FEE_ETH || process.env.NEXT_PUBLIC_SOLANA_PLATFORM_FEE_SOL || '0.001')
+            const platformFeeWei = Math.floor(platformFeeEth * 1e18)
+            const networkFees = 0
 
             const totalMintPrice = activePhase.mint_price_lamports * mintQuantity
-            const totalPlatformFee = platformFeeLamports * mintQuantity
-            const totalRent = rentPerNft * mintQuantity
-            const totalEstimate = totalMintPrice + totalPlatformFee + totalRent + networkFees
+            const totalPlatformFee = platformFeeWei * mintQuantity
+            const totalEstimate = totalMintPrice + totalPlatformFee + networkFees
 
             return (
               <div className="mt-4 p-4 bg-[#1a1a1a] border border-[#D4AF37]/20">
-                <div className="text-xs text-[#808080] mb-2 font-semibold">Estimated Cost Breakdown</div>
+                <div className="text-xs text-[#808080] mb-2 font-semibold">Estimated Cost Breakdown (ETH)</div>
                 <div className="space-y-1.5 text-sm">
                   {/* Mint Price - goes to creator */}
                   <div className="flex justify-between">
@@ -312,16 +310,16 @@ export function MintDetailsSection({
                     </span>
                   </div>
                   {/* Platform Fee */}
-                  {platformFeeLamports > 0 && (
+                  {platformFeeWei > 0 && (
                     <div className="flex justify-between">
                       <span className="text-[#808080]">Platform Fee {mintQuantity > 1 ? `(${mintQuantity}x)` : ''}</span>
                       <span className="text-white font-medium">{formatLamports(totalPlatformFee)}</span>
                     </div>
                   )}
-                  {/* Rent + Network */}
+                  {/* Gas note */}
                   <div className="flex justify-between">
-                    <span className="text-[#808080]">Rent + Network</span>
-                    <span className="text-white font-medium">~{formatLamports(totalRent + networkFees)}</span>
+                    <span className="text-[#808080]">Network gas</span>
+                    <span className="text-white font-medium">wallet pays ETH gas</span>
                   </div>
                   <div className="border-t border-[#D4AF37]/20 pt-2 mt-2 flex justify-between">
                     <span className="text-[#808080] font-semibold">Estimated Total</span>
@@ -353,7 +351,7 @@ export function MintDetailsSection({
                 rel="noopener noreferrer"
                 className="text-[#D4AF37] hover:text-[#D4AF37]/80 hover:underline text-sm transition-colors"
               >
-                View transaction on Solscan →
+                View transaction on explorer →
               </a>
             </div>
           )}

@@ -2,34 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { CREDIT_TIERS } from '@/lib/credits/constants';
 import { sql } from '@/lib/database';
 import { checkHolderStatus } from '@/lib/holder-check';
-import { getPlatformWalletAddress } from '@/lib/solana/platform-wallet';
-import { getClusterAsync } from '@/lib/solana/connection';
+import { getPlatformWalletAddress } from '@/lib/robinhood/platform-wallet';
+import { getRobinhoodNetwork } from '@/lib/robinhood/config';
 
-// Payment addresses
-const BTC_PAYMENT_ADDRESS = process.env.FEE_WALLET || 'bc1p693zz6n9cvmsewemg4j0pmvfvs4th3ft9c74afrc90l6sah300uqt99vee' // Legacy Bitcoin
-const ETH_PAYMENT_ADDRESS = process.env.ETH_PAYMENT_ADDRESS || '0x5CA2e4B034d2F37D66C6d546F14a52651726118A';
+const BTC_PAYMENT_ADDRESS = process.env.FEE_WALLET || 'bc1p693zz6n9cvmsewemg4j0pmvfvs4th3ft9c74afrc90l6sah300uqt99vee';
+const ETH_MAINNET_PAYMENT_ADDRESS = process.env.ETH_PAYMENT_ADDRESS || '0x5CA2e4B034d2F37D66C6d546F14a52651726118A';
 
-// Get Solana payment address (may be null during build)
-function getSolPaymentAddress(): string {
-  const address = getPlatformWalletAddress()
-  if (!address) {
-    throw new Error('Solana payment address not configured')
-  }
-  return address
-}
-
-// Fetch exchange rate from CoinGecko
 async function fetchExchangeRate(coinId: string): Promise<number> {
   try {
     const response = await fetch(
       `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`,
       { signal: AbortSignal.timeout(10000) }
     );
-
-    if (!response.ok) {
-      throw new Error(`CoinGecko API error: ${response.status}`);
-    }
-
+    if (!response.ok) throw new Error(`CoinGecko API error: ${response.status}`);
     const data = await response.json();
     return data[coinId]?.usd || 0;
   } catch (error) {
@@ -38,7 +23,7 @@ async function fetchExchangeRate(coinId: string): Promise<number> {
   }
 }
 
-// POST /api/credits/create-payment - Create a payment for credit purchase (supports BTC, ETH, SOL)
+// POST /api/credits/create-payment — default live path is ETH on Robinhood Chain
 export async function POST(request: NextRequest) {
   if (!sql) {
     return NextResponse.json({ error: 'Database connection not available' }, { status: 500 });
@@ -46,7 +31,14 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { wallet_address, tier_index, fee_rate, payment_type = 'btc', holder_discount = 0 } = body;
+    const {
+      wallet_address,
+      tier_index,
+      fee_rate,
+      payment_type = 'eth',
+      holder_discount = 0,
+      network: requestedNetwork,
+    } = body;
 
     if (!wallet_address) {
       return NextResponse.json({ error: 'Wallet address is required' }, { status: 400 });
@@ -61,94 +53,40 @@ export async function POST(request: NextRequest) {
     }
 
     const tier = CREDIT_TIERS[tier_index];
-    
-    // Apply holder discount (validated on server-side)
+
     let discountMultiplier = 1;
-    // Always check holder status server-side to validate discount
     try {
       const holderData = await checkHolderStatus(wallet_address);
       if (holderData.isHolder && holderData.discountPercent > 0) {
         discountMultiplier = 1 - (holderData.discountPercent / 100);
-        console.log(`[Payment] Holder discount applied: ${holderData.discountPercent}% for ${wallet_address} (holds ${holderData.holdingCount} ${holderData.collection} ordinal(s))`);
       } else if (holder_discount > 0) {
-        // Client claimed discount but server verification failed
-        console.warn(`[Payment] Client claimed ${holder_discount}% discount but holder check failed for ${wallet_address}`);
+        console.warn(
+          `[Payment] Client claimed ${holder_discount}% discount but holder check failed for ${wallet_address}`
+        );
       }
     } catch (err) {
       console.warn('[Payment] Could not verify holder discount, proceeding without discount:', err);
     }
-    
-    const usdAmount = tier.totalPrice * discountMultiplier;
 
-    // Create pending payment (expires in 1 hour)
+    const usdAmount = tier.totalPrice * discountMultiplier;
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 1);
 
     let paymentAddress: string;
     let cryptoAmount: number;
-    let bitcoinAmount: number; // Store in BTC equivalent for database compatibility
+    let bitcoinAmount: number;
     let network: string;
     let responseData: any = {};
 
     if (payment_type === 'btc') {
-      // Bitcoin payment
       paymentAddress = BTC_PAYMENT_ADDRESS;
       network = 'bitcoin';
-
-      // Fetch BTC/USD rate
       let btcRate = await fetchExchangeRate('bitcoin');
-      if (!btcRate || btcRate <= 0) {
-        // Fallback to multiple APIs
-        const apis = [
-          'https://api.coinbase.com/v2/exchange-rates?currency=BTC',
-          'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT',
-          'https://api.coindesk.com/v1/bpi/currentprice/USD.json'
-        ];
-        
-        for (const apiUrl of apis) {
-          try {
-            const response = await fetch(apiUrl, { signal: AbortSignal.timeout(5000) });
-            if (response.ok) {
-              const data = await response.json();
-              if (apiUrl.includes('coindesk')) {
-                btcRate = parseFloat(data.bpi.USD.rate.replace(/,/g, ''));
-              } else if (apiUrl.includes('coinbase')) {
-                btcRate = parseFloat(data.data.rates.USD);
-              } else if (apiUrl.includes('binance')) {
-                btcRate = parseFloat(data.price);
-              }
-              if (btcRate > 0) break;
-            }
-          } catch (err) {
-            continue;
-          }
-        }
-      }
-
-      if (!btcRate || btcRate <= 0) {
-        btcRate = 40000; // Fallback
-      }
-
+      if (!btcRate || btcRate <= 0) btcRate = 40000;
       cryptoAmount = usdAmount / btcRate;
       bitcoinAmount = cryptoAmount;
       const bitcoinAmountSats = Math.ceil(cryptoAmount * 100000000);
-
-      // Use provided fee rate or fetch current fee rate
-      let finalFeeRate = fee_rate || 10;
-      if (!fee_rate) {
-        try {
-          const feeResponse = await fetch('https://mempool.space/api/v1/fees/recommended', {
-            signal: AbortSignal.timeout(5000),
-          });
-          if (feeResponse.ok) {
-            const feeData = await feeResponse.json();
-            finalFeeRate = feeData.economyFee || 10;
-          }
-        } catch (error) {
-          console.error('Error fetching fee rate, using default:', error);
-        }
-      }
-
+      const finalFeeRate = fee_rate || 10;
       responseData = {
         bitcoinAmountSats,
         feeRate: finalFeeRate,
@@ -156,48 +94,29 @@ export async function POST(request: NextRequest) {
           recipientAddress: paymentAddress,
           amountSats: bitcoinAmountSats,
           feeRate: finalFeeRate,
-        }
+        },
       };
     } else if (payment_type === 'eth') {
-      // Ethereum payment
-      paymentAddress = ETH_PAYMENT_ADDRESS;
-      network = 'ethereum';
+      const rhWallet = getPlatformWalletAddress();
+      const useRobinhood = requestedNetwork === 'robinhood' || requestedNetwork === 'rh' || !!rhWallet;
+      paymentAddress = useRobinhood && rhWallet ? rhWallet : ETH_MAINNET_PAYMENT_ADDRESS;
+      network = useRobinhood && rhWallet ? `robinhood-${getRobinhoodNetwork()}` : 'ethereum';
 
-      // Fetch ETH/USD rate
       let ethRate = await fetchExchangeRate('ethereum');
-      if (!ethRate || ethRate <= 0) {
-        ethRate = 2500; // Fallback
-      }
-
+      if (!ethRate || ethRate <= 0) ethRate = 2500;
       cryptoAmount = usdAmount / ethRate;
-      bitcoinAmount = cryptoAmount; // Store as BTC equivalent for DB compatibility
-
-      responseData = {
-        ethAmount: cryptoAmount,
-      };
+      bitcoinAmount = cryptoAmount;
+      responseData = { ethAmount: cryptoAmount };
     } else if (payment_type === 'sol') {
-      // Solana payment — store actual cluster (devnet/mainnet-beta) not just "solana"
-      paymentAddress = getSolPaymentAddress();
-      network = await getClusterAsync();
-
-      // Fetch SOL/USD rate
-      let solRate = await fetchExchangeRate('solana');
-      if (!solRate || solRate <= 0) {
-        solRate = 100; // Fallback
-      }
-
-      cryptoAmount = usdAmount / solRate;
-      bitcoinAmount = cryptoAmount; // Store as BTC equivalent for DB compatibility
-
-      responseData = {
-        solAmount: cryptoAmount,
-      };
+      return NextResponse.json(
+        { error: 'SOL payments are deprecated. Use ETH on Robinhood Chain.' },
+        { status: 400 }
+      );
     } else {
-      // This should never happen due to validation above, but TypeScript needs this
       return NextResponse.json({ error: 'Invalid payment type' }, { status: 400 });
     }
 
-    const result = await sql`
+    const result = (await sql`
       INSERT INTO pending_payments (
         wallet_address,
         credits_amount,
@@ -221,7 +140,7 @@ export async function POST(request: NextRequest) {
         ${network}
       )
       RETURNING id, payment_address, bitcoin_amount, expires_at, created_at, payment_type, network
-    ` as any[];
+    `) as any[];
 
     const payment = Array.isArray(result) && result.length > 0 ? result[0] : null;
     if (!payment) {
@@ -240,8 +159,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error creating payment:', error);
-    return NextResponse.json({ 
-      error: error?.message || 'Failed to create payment' 
-    }, { status: 500 });
+    return NextResponse.json({ error: error?.message || 'Failed to create payment' }, { status: 500 });
   }
 }

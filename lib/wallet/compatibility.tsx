@@ -1,10 +1,8 @@
 "use client"
 
-import { useSolanaWallet } from "@/lib/wallet/solana-wallet-context"
-import { useWallet as useSolanaWalletAdapter } from '@solana/wallet-adapter-react'
+import { useEvmWallet } from "@/lib/wallet/evm-wallet-context"
+import type { Hex } from 'viem'
 
-// Re-export Solana wallet hook as useWallet for backwards compatibility
-// All components that previously used the Bitcoin useWallet() now get the Solana wallet
 interface WalletContextType {
   isConnected: boolean
   currentAddress: string | null
@@ -16,46 +14,50 @@ interface WalletContextType {
   isVerifying: boolean
   isLiveConnection: boolean
   verifyWallet: () => Promise<boolean>
-  // Changed to match Solana wallet adapter signature (Uint8Array -> Uint8Array)
-  signMessage: ((message: Uint8Array) => Promise<Uint8Array>) | null
+  /** EIP-191 personal_sign — accepts string or Uint8Array (decoded as utf-8) */
+  signMessage: ((message: string | Uint8Array) => Promise<Hex | Uint8Array>) | null
   signPsbt: (psbtBase64: string, autoFinalize?: boolean, broadcast?: boolean) => Promise<any>
-  connect: (provider: any) => Promise<void>
+  connect: (provider?: any) => Promise<void>
   disconnect: () => void
 }
 
 export function useWallet(): WalletContextType {
-  const solana = useSolanaWallet()
-  const { signMessage: solanaSignMessage } = useSolanaWalletAdapter()
+  const evm = useEvmWallet()
+
+  const signMessage = evm.signMessage
+    ? async (message: string | Uint8Array) => {
+        const text =
+          typeof message === 'string'
+            ? message
+            : new TextDecoder().decode(message)
+        return evm.signMessage!(text)
+      }
+    : null
 
   return {
-    isConnected: solana.isConnected,
-    currentAddress: solana.address,
-    // Solana has a single address for both receiving and payment
-    paymentAddress: solana.address,
-    paymentPublicKey: solana.publicKey?.toBase58() || null,
-    publicKey: solana.publicKey?.toBase58() || null,
+    isConnected: evm.isConnected,
+    currentAddress: evm.address,
+    paymentAddress: evm.address,
+    paymentPublicKey: evm.address,
+    publicKey: evm.address,
     client: null,
-    isVerified: solana.isVerified,
-    isVerifying: solana.isVerifying,
-    isLiveConnection: solana.isConnected,
-    verifyWallet: solana.verifyWallet,
-    // Return the raw Solana signMessage function (Uint8Array -> Uint8Array)
-    // This matches the signature expected by generateApiAuth
-    signMessage: solanaSignMessage || null,
+    isVerified: evm.isVerified,
+    isVerifying: evm.isVerifying,
+    isLiveConnection: evm.isConnected,
+    verifyWallet: evm.verifyWallet,
+    signMessage,
     signPsbt: async () => {
-      throw new Error("PSBTs are not supported on Solana")
+      throw new Error("PSBTs are not supported on Robinhood Chain")
     },
     connect: async () => {
-      await solana.connect()
+      await evm.connect()
     },
     disconnect: () => {
-      solana.disconnect()
+      void evm.disconnect()
     },
   }
 }
 
-// WalletProvider is no longer needed as a component wrapper since
-// the Solana providers handle this in components/providers.tsx
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }

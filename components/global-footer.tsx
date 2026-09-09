@@ -6,16 +6,16 @@ export function GlobalFooter() {
   const enableRevenueShare = process.env.NEXT_PUBLIC_ENABLE_REVENUE_SHARE === 'true'
 
   return (
-    <footer className="bg-[#0a0a0a] text-[#808080] border-t border-[#D4AF37]/20 mt-auto">
+    <footer className="bg-[#0a0c0d] text-[#808080] border-t border-[#00C805]/20 mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand Section */}
           <div>
-            <h3 className="text-2xl mb-4 font-black text-[#D4AF37] uppercase tracking-tight">
-              SolMaker.Fun
+            <h3 className="text-2xl mb-4 font-black text-[#00C805] uppercase tracking-tight">
+              OrdMaker
             </h3>
             <p className="text-xs text-[#808080] leading-relaxed">
-              AI-powered NFT creation platform on Solana. Build, launch, and grow your NFT collection.
+              AI-powered NFT creation platform on Robinhood Chain. Build, launch, and grow your NFT collection.
             </p>
           </div>
 
@@ -26,7 +26,7 @@ export function GlobalFooter() {
               <li>
                 <Link
                   href="/"
-                  className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                 >
                   Launchpad
                 </Link>
@@ -34,7 +34,7 @@ export function GlobalFooter() {
               <li>
                 <Link
                   href="/marketplace"
-                  className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                 >
                   Marketplace
                 </Link>
@@ -42,7 +42,7 @@ export function GlobalFooter() {
               <li>
                 <Link
                   href="/promotion"
-                  className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                 >
                   Promote
                 </Link>
@@ -50,7 +50,7 @@ export function GlobalFooter() {
               <li>
                 <Link
                   href="/collections"
-                  className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                 >
                   Collections
                 </Link>
@@ -67,7 +67,7 @@ export function GlobalFooter() {
                   <li>
                     <Link
                       href="/revshare"
-                      className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                      className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                     >
                       Revenue Share
                     </Link>
@@ -75,7 +75,7 @@ export function GlobalFooter() {
                   <li>
                     <Link
                       href="/pass-details"
-                      className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                      className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                     >
                       Pass Details
                     </Link>
@@ -85,7 +85,7 @@ export function GlobalFooter() {
               <li>
                 <Link
                   href="/buy-credits"
-                  className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                 >
                   Buy Credits
                 </Link>
@@ -100,7 +100,7 @@ export function GlobalFooter() {
               <li>
                 <Link
                   href="/terms"
-                  className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                 >
                   Terms
                 </Link>
@@ -108,7 +108,7 @@ export function GlobalFooter() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-[#808080] hover:text-[#D4AF37] transition-colors text-xs font-medium uppercase tracking-wide"
+                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
                 >
                   Privacy
                 </Link>
@@ -127,11 +127,11 @@ export function GlobalFooter() {
                 href="https://x.com/solmakerfun"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-8 h-8 bg-[#0a0a0a] border border-[#D4AF37]/40 hover:border-[#D4AF37] hover:bg-[#1a1a1a] transition-all group"
+                className="flex items-center justify-center w-8 h-8 bg-[#0a0c0d] border border-[#00C805]/40 hover:border-[#00C805] hover:bg-[#15181a] transition-all group"
                 aria-label="Follow us on X (Twitter)"
               >
                 <svg
-                  className="w-4 h-4 text-[#808080] group-hover:text-[#D4AF37] transition-colors"
+                  className="w-4 h-4 text-[#808080] group-hover:text-[#00C805] transition-colors"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -140,11 +140,11 @@ export function GlobalFooter() {
                 </svg>
               </a>
               <p className="text-xs text-[#808080]">
-                © {new Date().getFullYear()} <span className="text-[#D4AF37] font-bold">SolMaker.Fun</span>
+                © {new Date().getFullYear()} <span className="text-[#00C805] font-bold">SolMaker.Fun</span>
               </p>
             </div>
             <p className="text-xs text-[#808080] uppercase tracking-wider">
-              Built on <span className="text-[#D4AF37] font-bold">Solana</span>
+              Built on <span className="text-[#00C805] font-bold">Robinhood Chain</span>
             </p>
           </div>
         </div>

@@ -80,7 +80,7 @@ export function AppHeader() {
     }
   }, [activeWalletConnected, activeWalletAddress, loadCredits, clearCredits])
 
-  // Fetch SOL market data
+  // Fetch ETH market data
   useEffect(() => {
     const fetchMarketData = async () => {
       try {
@@ -124,6 +124,7 @@ export function AppHeader() {
       setWalletUpdateTrigger(prev => prev + 1)
     }
 
+    window.addEventListener('walletConnected', handleWalletConnected)
     window.addEventListener('solanaWalletConnected', handleWalletConnected)
 
     const handleStorageChange = (event: StorageEvent) => {
@@ -226,9 +227,9 @@ export function AppHeader() {
               Collections
             </Link>
             <Link
-              href="/solana-launchpad"
+              href="/launchpad"
               className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                pathname === '/solana-launchpad'
+                pathname === '/launchpad' || pathname?.startsWith('/launchpad')
                   ? 'text-white bg-gradient-to-r from-[var(--solana-purple)]/20 to-[var(--solana-green)]/20 border border-[var(--solana-purple)]/30'
                   : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface)]'
               }`}

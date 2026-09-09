@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { useWallet } from '@/lib/wallet/compatibility'
+import { generateApiAuth } from '@/lib/wallet/api-auth'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useRouter } from 'next/navigation'
 
@@ -21,7 +22,7 @@ interface LayersSectionProps {
 }
 
 export function LayersSection({ collectionId, layers, onLayerDeleted }: LayersSectionProps) {
-  const { currentAddress } = useWallet()
+  const { currentAddress, signMessage } = useWallet()
   const router = useRouter()
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ layerId: string; layerName: string } | null>(null)
   const [deleting, setDeleting] = useState(false)
@@ -72,14 +73,19 @@ export function LayersSection({ collectionId, layers, onLayerDeleted }: LayersSe
 
     setGeneratingLazy(true)
     try {
+      const auth = await generateApiAuth(currentAddress, signMessage)
+      if (!auth) {
+        toast.error('Signature required. Please sign the request with your wallet.')
+        setGeneratingLazy(false)
+        return
+      }
+
       const response = await fetch(`/api/collections/${collectionId}/lazy-layers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          wallet_address: currentAddress,
-        }),
+        body: JSON.stringify(auth),
       })
 
       if (response.ok) {

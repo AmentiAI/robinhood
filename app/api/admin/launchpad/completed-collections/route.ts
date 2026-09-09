@@ -4,7 +4,7 @@ import { checkAuthorizationServer } from '@/lib/auth/access-control'
 
 /**
  * GET /api/admin/launchpad/completed-collections
- * Returns collections with recent Solana mint activity
+ * Collections with Robinhood mint activity
  */
 export async function GET(request: NextRequest) {
   if (!sql) {
@@ -12,12 +12,17 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const authResult = await checkAuthorizationServer(request, sql)
-    if (!authResult.isAuthorized || !authResult.isAdmin) {
+    const { searchParams } = new URL(request.url)
+    const walletAddress = searchParams.get('wallet_address')
+    const authResult = walletAddress
+      ? await checkAuthorizationServer(walletAddress, sql)
+      : await checkAuthorizationServer(request, sql)
+
+    if (!authResult.isAdmin) {
       return NextResponse.json({ error: 'Unauthorized. Admin access only.' }, { status: 403 })
     }
 
-    const completedCollections = await sql`
+    const completedCollections = (await sql`
       SELECT
         c.id,
         c.name,
@@ -28,22 +33,23 @@ export async function GET(request: NextRequest) {
         c.mint_ended_at,
         c.is_locked,
         c.collection_status,
+        c.contract_address,
         (SELECT COUNT(*) FROM generated_ordinals WHERE collection_id = c.id) as total_supply,
         (
           SELECT COUNT(*)
-          FROM solana_nft_mints
+          FROM rh_nft_mints
           WHERE collection_id = c.id
             AND mint_status = 'confirmed'
         ) as minted_count,
         (
           SELECT COUNT(*)
-          FROM solana_nft_mints
+          FROM rh_nft_mints
           WHERE collection_id = c.id
             AND mint_status IN ('pending', 'building', 'awaiting_signature', 'broadcasting', 'confirming')
         ) as pending_count,
         (
           SELECT MAX(created_at)
-          FROM solana_nft_mints
+          FROM rh_nft_mints
           WHERE collection_id = c.id
         ) as last_mint_at,
         (SELECT json_agg(json_build_object(
@@ -56,17 +62,18 @@ export async function GET(request: NextRequest) {
           'phase_minted', mp.phase_minted
         ) ORDER BY mp.phase_order) FROM mint_phases mp WHERE mp.collection_id = c.id) as phases
       FROM collections c
-      WHERE EXISTS (
-        SELECT 1 FROM solana_nft_mints sm
-        WHERE sm.collection_id = c.id
-      )
+      WHERE c.contract_address IS NOT NULL
+         OR EXISTS (
+           SELECT 1 FROM rh_nft_mints sm
+           WHERE sm.collection_id = c.id
+         )
       ORDER BY (
         SELECT MAX(created_at)
-        FROM solana_nft_mints
+        FROM rh_nft_mints
         WHERE collection_id = c.id
       ) DESC NULLS LAST
       LIMIT 100
-    ` as any[]
+    `) as any[]
 
     return NextResponse.json({
       success: true,

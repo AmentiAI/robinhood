@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useWallet } from '@/lib/wallet/compatibility'
-import { useSolanaWallet } from '@/lib/wallet/solana-wallet-context'
+import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
 import { useMemo } from 'react'
 
 interface MarketplaceReviewFormProps {

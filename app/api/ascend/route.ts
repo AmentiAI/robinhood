@@ -443,7 +443,7 @@ CREATE AN AMAZING, IMPRESSIVE, HIGH-QUALITY ANGEL: The transformation should be 
 MAINTAIN CHIBI STYLE throughout: huge head, enormous eyes, chibi proportions, bold black outlines. The transformation only adds AMAZING angelic features (wings, halo, aura) in chibi style, but ALL TRAITS from the analysis remain exactly the same.`
     }
 
-    // Generate the image
+    const imageModel = process.env.OPENAI_IMAGE_MODEL || "gpt-image-2"
     const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
@@ -451,7 +451,7 @@ MAINTAIN CHIBI STYLE throughout: huge head, enormous eyes, chibi proportions, bo
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-image-1",
+        model: imageModel,
         prompt: transformationPrompt,
         n: 1,
         size: "1024x1024",

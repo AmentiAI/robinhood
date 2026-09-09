@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
     console.log("[v0] Traits:", JSON.stringify(traits))
     console.log("[v0] Rarity score:", rarityScore, "Tier:", rarityTier)
 
-    // Call OpenAI Image Generation API (gpt-image-1)
+    const imageModel = process.env.OPENAI_IMAGE_MODEL || "gpt-image-2"
     const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
       headers: {
@@ -91,11 +91,11 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-image-1",
+        model: imageModel,
         prompt: prompt,
         n: 1,
         size: "1024x1024",
-        quality: "high", // gpt-image-1 supports: low, medium, high, auto
+        quality: "high",
       }),
     })
 

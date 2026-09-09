@@ -29,3 +29,8 @@ next-env.d.ts
 # Large video files
 public/creator-pass-btc-video.mp4
 *.mp4
+# Hardhat
+/artifacts/
+/cache/
+/typechain-types/
+

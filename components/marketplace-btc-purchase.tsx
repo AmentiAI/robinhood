@@ -492,7 +492,7 @@ export function MarketplaceBtcPurchase({
         <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center gap-2">
             <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-            <span className="text-[#14F195] text-sm font-medium">
+            <span className="text-[#00C805] text-sm font-medium">
               {status === 'fetching_utxos' && 'Fetching wallet UTXOs...'}
               {status === 'building_tx' && 'Building transaction...'}
               {status === 'signing' && 'Please sign the transaction in your wallet...'}

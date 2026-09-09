@@ -1,14 +1,12 @@
 /**
- * Server-side signature verification for Solana wallet authentication
- * Verifies that API requests are made by the wallet owner
+ * Server-side signature verification for EVM (EIP-191) wallet authentication
  */
 
-import nacl from 'tweetnacl'
-import bs58 from 'bs58'
+import { verifyMessage, type Hex, type Address } from 'viem'
 
 const signatureCache = new Map<string, number>()
-const SIGNATURE_CACHE_TTL = 5 * 60 * 1000 // 5 minutes
-const SIGNATURE_EXPIRY = 5 * 60 * 1000 // 5 minutes
+const SIGNATURE_CACHE_TTL = 5 * 60 * 1000
+const SIGNATURE_EXPIRY = 5 * 60 * 1000
 
 interface SignatureVerificationResult {
   isValid: boolean
@@ -16,102 +14,43 @@ interface SignatureVerificationResult {
   error?: string
 }
 
-/**
- * Verify a Solana message signature
- */
-async function verifySolanaSignature(
+async function verifyEvmSignature(
   message: string,
   signature: string,
   address: string
 ): Promise<boolean> {
   try {
-    console.log('[verifySolanaSignature] Verifying:', {
-      address,
-      message,
-      signature_length: signature?.length,
-      signature_preview: signature?.substring(0, 20) + '...'
-    })
-
-    // Validate message format
     const messagePattern = /^Verify wallet ownership for (.+) at (\d+)$/
     const match = message.match(messagePattern)
 
     if (!match) {
-      console.error('[verifySolanaSignature] Invalid message format:', message)
+      console.error('[verifyEvmSignature] Invalid message format:', message)
       return false
     }
 
     const messageAddress = match[1]
     const timestamp = parseInt(match[2])
 
-    // Verify address matches (Solana addresses are case-sensitive base58)
-    if (messageAddress !== address) {
+    if (messageAddress.toLowerCase() !== address.toLowerCase()) {
       console.error('Address mismatch in message')
       return false
     }
 
-    // Check timestamp is recent
     const now = Date.now()
     if (Math.abs(now - timestamp) > SIGNATURE_EXPIRY) {
       console.error('Message timestamp expired')
       return false
     }
 
-    // CRYPTOGRAPHIC SIGNATURE VERIFICATION
-    // Decode the public key from base58
-    const publicKeyBytes = bs58.decode(address)
+    const valid = await verifyMessage({
+      address: address as Address,
+      message,
+      signature: signature as Hex,
+    })
 
-    // Encode the message to bytes
-    const messageBytes = new TextEncoder().encode(message)
-
-    // Decode the signature - handle base58, base64, and hex formats
-    let signatureBytes: Uint8Array
-    try {
-      // Try base58 first (most common for Solana)
-      signatureBytes = bs58.decode(signature)
-      console.log('[verifySolanaSignature] Decoded base58 signature, length:', signatureBytes.length)
-    } catch (e) {
-      // If base58 fails, try base64 (also common for Solana wallets)
-      try {
-        console.log('[verifySolanaSignature] Signature is not base58, trying base64')
-        signatureBytes = Uint8Array.from(Buffer.from(signature, 'base64'))
-        console.log('[verifySolanaSignature] Decoded base64 signature, length:', signatureBytes.length)
-      } catch (base64Error) {
-        // If base64 fails, try hex
-        try {
-          console.log('[verifySolanaSignature] Signature is not base64, trying hex')
-          signatureBytes = new Uint8Array(
-            signature.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))
-          )
-          console.log('[verifySolanaSignature] Decoded hex signature, length:', signatureBytes.length)
-        } catch (hexError) {
-          console.error('[verifySolanaSignature] Failed to decode signature as base58, base64, or hex')
-          return false
-        }
-      }
-    }
-
-    // Verify signature is exactly 64 bytes (Ed25519 requirement)
-    if (signatureBytes.length !== 64) {
-      console.error('[verifySolanaSignature] Invalid signature length:', signatureBytes.length, 'expected 64 bytes')
-      return false
-    }
-
-    // Verify the signature cryptographically
-    const isValidSignature = nacl.sign.detached.verify(
-      messageBytes,
-      signatureBytes,
-      publicKeyBytes
-    )
-
-    if (!isValidSignature) {
-      console.error('Invalid cryptographic signature')
-      return false
-    }
-
-    return true
+    return valid
   } catch (error) {
-    console.error('Error verifying Solana signature:', error)
+    console.error('Error verifying EVM signature:', error)
     return false
   }
 }
@@ -161,7 +100,7 @@ export async function verifyWalletSignature(
     return { isValid: false, walletAddress: null, error: 'Signature expired' }
   }
 
-  const isValid = await verifySolanaSignature(message, signature, walletAddress)
+  const isValid = await verifyEvmSignature(message, signature, walletAddress)
 
   if (!isValid) {
     return { isValid: false, walletAddress: null, error: 'Invalid signature' }

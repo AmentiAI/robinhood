@@ -11,8 +11,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'SolMaker - AI-Powered NFT Creator on Solana',
-  description: 'SolMaker - The easiest NFT maker on Solana using revolutionary AI technology. Create unique NFT collections with AI-powered generation.',
+  title: 'OrdMaker - AI-Powered NFT Creator on Robinhood Chain',
+  description: 'OrdMaker - Create and mint unique NFT collections on Robinhood Chain using AI-powered generation.',
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',

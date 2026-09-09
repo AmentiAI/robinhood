@@ -109,17 +109,17 @@ export default function FlyersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] py-12 px-6">
+    <div className="min-h-screen bg-[#0a0c0d] py-12 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-black text-white mb-4 uppercase tracking-wide">
-            Marketing <span className="text-[#D4AF37]">Flyers</span>
+            Marketing <span className="text-[#00C805]">Flyers</span>
           </h1>
           <p className="text-xl text-[#808080] font-semibold mb-6">
             AI-Generated promotional materials for SolMaker.Fun
           </p>
-          <div className="inline-block px-6 py-3 bg-[#1a1a1a] border-2 border-[#D4AF37]/40">
+          <div className="inline-block px-6 py-3 bg-[#15181a] border-2 border-[#00C805]/40">
             <p className="text-sm text-white/80">
               Click &quot;Generate&quot; to create a professional flyer using AI • High-quality 1024x1536px images
             </p>
@@ -136,11 +136,11 @@ export default function FlyersPage() {
             return (
               <div
                 key={flyer.id}
-                className="bg-[#1a1a1a] border-2 border-[#404040] hover:border-[#D4AF37] transition-all p-6"
+                className="bg-[#15181a] border-2 border-[#404040] hover:border-[#00C805] transition-all p-6"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="p-3 bg-[#0a0a0a] border border-[#D4AF37]/40">
-                    <Icon className="w-8 h-8 text-[#D4AF37]" />
+                  <div className="p-3 bg-[#0a0c0d] border border-[#00C805]/40">
+                    <Icon className="w-8 h-8 text-[#00C805]" />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-white uppercase tracking-wide mb-1">
@@ -158,7 +158,7 @@ export default function FlyersPage() {
                   className={`w-full px-6 py-3 font-bold uppercase tracking-wide transition-all ${
                     isGenerating
                       ? 'bg-[#404040] text-white/50 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black hover:opacity-90'
+                      : 'bg-gradient-to-r from-[#00C805] to-[#FFD700] text-black hover:opacity-90'
                   }`}
                 >
                   {isGenerating ? (
@@ -182,7 +182,7 @@ export default function FlyersPage() {
           <div className="space-y-8">
             <div className="border-t-2 border-[#404040] pt-8">
               <h2 className="text-3xl font-black text-white mb-6 uppercase tracking-wide">
-                Generated <span className="text-[#D4AF37]">Flyers</span>
+                Generated <span className="text-[#00C805]">Flyers</span>
               </h2>
             </div>
 
@@ -190,7 +190,7 @@ export default function FlyersPage() {
               {generatedFlyers.map((flyer) => (
                 <div
                   key={flyer.flyerType}
-                  className="bg-[#1a1a1a] border-2 border-[#D4AF37]/40 p-6"
+                  className="bg-[#15181a] border-2 border-[#00C805]/40 p-6"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-xl font-bold text-white uppercase tracking-wide">
@@ -198,7 +198,7 @@ export default function FlyersPage() {
                     </h3>
                     <button
                       onClick={() => handleDownload(flyer.imageUrl, flyer.flyerType)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#D4AF37] to-[#FFD700] text-black font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
+                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#00C805] to-[#FFD700] text-black font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
                     >
                       <Download className="w-4 h-4" />
                       Download

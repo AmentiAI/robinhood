@@ -29,16 +29,19 @@ async function ensureTableExists() {
       ON CONFLICT (setting_key) DO NOTHING
     `
 
-    // Seed Solana network defaults from env vars
-    const defaultDevnetRpc = process.env.SOLANA_DEVNET_RPC_URL || 'https://api.devnet.solana.com'
-    const defaultMainnetRpc = process.env.SOLANA_RPC_URL || 'https://api.mainnet-beta.solana.com'
-    
+    // Seed Robinhood network defaults
+    const defaultTestnetRpc =
+      process.env.RH_TESTNET_RPC_URL || 'https://rpc.testnet.chain.robinhood.com'
+    const defaultMainnetRpc =
+      process.env.RH_RPC_URL || 'https://rpc.mainnet.chain.robinhood.com'
+    const defaultNetwork = process.env.RH_NETWORK || process.env.NEXT_PUBLIC_RH_NETWORK || 'testnet'
+
     await sql`
       INSERT INTO site_settings (setting_key, setting_value, description)
       VALUES 
-        ('solana_network', ${JSON.stringify('devnet')}, 'Active Solana network (devnet or mainnet-beta)'),
-        ('solana_rpc_devnet', ${JSON.stringify(defaultDevnetRpc)}, 'Solana devnet RPC endpoint'),
-        ('solana_rpc_mainnet', ${JSON.stringify(defaultMainnetRpc)}, 'Solana mainnet RPC endpoint')
+        ('rh_network', ${JSON.stringify(defaultNetwork)}, 'Active Robinhood network (testnet or mainnet)'),
+        ('rh_testnet_rpc_url', ${JSON.stringify(defaultTestnetRpc)}, 'Robinhood testnet RPC endpoint'),
+        ('rh_mainnet_rpc_url', ${JSON.stringify(defaultMainnetRpc)}, 'Robinhood mainnet RPC endpoint')
       ON CONFLICT (setting_key) DO NOTHING
     `
     

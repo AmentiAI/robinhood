@@ -2,240 +2,224 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { PageHeader } from '@/components/page-header'
-import { useSolanaWallet } from '@/lib/wallet/solana-wallet-context'
+import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
+import { useWalletClient } from 'wagmi'
 import { toast } from 'sonner'
-import { Transaction, LAMPORTS_PER_SOL } from '@solana/web3.js'
-import { SolanaNft } from '@/lib/solana/nft-fetcher'
+import { getExplorerTxUrl } from '@/lib/explorer'
+
+interface RhNft {
+  id: string
+  collectionId?: string
+  collectionName?: string
+  contractAddress: string
+  tokenId: string
+  mintKey: string
+  name: string
+  imageUrl?: string | null
+}
 
 export default function ListNftPage() {
   const router = useRouter()
-  const { isConnected, publicKey, signTransaction } = useSolanaWallet()
+  const { isConnected, address } = useEvmWallet()
+  const { data: walletClient } = useWalletClient()
 
   const [step, setStep] = useState<1 | 2>(1)
   const [loading, setLoading] = useState(false)
-  const [nfts, setNfts] = useState<SolanaNft[]>([])
-  const [selectedNft, setSelectedNft] = useState<SolanaNft | null>(null)
+  const [nfts, setNfts] = useState<RhNft[]>([])
+  const [selectedNft, setSelectedNft] = useState<RhNft | null>(null)
   const [price, setPrice] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [listing, setListing] = useState(false)
 
   useEffect(() => {
-    if (!isConnected) {
-      toast.error('Please connect your wallet to list NFTs')
+    if (!isConnected || !address) {
+      toast.error('Connect your wallet to list NFTs')
       router.push('/marketplace')
       return
     }
     loadUserNfts()
-  }, [isConnected, publicKey])
+  }, [isConnected, address])
 
   const loadUserNfts = async () => {
-    if (!publicKey) return
-
+    if (!address) return
     setLoading(true)
     try {
-      const response = await fetch(`/api/marketplace/solana/my-nfts?wallet=${publicKey.toBase58()}`)
+      const response = await fetch(`/api/marketplace/rh/my-nfts?wallet=${encodeURIComponent(address)}`)
       const data = await response.json()
-
       if (response.ok) {
         setNfts(data.nfts || [])
       } else {
-        toast.error('Failed to load your NFTs')
+        toast.error(data.error || 'Failed to load your NFTs')
       }
     } catch (error) {
-      console.error('Error loading NFTs:', error)
+      console.error(error)
       toast.error('Failed to load NFTs')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleSelectNft = (nft: SolanaNft) => {
+  const handleSelectNft = (nft: RhNft) => {
     setSelectedNft(nft)
     setTitle(nft.name)
     setStep(2)
   }
 
   const handleCreateListing = async () => {
-    // Specific validation checks with helpful messages
     if (!selectedNft) {
-      toast.error('Please select an NFT to list')
+      toast.error('Select an NFT to list')
       return
     }
-
-    if (!publicKey) {
-      toast.error('Wallet not connected. Please connect your wallet.')
-      return
-    }
-
-    if (!signTransaction) {
-      toast.error('Wallet does not support transaction signing')
+    if (!address || !walletClient) {
+      toast.error('Connect your wallet')
       return
     }
 
     const priceNum = parseFloat(price)
     if (!price || isNaN(priceNum) || priceNum <= 0) {
-      toast.error('Please enter a valid price greater than 0')
+      toast.error('Enter a valid ETH price greater than 0')
       return
     }
 
     setListing(true)
-
     try {
-      // Step 1: Create listing
-      const response = await fetch('/api/marketplace/solana/list', {
+      const response = await fetch('/api/marketplace/rh/list', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          mintAddress: selectedNft.mintAddress,
-          price: priceNum,
-          sellerWallet: publicKey.toBase58(),
+          wallet_address: address,
+          contract_address: selectedNft.contractAddress,
+          token_id: selectedNft.tokenId,
+          price_eth: priceNum,
           title: title || selectedNft.name,
           description,
+          image_url: selectedNft.imageUrl,
+          collection_id: selectedNft.collectionId,
         }),
       })
-
       const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Failed to create listing')
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to create listing')
-      }
+      toast.info('Approve marketplace for this NFT...')
+      const approveHash = await walletClient.sendTransaction({
+        to: data.approve.to as `0x${string}`,
+        data: data.approve.data as `0x${string}`,
+        chain: undefined,
+      })
+      toast.info(
+        <span>
+          Approved.{' '}
+          <a href={getExplorerTxUrl(approveHash)} target="_blank" rel="noreferrer" className="underline">
+            View tx
+          </a>
+        </span>
+      )
 
-      // Step 2: Sign transaction
-      const transactionBuffer = Buffer.from(data.transaction, 'base64')
-      const transaction = Transaction.from(transactionBuffer)
-
-      const signedTx = await signTransaction(transaction)
-      toast.info('Signed! Broadcasting transaction...')
-
-      // Step 3: Broadcast transaction
-      const { Connection } = await import('@solana/web3.js')
-      const { getConnection } = await import('@/lib/solana/connection')
-      const connection = getConnection()
-
-      const signature = await connection.sendRawTransaction(signedTx.serialize(), {
-        skipPreflight: false,
-        preflightCommitment: 'confirmed',
+      toast.info('Confirm listing transaction...')
+      const listHash = await walletClient.sendTransaction({
+        to: data.list.to as `0x${string}`,
+        data: data.list.data as `0x${string}`,
+        chain: undefined,
       })
 
-      toast.info('Transaction sent, waiting for confirmation...')
-
-      await connection.confirmTransaction(signature, 'confirmed')
-
-      // Step 4: Confirm listing
-      const confirmResponse = await fetch('/api/marketplace/solana/confirm-listing', {
+      await fetch('/api/marketplace/rh/list', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          listingId: data.listingId,
-          txSignature: signature,
+          wallet_address: address,
+          listing_id: data.listingId,
+          tx_hash: listHash,
         }),
       })
 
-      const confirmData = await confirmResponse.json()
-
-      if (!confirmResponse.ok) {
-        throw new Error(confirmData.error || 'Failed to confirm listing')
-      }
-
-      toast.success('NFT listed successfully!')
-      router.push('/marketplace')
+      toast.success(
+        <div>
+          <p>Listed successfully!</p>
+          <a href={getExplorerTxUrl(listHash)} target="_blank" rel="noreferrer" className="underline">
+            View transaction
+          </a>
+        </div>,
+        { duration: 8000 }
+      )
+      router.push(`/marketplace/nft/${data.listingId}`)
     } catch (error: any) {
-      console.error('Error creating listing:', error)
-      toast.error(error.message || 'Failed to create listing')
+      console.error(error)
+      toast.error(error?.shortMessage || error?.message || 'Failed to list NFT')
     } finally {
       setListing(false)
     }
   }
 
-  const platformFee = parseFloat(price) * 0.02 || 0
-  const sellerReceives = parseFloat(price) - platformFee || 0
-
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen bg-[#050607]">
       <PageHeader
         title="List NFT"
-        subtitle={step === 1 ? 'Select an NFT to list on the marketplace' : 'Set your price and complete listing'}
+        subtitle="List your Robinhood Chain NFT for sale in ETH"
+        action={
+          <Link
+            href="/marketplace"
+            className="px-4 py-2 rounded-xl border border-white/10 text-sm text-[#a8aab2] hover:text-white hover:border-[#00C805]/40"
+          >
+            ← Marketplace
+          </Link>
+        }
       />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8 lg:py-12">
-        {/* Step Indicator */}
-        <div className="flex items-center gap-4 mb-12">
-          <div className={`flex items-center gap-3 ${step >= 1 ? 'opacity-100' : 'opacity-50'}`}>
-            <div className={`w-10 h-10 border-2 flex items-center justify-center font-black ${
-              step >= 1 ? 'bg-[#D4AF37] border-[#D4AF37] text-[#0a0a0a]' : 'bg-transparent border-[#404040] text-[#808080]'
-            }`}>
-              1
-            </div>
-            <span className="text-white font-bold uppercase tracking-wide">Select NFT</span>
-          </div>
-          <div className="flex-1 h-0.5 bg-[#404040]" />
-          <div className={`flex items-center gap-3 ${step >= 2 ? 'opacity-100' : 'opacity-50'}`}>
-            <div className={`w-10 h-10 border-2 flex items-center justify-center font-black ${
-              step >= 2 ? 'bg-[#D4AF37] border-[#D4AF37] text-[#0a0a0a]' : 'bg-transparent border-[#404040] text-[#808080]'
-            }`}>
-              2
-            </div>
-            <span className="text-white font-bold uppercase tracking-wide">Set Price</span>
-          </div>
-        </div>
-
-        {/* Step 1: Select NFT */}
+      <div className="max-w-4xl mx-auto px-6 py-8">
         {step === 1 && (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-black text-[#D4AF37] uppercase tracking-wide">Your NFTs</h2>
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-black text-white">Select an NFT</h2>
               <button
+                type="button"
                 onClick={loadUserNfts}
-                disabled={loading}
-                className="px-4 py-2 bg-[#1a1a1a] border border-[#D4AF37]/30 hover:border-[#D4AF37] text-white rounded-lg transition-colors uppercase tracking-wide font-semibold"
+                className="text-xs font-bold uppercase tracking-wider text-[#00C805] hover:text-[#CCFF00]"
               >
-                {loading ? 'Loading...' : 'Refresh'}
+                Refresh
               </button>
             </div>
 
             {loading ? (
-              <div className="flex flex-col items-center justify-center py-32">
-                <div className="w-16 h-16 border-4 border-[#9945FF] border-t-transparent rounded-full animate-spin cyber-glow mb-6" />
-                <p className="text-xl font-bold text-[#B4B4C8]">Loading your NFTs...</p>
-              </div>
+              <div className="py-20 text-center text-[#a8aab2]">Loading your NFTs...</div>
             ) : nfts.length === 0 ? (
-              <div className="glass-card border-2 border-[#9945FF]/40 rounded-3xl p-16 text-center">
-                <div className="text-8xl mb-6">🎨</div>
-                <h3 className="text-3xl font-black text-white mb-4">No NFTs Available</h3>
-                <p className="text-lg text-[#B4B4C8]">
-                  You don't have any NFTs available to list
+              <div className="rounded-2xl border border-dashed border-[#00C805]/25 bg-[#15181a] py-16 text-center px-6">
+                <p className="text-white font-bold mb-2">No listable NFTs found</p>
+                <p className="text-sm text-[#a8aab2] mb-6">
+                  Mint on the launchpad first, then come back to list.
                 </p>
+                <Link
+                  href="/launchpad"
+                  className="inline-flex px-5 py-3 rounded-xl bg-[#00C805] text-black font-black uppercase text-sm"
+                >
+                  Go to Launchpad
+                </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {nfts.map((nft) => (
                   <button
-                    key={nft.mintAddress}
+                    key={nft.mintKey}
+                    type="button"
                     onClick={() => handleSelectNft(nft)}
-                    className="group text-left"
+                    className="text-left rounded-2xl overflow-hidden bg-[#15181a] border border-white/10 hover:border-[#00C805]/50 transition-all"
                   >
-                    <div className="glass-card-hover border-2 border-[#9945FF]/30 rounded-2xl overflow-hidden hover:border-[#9945FF] transition-all duration-300">
-                      <div className="aspect-square bg-gradient-to-br from-[#9945FF]/20 to-[#14F195]/20 relative overflow-hidden">
-                        {nft.image ? (
-                          <img
-                            src={nft.image}
-                            alt={nft.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <span className="text-6xl">💎</span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-4">
-                        <h3 className="text-lg font-black text-white truncate">{nft.name}</h3>
-                        {nft.collectionName && (
-                          <p className="text-sm text-[#B4B4C8] truncate">{nft.collectionName}</p>
-                        )}
-                      </div>
+                    <div className="aspect-square bg-[#0a0c0d]">
+                      {nft.imageUrl ? (
+                        <img src={nft.imageUrl} alt={nft.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[#00C805]/40 text-4xl">
+                          ◆
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <p className="font-bold text-white truncate">{nft.name}</p>
+                      <p className="text-xs text-[#71717A] mt-1 truncate">
+                        {nft.collectionName || 'Collection'} · #{nft.tokenId}
+                      </p>
                     </div>
                   </button>
                 ))}
@@ -244,137 +228,79 @@ export default function ListNftPage() {
           </div>
         )}
 
-        {/* Step 2: Set Price */}
         {step === 2 && selectedNft && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left: NFT Preview */}
-            <div className="glass-card border-2 border-[#9945FF]/30 rounded-3xl p-8">
-              <h3 className="text-xl font-black text-white mb-6">NFT Preview</h3>
-              <div className="aspect-square bg-gradient-to-br from-[#9945FF]/20 to-[#14F195]/20 rounded-2xl overflow-hidden mb-6">
-                {selectedNft.image ? (
-                  <img
-                    src={selectedNft.image}
-                    alt={selectedNft.name}
-                    className="w-full h-full object-cover"
-                  />
+          <div className="space-y-6 max-w-xl">
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="text-sm text-[#a8aab2] hover:text-white"
+            >
+              ← Change NFT
+            </button>
+
+            <div className="rounded-2xl border border-[#00C805]/25 bg-[#15181a] p-4 flex gap-4">
+              <div className="w-24 h-24 rounded-xl overflow-hidden bg-[#0a0c0d] shrink-0">
+                {selectedNft.imageUrl ? (
+                  <img src={selectedNft.imageUrl} alt="" className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-8xl">💎</span>
-                  </div>
+                  <div className="w-full h-full flex items-center justify-center text-[#00C805]/40">◆</div>
                 )}
               </div>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-[#B4B4C8]">Name</p>
-                  <p className="text-lg font-bold text-white">{selectedNft.name}</p>
-                </div>
-                {selectedNft.collectionName && (
-                  <div>
-                    <p className="text-sm text-[#B4B4C8]">Collection</p>
-                    <p className="text-lg font-bold text-white">{selectedNft.collectionName}</p>
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm text-[#B4B4C8]">Mint Address</p>
-                  <p className="text-sm font-mono text-white truncate">{selectedNft.mintAddress}</p>
-                </div>
+              <div className="min-w-0">
+                <p className="font-black text-white truncate">{selectedNft.name}</p>
+                <p className="text-xs text-[#71717A] mt-1 font-mono truncate">{selectedNft.mintKey}</p>
               </div>
             </div>
 
-            {/* Right: Listing Form */}
-            <div className="glass-card border-2 border-[#14F195]/30 rounded-3xl p-8">
-              <h3 className="text-xl font-black text-white mb-6">Listing Details</h3>
-
-              <div className="space-y-6">
-                {/* Price Input */}
-                <div>
-                  <label className="block text-sm font-bold text-[#B4B4C8] mb-2">
-                    Price (SOL) *
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="number"
-                      step="0.01"
-                      min="0"
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
-                      placeholder="0.00"
-                      className="w-full px-4 py-3 glass-card border-2 border-[#14F195]/20 focus:border-[#14F195] text-white rounded-xl outline-none font-bold text-lg"
-                    />
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B4B4C8] font-bold">
-                      SOL
-                    </span>
-                  </div>
-                  {price && (
-                    <p className="text-sm text-[#B4B4C8] mt-2">
-                      ≈ {(parseFloat(price) * LAMPORTS_PER_SOL).toLocaleString()} lamports
-                    </p>
-                  )}
-                </div>
-
-                {/* Title Input */}
-                <div>
-                  <label className="block text-sm font-bold text-[#B4B4C8] mb-2">
-                    Title (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder={selectedNft.name}
-                    className="w-full px-4 py-3 glass-card border-2 border-[#9945FF]/20 focus:border-[#9945FF] text-white rounded-xl outline-none"
-                  />
-                </div>
-
-                {/* Description Input */}
-                <div>
-                  <label className="block text-sm font-bold text-[#B4B4C8] mb-2">
-                    Description (Optional)
-                  </label>
-                  <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Describe your NFT..."
-                    rows={4}
-                    className="w-full px-4 py-3 glass-card border-2 border-[#9945FF]/20 focus:border-[#9945FF] text-white rounded-xl outline-none resize-none"
-                  />
-                </div>
-
-                {/* Fee Breakdown */}
-                {price && parseFloat(price) > 0 && (
-                  <div className="glass-card border border-[#9945FF]/20 rounded-xl p-4 space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-[#B4B4C8]">Platform Fee (2%)</span>
-                      <span className="text-white font-bold">{platformFee.toFixed(4)} SOL</span>
-                    </div>
-                    <div className="border-t border-[#9945FF]/20 pt-2 flex justify-between">
-                      <span className="text-[#14F195] font-bold">You'll Receive</span>
-                      <span className="text-[#14F195] font-black text-lg">
-                        {sellerReceives.toFixed(4)} SOL
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex gap-4 pt-4">
-                  <button
-                    onClick={() => setStep(1)}
-                    disabled={listing}
-                    className="flex-1 px-6 py-4 bg-[#1a1a1a] border border-[#D4AF37]/30 hover:border-[#D4AF37] text-white font-bold rounded-xl transition-colors"
-                  >
-                    Back
-                  </button>
-                  <button
-                    onClick={handleCreateListing}
-                    disabled={listing || !price || parseFloat(price) <= 0}
-                    className="flex-1 px-6 py-4 bg-[#D4AF37] hover:bg-[#D4AF37]/80 text-[#0a0a0a] font-black rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide"
-                  >
-                    {listing ? 'Listing...' : 'Create Listing'}
-                  </button>
-                </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider text-[#a8aab2] mb-2">
+                  Title
+                </label>
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0c0d] border border-white/10 text-white outline-none focus:border-[#00C805]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider text-[#a8aab2] mb-2">
+                  Description (optional)
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0c0d] border border-white/10 text-white outline-none focus:border-[#00C805]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider text-[#a8aab2] mb-2">
+                  Price (ETH) *
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.0001"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="0.05"
+                  className="w-full px-4 py-3 rounded-xl bg-[#0a0c0d] border border-white/10 text-white outline-none focus:border-[#00C805]"
+                />
+                <p className="text-xs text-[#71717A] mt-2">
+                  Platform fee (~2%) is taken from the sale on-chain.
+                </p>
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={handleCreateListing}
+              disabled={listing}
+              className="w-full px-6 py-4 rounded-xl bg-[#00C805] hover:bg-[#CCFF00] text-black font-black uppercase tracking-wide disabled:opacity-50"
+            >
+              {listing ? 'Listing... (approve + list)' : 'List for sale'}
+            </button>
           </div>
         )}
       </div>

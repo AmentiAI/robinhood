@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Position Preview] Generating new preview for preset: ${presetId}`)
     
+    const imageModel = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2'
     const response = await fetch('https://api.openai.com/v1/images/generations', {
       method: 'POST',
       headers: {
@@ -95,7 +96,7 @@ export async function POST(request: NextRequest) {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-image-1',
+        model: imageModel,
         prompt: prompt,
         n: 1,
         size: '1024x1024',

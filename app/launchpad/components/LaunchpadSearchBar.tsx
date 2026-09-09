@@ -1,10 +1,12 @@
 'use client'
 
+import { Search } from 'lucide-react'
+
 interface LaunchpadSearchBarProps {
   searchTerm: string
   onSearchChange: (value: string) => void
-  filterStatus: 'all' | 'live' | 'upcoming' | 'ended'
-  onFilterChange: (status: 'all' | 'live' | 'upcoming' | 'ended') => void
+  filterStatus: 'all' | 'live' | 'upcoming'
+  onFilterChange: (status: 'all' | 'live' | 'upcoming') => void
 }
 
 export function LaunchpadSearchBar({
@@ -13,37 +15,35 @@ export function LaunchpadSearchBar({
   filterStatus,
   onFilterChange,
 }: LaunchpadSearchBarProps) {
-  const filters: Array<'all' | 'live' | 'upcoming' | 'ended'> = ['all', 'live', 'upcoming', 'ended']
+  const filters: Array<'all' | 'live' | 'upcoming'> = ['all', 'live', 'upcoming']
 
   return (
-    <div className="bg-[#0a0a0a] border-b border-[#404040]/40 px-6 py-4">
-      <div className="max-w-7xl mx-auto flex items-center gap-4">
-        {/* Search */}
-        <div className="flex-1 relative">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="SEARCH COLLECTIONS..."
-            className="w-full px-4 py-2 bg-[#1a1a1a] border border-[#404040] hover:border-[#D4AF37]/40 focus:border-[#D4AF37] text-white text-xs uppercase tracking-wider placeholder:text-[#808080] outline-none transition-colors"
-          />
-        </div>
-        {/* Filter Buttons */}
-        <div className="flex items-center gap-2">
-          {filters.map((status) => (
-            <button
-              key={status}
-              onClick={() => onFilterChange(status)}
-              className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
-                filterStatus === status
-                  ? 'bg-[#1a1a1a] border border-[#D4AF37] text-[#D4AF37]'
-                  : 'bg-[#1a1a1a] border border-[#404040] text-[#808080] hover:border-[#D4AF37]/40 hover:text-white'
-              }`}
-            >
-              {status}
-            </button>
-          ))}
-        </div>
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <div className="flex-1 relative">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A]" />
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          placeholder="Search collections..."
+          className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#15181a] border border-white/10 hover:border-[#00C805]/35 focus:border-[#00C805] text-white text-sm placeholder:text-[#71717A] outline-none transition-colors"
+        />
+      </div>
+      <div className="flex items-center gap-2">
+        {filters.map((status) => (
+          <button
+            key={status}
+            type="button"
+            onClick={() => onFilterChange(status)}
+            className={`px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors ${
+              filterStatus === status
+                ? 'bg-[#00C805] text-black shadow-[0_0_20px_rgba(0,200,5,0.35)]'
+                : 'bg-[#15181a] border border-white/10 text-[#a8aab2] hover:border-[#00C805]/40 hover:text-white'
+            }`}
+          >
+            {status}
+          </button>
+        ))}
       </div>
     </div>
   )

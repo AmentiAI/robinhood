@@ -1,149 +1,76 @@
 /**
- * Platform wallet for receiving fees and payments
- * This wallet is controlled by the platform and receives:
- * - Credit purchase payments
- * - Optional platform minting fees
- * - Other platform revenue
+ * Platform wallet helpers — Robinhood Chain live path
+ * (keeps Solana-era function names for import compatibility)
  */
 
-import { Keypair, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js'
-import { getConnectionAsync } from './connection'
-import bs58 from 'bs58'
+import { getPlatformFeeWei, getPlatformWallet } from '@/lib/robinhood/config'
+import { getEthBalance } from '@/lib/robinhood/client'
 
-/**
- * Get the platform wallet public key (address)
- * Returns null during build time if not configured
- */
 export function getPlatformWalletAddress(): string | null {
-  const address = process.env.SOLANA_PLATFORM_WALLET
-  
-  if (!address) {
-    return null
-  }
-  
-  return address
-}
-
-/**
- * Get the platform wallet as a PublicKey object
- */
-export function getPlatformWalletPublicKey(): PublicKey | null {
-  const address = getPlatformWalletAddress()
-  if (!address) return null
-  return new PublicKey(address)
-}
-
-/**
- * Get the platform wallet keypair (private key access)
- * ⚠️ ONLY USE ON SERVER SIDE - NEVER EXPOSE TO CLIENT
- */
-export function getPlatformWalletKeypair(): Keypair {
-  const privateKey = process.env.SOLANA_PLATFORM_PRIVATE_KEY
-  
-  if (!privateKey) {
-    throw new Error('SOLANA_PLATFORM_PRIVATE_KEY not configured in environment')
-  }
-  
   try {
-    // Decode base58 private key to Uint8Array
-    const secretKey = bs58.decode(privateKey)
-    return Keypair.fromSecretKey(secretKey)
-  } catch (error: any) {
-    throw new Error(`Failed to load platform wallet keypair: ${error.message}`)
+    return getPlatformWallet()
+  } catch {
+    return process.env.RH_PLATFORM_WALLET || process.env.SOLANA_PLATFORM_WALLET || null
   }
 }
 
-/**
- * Get platform wallet balance
- */
-export async function getPlatformWalletBalance(): Promise<number | null> {
-  const publicKey = getPlatformWalletPublicKey()
-  if (!publicKey) return null
-  
-  const connection = await getConnectionAsync()
-  const balance = await connection.getBalance(publicKey)
-  return balance / LAMPORTS_PER_SOL
+export function getPlatformFeeSol(): number {
+  return Number(process.env.NEXT_PUBLIC_RH_PLATFORM_FEE_ETH || process.env.NEXT_PUBLIC_SOLANA_PLATFORM_FEE_SOL || '0.001')
 }
 
-/**
- * Verify platform wallet is configured and accessible
- */
+export function getPlatformFeeDestination(): string | null {
+  return getPlatformWalletAddress()
+}
+
+export function calculatePlatformMintFee(_quantity = 1): number {
+  return getPlatformFeeSol() * _quantity
+}
+
+export async function getPlatformWalletBalance(): Promise<number> {
+  const addr = getPlatformWalletAddress()
+  if (!addr || !addr.startsWith('0x')) return 0
+  try {
+    return await getEthBalance(addr as `0x${string}`)
+  } catch {
+    return 0
+  }
+}
+
 export async function verifyPlatformWallet(): Promise<{
   configured: boolean
-  address?: string
-  balance?: number
+  address: string | null
+  balance: number
   error?: string
 }> {
+  const address = getPlatformWalletAddress()
+  if (!address) {
+    return { configured: false, address: null, balance: 0, error: 'RH_PLATFORM_WALLET not set' }
+  }
   try {
-    const address = getPlatformWalletAddress()
-    const keypair = getPlatformWalletKeypair()
     const balance = await getPlatformWalletBalance()
-    
-    // Verify keypair matches address
-    if (keypair.publicKey.toBase58() !== address) {
-      return {
-        configured: false,
-        error: 'Private key does not match public address',
-      }
-    }
-    
-    return {
-      configured: true,
-      address,
-      balance,
-    }
-  } catch (error: any) {
-    return {
-      configured: false,
-      error: error.message,
-    }
+    return { configured: true, address, balance }
+  } catch (e: any) {
+    return { configured: true, address, balance: 0, error: e?.message || 'balance check failed' }
   }
 }
 
-/**
- * Get the platform mint fee in SOL from environment.
- * Uses NEXT_PUBLIC_ prefix so it's available on both server and client.
- * Defaults to 0 if not set (no platform fee).
- */
-export function getPlatformFeeSol(): number {
-  const feeSol = parseFloat(process.env.NEXT_PUBLIC_SOLANA_PLATFORM_FEE_SOL || '0')
-  return isNaN(feeSol) ? 0 : feeSol
-}
-
-/**
- * Get the platform mint fee in lamports.
- */
 export function getPlatformFeeLamports(): number {
-  return Math.floor(getPlatformFeeSol() * LAMPORTS_PER_SOL)
+  // Compatibility: return fee in "atomic" units (wei truncated to number-safe range for legacy callers)
+  const eth = getPlatformFeeSol()
+  return Math.floor(eth * 1e9) // was lamports; now nano-ETH style for display math
 }
 
-/**
- * Platform fee constants - derived from environment.
- * PLATFORM_FEES.MINT_FEE_LAMPORTS reads from NEXT_PUBLIC_SOLANA_PLATFORM_FEE_SOL.
- */
 export const PLATFORM_FEES = {
-  get MINT_FEE_LAMPORTS() {
-    return getPlatformFeeLamports()
+  get MINT_FEE_WEI() {
+    return getPlatformFeeWei()
+  },
+  get MINT_FEE_ETH() {
+    return getPlatformFeeSol()
   },
   get MINT_FEE_SOL() {
     return getPlatformFeeSol()
   },
-  // Credit purchase minimum
-  MIN_CREDIT_PURCHASE_LAMPORTS: 10_000_000, // 0.01 SOL minimum
-}
-
-/**
- * Calculate platform mint fee
- */
-export function calculatePlatformMintFee(
-  enablePlatformFee: boolean = false
-): number {
-  return enablePlatformFee ? getPlatformFeeLamports() : 0
-}
-
-/**
- * Get platform fee destination for Candy Machine guards
- */
-export function getPlatformFeeDestination(): string | null {
-  return getPlatformWalletAddress()
+  get MINT_FEE_LAMPORTS() {
+    return getPlatformFeeLamports()
+  },
 }

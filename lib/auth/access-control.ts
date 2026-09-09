@@ -6,6 +6,7 @@ export const AUTHORIZED_WALLETS = [
   'bc1ptku2xtatqhntfctzachrmr8laq36s20wtrgnm66j39g0a3fwamlqxkryf2', // Bitcoin wallet
   'D3SNZXJwsMVqJM7qBMUZ8w2rnDhNiLbSs2TT1Ez8GiLJ', // Solana wallet - Admin
   '5evWF4HACa6fomaEzXS4UtCogR6S9R5nh1PLgm6dEFZK', // Solana wallet - Dev Admin
+  '0x19e135Fc29C7559C08C446d5F702467Cca429DFb', // Robinhood Chain / EVM - Admin
 ]
 
 export const AUTHORIZED_USERNAMES = [

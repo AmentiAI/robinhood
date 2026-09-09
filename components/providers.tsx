@@ -1,40 +1,28 @@
 'use client'
 
-import { useMemo } from 'react'
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
-import { SolflareWalletAdapter } from '@solana/wallet-adapter-wallets'
-import { clusterApiUrl } from '@solana/web3.js'
-import { SolanaWalletProvider } from '@/lib/wallet/solana-wallet-context'
+import { useMemo, useState, type ReactNode } from 'react'
+import { WagmiProvider } from 'wagmi'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createWagmiConfig } from '@/lib/robinhood/wagmi-config'
+import { EvmWalletProvider } from '@/lib/wallet/evm-wallet-context'
 import { ProfileProvider } from '@/lib/profile/useProfile'
 import { CreditsProvider } from '@/lib/credits-context'
 
-import '@solana/wallet-adapter-react-ui/styles.css'
+export function Providers({ children }: { children: ReactNode }) {
+  const [queryClient] = useState(() => new QueryClient())
+  const config = useMemo(() => createWagmiConfig(), [])
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  const endpoint = useMemo(() => {
-    return process.env.NEXT_PUBLIC_SOLANA_RPC_URL || clusterApiUrl('mainnet-beta')
-  }, [])
-
-  // Phantom auto-registers as a Standard Wallet — no explicit adapter needed.
-  // Adding PhantomWalletAdapter causes duplicate connections and signing failures.
-  const wallets = useMemo(() => [
-    new SolflareWalletAdapter(),
-  ], [])
-
+  // Always mount EvmWalletProvider — ProfileProvider/useWallet depend on it.
+  // Wagmi config uses ssr: true for hydration safety.
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          <SolanaWalletProvider>
-            <CreditsProvider>
-              <ProfileProvider>
-                {children}
-              </ProfileProvider>
-            </CreditsProvider>
-          </SolanaWalletProvider>
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <EvmWalletProvider>
+          <CreditsProvider>
+            <ProfileProvider>{children}</ProfileProvider>
+          </CreditsProvider>
+        </EvmWalletProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   )
 }
