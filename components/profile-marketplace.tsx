@@ -2,312 +2,231 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useWallet } from '@/lib/wallet/compatibility'
-import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
-import { MarketplaceReviewsDisplay } from '@/components/marketplace-reviews-display'
+import { useWalletClient } from 'wagmi'
+import { getExplorerTxUrl } from '@/lib/explorer'
 
-interface MarketplaceListing {
+interface RhListing {
   id: string
-  collection_id: string
-  seller_wallet: string
-  price_credits: number
-  price_btc?: string | null
-  seller_btc_address?: string | null
-  payment_type: 'credits' | 'btc' | 'both'
-  title: string
-  description?: string
-  included_promo_urls: string[]
+  mint_address: string
+  title?: string
+  image_url?: string
+  price_eth?: number
+  price_sol?: number
   status: string
   created_at: string
-  collection_name: string
-  collection_description?: string
-  ordinal_count: number
-  sample_image?: string
-  has_pending_payment?: boolean
-  pending_buyer_wallet?: string
+  sold_at?: string
+  collection_name?: string
+  contract_address?: string
+  token_id?: string
+}
+
+function parseContractToken(mintAddress: string) {
+  const parts = mintAddress.split(':')
+  if (parts.length >= 2 && parts[0].startsWith('0x')) {
+    return { contract: parts[0], tokenId: parts.slice(1).join(':') }
+  }
+  return null
 }
 
 export function ProfileMarketplace() {
-  const router = useRouter()
   const { isConnected, currentAddress } = useWallet()
+  const { data: walletClient } = useWalletClient()
   const activeWalletAddress = useMemo(() => {
     if (currentAddress && isConnected) return currentAddress
     return null
   }, [currentAddress, isConnected])
 
-  const [listings, setListings] = useState<MarketplaceListing[]>([])
+  const [tab, setTab] = useState<'active' | 'sold'>('active')
+  const [listings, setListings] = useState<RhListing[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [cancelingId, setCancelingId] = useState<string | null>(null)
 
   useEffect(() => {
-    if (activeWalletAddress) {
-      loadListings()
-    } else {
-      setLoading(false)
-    }
-  }, [activeWalletAddress])
+    if (activeWalletAddress) loadListings()
+    else setLoading(false)
+  }, [activeWalletAddress, tab])
 
   const loadListings = async () => {
     if (!activeWalletAddress) return
-
     setLoading(true)
-    setError(null)
-
     try {
-      // Get all listings (active and sold) for this wallet
-      const [activeResponse, soldResponse] = await Promise.all([
-        fetch(`/api/marketplace/listings?status=active&seller_wallet=${encodeURIComponent(activeWalletAddress)}`),
-        fetch(`/api/marketplace/listings?status=sold&seller_wallet=${encodeURIComponent(activeWalletAddress)}`)
-      ])
-
-      const activeData = activeResponse.ok ? await activeResponse.json() : { listings: [] }
-      const soldData = soldResponse.ok ? await soldResponse.json() : { listings: [] }
-
-      setListings([...activeData.listings, ...soldData.listings])
+      const res = await fetch(
+        `/api/marketplace/rh/listings?status=${tab}&seller_wallet=${encodeURIComponent(activeWalletAddress)}`
+      )
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to load')
+      setListings(data.listings || [])
     } catch (err) {
-      console.error('Error loading marketplace listings:', err)
-      setError('Failed to load marketplace listings')
+      console.error(err)
+      toast.error('Failed to load marketplace listings')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleCancelListing = async (listingId: string) => {
-    if (!confirm('Are you sure you want to cancel this listing? This will remove it from the marketplace.')) {
+  const handleCancel = async (listing: RhListing) => {
+    if (!activeWalletAddress || !walletClient) {
+      toast.error('Connect wallet')
+      return
+    }
+    if (!confirm('Cancel this listing?')) return
+
+    const parsed =
+      parseContractToken(listing.mint_address) ||
+      (listing.contract_address && listing.token_id
+        ? { contract: listing.contract_address, tokenId: listing.token_id }
+        : null)
+    if (!parsed) {
+      toast.error('Invalid listing')
       return
     }
 
+    setCancelingId(listing.id)
     try {
-      const response = await fetch(`/api/marketplace/listings/${listingId}/cancel`, {
-        method: 'PATCH',
+      const response = await fetch('/api/marketplace/rh/cancel', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'cancel' })
+        body: JSON.stringify({
+          wallet_address: activeWalletAddress,
+          contract_address: parsed.contract,
+          token_id: parsed.tokenId,
+        }),
+      })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Cancel failed')
+
+      const txHash = await walletClient.sendTransaction({
+        to: data.cancel.to as `0x${string}`,
+        data: data.cancel.data as `0x${string}`,
+        chain: undefined,
       })
 
-      if (response.ok) {
-        await loadListings()
-        toast.success('Listing cancelled successfully')
-      } else {
-        const errorData = await response.json()
-        toast.error('Error', { description: errorData.error || 'Failed to cancel listing' })
-      }
-    } catch (error) {
-      console.error('Error cancelling listing:', error)
-      toast.error('Failed to cancel listing')
+      await fetch('/api/marketplace/rh/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wallet_address: activeWalletAddress,
+          listing_id: listing.id,
+          tx_hash: txHash,
+        }),
+      })
+
+      toast.success(
+        <div>
+          Cancelled.{' '}
+          <a href={getExplorerTxUrl(txHash)} target="_blank" rel="noreferrer" className="underline">
+            View tx
+          </a>
+        </div>
+      )
+      loadListings()
+    } catch (e: any) {
+      toast.error(e?.shortMessage || e?.message || 'Cancel failed')
+    } finally {
+      setCancelingId(null)
     }
   }
 
-  if (!activeWalletAddress) {
+  if (!isConnected || !activeWalletAddress) {
     return (
-      <div>
-        <h3 className="text-xl font-bold text-white mb-4">My Marketplace</h3>
-        <p className="text-white/70">Please connect your wallet to view your marketplace listings.</p>
+      <div className="rounded-2xl border border-white/10 bg-[#15181a] p-8 text-center text-[#a8aab2]">
+        Connect your wallet to manage NFT listings.
       </div>
     )
   }
-
-  if (loading) {
-    return (
-      <div>
-        <h3 className="text-xl font-bold text-white mb-4">My Marketplace</h3>
-        <p className="text-white/70">Loading listings...</p>
-      </div>
-    )
-  }
-
-  const activeListings = listings.filter(l => l.status === 'active')
-  const soldListings = listings.filter(l => l.status === 'sold')
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-bold text-white">My Marketplace</h3>
-        <Link
-          href="/marketplace"
-          className="px-4 py-2 bg-[#39FF14] hover:bg-[#00C805] text-white rounded-lg font-semibold transition-colors text-sm shadow-lg shadow-[#39FF14]/20"
-        >
-          Browse Marketplace
-        </Link>
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-black text-white">My Marketplace</h2>
+          <p className="text-sm text-[#a8aab2]">Robinhood Chain NFT listings</p>
+        </div>
+        <div className="flex gap-2">
+          <Link
+            href="/marketplace/list"
+            className="px-4 py-2 rounded-xl bg-[#00C805] text-black text-xs font-black uppercase"
+          >
+            List NFT
+          </Link>
+          <Link
+            href="/marketplace/my-listings"
+            className="px-4 py-2 rounded-xl border border-[#00C805]/40 text-[#00C805] text-xs font-black uppercase"
+          >
+            All listings
+          </Link>
+        </div>
       </div>
 
-      {error && (
-        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
-          {error}
-        </div>
-      )}
-
-      {listings.length === 0 ? (
-        <div className="text-center py-8 text-white/70">
-          <p className="text-lg mb-2">No marketplace listings yet.</p>
-          <p className="text-sm text-[#a8a8b8]/80 mb-4">List your collections to start selling!</p>
-          <Link
-            href="/marketplace"
-            className="inline-block px-6 py-2 bg-[#39FF14] hover:bg-[#00C805] text-white rounded-lg font-semibold transition-colors shadow-lg shadow-[#39FF14]/20"
+      <div className="flex gap-2">
+        {(['active', 'sold'] as const).map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => setTab(t)}
+            className={`px-4 py-2 rounded-xl text-xs font-black uppercase ${
+              tab === t ? 'bg-[#00C805] text-black' : 'bg-[#15181a] border border-white/10 text-[#a8aab2]'
+            }`}
           >
-            List a Collection →
+            {t}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className="py-12 text-center text-[#a8aab2]">Loading...</div>
+      ) : listings.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-[#00C805]/25 bg-[#15181a] py-12 text-center">
+          <p className="text-white font-bold mb-2">No {tab} listings</p>
+          <Link href="/marketplace/list" className="text-[#00C805] text-sm font-bold uppercase">
+            List an NFT →
           </Link>
         </div>
       ) : (
-        <div className="space-y-6">
-          {/* Active Listings */}
-          {activeListings.length > 0 && (
-            <div>
-              <h4 className="text-lg font-semibold text-[#39FF14] mb-3 flex items-center gap-2">
-                <span>✓</span>
-                Active Listings ({activeListings.length})
-              </h4>
-              <div className="grid md:grid-cols-2 gap-4">
-                {activeListings.map((listing) => (
-                  <div
-                    key={listing.id}
-                    className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#39FF14]/50 rounded-xl overflow-hidden hover:shadow-lg transition-all"
+        <div className="space-y-3">
+          {listings.map((l) => {
+            const price = Number(l.price_eth ?? l.price_sol ?? 0)
+            return (
+              <div
+                key={l.id}
+                className="flex items-center gap-4 p-4 rounded-2xl bg-[#15181a] border border-white/10"
+              >
+                <div className="w-14 h-14 rounded-xl overflow-hidden bg-[#0a0c0d] shrink-0">
+                  {l.image_url ? (
+                    <img src={l.image_url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-[#00C805]/40">◆</div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <Link
+                    href={`/marketplace/nft/${l.id}`}
+                    className="font-bold text-white hover:text-[#00C805] truncate block"
                   >
-                    {/* Sample Image */}
-                    {listing.sample_image && (
-                      <div className="h-40 bg-white/5 overflow-hidden">
-                        <img
-                          src={listing.sample_image}
-                          alt={listing.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-
-                    <div className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-bold text-lg text-white flex-1">{listing.title}</h4>
-                        <span className="px-2 py-1 bg-[#39FF14]/20 text-[#39FF14] text-xs font-bold rounded-full border border-[#39FF14]/30">
-                          Active
-                        </span>
-                      </div>
-
-                      <div className="space-y-2 mb-3">
-                        <div className="text-sm text-white/70">
-                          <span className="font-medium">{listing.ordinal_count}</span> NFTs
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          {(listing.payment_type === 'credits' || listing.payment_type === 'both') && (
-                            <span className="px-2 py-1 bg-[#39FF14]/20 text-[#39FF14] rounded text-xs font-semibold border border-[#39FF14]/30">
-                              {listing.price_credits} Credits
-                            </span>
-                          )}
-                          {(listing.payment_type === 'btc' || listing.payment_type === 'both') && listing.price_btc && (
-                            <span className="px-2 py-1 bg-[#DC1FFF]/20 text-[#DC1FFF] rounded text-xs font-semibold border border-[#DC1FFF]/30">
-                              {parseFloat(listing.price_btc).toFixed(6)} BTC
-                            </span>
-                          )}
-                        </div>
-
-                        {listing.has_pending_payment && (
-                          <div className="px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#DC1FFF]/50 rounded-lg">
-                            <p className="text-xs text-[#DC1FFF] font-medium">
-                              ⏳ Pending BTC Payment
-                            </p>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Link
-                          href={`/marketplace/${listing.id}`}
-                          className="flex-1 px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#39FF14]/30 hover:border-[#39FF14]/50 text-white/70 hover:text-white rounded-lg text-sm font-semibold text-center transition-colors"
-                        >
-                          View
-                        </Link>
-                        <button
-                          onClick={() => handleCancelListing(listing.id)}
-                          className="px-3 py-2 bg-[#EF4444] hover:bg-[#ff3838] text-white rounded-lg text-sm font-semibold transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Sold Listings */}
-          {soldListings.length > 0 && (
-            <div>
-              <h4 className="text-lg font-semibold text-white/70 mb-3 flex items-center gap-2">
-                <span>✓</span>
-                Sold ({soldListings.length})
-              </h4>
-              <div className="grid md:grid-cols-2 gap-4">
-                {soldListings.map((listing) => (
-                  <div
-                    key={listing.id}
-                    className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-white/20 rounded-xl overflow-hidden opacity-75"
+                    {l.title || 'NFT'}
+                  </Link>
+                  <p className="text-xs text-[#71717A]">
+                    {price.toFixed(4)} ETH
+                    {l.collection_name ? ` · ${l.collection_name}` : ''}
+                  </p>
+                </div>
+                {tab === 'active' && (
+                  <button
+                    type="button"
+                    onClick={() => handleCancel(l)}
+                    disabled={cancelingId === l.id}
+                    className="px-3 py-2 text-xs font-bold uppercase text-[#ff5052] border border-[#ff5052]/30 rounded-lg disabled:opacity-50"
                   >
-                    {/* Sample Image */}
-                    {listing.sample_image && (
-                      <div className="h-40 bg-white/5 overflow-hidden">
-                        <img
-                          src={listing.sample_image}
-                          alt={listing.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-
-                    <div className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="font-bold text-lg text-white/70 flex-1">{listing.title}</h4>
-                        <span className="px-2 py-1 bg-white/20 text-white/70 text-xs font-bold rounded-full">
-                          Sold
-                        </span>
-                      </div>
-
-                      <div className="space-y-2 mb-3">
-                        <div className="text-sm text-[#a8a8b8]/80">
-                          <span className="font-medium">{listing.ordinal_count}</span> NFTs
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          {(listing.payment_type === 'credits' || listing.payment_type === 'both') && (
-                            <span className="px-2 py-1 bg-white/10 text-[#a8a8b8]/80 rounded text-xs font-semibold">
-                              {listing.price_credits} Credits
-                            </span>
-                          )}
-                          {(listing.payment_type === 'btc' || listing.payment_type === 'both') && listing.price_btc && (
-                            <span className="px-2 py-1 bg-white/10 text-[#a8a8b8]/80 rounded text-xs font-semibold">
-                              {parseFloat(listing.price_btc).toFixed(6)} BTC
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <Link
-                        href={`/marketplace/${listing.id}`}
-                        className="block w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-white/20 hover:border-white/30 text-white/70 hover:text-white rounded-lg text-sm font-semibold text-center transition-colors"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+                    {cancelingId === l.id ? '...' : 'Cancel'}
+                  </button>
+                )}
               </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Seller Reviews Section */}
-      {activeWalletAddress && (
-        <div className="mt-8 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#39FF14]/30 rounded-xl p-6">
-          <h3 className="text-xl font-bold text-white mb-4">My Seller Reviews</h3>
-          <MarketplaceReviewsDisplay
-            sellerWallet={activeWalletAddress}
-            showStats={true}
-          />
+            )
+          })}
         </div>
       )}
     </div>
   )
 }
-

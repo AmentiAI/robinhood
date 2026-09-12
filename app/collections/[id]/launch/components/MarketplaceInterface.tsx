@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Collection } from '../types'
 
 interface MarketplaceInterfaceProps {
@@ -11,22 +12,30 @@ interface MarketplaceInterfaceProps {
 
 export default function MarketplaceInterface({
   collection,
-  collectionId,
-  currentAddress,
-  onLoadData,
 }: MarketplaceInterfaceProps) {
   return (
     <div className="space-y-6">
-      <div className="bg-white border border-gray-200 rounded-xl p-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">💰 List Collection on Marketplace</h2>
-          <p className="text-gray-600">
-            Sell your entire collection (as generated images) for credits or BTC. The buyer will receive full ownership to generate more, inscribe, or launch as they wish.
-          </p>
+      <div className="rounded-2xl border border-[#00C805]/25 bg-[#15181a] p-8">
+        <h2 className="text-2xl font-black text-white mb-2">NFT Marketplace</h2>
+        <p className="text-[#a8aab2] mb-6">
+          Individual NFTs from <span className="text-white font-bold">{collection.name}</span> trade
+          on the Robinhood Chain marketplace in ETH after minting.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/marketplace"
+            className="px-5 py-3 rounded-xl bg-[#00C805] text-black font-black uppercase text-sm"
+          >
+            Open Marketplace
+          </Link>
+          <Link
+            href="/marketplace/list"
+            className="px-5 py-3 rounded-xl border border-[#00C805]/40 text-[#00C805] font-black uppercase text-sm"
+          >
+            List an NFT
+          </Link>
         </div>
-        <p className="text-[#a8a8b8]/80">Marketplace interface - to be implemented</p>
       </div>
     </div>
   )
 }
-

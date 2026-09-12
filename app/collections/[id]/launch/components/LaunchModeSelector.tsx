@@ -69,15 +69,15 @@ export default function LaunchModeSelector({ onSelectMode }: LaunchModeSelectorP
               <span className="text-2xl">💰</span>
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Sell on Marketplace</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">NFT Marketplace</h3>
               <p className="text-gray-600 text-sm mb-3">
-                Sell your entire collection (as images) for SOL or credits before minting
+                After minting on Robinhood Chain, list individual NFTs for sale in ETH
               </p>
               <ul className="text-sm text-[#a8a8b8]/80 space-y-1">
-                <li>✓ Sell collection for SOL or credits</li>
-                <li>✓ Include promotional materials</li>
-                <li>✓ Transfer full ownership</li>
-                <li>✓ Never mint it yourself</li>
+                <li>✓ Trade NFTs on Robinhood Chain</li>
+                <li>✓ Price in ETH</li>
+                <li>✓ Escrow buy / cancel</li>
+                <li>✓ Manage from My Listings</li>
               </ul>
             </div>
           </div>

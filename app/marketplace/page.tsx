@@ -11,7 +11,7 @@ interface NftListing {
   id: string
   mint_address: string
   title?: string
-  price_lamports: number
+  price_lamports: number | string
   price_sol: number
   price_eth?: number
   seller_wallet: string
@@ -75,19 +75,23 @@ export default function MarketplacePage() {
     // Price range filter
     if (priceRange !== 'all') {
       filtered = filtered.filter(listing => {
-        const ETH = listing.price_sol
-        if (priceRange === 'under_1') return ETH < 1
-        if (priceRange === '1_to_5') return ETH >= 1 && ETH <= 5
-        if (priceRange === 'over_5') return ETH > 5
+        const eth = Number(listing.price_eth ?? listing.price_sol ?? 0)
+        if (priceRange === 'under_1') return eth < 1
+        if (priceRange === '1_to_5') return eth >= 1 && eth <= 5
+        if (priceRange === 'over_5') return eth > 5
         return true
       })
     }
 
     // Sort
     if (sortBy === 'price_low') {
-      filtered.sort((a, b) => a.price_lamports - b.price_lamports)
+      filtered.sort(
+        (a, b) => Number(a.price_eth ?? a.price_sol ?? 0) - Number(b.price_eth ?? b.price_sol ?? 0)
+      )
     } else if (sortBy === 'price_high') {
-      filtered.sort((a, b) => b.price_lamports - a.price_lamports)
+      filtered.sort(
+        (a, b) => Number(b.price_eth ?? b.price_sol ?? 0) - Number(a.price_eth ?? a.price_sol ?? 0)
+      )
     } else {
       filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     }
@@ -218,13 +222,20 @@ export default function MarketplacePage() {
                 </span>
               </div>
               {isConnected && (
-                <Link
-                  href="/marketplace/list"
-                  className="group px-8 py-4 bg-[#15181a] border border-[#00C805] text-white font-black tracking-wider uppercase transition-all duration-300 hover:bg-[#00C805] hover:text-black relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                  <span className="relative z-10">List NFT</span>
-                </Link>
+                <div className="flex gap-2">
+                  <Link
+                    href="/marketplace/my-listings"
+                    className="px-5 py-3 bg-[#15181a] border border-white/15 text-white font-bold tracking-wider uppercase text-sm hover:border-[#00C805]/50"
+                  >
+                    My Listings
+                  </Link>
+                  <Link
+                    href="/marketplace/list"
+                    className="group px-8 py-3 bg-[#00C805] text-black font-black tracking-wider uppercase transition-all duration-300 hover:bg-[#CCFF00]"
+                  >
+                    List NFT
+                  </Link>
+                </div>
               )}
             </div>
 
@@ -288,11 +299,16 @@ export default function MarketplacePage() {
                         <h3 className="text-lg font-black text-white truncate relative z-10 uppercase tracking-wide">
                           {listing.title || 'NFT'}
                         </h3>
+                        {listing.collection_name && (
+                          <p className="text-xs text-[#71717A] relative z-10 truncate">
+                            {listing.collection_name}
+                          </p>
+                        )}
                         <div className="flex items-center justify-between relative z-10">
                           <span className="text-sm font-bold text-[#808080]">Price</span>
                           <div className="flex items-center gap-2">
                             <span className="text-xl font-black text-[#00C805]">
-                              {parseFloat(String(listing.price_eth ?? listing.price_sol)).toFixed(4)}
+                              {Number(listing.price_eth ?? listing.price_sol ?? 0).toFixed(4)}
                             </span>
                             <span className="text-sm font-bold text-[#808080]">ETH</span>
                           </div>
@@ -304,20 +320,6 @@ export default function MarketplacePage() {
               </div>
             )}
 
-            {/* Pagination */}
-            {filteredListings.length > 0 && (
-              <div className="mt-12 flex items-center justify-center gap-2">
-                <button className="px-4 py-2 bg-[#15181a] border border-[#404040] text-white hover:border-[#00C805] transition-all">
-                  Previous
-                </button>
-                <button className="px-4 py-2 bg-[#00C805] text-black font-semibold">
-                  1
-                </button>
-                <button className="px-4 py-2 bg-[#15181a] border border-[#404040] text-white hover:border-[#00C805] transition-all">
-                  Next
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

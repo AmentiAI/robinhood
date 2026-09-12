@@ -50,20 +50,17 @@ export default function NftDetailPage() {
   const loadListing = async () => {
     setLoading(true)
     try {
-      // Try active first, then any status for seller views of pending
-      const response = await fetch(`/api/marketplace/rh/listings?status=active`)
+      const response = await fetch(`/api/marketplace/rh/listings?id=${encodeURIComponent(listingId)}`)
       const data = await response.json()
-      if (response.ok) {
-        let found = (data.listings || []).find(
+      if (response.ok && (data.listing || data.listings?.[0])) {
+        setListing(data.listing || data.listings[0])
+      } else {
+        // Fallback: match by mint_address among active
+        const all = await fetch(`/api/marketplace/rh/listings?status=active`)
+        const allData = await all.json()
+        const found = (allData.listings || []).find(
           (l: any) => l.id === listingId || l.mint_address === listingId
         )
-        if (!found) {
-          const pendingRes = await fetch(`/api/marketplace/rh/listings?status=pending`)
-          const pendingData = await pendingRes.json()
-          found = (pendingData.listings || []).find(
-            (l: any) => l.id === listingId || l.mint_address === listingId
-          )
-        }
         if (found) setListing(found)
         else {
           toast.error('Listing not found')

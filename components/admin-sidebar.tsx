@@ -75,6 +75,7 @@ export function AdminSidebar() {
       category: 'System',
       items: [
         { path: '/admin/site-settings', label: 'Site Settings', icon: '⚙' },
+        { path: '/admin/whitelist', label: 'Whitelist', icon: '✓' },
         { path: '/support/admin', label: 'Support Inbox', icon: '✉' },
       ],
     },

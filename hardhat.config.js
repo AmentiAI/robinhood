@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("@nomicfoundation/hardhat-toolbox");
 
 const RH_RPC_URL = process.env.RH_RPC_URL || "https://rpc.testnet.chain.robinhood.com";
 const RH_PRIVATE_KEY = process.env.RH_PLATFORM_PRIVATE_KEY || process.env.PRIVATE_KEY || "";
