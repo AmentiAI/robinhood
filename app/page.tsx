@@ -8,7 +8,6 @@ import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
 import { useSiteLock } from '@/components/site-lock-provider'
 import { useRouter } from 'next/navigation'
 import {
-  Wallet,
   ArrowRight,
   Crown,
   Trophy,
@@ -214,7 +213,7 @@ export default function HomePage() {
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
         {/* Header */}
         <header
-          className="flex items-center justify-between gap-4 mb-6 sm:mb-8 py-2"
+          className="flex items-center mb-6 sm:mb-8 py-2"
           style={anim('0s')}
         >
           <a href="#" className="flex items-center gap-2 shrink-0 group">
@@ -226,20 +225,6 @@ export default function HomePage() {
               HoodGFX
             </span>
           </a>
-
-          <button
-            type="button"
-            onClick={handleConnect}
-            disabled={connecting || (isConnected && !!address)}
-            className="inline-flex items-center gap-2.5 h-12 sm:h-14 px-5 sm:px-6 rounded-xl border-2 border-[#2DE2FF]/70 bg-black/40 text-sm sm:text-[15px] font-bold text-white hover:bg-[#2DE2FF]/10 hover:border-[#2DE2FF] transition-all disabled:opacity-80"
-          >
-            <Wallet className="h-5 w-5 text-[#2DE2FF]" />
-            {isConnected && address
-              ? shortAddr(address)
-              : connecting
-                ? 'Connecting…'
-                : 'Connect Wallet'}
-          </button>
         </header>
 
         {/* Hero grid */}
@@ -288,7 +273,7 @@ export default function HomePage() {
                 boxShadow: '0 0 36px rgba(168, 85, 247, 0.35)',
               }}
             >
-              Start Creating
+              Join the whitelist
               <ArrowRight className="h-5 w-5" />
             </button>
           </div>
