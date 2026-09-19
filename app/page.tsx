@@ -99,12 +99,12 @@ const CSS = `
 
 export default function HomePage() {
   const router = useRouter()
-  const { isConnected, address, connect, disconnect } = useEvmWallet()
-  const { locked, allowed, isAdmin, status, loading, refresh } = useSiteLock()
-  const [email, setEmail] = useState('')
+  const { address } = useEvmWallet()
+  const { allowed, isAdmin, status, loading, refresh } = useSiteLock()
+  const [formWallet, setFormWallet] = useState('')
   const [twitter, setTwitter] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [connecting, setConnecting] = useState(false)
+  const [showJoinModal, setShowJoinModal] = useState(false)
   const [entered, setEntered] = useState(false)
   const [wlPanel, setWlPanel] = useState<'board' | 'spots' | 'how' | 'req'>('board')
   const [wlEntries, setWlEntries] = useState<
@@ -132,37 +132,39 @@ export default function HomePage() {
 
   const handleEnter = () => router.push('/launchpad')
 
-  const handleConnect = async () => {
-    setConnecting(true)
-    try {
-      const ok = await connect()
-      if (!ok) toast.error('Connection cancelled')
-    } catch {
-      toast.error('Failed to connect wallet')
-    } finally {
-      setConnecting(false)
-    }
+  const openJoinModal = () => {
+    setShowJoinModal(true)
   }
 
   const handleJoin = async () => {
-    if (!address) {
-      toast.error('Connect your wallet first')
+    const wallet = formWallet.trim()
+    const handle = twitter.trim()
+
+    if (!wallet.startsWith('0x') || wallet.length < 42) {
+      toast.error('Paste a valid 0x wallet address')
       return
     }
+    if (!handle) {
+      toast.error('Enter your X handle')
+      return
+    }
+
     setSubmitting(true)
     try {
       const res = await fetch('/api/site-whitelist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          wallet_address: address,
-          email: email.trim() || undefined,
-          twitter: twitter.trim() || undefined,
+          wallet_address: wallet,
+          twitter: handle.startsWith('@') ? handle : `@${handle}`,
         }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to join')
       toast.success(data.message || "You're on the whitelist")
+      setShowJoinModal(false)
+      setFormWallet('')
+      setTwitter('')
       await refresh()
       await loadWhitelist()
     } catch (e: any) {
@@ -170,10 +172,6 @@ export default function HomePage() {
     } finally {
       setSubmitting(false)
     }
-  }
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   const anim = (delay: string): CSSProperties =>
@@ -266,7 +264,7 @@ export default function HomePage() {
 
             <button
               type="button"
-              onClick={() => scrollTo('whitelist')}
+              onClick={openJoinModal}
               className="inline-flex items-center gap-3 h-14 sm:h-16 px-8 sm:px-10 rounded-full text-base sm:text-lg font-bold text-white transition-transform hover:scale-[1.02]"
               style={{
                 background: `linear-gradient(90deg, ${PURPLE} 0%, ${CYAN} 100%)`,
@@ -440,71 +438,29 @@ export default function HomePage() {
 
                 {wlPanel === 'spots' && (
                   <div className="space-y-3">
-                    {!isConnected || !address ? (
-                      <button
-                        type="button"
-                        onClick={handleConnect}
-                        disabled={connecting}
-                        className="w-full h-12 rounded-xl text-black text-sm font-bold disabled:opacity-50"
-                        style={{ background: CYAN }}
+                    {onList && address ? (
+                      <div
+                        className="rounded-xl border px-4 py-4 text-center"
+                        style={{ borderColor: `${CYAN}40`, background: `${CYAN}12` }}
                       >
-                        {connecting ? 'Connecting…' : 'Connect wallet'}
-                      </button>
+                        <p className="text-sm font-bold" style={{ color: CYAN }}>
+                          You&apos;re on the list
+                        </p>
+                        <p className="font-mono text-[12px] text-white/50 mt-1">{shortAddr(address)}</p>
+                      </div>
                     ) : (
                       <>
-                        <div className="flex items-center justify-between rounded-xl border border-white/10 bg-black/40 px-3 py-2.5">
-                          <span className="font-mono text-[13px]" style={{ color: CYAN }}>
-                            {shortAddr(address)}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => disconnect()}
-                            className="text-[11px] text-white/40 hover:text-white"
-                          >
-                            Disconnect
-                          </button>
-                        </div>
-                        {status === 'rejected' ? (
-                          <p className="text-center text-sm text-red-400 py-2">Not approved</p>
-                        ) : onList ? (
-                          <div
-                            className="rounded-xl border px-4 py-4 text-center"
-                            style={{ borderColor: `${CYAN}40`, background: `${CYAN}12` }}
-                          >
-                            <p className="text-sm font-bold" style={{ color: CYAN }}>
-                              You&apos;re on the list
-                            </p>
-                            <p className="text-[12px] text-white/45 mt-1">Free mint coming soon</p>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="grid grid-cols-2 gap-2">
-                              <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Email (optional)"
-                                className="h-11 rounded-lg px-3 bg-black/50 border border-white/10 text-[12px] text-white placeholder:text-white/25 outline-none focus:border-[#2DE2FF]/50"
-                              />
-                              <input
-                                type="text"
-                                value={twitter}
-                                onChange={(e) => setTwitter(e.target.value)}
-                                placeholder="@handle"
-                                className="h-11 rounded-lg px-3 bg-black/50 border border-white/10 text-[12px] text-white placeholder:text-white/25 outline-none focus:border-[#FF2BD6]/50"
-                              />
-                            </div>
-                            <button
-                              type="button"
-                              onClick={handleJoin}
-                              disabled={submitting || loading}
-                              className="w-full h-12 rounded-xl text-black text-sm font-bold disabled:opacity-50"
-                              style={{ background: `linear-gradient(90deg, ${CYAN}, ${MAGENTA})` }}
-                            >
-                              {submitting ? 'Submitting…' : 'Request whitelist spot'}
-                            </button>
-                          </>
-                        )}
+                        <p className="text-[13px] text-white/50 leading-relaxed">
+                          Paste your wallet address and X handle to request a spot.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={openJoinModal}
+                          className="w-full h-12 rounded-xl text-black text-sm font-bold"
+                          style={{ background: `linear-gradient(90deg, ${CYAN}, ${MAGENTA})` }}
+                        >
+                          Join the whitelist
+                        </button>
                       </>
                     )}
                   </div>
@@ -512,18 +468,17 @@ export default function HomePage() {
 
                 {wlPanel === 'how' && (
                   <ul className="space-y-3 text-[13px] text-white/60 leading-relaxed">
-                    <li>1. Connect your Robinhood Chain wallet.</li>
-                    <li>2. Request a whitelist spot from My Spots.</li>
-                    <li>3. Wait for approval — free mint coming soon.</li>
+                    <li>1. Open the join form and paste your 0x wallet.</li>
+                    <li>2. Add your X handle.</li>
+                    <li>3. Submit and wait for approval — free mint coming soon.</li>
                     <li>4. When the site unlocks, enter and start creating.</li>
                   </ul>
                 )}
 
                 {wlPanel === 'req' && (
                   <ul className="space-y-3 text-[13px] text-white/60 leading-relaxed">
-                    <li>• Compatible EVM wallet on Robinhood Chain</li>
-                    <li>• Valid 0x address to join the list</li>
-                    <li>• Optional email / X handle for updates</li>
+                    <li>• Valid 0x wallet address on Robinhood Chain</li>
+                    <li>• X (Twitter) handle</li>
                     <li>• 18+ and agree to HoodGFX Terms</li>
                   </ul>
                 )}
@@ -569,10 +524,10 @@ export default function HomePage() {
             </div>
             <button
               type="button"
-              onClick={() => scrollTo('whitelist')}
+              onClick={openJoinModal}
               className="h-12 px-6 rounded-xl border border-[#2DE2FF]/50 text-sm font-bold text-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-colors"
             >
-              Join whitelist
+              Join the whitelist
             </button>
           </div>
         </section>
@@ -589,6 +544,85 @@ export default function HomePage() {
           </div>
         </footer>
       </div>
+
+      {showJoinModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75"
+          onClick={() => !submitting && setShowJoinModal(false)}
+        >
+          <div
+            className="relative w-full max-w-md rounded-2xl border bg-[#0a0a0c] p-6 sm:p-7 shadow-2xl"
+            style={{
+              borderColor: 'rgba(45, 226, 255, 0.35)',
+              boxShadow: '0 0 40px rgba(168, 85, 247, 0.2)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="absolute inset-x-0 top-0 h-px rounded-t-2xl"
+              style={{ background: `linear-gradient(90deg, transparent, ${CYAN}, ${MAGENTA}, transparent)` }}
+            />
+            <div className="flex items-start justify-between gap-3 mb-5">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A855F7] mb-1">
+                  HoodGFX
+                </p>
+                <h2
+                  className="text-xl sm:text-2xl font-bold text-white"
+                  style={{ fontFamily: 'var(--f-display)' }}
+                >
+                  Join the whitelist
+                </h2>
+                <p className="text-sm text-white/45 mt-1.5">
+                  Paste your wallet address and X handle.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowJoinModal(false)}
+                disabled={submitting}
+                className="text-white/40 hover:text-white text-sm font-medium"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="space-y-3.5">
+              <div>
+                <label className="block text-[12px] text-white/50 mb-1.5">Wallet address</label>
+                <input
+                  type="text"
+                  value={formWallet}
+                  onChange={(e) => setFormWallet(e.target.value)}
+                  placeholder="0x…"
+                  autoComplete="off"
+                  className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white font-mono placeholder:text-white/25 outline-none focus:border-[#2DE2FF]/55"
+                />
+              </div>
+              <div>
+                <label className="block text-[12px] text-white/50 mb-1.5">X handle</label>
+                <input
+                  type="text"
+                  value={twitter}
+                  onChange={(e) => setTwitter(e.target.value)}
+                  placeholder="@yourhandle"
+                  autoComplete="off"
+                  className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#FF2BD6]/55"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleJoin}
+                disabled={submitting}
+                className="w-full h-13 h-14 rounded-xl text-black text-[15px] font-bold disabled:opacity-50 transition-opacity"
+                style={{ background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})` }}
+              >
+                {submitting ? 'Submitting…' : 'Submit'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
