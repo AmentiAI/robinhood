@@ -1,161 +1,118 @@
+import { LegalPageShell } from '@/components/legal-page-shell'
+
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#050510] via-[#0f0f1e] to-[#15152a]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent mb-8">Privacy Policy</h1>
-        
-        <div className="prose prose-lg max-w-none">
-          <p className="text-white/70 mb-6">Last updated: {new Date().toLocaleDateString()}</p>
+    <LegalPageShell
+      title="Privacy Policy"
+      subtitle={`Last updated: ${new Date().toLocaleDateString()}`}
+    >
+      <section>
+        <h2>1. Introduction</h2>
+        <p>
+          HoodGFX (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. This
+          Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use
+          the HoodGFX platform on Robinhood Chain.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">1. Introduction</h2>
-            <p className="text-[#a8a8b8] mb-4">
-              solmakerfun ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, 
-              use, disclose, and safeguard your information when you use our Platform.
-            </p>
-          </section>
+      <section>
+        <h2>2. Information We Collect</h2>
+        <p>
+          <strong>2.1 Wallet information.</strong> We collect and store wallet addresses when you connect to
+          the Platform. This is required for authentication, minting, and Platform functionality.
+        </p>
+        <p>
+          <strong>2.2 Transaction data.</strong> We collect information about activity on the Platform,
+          including credit purchases, generation jobs, and minting activity.
+        </p>
+        <p>
+          <strong>2.3 Usage data.</strong> We may collect technical information such as IP address, browser
+          type, device information, and how you interact with the Platform.
+        </p>
+        <p>
+          <strong>2.4 Content you create.</strong> We store content you generate or upload, including
+          collection art, metadata, prompts, and related assets.
+        </p>
+        <p>
+          <strong>2.5 Contact details.</strong> If you join the whitelist or contact support, we may collect
+          optional email or social handles you provide.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">2. Information We Collect</h2>
-            <div className="text-[#a8a8b8] space-y-4">
-              <p>
-                <strong>2.1 Wallet Information:</strong> We collect and store wallet addresses when you connect to the Platform. 
-                This information is necessary for transaction processing and Platform functionality.
-              </p>
-              <p>
-                <strong>2.2 Transaction Data:</strong> We collect information about transactions you make on the Platform, including 
-                purchase history, minting activity, and payment information.
-              </p>
-              <p>
-                <strong>2.3 Usage Data:</strong> We automatically collect information about how you interact with the Platform, including 
-                IP addresses, browser type, device information, and usage patterns.
-              </p>
-              <p>
-                <strong>2.4 Content You Create:</strong> We collect and store content you create, generate, or upload to the Platform, 
-                including ordinals, collections, and associated metadata.
-              </p>
-            </div>
-          </section>
+      <section>
+        <h2>3. How We Use Information</h2>
+        <p>We use collected information to:</p>
+        <ul>
+          <li>Operate, maintain, and improve the HoodGFX Platform</li>
+          <li>Process generations, deployments, and mints</li>
+          <li>Manage whitelist access and account features</li>
+          <li>Communicate about service updates and support</li>
+          <li>Detect fraud, abuse, and security issues</li>
+          <li>Comply with legal obligations</li>
+        </ul>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">3. How We Use Your Information</h2>
-            <div className="text-[#a8a8b8] space-y-4">
-              <p>We use the information we collect to:</p>
-              <ul className="list-disc pl-6 space-y-2">
-                <li>Provide, maintain, and improve the Platform</li>
-                <li>Process transactions and payments</li>
-                <li>Authenticate users and prevent fraud</li>
-                <li>Communicate with you about the Platform</li>
-                <li>Comply with legal obligations</li>
-                <li>Enforce our Terms and Conditions</li>
-                <li>Analyze usage patterns to improve our services</li>
-              </ul>
-            </div>
-          </section>
+      <section>
+        <h2>4. Sharing of Information</h2>
+        <p>
+          We do not sell your personal information. We may share information with service providers who help
+          operate the Platform (for example hosting, databases, AI providers, and analytics), when required by
+          law, or to protect the rights and safety of HoodGFX and its users.
+        </p>
+        <p>
+          Blockchain transactions are public by nature. Wallet addresses and on-chain activity may be visible
+          on Robinhood Chain and related explorers.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">4. Information Sharing and Disclosure</h2>
-            <div className="text-[#a8a8b8] space-y-4">
-              <p>
-                <strong>4.1 Public Information:</strong> Certain information, such as wallet addresses and public transaction data, 
-                may be publicly visible on the blockchain and through the Platform.
-              </p>
-              <p>
-                <strong>4.2 Service Providers:</strong> We may share information with third-party service providers who assist us in 
-                operating the Platform, processing transactions, or providing services to you.
-              </p>
-              <p>
-                <strong>4.3 Legal Requirements:</strong> We may disclose information if required by law, court order, or government 
-                regulation, or to protect our rights, property, or safety.
-              </p>
-              <p>
-                <strong>4.4 Business Transfers:</strong> In the event of a merger, acquisition, or sale of assets, your information 
-                may be transferred to the acquiring entity.
-              </p>
-            </div>
-          </section>
+      <section>
+        <h2>5. Data Retention</h2>
+        <p>
+          We retain information for as long as needed to provide the Platform, comply with legal requirements,
+          resolve disputes, and enforce our agreements. You may request deletion of account data where
+          applicable, subject to legal and operational limits.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">5. Data Security</h2>
-            <p className="text-[#a8a8b8]">
-              We implement reasonable security measures to protect your information. However, no method of transmission over the internet 
-              or electronic storage is 100% secure. We cannot guarantee absolute security of your information.
-            </p>
-          </section>
+      <section>
+        <h2>6. Security</h2>
+        <p>
+          We use reasonable administrative and technical safeguards to protect information. No method of
+          transmission or storage is fully secure. You are responsible for safeguarding your wallet and private
+          keys.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">6. Blockchain and Public Data</h2>
-            <div className="text-[#a8a8b8] space-y-4">
-              <p>
-                <strong>6.1 Public Nature:</strong> Transactions on the Bitcoin blockchain are public and permanent. Information recorded 
-                on the blockchain, including wallet addresses and transaction details, cannot be deleted or modified.
-              </p>
-              <p>
-                <strong>6.2 No Anonymity:</strong> While wallet addresses may appear anonymous, they can potentially be linked to your 
-                identity through various means, including transaction analysis and other publicly available information.
-              </p>
-            </div>
-          </section>
+      <section>
+        <h2>7. Third-Party Services</h2>
+        <p>
+          The Platform may integrate third-party wallets, AI services, and blockchain infrastructure. Those
+          services have their own privacy policies. HoodGFX is not responsible for third-party practices.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">7. Your Rights and Choices</h2>
-            <div className="text-[#a8a8b8] space-y-4">
-              <p>
-                <strong>7.1 Access and Correction:</strong> You may access and update certain information through your account settings 
-                on the Platform.
-              </p>
-              <p>
-                <strong>7.2 Deletion:</strong> You may request deletion of certain information, subject to our legal obligations and 
-                the immutable nature of blockchain data.
-              </p>
-              <p>
-                <strong>7.3 Opt-Out:</strong> You may opt out of certain communications from us, though we may still send essential 
-                service-related communications.
-              </p>
-            </div>
-          </section>
+      <section>
+        <h2>8. Children</h2>
+        <p>
+          HoodGFX is not intended for individuals under 18. We do not knowingly collect information from
+          children.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">8. Cookies and Tracking Technologies</h2>
-            <p className="text-[#a8a8b8]">
-              We use cookies and similar tracking technologies to collect and store information about your use of the Platform. You can 
-              control cookies through your browser settings, though disabling cookies may affect Platform functionality.
-            </p>
-          </section>
+      <section>
+        <h2>9. Changes</h2>
+        <p>
+          We may update this Privacy Policy from time to time. Continued use of the Platform after changes
+          means you accept the updated policy.
+        </p>
+      </section>
 
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">9. Children's Privacy</h2>
-            <p className="text-[#a8a8b8]">
-              The Platform is not intended for users under the age of 18. We do not knowingly collect information from children. If you 
-              believe we have collected information from a child, please contact us immediately.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">10. International Users</h2>
-            <p className="text-[#a8a8b8]">
-              The Platform may be accessed from countries around the world. By using the Platform, you consent to the transfer of your 
-              information to and processing in countries where we operate, which may have different data protection laws than your country.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">11. Changes to This Privacy Policy</h2>
-            <p className="text-[#a8a8b8]">
-              We may update this Privacy Policy from time to time. Changes will be effective immediately upon posting. We encourage you to 
-              review this Privacy Policy periodically to stay informed about how we protect your information.
-            </p>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-bold text-white mb-4">12. Contact Us</h2>
-            <p className="text-[#a8a8b8]">
-              If you have questions about this Privacy Policy, please contact us through the Platform's support system.
-            </p>
-          </section>
-        </div>
-      </div>
-    </div>
+      <section>
+        <h2>10. Contact</h2>
+        <p>
+          For privacy questions, contact HoodGFX through the support channels listed on the Platform.
+        </p>
+      </section>
+    </LegalPageShell>
   )
 }
-

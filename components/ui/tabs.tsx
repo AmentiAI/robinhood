@@ -39,7 +39,7 @@ interface TabsListProps {
 
 export function TabsList({ children, className = '' }: TabsListProps) {
   return (
-    <div className={`flex border-b border-[#00C805]/20 ${className}`}>
+    <div className={`flex border-b border-[#2DE2FF]/20 ${className}`}>
       {children}
     </div>
   )
@@ -61,14 +61,14 @@ export function TabsTrigger({ value, children, className = '' }: TabsTriggerProp
       className={`
         flex-1 px-6 py-4 text-center font-semibold transition-all duration-300 relative
         ${isActive
-          ? 'text-white bg-gradient-to-r from-[#00C805]/10 to-[#00C805]/10'
+          ? 'text-white bg-gradient-to-r from-[#2DE2FF]/10 to-[#2DE2FF]/10'
           : 'text-[#A1A1AA] hover:text-white hover:bg-[#1A1A22]'
         }
         ${className}
       `}
     >
       {isActive && (
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00C805] to-[#00C805]" />
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#2DE2FF] to-[#2DE2FF]" />
       )}
       <span className="relative z-10">{children}</span>
     </button>

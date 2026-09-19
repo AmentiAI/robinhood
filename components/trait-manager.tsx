@@ -37,14 +37,14 @@ export function TraitManager({ onTraitAdded }: TraitManagerProps) {
   }
 
   return (
-    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#00C805]/20 rounded-lg p-4">
+    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2DE2FF]/20 rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Trait Manager
         </h3>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-[#00C805] text-sm"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-[#2DE2FF] text-sm"
         >
           {isOpen ? 'Cancel' : 'Add New Trait'}
         </button>
@@ -60,7 +60,7 @@ export function TraitManager({ onTraitAdded }: TraitManagerProps) {
               <select
                 value={newTrait.category}
                 onChange={(e) => setNewTrait({ ...newTrait, category: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#2DE2FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
                 required
               >
                 <option value="">Select Category</option>
@@ -79,7 +79,7 @@ export function TraitManager({ onTraitAdded }: TraitManagerProps) {
               <select
                 value={newTrait.rarity}
                 onChange={(e) => setNewTrait({ ...newTrait, rarity: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-[#2DE2FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
               >
                 {rarities.map(rarity => (
                   <option key={rarity.value} value={rarity.value}>
@@ -98,7 +98,7 @@ export function TraitManager({ onTraitAdded }: TraitManagerProps) {
               type="text"
               value={newTrait.name}
               onChange={(e) => setNewTrait({ ...newTrait, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#2DE2FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
               placeholder="Enter trait name"
               required
             />
@@ -111,7 +111,7 @@ export function TraitManager({ onTraitAdded }: TraitManagerProps) {
             <textarea
               value={newTrait.description}
               onChange={(e) => setNewTrait({ ...newTrait, description: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#2DE2FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
               rows={4}
               placeholder="Enter detailed description for AI generation"
               required

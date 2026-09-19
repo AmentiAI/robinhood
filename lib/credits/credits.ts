@@ -241,6 +241,36 @@ export async function secureAddCreditsForRefund(
 }
 
 /**
+ * Refund credits after a failed usage (e.g. AI generation failed after deduct).
+ * Internal system refund only — not for user-initiated top-ups.
+ */
+export async function refundUsageCredits(
+  walletAddress: string,
+  amount: number,
+  description: string
+): Promise<void> {
+  if (!sql) {
+    throw new Error('Database connection not available')
+  }
+  if (!amount || amount <= 0) return
+
+  await getOrCreateCredits(walletAddress)
+
+  await sql`
+    UPDATE credits
+    SET credits = credits + ${amount}, updated_at = CURRENT_TIMESTAMP
+    WHERE wallet_address = ${walletAddress}
+  `
+
+  await sql`
+    INSERT INTO credit_transactions (wallet_address, amount, transaction_type, description, payment_txid)
+    VALUES (${walletAddress}, ${amount}, 'refund', ${description}, NULL)
+  `
+
+  console.log(`[refundUsageCredits] ✅ Refunded ${amount} to ${walletAddress}: ${description}`)
+}
+
+/**
  * Deduct credits from a wallet (for usage)
  */
 export async function deductCredits(

@@ -156,7 +156,7 @@ export function ProfileManager() {
 
   if (!activeWalletConnected || !activeWalletAddress) {
     return (
-      <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl p-6">
+      <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-6">
         <p className="text-[#808080]">Please connect your wallet to create a profile</p>
       </div>
     )
@@ -164,9 +164,9 @@ export function ProfileManager() {
 
   if (loading && !profile) {
     return (
-      <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl p-6">
+      <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-6">
         <div className="flex items-center gap-3">
-          <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#00C805] border-t-transparent"></div>
+          <div className="animate-spin rounded-full h-5 w-5 border-2 border-[#2DE2FF] border-t-transparent"></div>
           <p className="text-[#808080]">Loading profile...</p>
         </div>
       </div>
@@ -174,11 +174,11 @@ export function ProfileManager() {
   }
 
   return (
-    <div className="bg-[#15181a] border border-[#00C805]/30 rounded-xl p-6 relative overflow-hidden col-span-1 sm:col-span-2">
+    <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-6 relative overflow-hidden col-span-1 sm:col-span-2">
       <div className="relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-[#00C805] mb-1 uppercase tracking-wide">
+            <h2 className="text-2xl font-bold text-[#2DE2FF] mb-1 uppercase tracking-wide">
               Account Information
             </h2>
             <p className="text-[#808080] text-sm">Manage your profile</p>
@@ -186,7 +186,7 @@ export function ProfileManager() {
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="px-4 py-2 bg-[#00C805] hover:bg-[#00C805]/80 text-[#0a0c0d] rounded-lg font-semibold transition-all duration-200 text-sm whitespace-nowrap uppercase tracking-wide"
+              className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 text-[#0a0c0d] rounded-lg font-semibold transition-all duration-200 text-sm whitespace-nowrap uppercase tracking-wide"
             >
               {profile ? 'Edit Profile' : 'Create Profile'}
             </button>
@@ -206,7 +206,7 @@ export function ProfileManager() {
         )}
 
         {saveSuccess && (
-          <div className="mb-4 p-3 bg-[#0a0c0d] border border-[#00C805]/50 text-[#00C805] rounded-lg">
+          <div className="mb-4 p-3 bg-[#0a0c0d] border border-[#2DE2FF]/50 text-[#2DE2FF] rounded-lg">
             ✨ Profile saved successfully!
           </div>
         )}
@@ -232,8 +232,8 @@ export function ProfileManager() {
           }}
         >
               {/* Avatar First */}
-              <div className="bg-[#0a0c0d] border border-[#00C805]/30 rounded-xl p-6">
-                <label className="block text-sm font-medium text-[#00C805] mb-4 uppercase tracking-wide">
+              <div className="bg-[#0a0c0d] border border-[#2DE2FF]/30 rounded-xl p-6">
+                <label className="block text-sm font-medium text-[#2DE2FF] mb-4 uppercase tracking-wide">
                   Avatar
                 </label>
                 <div className="flex items-center gap-6">
@@ -244,7 +244,7 @@ export function ProfileManager() {
                       className="cursor-pointer group"
                       title="Click to upload avatar"
                     >
-                      <div className="w-32 h-32 rounded-full border-2 border-purple-500/50 group-hover:border-purple-400 transition-all duration-300 overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md flex items-center justify-center relative shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40">
+                      <div className="w-32 h-32 rounded-full border-2 border-purple-500/50 group-hover:border-purple-400 transition-all duration-300 overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md flex items-center justify-center relative shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40">
                         {avatarPreview || formData.avatarUrl ? (
                           <img
                             src={avatarPreview || formData.avatarUrl || ''}
@@ -305,7 +305,7 @@ export function ProfileManager() {
 
               <div>
                 <label className="block text-sm font-medium text-white mb-2">
-                  <span className="bg-gradient-to-r from-[#39FF14] to-purple-400 bg-clip-text text-transparent">Username</span> <span className="text-[#EF4444]">*</span>
+                  <span className="bg-gradient-to-r from-[#2DE2FF] to-purple-400 bg-clip-text text-transparent">Username</span> <span className="text-[#EF4444]">*</span>
                 </label>
                 <input
                   type="text"
@@ -314,7 +314,7 @@ export function ProfileManager() {
                   placeholder="username"
                   required
                   pattern="^[a-zA-Z0-9_-]{3,50}$"
-                  className="w-full p-3.5 border-2 border-[#39FF14]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#39FF14] focus:ring-2 focus:ring-[#39FF14]/20 focus:outline-none transition-all duration-200 backdrop-blur-sm"
+                  className="w-full p-3.5 border-2 border-[#2DE2FF]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#2DE2FF] focus:ring-2 focus:ring-[#2DE2FF]/20 focus:outline-none transition-all duration-200 backdrop-blur-sm"
                   disabled={saving}
                 />
                 <p className="text-xs text-[#a8a8b8]/80 mt-1">
@@ -332,7 +332,7 @@ export function ProfileManager() {
                   onChange={(e) => setFormData({ ...formData, displayName: e.target.value })}
                   placeholder="Your display name"
                   maxLength={100}
-                  className="w-full p-3 border-2 border-[#39FF14]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#39FF14] focus:ring-2 focus:ring-[#39FF14]/20 focus:outline-none backdrop-blur-sm"
+                  className="w-full p-3 border-2 border-[#2DE2FF]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#2DE2FF] focus:ring-2 focus:ring-[#2DE2FF]/20 focus:outline-none backdrop-blur-sm"
                   disabled={saving}
                 />
               </div>
@@ -347,7 +347,7 @@ export function ProfileManager() {
                   placeholder="Tell us about yourself..."
                   rows={4}
                   maxLength={500}
-                  className="w-full p-3 border-2 border-[#39FF14]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#39FF14] focus:ring-2 focus:ring-[#39FF14]/20 focus:outline-none resize-none backdrop-blur-sm"
+                  className="w-full p-3 border-2 border-[#2DE2FF]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#2DE2FF] focus:ring-2 focus:ring-[#2DE2FF]/20 focus:outline-none resize-none backdrop-blur-sm"
                   disabled={saving}
                 />
               </div>
@@ -361,7 +361,7 @@ export function ProfileManager() {
                   value={formData.twitterUrl}
                   onChange={(e) => setFormData({ ...formData, twitterUrl: e.target.value })}
                   placeholder="https://x.com/username or https://twitter.com/username"
-                  className="w-full p-3 border-2 border-[#39FF14]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#39FF14] focus:ring-2 focus:ring-[#39FF14]/20 focus:outline-none backdrop-blur-sm"
+                  className="w-full p-3 border-2 border-[#2DE2FF]/30 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-black/20 text-white placeholder-white/50 focus:border-[#2DE2FF] focus:ring-2 focus:ring-[#2DE2FF]/20 focus:outline-none backdrop-blur-sm"
                   disabled={saving}
                 />
                 <p className="text-xs text-[#a8a8b8]/80 mt-1">
@@ -373,7 +373,7 @@ export function ProfileManager() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-6 py-3 bg-gradient-to-r from-[#39FF14] to-purple-500 hover:from-purple-500 hover:to-[#39FF14] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-semibold shadow-lg shadow-[#39FF14]/30 transition-all duration-200 transform hover:scale-105"
+                  className="px-6 py-3 bg-gradient-to-r from-[#2DE2FF] to-purple-500 hover:from-purple-500 hover:to-[#2DE2FF] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-semibold shadow-lg shadow-[#2DE2FF]/30 transition-all duration-200 transform hover:scale-105"
                 >
                   {saving ? 'Saving...' : '✨ Save Profile'}
                 </button>
@@ -397,7 +397,7 @@ export function ProfileManager() {
                       }
                     }}
                     disabled={saving}
-                    className="px-6 py-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#39FF14]/30 hover:border-[#39FF14]/50 disabled:border-[#39FF14]/20 disabled:cursor-not-allowed text-white/70 hover:text-white rounded-lg font-semibold transition-all duration-200 backdrop-blur-sm"
+                    className="px-6 py-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 disabled:border-[#2DE2FF]/20 disabled:cursor-not-allowed text-white/70 hover:text-white rounded-lg font-semibold transition-all duration-200 backdrop-blur-sm"
                   >
                     Cancel
                   </button>
@@ -408,7 +408,7 @@ export function ProfileManager() {
             <div className="space-y-6">
               {/* Avatar First */}
               {profile.avatarUrl && (
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-purple-500/30 rounded-xl p-6 bg-gradient-to-br from-purple-900/20 to-blue-900/20 backdrop-blur-sm">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-purple-500/30 rounded-xl p-6 bg-gradient-to-br from-purple-900/20 to-blue-900/20 backdrop-blur-sm">
                   <p className="text-sm text-white/70 mb-4 font-medium">Avatar</p>
                   <img
                     src={profile.avatarUrl}
@@ -440,7 +440,7 @@ export function ProfileManager() {
                     href={profile.twitterUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#39FF14] hover:text-[#00C805] transition-colors flex items-center gap-2"
+                    className="text-[#2DE2FF] hover:text-[#2DE2FF] transition-colors flex items-center gap-2"
                   >
                     <span>{profile.twitterUrl}</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

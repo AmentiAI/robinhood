@@ -1,7 +1,7 @@
 'use client'
 
 interface LaunchModeSelectorProps {
-  onSelectMode: (mode: 'launchpad' | 'marketplace' | 'owner-mint') => void
+  onSelectMode: (mode: 'launchpad' | 'owner-mint') => void
 }
 
 export default function LaunchModeSelector({ onSelectMode }: LaunchModeSelectorProps) {
@@ -10,8 +10,7 @@ export default function LaunchModeSelector({ onSelectMode }: LaunchModeSelectorP
       <h2 className="text-2xl font-bold text-gray-900 mb-3">Choose Your Launch Method</h2>
       <p className="text-gray-600 mb-8">How would you like to launch your collection?</p>
 
-      <div className="grid md:grid-cols-3 gap-6">
-        {/* Launchpad Option */}
+      <div className="grid md:grid-cols-2 gap-6">
         <button
           onClick={() => onSelectMode('launchpad')}
           className="group bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-[#e27d0f] hover:shadow-lg transition-all"
@@ -35,7 +34,6 @@ export default function LaunchModeSelector({ onSelectMode }: LaunchModeSelectorP
           </div>
         </button>
 
-        {/* Owner Mint Option */}
         <button
           onClick={() => onSelectMode('owner-mint')}
           className="group bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-[#4561ad] hover:shadow-lg transition-all"
@@ -58,32 +56,7 @@ export default function LaunchModeSelector({ onSelectMode }: LaunchModeSelectorP
             </div>
           </div>
         </button>
-
-        {/* Marketplace Option */}
-        <button
-          onClick={() => onSelectMode('marketplace')}
-          className="group bg-white border-2 border-gray-200 rounded-xl p-6 text-left hover:border-green-500 hover:shadow-lg transition-all"
-        >
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-green-500/20 transition-colors">
-              <span className="text-2xl">💰</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">NFT Marketplace</h3>
-              <p className="text-gray-600 text-sm mb-3">
-                After minting on Robinhood Chain, list individual NFTs for sale in ETH
-              </p>
-              <ul className="text-sm text-[#a8a8b8]/80 space-y-1">
-                <li>✓ Trade NFTs on Robinhood Chain</li>
-                <li>✓ Price in ETH</li>
-                <li>✓ Escrow buy / cancel</li>
-                <li>✓ Manage from My Listings</li>
-              </ul>
-            </div>
-          </div>
-        </button>
       </div>
     </div>
   )
 }
-

@@ -55,10 +55,10 @@ export default function BuyCreditsPage() {
     return (
       <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center">
         <div className="max-w-2xl mx-auto text-center px-6">
-          <div className="w-32 h-32 mx-auto mb-8 bg-[#0a0c0d] border-2 border-[#00C805] flex items-center justify-center">
+          <div className="w-32 h-32 mx-auto mb-8 bg-[#0a0c0d] border-2 border-[#2DE2FF] flex items-center justify-center">
             <span className="text-6xl">🔌</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#00C805] uppercase tracking-wide">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#2DE2FF] uppercase tracking-wide">
             Buy Credits
           </h1>
           <p className="text-xl text-[#808080] mb-10 font-medium leading-relaxed">
@@ -66,7 +66,7 @@ export default function BuyCreditsPage() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#0a0c0d] border-2 border-[#00C805] hover:bg-[#15181a] text-[#00C805] text-lg font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#0a0c0d] border-2 border-[#2DE2FF] hover:bg-[#15181a] text-[#2DE2FF] text-lg font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <span>Go to Homepage</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -82,10 +82,10 @@ export default function BuyCreditsPage() {
     return (
       <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center">
         <div className="max-w-2xl mx-auto text-center px-6">
-          <div className="w-32 h-32 mx-auto mb-8 bg-[#0a0c0d] border-2 border-[#00C805] flex items-center justify-center">
+          <div className="w-32 h-32 mx-auto mb-8 bg-[#0a0c0d] border-2 border-[#2DE2FF] flex items-center justify-center">
             <span className="text-6xl">⚠️</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#00C805] uppercase tracking-wide">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#2DE2FF] uppercase tracking-wide">
             Buy Credits
           </h1>
           <p className="text-xl text-[#808080] mb-10 font-medium leading-relaxed">
@@ -93,7 +93,7 @@ export default function BuyCreditsPage() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#0a0c0d] border-2 border-[#00C805] hover:bg-[#15181a] text-[#00C805] text-lg font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-[#0a0c0d] border-2 border-[#2DE2FF] hover:bg-[#15181a] text-[#2DE2FF] text-lg font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"
           >
             <span>Go to Homepage</span>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -112,11 +112,11 @@ export default function BuyCreditsPage() {
         subtitle="Purchase credits to generate collections, traits, and more"
         action={
           !loadingCredits && credits !== null ? (
-            <div className="flex items-center gap-3 bg-[#15181a] border-2 border-[#00C805] px-5 py-3">
+            <div className="flex items-center gap-3 bg-[#15181a] border-2 border-[#2DE2FF] px-5 py-3">
               <span className="text-2xl">💰</span>
               <div>
                 <div className="text-xs text-[#808080] font-medium uppercase tracking-wide">Balance</div>
-                <div className="text-xl font-bold text-[#00C805]">
+                <div className="text-xl font-bold text-[#2DE2FF]">
                   {typeof credits === 'number'
                     ? credits.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
                     : parseFloat(String(credits)).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
@@ -135,9 +135,9 @@ export default function BuyCreditsPage() {
 
           {/* Info Section */}
           <div className="bg-[#15181a] border border-[#404040] p-8">
-            <h2 className="text-3xl font-bold text-[#00C805] mb-6 uppercase tracking-wide">What are Credits?</h2>
+            <h2 className="text-3xl font-bold text-[#2DE2FF] mb-6 uppercase tracking-wide">What are Credits?</h2>
             <p className="text-[#808080] mb-6 text-lg leading-relaxed">
-              Credits are used to power various features on OrdMaker.fun:
+              Credits are used to power various features on HoodGFX:
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div className="flex items-start gap-3 p-4 bg-[#0a0c0d] border border-[#404040]">
@@ -169,7 +169,7 @@ export default function BuyCreditsPage() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-3 p-4 bg-[#0a0c0d] border-2 border-[#00C805]">
+            <div className="flex items-center gap-3 p-4 bg-[#0a0c0d] border-2 border-[#2DE2FF]">
               <span className="text-2xl">💎</span>
               <p className="text-[#808080] text-sm">
                 Credits never expire and can be used at any time. Purchase credits securely using ETH on Robinhood Chain.

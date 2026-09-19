@@ -60,7 +60,7 @@ export function NftCard({
         <div className="relative w-full h-full">
           <div className="absolute inset-0">
             <Image src={compressedImageUrl} alt={`Compressed #${displayNumber}`} fill className="object-cover" />
-            <div className={`absolute top-1 left-1 ${hasCompressed ? 'bg-green-600/90' : 'bg-[#FBBF24]/90'} text-white text-[8px] px-1 py-0.5 rounded font-semibold`}>
+            <div className={`absolute top-1 left-1 ${hasCompressed ? 'bg-green-600/90' : 'bg-[#FF2BD6]/90'} text-white text-[8px] px-1 py-0.5 rounded font-semibold`}>
               {hasCompressed ? 'Compressed' : 'Original Only'}
             </div>
           </div>

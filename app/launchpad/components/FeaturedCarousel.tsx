@@ -27,11 +27,11 @@ export function FeaturedCarousel({
   if (collections.length === 0) return null
 
   return (
-    <div className="relative border-b border-[#00C805]/20 bg-[#0a0c0d]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,200,5,0.08),transparent_60%)]" />
+    <div className="relative border-b border-[#2DE2FF]/20 bg-[#0a0c0d]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(45, 226, 255,0.08),transparent_60%)]" />
       <div className="max-w-7xl mx-auto px-6 py-8 relative">
         <div className="flex gap-6">
-          <div className="flex-1 relative aspect-[16/9] bg-[#15181a] border border-[#00C805]/40 overflow-hidden shadow-[0_0_60px_rgba(0,200,5,0.12)]">
+          <div className="flex-1 relative aspect-[16/9] bg-[#15181a] border border-[#2DE2FF]/40 overflow-hidden shadow-[0_0_60px_rgba(45, 226, 255,0.12)]">
             {collections.map((collection, index) => {
               const progress =
                 collection.total_supply > 0
@@ -52,7 +52,7 @@ export function FeaturedCarousel({
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c0d] via-[#0a0c0d]/60 to-transparent" />
-                  <div className="absolute top-4 left-4 px-2.5 py-1 bg-[#00C805] text-black text-[10px] font-black uppercase tracking-wider">
+                  <div className="absolute top-4 left-4 px-2.5 py-1 bg-[#2DE2FF] text-black text-[10px] font-black uppercase tracking-wider">
                     Featured
                   </div>
 
@@ -63,7 +63,7 @@ export function FeaturedCarousel({
                     <div className="flex items-center gap-4 mb-3">
                       <div>
                         <p className="text-xs text-[#a8aab2] uppercase">Price</p>
-                        <p className="text-lg font-black text-[#00C805]">{collection.mint_price} ETH</p>
+                        <p className="text-lg font-black text-[#2DE2FF]">{collection.mint_price} ETH</p>
                       </div>
                       <div className="w-px h-8 bg-white/10" />
                       <div>
@@ -75,14 +75,14 @@ export function FeaturedCarousel({
                     </div>
                     <div className="h-1.5 bg-[#1f2326] mb-4 overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-[#00C805] to-[#CCFF00]"
+                        className="h-full bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6]"
                         style={{ width: `${progress}%` }}
                       />
                     </div>
                     <button
                       type="button"
                       onClick={() => router.push(`/launchpad/${collection.id}`)}
-                      className="px-6 py-2.5 bg-[#00C805] hover:bg-[#CCFF00] text-black text-sm font-black uppercase tracking-wider transition-colors shadow-[0_0_24px_rgba(0,200,5,0.35)]"
+                      className="px-6 py-2.5 bg-[#2DE2FF] hover:bg-[#FF2BD6] text-black text-sm font-black uppercase tracking-wider transition-colors shadow-[0_0_24px_rgba(45, 226, 255,0.35)]"
                     >
                       Mint Now
                     </button>
@@ -105,8 +105,8 @@ export function FeaturedCarousel({
                   onClick={() => onSlideChange(index)}
                   className={`w-full text-left transition-all ${
                     index === currentSlide
-                      ? 'border-2 border-[#00C805] shadow-[0_0_20px_rgba(0,200,5,0.2)]'
-                      : 'border border-white/10 hover:border-[#00C805]/40'
+                      ? 'border-2 border-[#2DE2FF] shadow-[0_0_20px_rgba(45, 226, 255,0.2)]'
+                      : 'border border-white/10 hover:border-[#2DE2FF]/40'
                   }`}
                 >
                   <div className="aspect-video relative overflow-hidden bg-[#15181a]">
@@ -121,7 +121,7 @@ export function FeaturedCarousel({
                       {collection.name}
                     </h4>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-[#00C805]">
+                      <span className="text-xs font-bold text-[#2DE2FF]">
                         {collection.mint_price} ETH
                       </span>
                       <span className="text-xs text-[#a8aab2]">
@@ -130,7 +130,7 @@ export function FeaturedCarousel({
                     </div>
                     <div className="h-0.5 bg-[#1f2326]">
                       <div
-                        className="h-full bg-gradient-to-r from-[#00C805] to-[#CCFF00]"
+                        className="h-full bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6]"
                         style={{ width: `${progress}%` }}
                       />
                     </div>

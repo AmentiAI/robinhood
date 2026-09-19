@@ -212,7 +212,7 @@ export function WalletConnect() {
     return (
       <button
         disabled
-        className="w-full px-4 py-3 rounded-xl bg-[#00C805]/80 text-black text-sm font-black transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide opacity-80"
+        className="w-full px-5 py-4 rounded-xl bg-[#2DE2FF]/80 text-black text-[15px] font-black transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide opacity-80"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -226,7 +226,7 @@ export function WalletConnect() {
     return (
       <button
         disabled
-        className="w-full px-4 py-3 bg-[#15181a] text-white text-sm font-bold opacity-50 cursor-not-allowed border border-[#404040] uppercase tracking-wide"
+        className="w-full px-5 py-4 bg-[#15181a] text-white text-[15px] font-bold opacity-50 cursor-not-allowed border border-[#404040] uppercase tracking-wide"
       >
         Connecting...
       </button>
@@ -252,14 +252,14 @@ export function WalletConnect() {
       <div className="relative flex flex-col w-full" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full px-4 py-3 bg-[#15181a] hover:bg-[#252525] text-white text-sm font-bold transition-all duration-200 flex items-center justify-between gap-3 border border-[#00C805]/40 hover:border-[#00C805]"
+          className="w-full px-5 py-4 bg-[#15181a] hover:bg-[#252525] text-white text-[15px] font-bold transition-all duration-200 flex items-center justify-between gap-3 border border-[#2DE2FF]/40 hover:border-[#2DE2FF]"
         >
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <span className="w-1 h-1 bg-[#00C805] flex-shrink-0"></span>
+            <span className="w-1 h-1 bg-[#2DE2FF] flex-shrink-0"></span>
             <span className="truncate text-xs uppercase tracking-wide">{buttonText}</span>
           </div>
           <svg
-            className={`w-3 h-3 transition-transform text-[#00C805] flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-3 h-3 transition-transform text-[#2DE2FF] flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -269,17 +269,17 @@ export function WalletConnect() {
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 right-0 top-full mt-1 bg-[#0a0c0d] border border-[#00C805]/40 shadow-xl z-[9999] overflow-hidden">
+          <div className="absolute left-0 right-0 top-full mt-1 bg-[#0a0c0d] border border-[#2DE2FF]/40 shadow-xl z-[9999] overflow-hidden">
             <div className="p-4 border-b border-[#404040]">
               <div className="flex items-center gap-3">
                 {profile?.avatarUrl ? (
                   <img
                     src={profile.avatarUrl}
                     alt={profile.displayName || profile.username || 'Avatar'}
-                    className="w-10 h-10 object-cover border border-[#00C805]"
+                    className="w-10 h-10 object-cover border border-[#2DE2FF]"
                   />
                 ) : (
-                  <div className="w-10 h-10 bg-[#15181a] border border-[#00C805] flex items-center justify-center text-[#00C805] font-bold text-base">
+                  <div className="w-10 h-10 bg-[#15181a] border border-[#2DE2FF] flex items-center justify-center text-[#2DE2FF] font-bold text-base">
                     {profile?.username?.charAt(0).toUpperCase() || activeAddress.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -290,7 +290,7 @@ export function WalletConnect() {
                   <p className="text-[#808080] text-xs font-mono truncate" title={activeAddress}>
                     {formatAddress(activeAddress)}
                   </p>
-                  <p className="text-[#00C805] text-xs mt-1 font-semibold uppercase tracking-wide">Robinhood Chain</p>
+                  <p className="text-[#2DE2FF] text-xs mt-1 font-semibold uppercase tracking-wide">Robinhood Chain</p>
                 </div>
               </div>
             </div>
@@ -300,12 +300,12 @@ export function WalletConnect() {
                 <>
                   <button
                     onClick={handleVerify}
-                    className="w-full px-4 py-2 bg-[#15181a] border border-[#00C805] hover:bg-[#00C805] hover:text-black text-white text-xs font-bold transition-colors mb-2 uppercase tracking-wide"
+                    className="w-full px-4 py-2 bg-[#15181a] border border-[#2DE2FF] hover:bg-[#2DE2FF] hover:text-black text-white text-xs font-bold transition-colors mb-2 uppercase tracking-wide"
                   >
                     Verify Wallet
                   </button>
                   {verificationRejected && (
-                    <p className="text-xs text-[#00C805] text-center mb-2">
+                    <p className="text-xs text-[#2DE2FF] text-center mb-2">
                       Verification cancelled. Click above to retry.
                     </p>
                   )}
@@ -317,33 +317,33 @@ export function WalletConnect() {
                 </div>
               )}
               {isVerified && (
-                <div className="w-full px-4 py-2 bg-[#15181a] border border-[#00C805] text-[#00C805] text-xs font-bold text-center mb-2 flex items-center justify-center gap-2 uppercase tracking-wide">
+                <div className="w-full px-4 py-2 bg-[#15181a] border border-[#2DE2FF] text-[#2DE2FF] text-xs font-bold text-center mb-2 flex items-center justify-center gap-2 uppercase tracking-wide">
                   <span>&#10003;</span>
                   Verified
                 </div>
               )}
               <div className="border-t border-[#404040] pt-2 mt-2">
-                <Link href="/profile" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors relative font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
+                <Link href="/profile" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors relative font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#2DE2FF]">
                   Profile
                   {pendingInvitations > 0 && (
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#00C805] text-black text-[10px] font-bold border border-[#00C805]">
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center min-w-[16px] h-[16px] px-1 bg-[#2DE2FF] text-black text-[10px] font-bold border border-[#2DE2FF]">
                       {pendingInvitations > 9 ? '9+' : pendingInvitations}
                     </span>
                   )}
                 </Link>
-                <Link href="/collections" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
+                <Link href="/collections" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#2DE2FF]">
                   Collections
                 </Link>
-                <Link href="/my-mints" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
+                <Link href="/my-mints" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#2DE2FF]">
                   Transactions
                 </Link>
-                <Link href="/transactions" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
+                <Link href="/transactions" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#2DE2FF]">
                   Credit Usage
                 </Link>
-                <Link href="/guide" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
+                <Link href="/guide" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#2DE2FF]">
                   Guide
                 </Link>
-                <Link href="/support" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#00C805]">
+                <Link href="/support" onClick={() => setIsOpen(false)} className="block px-4 py-2 text-xs text-[#808080] hover:text-white hover:bg-[#15181a] transition-colors font-semibold uppercase tracking-wide border-l-2 border-transparent hover:border-[#2DE2FF]">
                   Support
                 </Link>
               </div>
@@ -367,7 +367,7 @@ export function WalletConnect() {
     <div className="relative w-full" ref={dropdownRef}>
       <button
         onClick={handleConnect}
-        className="w-full px-4 py-3 rounded-xl bg-[#00C805] hover:bg-[#CCFF00] text-black text-sm font-black transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide shadow-[0_0_24px_rgba(0,200,5,0.35)]"
+        className="w-full px-5 py-4 rounded-xl bg-[#2DE2FF] hover:bg-[#FF2BD6] text-black text-[15px] font-black transition-all duration-200 flex items-center justify-center gap-3 uppercase tracking-wide shadow-[0_0_24px_rgba(45, 226, 255,0.35)]"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />

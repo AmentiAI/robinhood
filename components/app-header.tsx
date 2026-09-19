@@ -151,23 +151,13 @@ export function AppHeader() {
               className="flex items-center group transition-all duration-300 flex-shrink-0"
             >
               <span className="text-2xl font-extrabold bg-gradient-to-r from-[var(--solana-purple)] to-[var(--solana-green)] bg-clip-text text-transparent group-hover:scale-105 transition-transform">
-                SolMaker
+                HoodGFX
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-2">
-            <Link
-              href="/marketplace"
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                pathname?.startsWith('/marketplace')
-                  ? 'text-white bg-gradient-to-r from-[var(--solana-purple)]/20 to-[var(--solana-green)]/20 border border-[var(--solana-purple)]/30'
-                  : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface)]'
-              }`}
-            >
-              Marketplace
-            </Link>
             <div className="relative flex-shrink-0">
               <button
                 type="button"
@@ -301,16 +291,6 @@ export function AppHeader() {
         {mobileMenuOpen && (
           <nav className="lg:hidden py-4 border-t border-[var(--border)] animate-[fadeIn_0.3s_ease-out]">
             <div className="flex flex-col gap-2">
-              <Link
-                href="/marketplace"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface)] rounded-lg transition-all duration-300"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">🛍️</span>
-                  <span>Marketplace</span>
-                </div>
-              </Link>
               <details className="group">
                 <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:text-white hover:bg-[var(--surface)] rounded-lg transition-all duration-300 list-none flex items-center justify-between">
                   <div className="flex items-center gap-3">

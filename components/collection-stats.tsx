@@ -44,7 +44,7 @@ export function CollectionStats({ nfts }: CollectionStatsProps) {
       label: "Total Collection",
       value: `${totalCount} / ${COLLECTION_GOAL}`,
       icon: Layers,
-      color: "text-[#00C805] dark:text-blue-400",
+      color: "text-[#2DE2FF] dark:text-blue-400",
     },
     {
       label: "Legendary Count",

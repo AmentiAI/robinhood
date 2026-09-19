@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   Home,
-  ShoppingBag,
   Layers,
   CreditCard,
   User,
@@ -14,14 +13,12 @@ import {
   Megaphone,
   Sticker,
   Film,
-  Box,
 } from 'lucide-react'
 import { WalletConnect } from './wallet-connect'
 import { useWallet } from '@/lib/wallet/compatibility'
 
 const navigation = [
   { name: 'Home', href: '/launchpad', icon: Home, match: ['/', '/launchpad'] },
-  { name: 'Marketplace', href: '/marketplace', icon: ShoppingBag },
   { name: 'Collections', href: '/collections', icon: Layers },
   { name: 'Buy Credits', href: '/buy-credits', icon: CreditCard },
   { name: 'Profile', href: '/profile', icon: User },
@@ -92,9 +89,9 @@ export function SidebarNav() {
       <button
         type="button"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-20 left-4 z-50 p-2 rounded-lg bg-[#0a0c0d] border border-[#00C805]/40 text-white hover:bg-[#15181a] transition-colors"
+        className="lg:hidden fixed top-[4.75rem] left-4 z-50 p-3 bg-[#050507] border border-[#2DE2FF]/30 text-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-colors"
       >
-        {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
 
       {isMobileOpen && (
@@ -106,25 +103,23 @@ export function SidebarNav() {
 
       <aside
         className={`
-          fixed top-16 left-0 bottom-0 w-64 z-40
-          flex flex-col bg-[#050607] border-r border-[#00C805]/15 overflow-hidden
+          fixed top-16 sm:top-[4.25rem] left-0 bottom-0 w-72 z-40
+          flex flex-col bg-[#050507] border-r border-white/[0.08] overflow-hidden
           transition-transform duration-300 ease-in-out
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="p-4 space-y-3 border-b border-white/5">
+        <div className="p-4 space-y-3 border-b border-white/[0.08]">
           {ethPrice !== null && (
-            <div className="rounded-xl bg-[#15181a] border border-white/10 px-3.5 py-3">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#71717A] mb-1">
-                ETH / USDT
-              </p>
+            <div className="border border-[#2DE2FF]/20 bg-[#2DE2FF]/[0.04] px-4 py-3.5">
+              <p className="text-[11px] text-white/40 mb-1 tracking-wide uppercase">ETH</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-black text-white tabular-nums">
+                <span className="text-xl font-semibold text-white tabular-nums">
                   ${ethPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
                 <span
-                  className={`text-xs font-bold tabular-nums ${
-                    priceChange >= 0 ? 'text-[#00C805]' : 'text-[#ff5052]'
+                  className={`text-sm tabular-nums ${
+                    priceChange >= 0 ? 'text-[#2DE2FF]' : 'text-red-400'
                   }`}
                 >
                   {priceChange >= 0 ? '+' : ''}
@@ -139,14 +134,14 @@ export function SidebarNav() {
           </div>
 
           {isConnected && currentAddress && (
-            <p className="text-[10px] text-[#71717A] truncate px-1 font-mono">
+            <p className="text-[11px] text-white/35 truncate px-1 font-mono">
               {currentAddress}
             </p>
           )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-          <div className="space-y-1">
+        <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-7">
+          <div className="space-y-1.5">
             {navigation.map((item) => {
               const active = isActive(item)
               const Icon = item.icon
@@ -156,15 +151,15 @@ export function SidebarNav() {
                   href={item.href}
                   onClick={() => setIsMobileOpen(false)}
                   className={`
-                    flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wide transition-all
+                    flex items-center gap-3.5 px-4 py-3.5 text-[15px] transition-colors
                     ${
                       active
-                        ? 'bg-[#00C805] text-black shadow-[0_0_24px_rgba(0,200,5,0.35)]'
-                        : 'text-[#a8aab2] hover:text-white hover:bg-[#15181a]'
+                        ? 'bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-black font-semibold'
+                        : 'text-white/55 hover:text-white hover:bg-white/[0.05]'
                     }
                   `}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-5 w-5" />
                   {item.name}
                 </Link>
               )
@@ -172,12 +167,12 @@ export function SidebarNav() {
           </div>
 
           <div>
-            <div className="px-3.5 mb-2">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00C805]">
+            <div className="px-4 mb-2.5">
+              <span className="text-[11px] text-[#FF2BD6]/70 font-semibold uppercase tracking-[0.18em]">
                 Tools
               </span>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {tools.map((item) => {
                 const active = pathname === item.href
                 const Icon = item.icon
@@ -187,15 +182,15 @@ export function SidebarNav() {
                     href={item.href}
                     onClick={() => setIsMobileOpen(false)}
                     className={`
-                      flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-wide transition-all
+                      flex items-center gap-3.5 px-4 py-3.5 text-[15px] transition-colors
                       ${
                         active
-                          ? 'bg-[#00C805] text-black'
-                          : 'text-[#a8aab2] hover:text-white hover:bg-[#15181a]'
+                          ? 'bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-black font-semibold'
+                          : 'text-white/55 hover:text-white hover:bg-white/[0.05]'
                       }
                     `}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-5 w-5" />
                     {item.name}
                   </Link>
                 )
@@ -204,23 +199,10 @@ export function SidebarNav() {
           </div>
         </nav>
 
-        <div className="p-4 border-t border-white/5">
-          <div className="rounded-xl border border-[#00C805]/25 bg-gradient-to-br from-[#00C805]/10 to-transparent p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-[#00C805]/15 border border-[#00C805]/40 flex items-center justify-center">
-                <Box className="h-4 w-4 text-[#00C805]" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#00C805]">
-                  Powered by
-                </p>
-                <p className="text-xs font-bold text-white">Robinhood Chain</p>
-              </div>
-            </div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#a8aab2]">
-              Fast / Low Fees / Green
-            </p>
-          </div>
+        <div className="p-4 border-t border-white/[0.08]">
+          <p className="text-[12px] text-white/35 px-1">
+            Hood<span className="text-[#FF2BD6]">GFX</span> · Robinhood Chain
+          </p>
         </div>
       </aside>
     </>

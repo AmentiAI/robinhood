@@ -6,132 +6,93 @@ export function GlobalFooter() {
   const enableRevenueShare = process.env.NEXT_PUBLIC_ENABLE_REVENUE_SHARE === 'true'
 
   return (
-    <footer className="bg-[#0a0c0d] text-[#808080] border-t border-[#00C805]/20 mt-auto">
+    <footer className="bg-[#050507] text-white/40 border-t border-white/[0.08] mt-auto">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* Brand Section */}
           <div>
-            <h3 className="text-2xl mb-4 font-black text-[#00C805] uppercase tracking-tight">
-              OrdMaker
+            <h3 className="text-lg mb-3 font-semibold text-white tracking-tight">
+              Hood<span className="text-[#FF2BD6]">GFX</span>
             </h3>
-            <p className="text-xs text-[#808080] leading-relaxed">
-              AI-powered NFT creation platform on Robinhood Chain. Build, launch, and grow your NFT collection.
+            <p className="text-sm text-white/40 leading-relaxed">
+              NFT creation studio on Robinhood Chain. Build, launch, and grow your collection.
             </p>
           </div>
 
-          {/* Platform Links */}
           <div>
             <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider">Platform</h4>
             <ul className="space-y-2">
               <li>
-                <Link
-                  href="/"
-                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                >
+                <Link href="/launchpad" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                   Launchpad
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/marketplace"
-                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                >
-                  Marketplace
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/promotion"
-                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                >
+                <Link href="/promotion" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                   Promote
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/collections"
-                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                >
+                <Link href="/collections" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                   Collections
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Features Links */}
           <div>
             <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider">Features</h4>
             <ul className="space-y-2">
               {enableRevenueShare && (
                 <>
                   <li>
-                    <Link
-                      href="/revshare"
-                      className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                    >
+                    <Link href="/revshare" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                       Revenue Share
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      href="/pass-details"
-                      className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                    >
+                    <Link href="/pass-details" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                       Pass Details
                     </Link>
                   </li>
                 </>
               )}
               <li>
-                <Link
-                  href="/buy-credits"
-                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                >
+                <Link href="/buy-credits" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                   Buy Credits
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Legal Links */}
           <div>
             <h4 className="text-white font-bold mb-5 text-sm uppercase tracking-wider">Legal</h4>
             <ul className="space-y-2">
               <li>
-                <Link
-                  href="/terms"
-                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                >
+                <Link href="/terms" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                   Terms
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/privacy"
-                  className="text-[#808080] hover:text-[#00C805] transition-colors text-xs font-medium uppercase tracking-wide"
-                >
+                <Link href="/privacy" className="text-[#808080] hover:text-[#2DE2FF] transition-colors text-xs font-medium uppercase tracking-wide">
                   Privacy
                 </Link>
               </li>
             </ul>
           </div>
-
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-10 pt-8 border-t border-[#404040]">
+        <div className="mt-10 pt-8 border-t border-white/[0.08]">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-5">
-              {/* X (Twitter) Link */}
               <a
-                href="https://x.com/solmakerfun"
+                href="https://x.com/hoodgfx"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-8 h-8 bg-[#0a0c0d] border border-[#00C805]/40 hover:border-[#00C805] hover:bg-[#15181a] transition-all group"
+                className="flex items-center justify-center w-9 h-9 bg-[#0a0c0d] border border-[#2DE2FF]/35 hover:border-[#FF2BD6] hover:bg-[#15181a] transition-all group"
                 aria-label="Follow us on X (Twitter)"
               >
                 <svg
-                  className="w-4 h-4 text-[#808080] group-hover:text-[#00C805] transition-colors"
+                  className="w-4 h-4 text-[#808080] group-hover:text-[#2DE2FF] transition-colors"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -140,11 +101,11 @@ export function GlobalFooter() {
                 </svg>
               </a>
               <p className="text-xs text-[#808080]">
-                © {new Date().getFullYear()} <span className="text-[#00C805] font-bold">SolMaker.Fun</span>
+                © {new Date().getFullYear()} <span className="text-white font-medium">HoodGFX</span>
               </p>
             </div>
             <p className="text-xs text-[#808080] uppercase tracking-wider">
-              Built on <span className="text-[#00C805] font-bold">Robinhood Chain</span>
+              Built on <span className="text-[#2DE2FF] font-bold">Robinhood Chain</span>
             </p>
           </div>
         </div>
@@ -152,4 +113,3 @@ export function GlobalFooter() {
     </footer>
   )
 }
-

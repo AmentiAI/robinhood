@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     const headers: Record<string, string> = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'User-Agent': 'OrdMaker/1.0',
+      'User-Agent': 'HoodGFX/1.0',
     }
 
     const apiKey = process.env.MAGIC_EDEN_API_KEY

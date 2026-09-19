@@ -175,7 +175,7 @@ export function CreditPurchase({ onPurchaseComplete }: CreditPurchaseProps) {
   return (
     <div className="space-y-6">
       {holderStatus?.isHolder && (
-        <p className="text-sm text-[#00C805]">Holder discount active ({holderStatus.discountPercent}%)</p>
+        <p className="text-sm text-[#2DE2FF]">Holder discount active ({holderStatus.discountPercent}%)</p>
       )}
       {checkingHolder && <p className="text-xs text-white/40">Checking holder status...</p>}
 
@@ -185,10 +185,10 @@ export function CreditPurchase({ onPurchaseComplete }: CreditPurchaseProps) {
             key={tier.credits}
             type="button"
             onClick={() => handlePurchase(index)}
-            className="border border-[#00C805]/40 p-4 text-left hover:border-[#00C805] transition-colors bg-[#111]"
+            className="border border-[#2DE2FF]/40 p-4 text-left hover:border-[#2DE2FF] transition-colors bg-[#111]"
           >
             <div className="text-white font-bold text-lg">{tier.credits} credits</div>
-            <div className="text-[#00C805] mt-1">${tier.discountedPrice.toFixed(2)}</div>
+            <div className="text-[#2DE2FF] mt-1">${tier.discountedPrice.toFixed(2)}</div>
             <div className="text-xs text-white/50 mt-1">Pay with ETH on Robinhood Chain</div>
             {creditCosts && (
               <div className="text-xs text-white/40 mt-2">
@@ -200,13 +200,13 @@ export function CreditPurchase({ onPurchaseComplete }: CreditPurchaseProps) {
       </div>
 
       {error && <p className="text-red-400 text-sm">{error}</p>}
-      {checkingPayment && <p className="text-[#00C805] text-sm">Confirming payment...</p>}
+      {checkingPayment && <p className="text-[#2DE2FF] text-sm">Confirming payment...</p>}
       {txHash && (
         <a
           href={getExplorerTxUrl(txHash)}
           target="_blank"
           rel="noreferrer"
-          className="text-sm text-[#00C805] underline"
+          className="text-sm text-[#2DE2FF] underline"
         >
           View transaction
         </a>

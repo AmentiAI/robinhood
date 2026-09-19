@@ -9,6 +9,7 @@ type WhitelistStatus = 'approved' | 'pending' | 'rejected' | null
 interface SiteLockContextValue {
   locked: boolean
   allowed: boolean
+  isAdmin: boolean
   status: WhitelistStatus
   loading: boolean
   refresh: () => Promise<void>
@@ -17,6 +18,7 @@ interface SiteLockContextValue {
 const SiteLockContext = createContext<SiteLockContextValue>({
   locked: true,
   allowed: false,
+  isAdmin: false,
   status: null,
   loading: true,
   refresh: async () => {},
@@ -26,7 +28,7 @@ export function useSiteLock() {
   return useContext(SiteLockContext)
 }
 
-const ALLOWED_WHEN_LOCKED = ['/', '/support']
+const ALLOWED_WHEN_LOCKED = ['/', '/support', '/privacy', '/terms']
 
 export function SiteLockProvider({ children }: { children: React.ReactNode }) {
   const { currentAddress, isConnected } = useWallet()
@@ -34,6 +36,7 @@ export function SiteLockProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [locked, setLocked] = useState(true)
   const [allowed, setAllowed] = useState(false)
+  const [isAdminUser, setIsAdminUser] = useState(false)
   const [status, setStatus] = useState<WhitelistStatus>(null)
   const [loading, setLoading] = useState(true)
 
@@ -46,14 +49,17 @@ export function SiteLockProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed')
       const isLocked = Boolean(data.locked)
+      const admin = Boolean(data.isAdmin)
       setLocked(isLocked)
-      // Connecting / whitelist never unlocks the app — only unlocking the site does
-      setAllowed(!isLocked)
+      setIsAdminUser(admin)
+      // Public stays locked; admins get platform access while lock is on
+      setAllowed(Boolean(data.allowed) || !isLocked || admin)
       setStatus((data.status as WhitelistStatus) || null)
     } catch (e) {
       console.error('[SiteLock]', e)
       setLocked(true)
       setAllowed(false)
+      setIsAdminUser(false)
     } finally {
       setLoading(false)
     }
@@ -66,6 +72,7 @@ export function SiteLockProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (loading) return
     if (!locked) return
+    if (allowed) return
 
     const path = pathname || '/'
     const ok =
@@ -76,10 +83,12 @@ export function SiteLockProvider({ children }: { children: React.ReactNode }) {
     if (!ok) {
       router.replace('/')
     }
-  }, [loading, locked, pathname, router])
+  }, [loading, locked, allowed, pathname, router])
 
   return (
-    <SiteLockContext.Provider value={{ locked, allowed, status, loading, refresh }}>
+    <SiteLockContext.Provider
+      value={{ locked, allowed, isAdmin: isAdminUser, status, loading, refresh }}
+    >
       {children}
     </SiteLockContext.Provider>
   )

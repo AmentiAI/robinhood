@@ -112,7 +112,7 @@ export default function SiteSettingsPage() {
           </div>
         )}
         {success && (
-          <div className="mb-4 p-4 rounded-xl border border-[#00C805]/40 bg-[#00C805]/10 text-[#00C805]">
+          <div className="mb-4 p-4 rounded-xl border border-[#2DE2FF]/40 bg-[#2DE2FF]/10 text-[#2DE2FF]">
             {success}
           </div>
         )}
@@ -121,12 +121,12 @@ export default function SiteSettingsPage() {
           <div className="text-[#a8aab2]">Loading settings...</div>
         ) : (
           <div className="space-y-6">
-            <div className="bg-[#15181a] border border-[#00C805]/25 rounded-xl p-6">
+            <div className="bg-[#15181a] border border-[#2DE2FF]/25 rounded-xl p-6">
               <div className="mb-6">
-                <h2 className="text-xl font-black text-[#00C805] mb-1">Robinhood Chain Network</h2>
+                <h2 className="text-xl font-black text-[#2DE2FF] mb-1">Robinhood Chain Network</h2>
                 <p className="text-sm text-[#a8aab2]">
                   Switch between testnet and mainnet. Deployments and mints use env + these settings.
-                  Contract addresses are configured in <code className="text-[#CCFF00]">.env</code>.
+                  Contract addresses are configured in <code className="text-[#FF2BD6]">.env</code>.
                 </p>
               </div>
 
@@ -140,8 +140,8 @@ export default function SiteSettingsPage() {
                       disabled={saving}
                       className={`flex-1 px-6 py-4 rounded-xl font-semibold transition-all ${
                         networkLabel === 'testnet'
-                          ? 'bg-[#00C805] text-black'
-                          : 'bg-[#0a0c0d] border border-[#00C805]/30 text-white hover:border-[#00C805]'
+                          ? 'bg-[#2DE2FF] text-black'
+                          : 'bg-[#0a0c0d] border border-[#2DE2FF]/30 text-white hover:border-[#2DE2FF]'
                       } disabled:opacity-50`}
                     >
                       <div className="text-lg">Testnet</div>
@@ -153,8 +153,8 @@ export default function SiteSettingsPage() {
                       disabled={saving}
                       className={`flex-1 px-6 py-4 rounded-xl font-semibold transition-all ${
                         networkLabel === 'mainnet'
-                          ? 'bg-[#00C805] text-black'
-                          : 'bg-[#0a0c0d] border border-[#00C805]/30 text-white hover:border-[#00C805]'
+                          ? 'bg-[#2DE2FF] text-black'
+                          : 'bg-[#0a0c0d] border border-[#2DE2FF]/30 text-white hover:border-[#2DE2FF]'
                       } disabled:opacity-50`}
                     >
                       <div className="text-lg">Mainnet</div>
@@ -163,7 +163,7 @@ export default function SiteSettingsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[#00C805]/20">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[#2DE2FF]/20">
                   <div>
                     <label className="block text-sm font-medium text-white mb-2">Testnet RPC</label>
                     <input
@@ -171,7 +171,7 @@ export default function SiteSettingsPage() {
                       value={String(rhTestnetRpc).replace(/^"|"$/g, '')}
                       onChange={(e) => updateSetting('rh_testnet_rpc_url', e.target.value)}
                       disabled={saving}
-                      className="w-full px-4 py-2 bg-[#0a0c0d] border border-[#00C805]/30 rounded-xl text-white text-sm font-mono focus:border-[#00C805] outline-none disabled:opacity-50"
+                      className="w-full px-4 py-2 bg-[#0a0c0d] border border-[#2DE2FF]/30 rounded-xl text-white text-sm font-mono focus:border-[#2DE2FF] outline-none disabled:opacity-50"
                     />
                   </div>
                   <div>
@@ -181,21 +181,21 @@ export default function SiteSettingsPage() {
                       value={String(rhMainnetRpc).replace(/^"|"$/g, '')}
                       onChange={(e) => updateSetting('rh_mainnet_rpc_url', e.target.value)}
                       disabled={saving}
-                      className="w-full px-4 py-2 bg-[#0a0c0d] border border-[#00C805]/30 rounded-xl text-white text-sm font-mono focus:border-[#00C805] outline-none disabled:opacity-50"
+                      className="w-full px-4 py-2 bg-[#0a0c0d] border border-[#2DE2FF]/30 rounded-xl text-white text-sm font-mono focus:border-[#2DE2FF] outline-none disabled:opacity-50"
                     />
                   </div>
                 </div>
 
-                <div className="mt-4 p-4 bg-[#0a0c0d] rounded-xl border border-[#00C805]/20 text-sm text-[#a8aab2] space-y-2">
+                <div className="mt-4 p-4 bg-[#0a0c0d] rounded-xl border border-[#2DE2FF]/20 text-sm text-[#a8aab2] space-y-2">
                   <p>
                     <strong className="text-white">Env network:</strong>{' '}
                     {process.env.NEXT_PUBLIC_RH_NETWORK || 'testnet'}
                   </p>
                   <p>
                     <strong className="text-white">Also set in .env:</strong>{' '}
-                    <code className="text-[#00C805]">RH_FACTORY_ADDRESS</code>,{' '}
-                    <code className="text-[#00C805]">RH_MARKETPLACE_ADDRESS</code>,{' '}
-                    <code className="text-[#00C805]">RH_PLATFORM_WALLET</code>
+                    <code className="text-[#2DE2FF]">RH_FACTORY_ADDRESS</code>,{' '}
+                    <code className="text-[#2DE2FF]">RH_MARKETPLACE_ADDRESS</code>,{' '}
+                    <code className="text-[#2DE2FF]">RH_PLATFORM_WALLET</code>
                   </p>
                 </div>
               </div>
@@ -217,7 +217,7 @@ export default function SiteSettingsPage() {
                     disabled={saving}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-[#0a0c0d] rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#00C805]" />
+                  <div className="w-11 h-6 bg-[#0a0c0d] rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#2DE2FF]" />
                   <span className="ml-3 text-sm font-medium text-white">
                     {showCreditPurchase ? 'Visible' : 'Hidden'}
                   </span>

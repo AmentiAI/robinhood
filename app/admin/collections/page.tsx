@@ -141,7 +141,7 @@ export default function AdminCollectionsPage() {
     return (
       <div className="min-h-screen bg-[#0a0e27] p-8">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 rounded-lg shadow p-6 text-center">
+          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-lg shadow p-6 text-center">
             <p className="text-white/70">Please connect your wallet</p>
           </div>
         </div>
@@ -160,13 +160,13 @@ export default function AdminCollectionsPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-red-500/50 rounded-lg">
+            <div className="mb-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-red-500/50 rounded-lg">
               <p className="text-[#EF4444]">Error: {error}</p>
             </div>
           )}
 
           {/* Filters */}
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 rounded-lg shadow mb-6 p-6">
+          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-lg shadow mb-6 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
                 <label className="block text-sm font-medium text-white/70 mb-1">Search</label>
@@ -175,7 +175,7 @@ export default function AdminCollectionsPage() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Name, description, or ID"
-                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50 placeholder:text-white/40"
+                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50 placeholder:text-white/40"
                 />
               </div>
               <div>
@@ -183,7 +183,7 @@ export default function AdminCollectionsPage() {
                 <select
                   value={isLockedFilter}
                   onChange={(e) => setIsLockedFilter(e.target.value)}
-                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50"
+                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50"
                 >
                   <option value="">All</option>
                   <option value="true">Locked</option>
@@ -195,7 +195,7 @@ export default function AdminCollectionsPage() {
                 <select
                   value={collectionStatusFilter}
                   onChange={(e) => setCollectionStatusFilter(e.target.value)}
-                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50"
+                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50"
                 >
                   <option value="">All</option>
                   <option value="draft">Draft</option>
@@ -209,7 +209,7 @@ export default function AdminCollectionsPage() {
                 <select
                   value={launchStatusFilter}
                   onChange={(e) => setLaunchStatusFilter(e.target.value)}
-                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50"
+                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50"
                 >
                   <option value="">All</option>
                   <option value="draft">Draft</option>
@@ -225,7 +225,7 @@ export default function AdminCollectionsPage() {
                   value={walletFilter}
                   onChange={(e) => setWalletFilter(e.target.value)}
                   placeholder="Filter by wallet"
-                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50 placeholder:text-white/40"
+                  className="w-full px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50 placeholder:text-white/40"
                 />
               </div>
               <div className="flex items-end">
@@ -238,7 +238,7 @@ export default function AdminCollectionsPage() {
                     setWalletFilter('')
                     setPage(1)
                   }}
-                  className="px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 hover:border-[#00C805]/50 text-white rounded-lg text-sm font-medium"
+                  className="px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-white rounded-lg text-sm font-medium"
                 >
                   Clear Filters
                 </button>
@@ -247,38 +247,38 @@ export default function AdminCollectionsPage() {
           </div>
 
           {/* Collections Table */}
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 rounded-lg shadow overflow-hidden">
+          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-lg shadow overflow-hidden">
             {loading ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 border-4 border-[#00C805] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                <div className="w-16 h-16 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
                 <p className="text-white/70">Loading collections...</p>
               </div>
             ) : (
               <>
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-[#00C805]/20">
+                  <table className="min-w-full divide-y divide-[#2DE2FF]/20">
                     <thead className="bg-[#0a0e27]/80">
                       <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#00C805]/10" onClick={() => handleSort('name')}>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#2DE2FF]/10" onClick={() => handleSort('name')}>
                           Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">ID</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#00C805]/10" onClick={() => handleSort('wallet_address')}>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#2DE2FF]/10" onClick={() => handleSort('wallet_address')}>
                           Owner {sortBy === 'wallet_address' && (sortOrder === 'asc' ? '↑' : '↓')}
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Stats</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#00C805]/10" onClick={() => handleSort('is_locked')}>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#2DE2FF]/10" onClick={() => handleSort('is_locked')}>
                           Status {sortBy === 'is_locked' && (sortOrder === 'asc' ? '↑' : '↓')}
                         </th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#00C805]/10" onClick={() => handleSort('created_at')}>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider cursor-pointer hover:bg-[#2DE2FF]/10" onClick={() => handleSort('created_at')}>
                           Created {sortBy === 'created_at' && (sortOrder === 'asc' ? '↑' : '↓')}
                         </th>
                         <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#00C805]/20">
+                    <tbody className="divide-y divide-[#2DE2FF]/20">
                       {collections.map((collection) => (
-                        <tr key={collection.id} className="hover:bg-[#00C805]/5">
+                        <tr key={collection.id} className="hover:bg-[#2DE2FF]/5">
                           <td className="px-4 py-3">
                             <div className="font-medium text-white">{collection.name}</div>
                             {collection.description && (
@@ -298,7 +298,7 @@ export default function AdminCollectionsPage() {
                               <div>Phases: {collection.phase_count}</div>
                               <div>Layers: {collection.layer_count}</div>
                               {(collection.twitter_url || collection.discord_url || collection.telegram_url || collection.website_url) && (
-                                <div className="flex gap-1 mt-2 pt-2 border-t border-[#00C805]/20">
+                                <div className="flex gap-1 mt-2 pt-2 border-t border-[#2DE2FF]/20">
                                   {collection.twitter_url && (
                                     <a
                                       href={collection.twitter_url}
@@ -358,7 +358,7 @@ export default function AdminCollectionsPage() {
                                   collection.collection_status === 'launchpad_live' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
                                   collection.collection_status === 'self_inscribe' ? 'bg-[#4561ad]/20 text-[#4561ad] border border-[#4561ad]/30' :
                                   collection.collection_status === 'marketplace' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                                  'bg-gray-500/20 text-[#a8a8b8] border border-[#00C805]/40/30'
+                                  'bg-gray-500/20 text-[#a8a8b8] border border-[#2DE2FF]/40/30'
                                 }`}>
                                   {collection.collection_status === 'draft' && '📝 Draft'}
                                   {collection.collection_status === 'launchpad' && '🚀 Launch'}
@@ -388,7 +388,7 @@ export default function AdminCollectionsPage() {
                               <Link
                                 href={`/collections/${collection.id}`}
                                 target="_blank"
-                                className="px-3 py-1.5 text-xs font-medium bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 hover:border-[#00C805]/50 text-white rounded transition-colors"
+                                className="px-3 py-1.5 text-xs font-medium bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-white rounded transition-colors"
                               >
                                 View
                               </Link>
@@ -401,7 +401,7 @@ export default function AdminCollectionsPage() {
                 </div>
 
                 {/* Pagination */}
-                <div className="bg-[#0a0e27]/80 px-4 py-3 flex items-center justify-between border-t border-[#00C805]/20">
+                <div className="bg-[#0a0e27]/80 px-4 py-3 flex items-center justify-between border-t border-[#2DE2FF]/20">
                   <div className="text-sm text-white/70">
                     Showing <span className="font-medium text-white">{(page - 1) * limit + 1}</span> to{' '}
                     <span className="font-medium text-white">{Math.min(page * limit, total)}</span> of{' '}
@@ -411,14 +411,14 @@ export default function AdminCollectionsPage() {
                     <button
                       onClick={() => setPage(Math.max(1, page - 1))}
                       disabled={page === 1}
-                      className="px-3 py-2 text-sm font-medium text-white bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 hover:border-[#00C805]/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-2 text-sm font-medium text-white bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Previous
                     </button>
                     <button
                       onClick={() => setPage(Math.min(totalPages, page + 1))}
                       disabled={page >= totalPages}
-                      className="px-3 py-2 text-sm font-medium text-white bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 hover:border-[#00C805]/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-2 text-sm font-medium text-white bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Next
                     </button>

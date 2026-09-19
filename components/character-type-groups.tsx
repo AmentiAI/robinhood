@@ -52,7 +52,7 @@ export function CharacterTypeGroups({ nfts, selectedTypes, onDelete }: Character
       witch: "bg-indigo-100 text-indigo-800 border-indigo-300",
       demon: "bg-red-100 text-red-800 border-red-300",
       mummy: "bg-yellow-100 text-yellow-800 border-yellow-300",
-      reaper: "bg-black text-white border-[#00C805]/30"
+      reaper: "bg-black text-white border-[#2DE2FF]/30"
     }
     return colors[type] || "bg-gray-100 text-gray-800 border-gray-300"
   }

@@ -75,7 +75,7 @@ export default function AdminWhitelistPage() {
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-5xl">
       <div>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00C805] mb-2">Access</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#2DE2FF] mb-2">Access</p>
         <h1 className="text-3xl font-black text-white">Site Whitelist</h1>
         <p className="text-[#a8aab2] text-sm mt-1">Approve wallets to unlock the platform</p>
       </div>
@@ -87,7 +87,7 @@ export default function AdminWhitelistPage() {
             type="button"
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-xl text-xs font-black uppercase ${
-              filter === f ? 'bg-[#00C805] text-black' : 'bg-[#15181a] border border-white/10 text-[#a8aab2]'
+              filter === f ? 'bg-[#2DE2FF] text-black' : 'bg-[#15181a] border border-white/10 text-[#a8aab2]'
             }`}
           >
             {f}
@@ -98,7 +98,7 @@ export default function AdminWhitelistPage() {
       {loading ? (
         <div className="py-16 text-center text-[#a8aab2]">Loading...</div>
       ) : entries.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#00C805]/25 bg-[#15181a] py-16 text-center text-[#a8aab2]">
+        <div className="rounded-2xl border border-dashed border-[#2DE2FF]/25 bg-[#15181a] py-16 text-center text-[#a8aab2]">
           No {filter === 'all' ? '' : filter} entries
         </div>
       ) : (
@@ -109,7 +109,7 @@ export default function AdminWhitelistPage() {
               className="flex flex-wrap items-center gap-3 p-4 rounded-2xl bg-[#15181a] border border-white/10"
             >
               <div className="flex-1 min-w-0">
-                <p className="font-mono text-sm text-[#00C805] break-all">{e.wallet_address}</p>
+                <p className="font-mono text-sm text-[#2DE2FF] break-all">{e.wallet_address}</p>
                 <p className="text-xs text-[#71717A] mt-1">
                   {e.status}
                   {e.email ? ` · ${e.email}` : ''}
@@ -122,7 +122,7 @@ export default function AdminWhitelistPage() {
                   <button
                     type="button"
                     onClick={() => moderate(e.wallet_address, 'approve')}
-                    className="px-3 py-2 rounded-lg bg-[#00C805] text-black text-xs font-black uppercase"
+                    className="px-3 py-2 rounded-lg bg-[#2DE2FF] text-black text-xs font-black uppercase"
                   >
                     Approve
                   </button>

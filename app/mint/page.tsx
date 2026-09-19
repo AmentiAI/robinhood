@@ -22,8 +22,8 @@ export default function MintPage() {
             <div className="flex items-center gap-6 flex-shrink min-w-0">
               <div className="relative flex-shrink-0">
                 <Image
-                  src="/newestlogo.png"
-                  alt="Ord Maker"
+                  src="/hoodgfx-hero.png"
+                  alt="HoodGFX"
                   width={350}
                   height={350}
                   className=""
@@ -60,7 +60,7 @@ export default function MintPage() {
                           <span className="text-[#e27d0f] bg-gradient-to-r from-[#e27d0f] to-[#f59e0b] bg-clip-text text-transparent">222 PASSES</span>
                           <span className="text-gray-800"> — OWNING A CREATOR PASS GETS YOU </span>
                           <span className="text-[#e27d0f] bg-gradient-to-r from-[#e27d0f] to-[#f59e0b] bg-clip-text text-transparent">50% OFF</span>
-                          <span className="text-gray-800"> ORDMAKER.FUN CREDITS</span>
+                          <span className="text-gray-800"> HOODGFX CREDITS</span>
                         </p>
                       </div>
                     </div>
@@ -81,7 +81,7 @@ export default function MintPage() {
                         <span>Preview Platform</span>
                       </button>
                       <a 
-                        href="https://x.com/ordmakerfun" 
+                        href="https://x.com/hoodgfx" 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group inline-flex items-center gap-3 px-10 py-3 bg-gradient-to-r from-[#e27d0f] to-[#f59e0b] text-white font-bold text-base rounded-full hover:from-[#d66f0d] hover:to-[#e27d0f] transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[#e27d0f]/50 transform hover:-translate-y-1"
@@ -289,7 +289,7 @@ export default function MintPage() {
             {/* Footer */}
             <footer className="py-3 px-4 border-t border-gray-100">
               <div className="max-w-5xl mx-auto text-center text-gray-600 text-xs font-medium">
-                <p>© 2025 Ord Maker. All rights reserved.</p>
+                <p>© 2025 HoodGFX. All rights reserved.</p>
               </div>
             </footer>
           </div>

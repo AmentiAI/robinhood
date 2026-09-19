@@ -117,7 +117,7 @@ export function RobinhoodDeploymentWizard({
   }
 
   return (
-    <div className="space-y-4 border border-[#00C805]/30 p-4 bg-[#111]">
+    <div className="space-y-4 border border-[#2DE2FF]/30 p-4 bg-[#111]">
       <h3 className="text-white font-bold uppercase tracking-wide">Deploy on Robinhood Chain</h3>
       <p className="text-sm text-white/60">
         Creates an ERC-721 collection via the platform factory. Gas paid in ETH on Robinhood Chain.
@@ -125,7 +125,7 @@ export function RobinhoodDeploymentWizard({
       <p className="text-xs text-white/40">
         {meta.name} · {meta.symbol} · supply {meta.supply}
       </p>
-      {status && <p className="text-sm text-[#00C805]">{status}</p>}
+      {status && <p className="text-sm text-[#2DE2FF]">{status}</p>}
       {error && <p className="text-sm text-red-400">{error}</p>}
       {contractAddress && (
         <p className="text-xs text-white/80 break-all">Contract: {contractAddress}</p>
@@ -134,7 +134,7 @@ export function RobinhoodDeploymentWizard({
         type="button"
         disabled={busy || !isConnected || !!contractAddress}
         onClick={deploy}
-        className="px-4 py-2 bg-[#00C805] text-black font-bold uppercase text-sm disabled:opacity-50"
+        className="px-4 py-2 bg-[#2DE2FF] text-black font-bold uppercase text-sm disabled:opacity-50"
       >
         {contractAddress ? 'Already Deployed' : busy ? 'Deploying...' : 'Deploy Collection'}
       </button>

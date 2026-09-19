@@ -4,13 +4,13 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-[#00C805]/20 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] mt-auto h-[140px] flex items-center">
+    <footer className="border-t border-[#2DE2FF]/20 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] mt-auto h-[140px] flex items-center">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           {/* Left side - Branding */}
           <div className="text-center md:text-left">
             <p className="text-[#a8a8b8] text-sm">
-              © {currentYear} SolMaker.Fun
+              © {currentYear} HoodGFX
             </p>
             <p className="text-[#a8a8b8]/80 text-xs mt-1">
               Built with Next.js, Robinhood Chain, and OpenAI

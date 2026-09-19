@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     const headers: Record<string, string> = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'User-Agent': 'OrdMaker/1.0',
+      'User-Agent': 'HoodGFX/1.0',
     }
 
     if (apiKey) {

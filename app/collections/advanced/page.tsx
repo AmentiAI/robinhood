@@ -186,7 +186,7 @@ export default function AdvancedCollections() {
               
               {/* Display existing custom rules */}
               {customRules.length > 0 && (
-                <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#00C805]/20 rounded-lg p-4">
+                <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2DE2FF]/20 rounded-lg p-4">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
                     Existing Custom Rules
                   </h3>
@@ -216,13 +216,13 @@ export default function AdvancedCollections() {
         </div>
 
         {/* Collection Overview */}
-        <div className="mt-8 bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#00C805]/20 rounded-lg p-4">
+        <div className="mt-8 bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2DE2FF]/20 rounded-lg p-4">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
             Collection Overview
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-[#00C805] dark:text-blue-400">
+              <div className="text-2xl font-bold text-[#2DE2FF] dark:text-blue-400">
                 {collections.length}
               </div>
               <div className="text-sm text-gray-600 dark:text-[#a8a8b8]">

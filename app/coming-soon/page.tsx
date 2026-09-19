@@ -15,8 +15,8 @@ export default function ComingSoonPage() {
         <div className="flex items-center justify-between">
           <div className="relative">
             <Image
-              src="/newestlogo.png"
-              alt="Ord Maker"
+              src="/hoodgfx-hero.png"
+              alt="HoodGFX"
               width={500}
               height={500}
               className=""
@@ -25,7 +25,7 @@ export default function ComingSoonPage() {
           <div className="flex items-center gap-4">
             {/* Twitter/X */}
             <a 
-              href="https://twitter.com/ordmaker" 
+              href="https://twitter.com/hoodgfx" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] transition-all duration-300 hover:scale-110 shadow-lg"

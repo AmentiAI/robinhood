@@ -187,7 +187,7 @@ export default function CollectionsPage() {
   if (loading || loadingCredits) {
     return (
       <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#00C805] border-t-transparent animate-spin" />
+        <div className="w-12 h-12 border-4 border-[#2DE2FF] border-t-transparent animate-spin" />
       </div>
     )
   }
@@ -195,9 +195,9 @@ export default function CollectionsPage() {
   if (isConnected && currentAddress && (credits === null || credits === 0)) {
     return (
       <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center p-6">
-        <div className="max-w-md bg-[#15181a] border-2 border-[#00C805] p-8 text-center">
-          <div className="w-20 h-20 mx-auto mb-6 bg-[#0a0c0d] border-2 border-[#00C805] flex items-center justify-center">
-            <svg className="w-10 h-10 text-[#00C805]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="max-w-md bg-[#15181a] border-2 border-[#2DE2FF] p-8 text-center">
+          <div className="w-20 h-20 mx-auto mb-6 bg-[#0a0c0d] border-2 border-[#2DE2FF] flex items-center justify-center">
+            <svg className="w-10 h-10 text-[#2DE2FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
@@ -207,7 +207,7 @@ export default function CollectionsPage() {
           </p>
           <Link
             href="/"
-            className="inline-block px-8 py-3 bg-[#0a0c0d] border-2 border-[#00C805] text-[#00C805] font-semibold uppercase tracking-wide hover:bg-[#00C805] hover:text-black transition-all duration-300"
+            className="inline-block px-8 py-3 bg-[#0a0c0d] border-2 border-[#2DE2FF] text-[#2DE2FF] font-semibold uppercase tracking-wide hover:bg-[#2DE2FF] hover:text-black transition-all duration-300"
           >
             Purchase Credits
           </Link>
@@ -230,7 +230,7 @@ export default function CollectionsPage() {
             href="/collections/create"
             className="block mb-12 group"
           >
-            <div className="relative overflow-hidden bg-[#0a0c0d] border-2 border-[#00C805] p-12 text-center transition-all duration-300 group-hover:bg-[#00C805]">
+            <div className="relative overflow-hidden bg-[#0a0c0d] border-2 border-[#2DE2FF] p-12 text-center transition-all duration-300 group-hover:bg-[#2DE2FF]">
               <div className="relative z-10">
                 <div className="text-6xl mb-4">✨</div>
                 <h2 className="text-3xl font-bold text-white mb-2 uppercase tracking-wide group-hover:text-black transition-colors duration-300">Create New Collection</h2>
@@ -251,7 +251,7 @@ export default function CollectionsPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search collections..."
-                  className="w-full pl-12 pr-4 py-3 bg-[#0a0c0d] border-2 border-[#404040] focus:border-[#00C805] text-white placeholder:text-[#808080] transition-all duration-300 outline-none"
+                  className="w-full pl-12 pr-4 py-3 bg-[#0a0c0d] border-2 border-[#404040] focus:border-[#2DE2FF] text-white placeholder:text-[#808080] transition-all duration-300 outline-none"
                 />
               </div>
               <div className="flex gap-2">
@@ -259,8 +259,8 @@ export default function CollectionsPage() {
                   onClick={() => setActiveTab('collections')}
                   className={`px-6 py-3 font-semibold uppercase tracking-wide transition-all duration-300 ${
                     activeTab === 'collections'
-                      ? 'bg-[#00C805] text-black'
-                      : 'bg-[#0a0c0d] border-2 border-[#404040] text-[#808080] hover:text-white hover:border-[#00C805]'
+                      ? 'bg-[#2DE2FF] text-black'
+                      : 'bg-[#0a0c0d] border-2 border-[#404040] text-[#808080] hover:text-white hover:border-[#2DE2FF]'
                   }`}
                 >
                   My Collections ({ownedCollections.length})
@@ -269,8 +269,8 @@ export default function CollectionsPage() {
                   onClick={() => setActiveTab('collabs')}
                   className={`px-6 py-3 font-semibold uppercase tracking-wide transition-all duration-300 ${
                     activeTab === 'collabs'
-                      ? 'bg-[#00C805] text-black'
-                      : 'bg-[#0a0c0d] border-2 border-[#404040] text-[#808080] hover:text-white hover:border-[#00C805]'
+                      ? 'bg-[#2DE2FF] text-black'
+                      : 'bg-[#0a0c0d] border-2 border-[#404040] text-[#808080] hover:text-white hover:border-[#2DE2FF]'
                   }`}
                 >
                   Collaborations ({collabCollections.length})
@@ -286,7 +286,6 @@ export default function CollectionsPage() {
                   { value: 'draft', label: 'Draft' },
                   { value: 'launchpad', label: 'Launchpad' },
                   { value: 'self_inscribe', label: 'Inscribe' },
-                  { value: 'marketplace', label: 'Marketplace' },
                   { value: 'deleted', label: 'Deleted' }
                 ].map(filter => (
                   <button
@@ -294,8 +293,8 @@ export default function CollectionsPage() {
                     onClick={() => setStatusFilter(filter.value as any)}
                     className={`px-4 py-2 font-medium whitespace-nowrap uppercase tracking-wide transition-all duration-300 ${
                       statusFilter === filter.value
-                        ? 'bg-[#0a0c0d] border-2 border-[#00C805] text-[#00C805]'
-                        : 'bg-[#0a0c0d] border border-[#404040] text-[#808080] hover:text-white hover:border-[#00C805]'
+                        ? 'bg-[#0a0c0d] border-2 border-[#2DE2FF] text-[#2DE2FF]'
+                        : 'bg-[#0a0c0d] border border-[#404040] text-[#808080] hover:text-white hover:border-[#2DE2FF]'
                     }`}
                   >
                     {filter.label}
@@ -316,7 +315,7 @@ export default function CollectionsPage() {
               {!searchQuery && (
                 <Link
                   href="/collections/create"
-                  className="inline-block px-8 py-3 bg-[#0a0c0d] border-2 border-[#00C805] text-[#00C805] font-semibold uppercase tracking-wide hover:bg-[#00C805] hover:text-black transition-all duration-300"
+                  className="inline-block px-8 py-3 bg-[#0a0c0d] border-2 border-[#2DE2FF] text-[#2DE2FF] font-semibold uppercase tracking-wide hover:bg-[#2DE2FF] hover:text-black transition-all duration-300"
                 >
                   Create Collection
                 </Link>
@@ -327,7 +326,7 @@ export default function CollectionsPage() {
               {filteredCollections.map((collection) => (
                 <div
                   key={collection.id}
-                  className="bg-[#15181a] border-2 border-[#404040] overflow-hidden hover:border-[#00C805] transition-all duration-300 group"
+                  className="bg-[#15181a] border-2 border-[#404040] overflow-hidden hover:border-[#2DE2FF] transition-all duration-300 group"
                 >
                   {/* Collection Image */}
                   <div className="relative aspect-video bg-[#0a0c0d] overflow-hidden">
@@ -349,14 +348,14 @@ export default function CollectionsPage() {
                     <div className="absolute top-4 right-4">
                       <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide backdrop-blur-sm ${
                         collection.status === 'draft' ? 'bg-[#808080]/80 text-white border border-white/20' :
-                        collection.status === 'launchpad' || collection.status === 'launchpad_live' ? 'bg-[#00C805]/80 text-black border border-black/20' :
-                        collection.status === 'marketplace' ? 'bg-[#00C805]/80 text-black border border-black/20' :
-                        'bg-[#00C805]/80 text-black border border-black/20'
+                        collection.status === 'launchpad' || collection.status === 'launchpad_live' ? 'bg-[#2DE2FF]/80 text-black border border-black/20' :
+                        collection.status === 'marketplace' ? 'bg-[#2DE2FF]/80 text-black border border-black/20' :
+                        'bg-[#2DE2FF]/80 text-black border border-black/20'
                       }`}>
                         {collection.status === 'draft' && '📝 Draft'}
                         {(collection.status === 'launchpad' || collection.status === 'launchpad_live') && '🚀 Launchpad'}
                         {collection.status === 'self_inscribe' && '⚡ Inscribe'}
-                        {collection.status === 'marketplace' && '💰 Market'}
+                        {collection.status === 'marketplace' && '📦 Archived'}
                         {collection.status === 'deleted' && '🗑️ Deleted'}
                       </span>
                     </div>
@@ -367,7 +366,7 @@ export default function CollectionsPage() {
                     <div className="mb-3">
                       <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">{collection.name}</h3>
                       {collection.total_ordinals !== undefined && (
-                        <p className="text-sm text-[#00C805] font-semibold uppercase tracking-wide">
+                        <p className="text-sm text-[#2DE2FF] font-semibold uppercase tracking-wide">
                           {collection.total_ordinals} {collection.total_ordinals === 1 ? 'Item' : 'Items'}
                         </p>
                       )}
@@ -381,7 +380,7 @@ export default function CollectionsPage() {
                   <div className="p-6 space-y-2">
                     <Link
                       href={`/collections/${collection.id}`}
-                      className="block w-full px-4 py-3 bg-[#00C805] text-black font-semibold uppercase tracking-wide text-center transition-all duration-300 hover:bg-[#0a0c0d] hover:text-[#00C805] border-2 border-[#00C805]"
+                      className="block w-full px-4 py-3 bg-[#2DE2FF] text-black font-semibold uppercase tracking-wide text-center transition-all duration-300 hover:bg-[#0a0c0d] hover:text-[#2DE2FF] border-2 border-[#2DE2FF]"
                     >
                       View Collection
                     </Link>
@@ -389,13 +388,13 @@ export default function CollectionsPage() {
                       <>
                         <Link
                           href={`/collections/${collection.id}/launch`}
-                          className="block w-full px-4 py-3 bg-[#0a0c0d] border-2 border-[#00C805] hover:bg-[#00C805] text-[#00C805] hover:text-black font-semibold uppercase tracking-wide text-center transition-all duration-300"
+                          className="block w-full px-4 py-3 bg-[#0a0c0d] border-2 border-[#2DE2FF] hover:bg-[#2DE2FF] text-[#2DE2FF] hover:text-black font-semibold uppercase tracking-wide text-center transition-all duration-300"
                         >
                           🚀 Launchpad Settings
                         </Link>
                         <Link
                           href={`/collections/${collection.id}/edit`}
-                          className="block w-full px-4 py-3 bg-[#0a0c0d] border-2 border-[#404040] hover:border-[#00C805] text-white font-semibold uppercase tracking-wide text-center transition-all duration-300"
+                          className="block w-full px-4 py-3 bg-[#0a0c0d] border-2 border-[#404040] hover:border-[#2DE2FF] text-white font-semibold uppercase tracking-wide text-center transition-all duration-300"
                         >
                           Edit Settings
                         </Link>

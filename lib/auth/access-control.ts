@@ -93,7 +93,7 @@ export async function checkAuthorizationServer(
       // First, check database for is_admin flag
       const profileResult = await sql`
         SELECT is_admin, username FROM profiles
-        WHERE wallet_address = ${walletAddress}
+        WHERE LOWER(wallet_address) = LOWER(${walletAddress})
         LIMIT 1
       `
       

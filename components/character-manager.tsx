@@ -23,7 +23,7 @@ export function CharacterManager({ onCharacterAdded }: CharacterManagerProps) {
   }
 
   return (
-    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#00C805]/20 rounded-lg p-4">
+    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2DE2FF]/20 rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
           Character Manager
@@ -46,7 +46,7 @@ export function CharacterManager({ onCharacterAdded }: CharacterManagerProps) {
               type="text"
               value={newCharacter.name}
               onChange={(e) => setNewCharacter({ ...newCharacter, name: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#2DE2FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
               placeholder="e.g., ghost, demon, zombie"
               required
             />
@@ -59,7 +59,7 @@ export function CharacterManager({ onCharacterAdded }: CharacterManagerProps) {
             <textarea
               value={newCharacter.description}
               onChange={(e) => setNewCharacter({ ...newCharacter, description: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#2DE2FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100"
               rows={3}
               placeholder="Describe the character's appearance and key features"
               required

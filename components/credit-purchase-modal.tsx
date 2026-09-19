@@ -622,7 +622,7 @@ export function CreditPurchaseModal({ isOpen, onClose, tierIndex }: CreditPurcha
               placeholder={String(recommendedFeeRate)}
               min="1"
               step="1"
-              className="w-full px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 lg:px-8 lg:py-5 xl:px-10 xl:py-6 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl bg-[#1a1a24] border border-[#00C805]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-3 py-2 sm:px-4 sm:py-3 md:px-6 md:py-4 lg:px-8 lg:py-5 xl:px-10 xl:py-6 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl bg-[#1a1a24] border border-[#2DE2FF]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
               disabled={creating}
             />
             <p className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-lg text-[#a8a8b8]/80 mt-1 sm:mt-2 md:mt-2 lg:mt-3 xl:mt-4">

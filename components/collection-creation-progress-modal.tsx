@@ -57,7 +57,7 @@ export function CollectionCreationProgressModal({
                         ? 'bg-purple-900/20 border-purple-500/50 shadow-lg shadow-purple-500/20'
                         : isCompleted
                         ? 'bg-green-900/10 border-green-700/30'
-                        : 'bg-[#1a1a24]/30 border-[#00C805]/20/30 opacity-60'
+                        : 'bg-[#1a1a24]/30 border-[#2DE2FF]/20/30 opacity-60'
                     }`}
                   >
                     {/* Status Icon */}
@@ -73,7 +73,7 @@ export function CollectionCreationProgressModal({
                           <div className="w-3 h-3 rounded-full bg-[#FDFCFA] animate-pulse"></div>
                         </div>
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-gray-600 border-2 border-[#00C805]/40"></div>
+                        <div className="w-6 h-6 rounded-full bg-gray-600 border-2 border-[#2DE2FF]/40"></div>
                       )}
                     </div>
 

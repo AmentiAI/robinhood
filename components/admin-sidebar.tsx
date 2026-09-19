@@ -51,10 +51,6 @@ export function AdminSidebar() {
       ],
     },
     {
-      category: 'Marketplace',
-      items: [{ path: '/admin/marketplace', label: 'NFT Marketplace', icon: '🏪' }],
-    },
-    {
       category: 'Users & Credits',
       items: [
         { path: '/admin', label: 'Users', icon: '👥', tab: 'users' },
@@ -95,9 +91,9 @@ export function AdminSidebar() {
 
   if (loading) {
     return (
-      <div className="w-64 bg-[#050607] border-r border-[#00C805]/20 min-h-screen p-4 pt-6 fixed left-0 top-0 overflow-y-auto z-50">
+      <div className="w-64 bg-[#050607] border-r border-[#2DE2FF]/20 min-h-screen p-4 pt-6 fixed left-0 top-0 overflow-y-auto z-50">
         <div className="mb-6">
-          <h1 className="text-xl font-black text-[#00C805]">Admin</h1>
+          <h1 className="text-xl font-black text-[#2DE2FF]">Admin</h1>
           <p className="text-xs text-[#71717A] mt-1">Loading...</p>
         </div>
       </div>
@@ -116,11 +112,11 @@ export function AdminSidebar() {
   }
 
   return (
-    <div className="w-64 bg-[#050607] border-r border-[#00C805]/20 min-h-screen p-4 pt-6 fixed left-0 top-0 overflow-y-auto z-50">
+    <div className="w-64 bg-[#050607] border-r border-[#2DE2FF]/20 min-h-screen p-4 pt-6 fixed left-0 top-0 overflow-y-auto z-50">
       <div className="mb-6">
         <Link href="/admin" className="block group">
-          <h1 className="text-xl font-black text-[#00C805] group-hover:text-[#CCFF00] transition-colors">
-            OrdMaker Admin
+          <h1 className="text-xl font-black text-[#2DE2FF] group-hover:text-[#FF2BD6] transition-colors">
+            HoodGFX Admin
           </h1>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#a8aab2] mt-1">
             Robinhood Chain
@@ -151,7 +147,7 @@ export function AdminSidebar() {
                 </span>
               </button>
               {isExpanded && (
-                <div className="mt-1 ml-2 space-y-1 border-l border-[#00C805]/20 pl-2">
+                <div className="mt-1 ml-2 space-y-1 border-l border-[#2DE2FF]/20 pl-2">
                   {category.items.map((item, index) => {
                     const itemTab = 'tab' in item ? (item.tab as string | undefined) : undefined
                     const uniqueKey = `${category.category}-${item.path}-${itemTab || ''}-${index}`
@@ -162,7 +158,7 @@ export function AdminSidebar() {
                         href={item.path + (itemTab ? `?tab=${itemTab}` : '')}
                         className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                           active
-                            ? 'bg-[#00C805] text-black shadow-[0_0_20px_rgba(0,200,5,0.3)]'
+                            ? 'bg-[#2DE2FF] text-black shadow-[0_0_20px_rgba(45, 226, 255,0.3)]'
                             : 'text-[#a8aab2] hover:text-white hover:bg-[#15181a]'
                         }`}
                       >
@@ -178,10 +174,10 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      <div className="mt-8 pt-6 border-t border-[#00C805]/15 space-y-2">
+      <div className="mt-8 pt-6 border-t border-[#2DE2FF]/15 space-y-2">
         <Link
           href="/launchpad"
-          className="flex items-center gap-2 px-3 py-2 text-sm text-[#a8aab2] hover:text-[#00C805] hover:bg-[#15181a] rounded-lg transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-sm text-[#a8aab2] hover:text-[#2DE2FF] hover:bg-[#15181a] rounded-lg transition-colors"
         >
           <span>←</span>
           <span>Back to Launchpad</span>

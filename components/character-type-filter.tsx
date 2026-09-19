@@ -62,13 +62,13 @@ export function CharacterTypeFilter({
       witch: "bg-indigo-100 text-indigo-800 border-indigo-300",
       demon: "bg-red-100 text-red-800 border-red-300",
       mummy: "bg-yellow-100 text-yellow-800 border-yellow-300",
-      reaper: "bg-black text-white border-[#00C805]/30"
+      reaper: "bg-black text-white border-[#2DE2FF]/30"
     }
     return colors[type] || "bg-gray-100 text-gray-800 border-gray-300"
   }
 
   return (
-    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#00C805]/20 rounded-lg p-4">
+    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2DE2FF]/20 rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <button
@@ -89,7 +89,7 @@ export function CharacterTypeFilter({
         <div className="flex gap-2">
           <button
             onClick={onSelectAll}
-            className="text-xs text-[#00C805] hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            className="text-xs text-[#2DE2FF] hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
           >
             Select All
           </button>
@@ -110,7 +110,7 @@ export function CharacterTypeFilter({
               className={`flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors ${
                 selectedTypes.includes(type)
                   ? getTypeColor(type)
-                  : "bg-gray-50 dark:bg-[#1a1a24]/80 text-gray-700 dark:text-white border-gray-200 dark:border-[#00C805]/30 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  : "bg-gray-50 dark:bg-[#1a1a24]/80 text-gray-700 dark:text-white border-gray-200 dark:border-[#2DE2FF]/30 hover:bg-gray-100 dark:hover:bg-gray-600"
               }`}
             >
               <input

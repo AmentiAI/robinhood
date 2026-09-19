@@ -50,7 +50,7 @@ export default function ProcessJobsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md p-8">
+        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md p-8">
           <h1 className="text-4xl font-bold text-white mb-6">Process Generation Jobs</h1>
           
           <p className="text-white/70 mb-8">
@@ -60,7 +60,7 @@ export default function ProcessJobsPage() {
           <button
             onClick={handleProcessJobs}
             disabled={processing || !isConnected}
-            className="w-full bg-gradient-to-r from-[#00C805] to-[#00C805] hover:opacity-90 text-white font-bold py-4 px-8 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+            className="w-full bg-gradient-to-r from-[#2DE2FF] to-[#2DE2FF] hover:opacity-90 text-white font-bold py-4 px-8 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed text-lg"
           >
             {processing ? (
               <span className="flex items-center justify-center gap-2">
@@ -76,7 +76,7 @@ export default function ProcessJobsPage() {
           </button>
 
           {result && (
-            <div className="mt-8 bg-black/30 rounded-xl p-6 border border-[#00C805]/20">
+            <div className="mt-8 bg-black/30 rounded-xl p-6 border border-[#2DE2FF]/20">
               <h2 className="text-xl font-bold text-white mb-4">Result:</h2>
               <pre className="text-white/80 text-sm overflow-auto max-h-96">
                 {JSON.stringify(result, null, 2)}

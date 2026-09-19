@@ -276,17 +276,17 @@ export default function WireframeEditor({ config, onChange, bodyStyle }: Wirefra
                 key={preset.id}
                 className={`relative border-2 rounded-lg p-2 sm:p-3 md:p-4 cursor-pointer transition-all ${
                   selectedPreset === preset.id
-                    ? 'border-[#39FF14] bg-[#39FF14]/10 shadow-lg shadow-[#39FF14]/20 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md'
-                    : 'border-[#39FF14]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md hover:border-[#39FF14]/50'
+                    ? 'border-[#2DE2FF] bg-[#2DE2FF]/10 shadow-lg shadow-[#2DE2FF]/20 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md'
+                    : 'border-[#2DE2FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md hover:border-[#2DE2FF]/50'
                 }`}
                 onClick={() => setSelectedPreset(preset.id)}
               >
                 <div className="flex items-start gap-2 sm:gap-3">
                   {/* Preview area */}
-                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-white/5 rounded border border-[#39FF14]/30 overflow-hidden relative">
+                  <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-white/5 rounded border border-[#2DE2FF]/30 overflow-hidden relative">
                     {isGenerating ? (
                       <div className="absolute inset-0 flex items-center justify-center bg-white/5">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#39FF14]"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2DE2FF]"></div>
                       </div>
                     ) : hasPreview ? (
                       <img
@@ -302,7 +302,7 @@ export default function WireframeEditor({ config, onChange, bodyStyle }: Wirefra
                             e.stopPropagation()
                             generatePreview(preset.id)
                           }}
-                          className="text-xs px-2 py-1 bg-[#39FF14]/20 hover:bg-[#39FF14]/30 text-[#39FF14] rounded border border-[#39FF14]/30"
+                          className="text-xs px-2 py-1 bg-[#2DE2FF]/20 hover:bg-[#2DE2FF]/30 text-[#2DE2FF] rounded border border-[#2DE2FF]/30"
                         >
                           Generate Preview
                         </button>
@@ -318,7 +318,7 @@ export default function WireframeEditor({ config, onChange, bodyStyle }: Wirefra
                         name="position-preset"
                         checked={selectedPreset === preset.id}
                         onChange={() => setSelectedPreset(preset.id)}
-                        className="w-3 h-3 sm:w-4 sm:h-4 text-[#39FF14] flex-shrink-0"
+                        className="w-3 h-3 sm:w-4 sm:h-4 text-[#2DE2FF] flex-shrink-0"
                       />
                       <span className="font-semibold text-xs sm:text-sm text-white break-words">{preset.name}</span>
                     </div>
@@ -345,8 +345,8 @@ export default function WireframeEditor({ config, onChange, bodyStyle }: Wirefra
               key={size.id}
               className={`border-2 rounded-lg p-2 sm:p-3 cursor-pointer transition-all text-center ${
                 headSizePreset === size.id
-                  ? 'border-[#39FF14] bg-[#39FF14]/10 shadow-md bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md'
-                  : 'border-[#39FF14]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md hover:border-[#39FF14]/50'
+                  ? 'border-[#2DE2FF] bg-[#2DE2FF]/10 shadow-md bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md'
+                  : 'border-[#2DE2FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md hover:border-[#2DE2FF]/50'
               }`}
               onClick={() => setHeadSizePreset(size.id)}
             >
@@ -355,7 +355,7 @@ export default function WireframeEditor({ config, onChange, bodyStyle }: Wirefra
                 name="head-size"
                 checked={headSizePreset === size.id}
                 onChange={() => setHeadSizePreset(size.id)}
-                className="w-3 h-3 sm:w-4 sm:h-4 text-[#39FF14] mb-1 sm:mb-2"
+                className="w-3 h-3 sm:w-4 sm:h-4 text-[#2DE2FF] mb-1 sm:mb-2"
               />
               <div className="font-semibold text-xs sm:text-sm text-white break-words">{size.name}</div>
               <div className="text-[10px] sm:text-xs text-white/70 mt-0.5 sm:mt-1">
@@ -367,7 +367,7 @@ export default function WireframeEditor({ config, onChange, bodyStyle }: Wirefra
       </div>
 
       {/* Current Selection Summary */}
-      <div className="p-3 sm:p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-[#39FF14]/30 rounded-lg">
+      <div className="p-3 sm:p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-[#2DE2FF]/30 rounded-lg">
         <div className="text-xs sm:text-sm font-semibold text-white mb-2">Selected Configuration:</div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs text-[#a8a8b8]">
           <div>

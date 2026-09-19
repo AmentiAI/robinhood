@@ -147,13 +147,13 @@ export function ProfileMarketplace() {
         <div className="flex gap-2">
           <Link
             href="/marketplace/list"
-            className="px-4 py-2 rounded-xl bg-[#00C805] text-black text-xs font-black uppercase"
+            className="px-4 py-2 rounded-xl bg-[#2DE2FF] text-black text-xs font-black uppercase"
           >
             List NFT
           </Link>
           <Link
             href="/marketplace/my-listings"
-            className="px-4 py-2 rounded-xl border border-[#00C805]/40 text-[#00C805] text-xs font-black uppercase"
+            className="px-4 py-2 rounded-xl border border-[#2DE2FF]/40 text-[#2DE2FF] text-xs font-black uppercase"
           >
             All listings
           </Link>
@@ -167,7 +167,7 @@ export function ProfileMarketplace() {
             type="button"
             onClick={() => setTab(t)}
             className={`px-4 py-2 rounded-xl text-xs font-black uppercase ${
-              tab === t ? 'bg-[#00C805] text-black' : 'bg-[#15181a] border border-white/10 text-[#a8aab2]'
+              tab === t ? 'bg-[#2DE2FF] text-black' : 'bg-[#15181a] border border-white/10 text-[#a8aab2]'
             }`}
           >
             {t}
@@ -178,9 +178,9 @@ export function ProfileMarketplace() {
       {loading ? (
         <div className="py-12 text-center text-[#a8aab2]">Loading...</div>
       ) : listings.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#00C805]/25 bg-[#15181a] py-12 text-center">
+        <div className="rounded-2xl border border-dashed border-[#2DE2FF]/25 bg-[#15181a] py-12 text-center">
           <p className="text-white font-bold mb-2">No {tab} listings</p>
-          <Link href="/marketplace/list" className="text-[#00C805] text-sm font-bold uppercase">
+          <Link href="/marketplace/list" className="text-[#2DE2FF] text-sm font-bold uppercase">
             List an NFT →
           </Link>
         </div>
@@ -197,13 +197,13 @@ export function ProfileMarketplace() {
                   {l.image_url ? (
                     <img src={l.image_url} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[#00C805]/40">◆</div>
+                    <div className="w-full h-full flex items-center justify-center text-[#2DE2FF]/40">◆</div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/marketplace/nft/${l.id}`}
-                    className="font-bold text-white hover:text-[#00C805] truncate block"
+                    className="font-bold text-white hover:text-[#2DE2FF] truncate block"
                   >
                     {l.title || 'NFT'}
                   </Link>

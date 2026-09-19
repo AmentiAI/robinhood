@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sql } from '@/lib/database'
-import { isAdmin } from '@/lib/auth/access-control'
+import { isAdmin as isHardcodedAdmin } from '@/lib/auth/access-control'
+
+async function isAdminWallet(wallet: string | null | undefined): Promise<boolean> {
+  if (!wallet) return false
+  if (isHardcodedAdmin(wallet)) return true
+  if (!sql) return false
+  try {
+    const rows = (await sql`
+      SELECT is_admin FROM profiles
+      WHERE LOWER(wallet_address) = LOWER(${wallet})
+      LIMIT 1
+    `) as any[]
+    return Boolean(rows[0]?.is_admin)
+  } catch {
+    return false
+  }
+}
 
 async function ensureTable() {
   if (!sql) return
@@ -56,7 +72,9 @@ export async function GET(request: NextRequest) {
     const wallet = request.nextUrl.searchParams.get('wallet')
     const wantList = request.nextUrl.searchParams.get('list') === '1'
     const locked = await isSiteLocked()
-    const allowed = !locked
+    const admin = await isAdminWallet(wallet)
+    // Site stays locked for the public, but admins may enter the platform
+    const allowed = !locked || admin
 
     let entries: { wallet_address: string; status: string; created_at: string }[] = []
     if (wantList || !wallet) {
@@ -98,7 +116,7 @@ export async function GET(request: NextRequest) {
       locked,
       allowed,
       status,
-      isAdmin: isAdmin(wallet),
+      isAdmin: admin,
       entries: wantList ? entries : undefined,
       count: wantList ? entries.length : undefined,
       entry: entry
@@ -129,7 +147,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === 'approve' || action === 'reject') {
-      if (!admin_wallet || !isAdmin(admin_wallet)) {
+      if (!admin_wallet || !(await isAdminWallet(admin_wallet))) {
         return NextResponse.json({ error: 'Admin only' }, { status: 403 })
       }
       const status = action === 'approve' ? 'approved' : 'rejected'

@@ -62,10 +62,10 @@ export function NftTicker({ section = 'top' }: NftTickerProps) {
 
   if (loading) {
     return (
-      <div className="w-full bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border-y border-[#00C805]/20 py-6">
+      <div className="w-full bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border-y border-[#2DE2FF]/20 py-6">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#00C805]/30 border-t-[#00C805]"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#2DE2FF]/30 border-t-[#2DE2FF]"></div>
           </div>
         </div>
       </div>
@@ -79,10 +79,10 @@ export function NftTicker({ section = 'top' }: NftTickerProps) {
   const animation = section === 'top' ? 'scrollLeft 90s linear infinite' : 'scrollRight 90s linear infinite'
 
   return (
-    <div className="w-full bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border-y border-[#00C805]/20 py-6 overflow-hidden relative">
+    <div className="w-full bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border-y border-[#2DE2FF]/20 py-6 overflow-hidden relative">
       <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0a0c0d] via-[#0a0c0d]/50 to-transparent z-10 pointer-events-none"></div>
       <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#0a0c0d] via-[#0a0c0d]/50 to-transparent z-10 pointer-events-none"></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00C805]/5 to-transparent opacity-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2DE2FF]/5 to-transparent opacity-50"></div>
 
       <div className="relative">
         <div
@@ -138,7 +138,7 @@ function TickerItem({ nft }: { nft: Nft }) {
 
   return (
     <div className="flex-shrink-0 group relative">
-      <div className="relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-lg overflow-hidden border-2 border-[#00C805]/30 group-hover:border-[#00C805] transition-all duration-300 shadow-lg shadow-black/20 group-hover:shadow-[#00C805]/20 group-hover:scale-105">
+      <div className="relative w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-lg overflow-hidden border-2 border-[#2DE2FF]/30 group-hover:border-[#2DE2FF] transition-all duration-300 shadow-lg shadow-black/20 group-hover:shadow-[#2DE2FF]/20 group-hover:scale-105">
         <Image
           src={imageUrl}
           alt={`${nft.collection_name} #${nft.ordinal_number || nft.id}`}
@@ -149,7 +149,7 @@ function TickerItem({ nft }: { nft: Nft }) {
         />
 
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00C805]/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#2DE2FF]/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
         </div>
       </div>
     </div>

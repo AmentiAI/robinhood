@@ -104,7 +104,7 @@ export function ProfileNameModal({ isOpen, onClose }: ProfileNameModalProps) {
         }
       }}
     >
-      <div className="bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#00C805]/20 rounded-lg shadow-2xl w-full max-w-md mx-4">
+      <div className="bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#2DE2FF]/20 rounded-lg shadow-2xl w-full max-w-md mx-4">
         <div className="p-6">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-2xl font-bold text-white">Profile Name</h2>
@@ -136,7 +136,7 @@ export function ProfileNameModal({ isOpen, onClose }: ProfileNameModalProps) {
                   setError(null)
                 }}
                 placeholder="Enter your profile name"
-                className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#00C805]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#2DE2FF]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 disabled={isSubmitting}
                 autoFocus
                 maxLength={50}
@@ -156,7 +156,7 @@ export function ProfileNameModal({ isOpen, onClose }: ProfileNameModalProps) {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Enter your display name"
-                className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#00C805]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#2DE2FF]/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 disabled={isSubmitting}
                 maxLength={100}
               />

@@ -69,7 +69,7 @@ export default function EthPaymentsAdminPage() {
     <div className="p-6 lg:p-8 space-y-6 max-w-7xl">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#00C805] mb-2">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#2DE2FF] mb-2">
             Credits
           </p>
           <h1 className="text-3xl font-black text-white">ETH Payments</h1>
@@ -80,7 +80,7 @@ export default function EthPaymentsAdminPage() {
         <button
           type="button"
           onClick={load}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#15181a] border border-[#00C805]/30 text-white text-sm font-bold"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#15181a] border border-[#2DE2FF]/30 text-white text-sm font-bold"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Refresh
@@ -96,7 +96,7 @@ export default function EthPaymentsAdminPage() {
       {loading ? (
         <div className="py-16 text-center text-[#a8aab2]">Loading...</div>
       ) : transactions.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[#00C805]/25 bg-[#15181a] py-16 text-center text-[#a8aab2]">
+        <div className="rounded-xl border border-dashed border-[#2DE2FF]/25 bg-[#15181a] py-16 text-center text-[#a8aab2]">
           No ETH credit payments yet
         </div>
       ) : (
@@ -119,17 +119,17 @@ export default function EthPaymentsAdminPage() {
                     {tx.wallet_address?.slice(0, 6)}...{tx.wallet_address?.slice(-4)}
                   </td>
                   <td className="px-4 py-3 font-bold">{tx.credits_amount}</td>
-                  <td className="px-4 py-3 text-[#00C805] font-mono">
+                  <td className="px-4 py-3 text-[#2DE2FF] font-mono">
                     {tx.bitcoin_amount} ETH
                   </td>
                   <td className="px-4 py-3">
                     <span
                       className={`text-[10px] font-black uppercase tracking-wider ${
                         tx.status === 'completed'
-                          ? 'text-[#00C805]'
+                          ? 'text-[#2DE2FF]'
                           : tx.status === 'expired'
                             ? 'text-[#ff5052]'
-                            : 'text-[#CCFF00]'
+                            : 'text-[#FF2BD6]'
                       }`}
                     >
                       {tx.status}
@@ -142,7 +142,7 @@ export default function EthPaymentsAdminPage() {
                         href={`${explorer}/tx/${tx.payment_txid}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#00C805] hover:underline inline-flex items-center gap-1 font-mono text-xs"
+                        className="text-[#2DE2FF] hover:underline inline-flex items-center gap-1 font-mono text-xs"
                       >
                         {tx.payment_txid.slice(0, 10)}... <ExternalLink className="h-3 w-3" />
                       </a>

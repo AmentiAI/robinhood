@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
     const headers: Record<string, string> = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'User-Agent': 'OrdMaker/1.0',
+      'User-Agent': 'HoodGFX/1.0',
     }
 
     if (apiKey) {
@@ -317,7 +317,7 @@ export async function GET(request: NextRequest) {
           amount_sats: 0,
           share_percentage: 0,
         },
-        message: `Your watching wallet (${watchingWallet.substring(0, 10)}...) does not currently hold any ordmakers. Make sure your payment address matches the wallet that holds your ordmakers.`
+        message: `Your watching wallet (${watchingWallet.substring(0, 10)}...) does not currently hold any pieces. Make sure your payment address matches the wallet that holds your pieces.`
       })
     }
 

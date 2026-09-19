@@ -63,12 +63,12 @@ export function FallingCodeBackground() {
         const char = CHARS[Math.floor(Math.random() * CHARS.length)]
 
         // Head glow
-        ctx.fillStyle = 'rgba(204, 255, 0, 0.55)'
+        ctx.fillStyle = 'rgba(255, 43, 214, 0.55)'
         ctx.fillText(char, x, y)
 
         // Trailing dimmer glyph
         const trail = CHARS[Math.floor(Math.random() * CHARS.length)]
-        ctx.fillStyle = 'rgba(0, 200, 5, 0.22)'
+        ctx.fillStyle = 'rgba(45, 226, 255, 0.22)'
         ctx.fillText(trail, x, y - fontSize)
 
         columns[i] += columnSpeeds[i]

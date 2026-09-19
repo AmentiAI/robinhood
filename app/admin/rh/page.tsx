@@ -78,19 +78,19 @@ export default function RobinhoodAdminPage() {
     <div className="p-6 lg:p-8 space-y-6 max-w-7xl">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#00C805] mb-2">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#2DE2FF] mb-2">
             Platform ops
           </p>
           <h1 className="text-3xl font-black text-white tracking-tight">Robinhood Chain</h1>
           <p className="text-[#a8aab2] text-sm mt-1">
-            Network: <span className="text-[#00C805] font-bold uppercase">{data?.network || '—'}</span>
+            Network: <span className="text-[#2DE2FF] font-bold uppercase">{data?.network || '—'}</span>
             {data?.chainId ? ` · Chain ID ${data.chainId}` : ''}
           </p>
         </div>
         <button
           type="button"
           onClick={load}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#15181a] border border-[#00C805]/30 text-white text-sm font-bold hover:border-[#00C805] transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#15181a] border border-[#2DE2FF]/30 text-white text-sm font-bold hover:border-[#2DE2FF] transition-colors"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
           Refresh
@@ -103,9 +103,9 @@ export default function RobinhoodAdminPage() {
           <div>
             <p className="font-bold text-white">Contracts not deployed yet</p>
             <p className="text-sm text-[#a8aab2] mt-1">
-              Set <code className="text-[#00C805]">RH_FACTORY_ADDRESS</code> and{' '}
-              <code className="text-[#00C805]">RH_MARKETPLACE_ADDRESS</code> after{' '}
-              <code className="text-[#CCFF00]">npm run deploy:rh</code>.
+              Set <code className="text-[#2DE2FF]">RH_FACTORY_ADDRESS</code> and{' '}
+              <code className="text-[#2DE2FF]">RH_MARKETPLACE_ADDRESS</code> after{' '}
+              <code className="text-[#FF2BD6]">npm run deploy:rh</code>.
             </p>
           </div>
         </div>
@@ -119,33 +119,33 @@ export default function RobinhoodAdminPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          icon={<Wallet className="h-4 w-4 text-[#00C805]" />}
+          icon={<Wallet className="h-4 w-4 text-[#2DE2FF]" />}
           label="Platform wallet"
           value={`${(data?.platformWallet?.balanceEth ?? 0).toFixed(4)} ETH`}
           sub={shortAddr(data?.platformWallet?.address)}
           href={data?.platformWallet?.address ? `${explorer}/address/${data.platformWallet.address}` : undefined}
         />
         <StatCard
-          icon={<Rocket className="h-4 w-4 text-[#00C805]" />}
+          icon={<Rocket className="h-4 w-4 text-[#2DE2FF]" />}
           label="Deployed collections"
           value={String(data?.collections?.deployed ?? 0)}
           sub={`${data?.collections?.live ?? 0} live on launchpad`}
         />
         <StatCard
-          icon={<ImageIcon className="h-4 w-4 text-[#00C805]" />}
+          icon={<ImageIcon className="h-4 w-4 text-[#2DE2FF]" />}
           label="Confirmed mints"
           value={String(data?.mints?.confirmed ?? 0)}
           sub={`${data?.mints?.pending ?? 0} pending · ${data?.mints?.failed ?? 0} failed`}
         />
         <StatCard
-          icon={<ShoppingCart className="h-4 w-4 text-[#00C805]" />}
+          icon={<ShoppingCart className="h-4 w-4 text-[#2DE2FF]" />}
           label="Marketplace"
           value={String(data?.marketplaceStats?.active ?? 0)}
           sub={`${data?.marketplaceStats?.sold ?? 0} sold · ${data?.marketplaceStats?.pending ?? 0} pending`}
         />
       </div>
 
-      <div className="rounded-xl border border-[#00C805]/20 bg-[#15181a] p-5 space-y-3">
+      <div className="rounded-xl border border-[#2DE2FF]/20 bg-[#15181a] p-5 space-y-3">
         <h2 className="text-sm font-black uppercase tracking-wider text-white">Contract addresses</h2>
         <AddrRow label="Factory" value={data?.factory} explorer={explorer} />
         <AddrRow label="Marketplace" value={data?.marketplace} explorer={explorer} />
@@ -163,8 +163,8 @@ export default function RobinhoodAdminPage() {
             onClick={() => setTab(t)}
             className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-colors ${
               tab === t
-                ? 'bg-[#00C805] text-black'
-                : 'bg-[#15181a] border border-white/10 text-[#a8aab2] hover:border-[#00C805]/40'
+                ? 'bg-[#2DE2FF] text-black'
+                : 'bg-[#15181a] border border-white/10 text-[#a8aab2] hover:border-[#2DE2FF]/40'
             }`}
           >
             {t}
@@ -189,7 +189,7 @@ export default function RobinhoodAdminPage() {
                 href={`${explorer}/tx/${m.mint_tx_hash}`}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[#00C805] hover:underline inline-flex items-center gap-1"
+                className="text-[#2DE2FF] hover:underline inline-flex items-center gap-1"
               >
                 {shortAddr(m.mint_tx_hash)} <ExternalLink className="h-3 w-3" />
               </a>
@@ -204,7 +204,7 @@ export default function RobinhoodAdminPage() {
         <Table
           headers={['Name', 'Contract', 'Status', 'Minted', 'Deploy tx']}
           rows={(data?.deployedCollections || []).map((c: any) => [
-            <Link key="n" href={`/admin/collections/${c.id}`} className="text-[#00C805] hover:underline font-bold">
+            <Link key="n" href={`/admin/collections/${c.id}`} className="text-[#2DE2FF] hover:underline font-bold">
               {c.name}
             </Link>,
             c.contract_address ? (
@@ -213,7 +213,7 @@ export default function RobinhoodAdminPage() {
                 href={`${explorer}/address/${c.contract_address}`}
                 target="_blank"
                 rel="noreferrer"
-                className="font-mono text-xs text-[#a8aab2] hover:text-[#00C805]"
+                className="font-mono text-xs text-[#a8aab2] hover:text-[#2DE2FF]"
               >
                 {shortAddr(c.contract_address)}
               </a>
@@ -228,7 +228,7 @@ export default function RobinhoodAdminPage() {
                 href={`${explorer}/tx/${c.rh_deploy_tx}`}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[#00C805] hover:underline"
+                className="text-[#2DE2FF] hover:underline"
               >
                 {shortAddr(c.rh_deploy_tx)}
               </a>
@@ -256,16 +256,16 @@ export default function RobinhoodAdminPage() {
           <div className="rounded-xl border border-white/10 bg-[#15181a] p-5">
             <h3 className="text-sm font-black uppercase tracking-wider text-white mb-3">Quick links</h3>
             <div className="space-y-2 text-sm">
-              <Link href="/admin/launchpad" className="block text-[#00C805] hover:underline">
+              <Link href="/admin/launchpad" className="block text-[#2DE2FF] hover:underline">
                 Launchpad hub →
               </Link>
-              <Link href="/admin/marketplace" className="block text-[#00C805] hover:underline">
+              <Link href="/admin/marketplace" className="block text-[#2DE2FF] hover:underline">
                 Marketplace admin →
               </Link>
-              <Link href="/admin/collections" className="block text-[#00C805] hover:underline">
+              <Link href="/admin/collections" className="block text-[#2DE2FF] hover:underline">
                 Collections manager →
               </Link>
-              <a href={explorer} target="_blank" rel="noreferrer" className="block text-[#00C805] hover:underline">
+              <a href={explorer} target="_blank" rel="noreferrer" className="block text-[#2DE2FF] hover:underline">
                 Block explorer ↗
               </a>
             </div>
@@ -329,7 +329,7 @@ function AddrRow({ label, value, explorer }: { label: string; value?: string | n
           href={`${explorer}/address/${value}`}
           target="_blank"
           rel="noreferrer"
-          className="font-mono text-[#00C805] hover:underline break-all"
+          className="font-mono text-[#2DE2FF] hover:underline break-all"
         >
           {value}
         </a>
@@ -343,10 +343,10 @@ function AddrRow({ label, value, explorer }: { label: string; value?: string | n
 function StatusBadge({ status }: { status: string }) {
   const color =
     status === 'confirmed' || status === 'active' || status === 'sold'
-      ? 'text-[#00C805]'
+      ? 'text-[#2DE2FF]'
       : status === 'failed' || status === 'cancelled'
         ? 'text-[#ff5052]'
-        : 'text-[#CCFF00]'
+        : 'text-[#FF2BD6]'
   return <span className={`font-bold uppercase text-[10px] tracking-wider ${color}`}>{status}</span>
 }
 
@@ -361,7 +361,7 @@ function Table({
 }) {
   if (!rows.length) {
     return (
-      <div className="rounded-xl border border-dashed border-[#00C805]/25 bg-[#15181a] py-16 text-center text-[#a8aab2]">
+      <div className="rounded-xl border border-dashed border-[#2DE2FF]/25 bg-[#15181a] py-16 text-center text-[#a8aab2]">
         {empty}
       </div>
     )

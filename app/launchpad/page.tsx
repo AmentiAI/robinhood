@@ -161,8 +161,8 @@ export default function LaunchpadPage() {
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
           <div className="relative w-16 h-16 mx-auto mb-5">
-            <div className="absolute inset-0 border-4 border-[#00C805]/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-[#00C805] border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-0 border-4 border-[#2DE2FF]/20 rounded-full" />
+            <div className="absolute inset-0 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
           </div>
           <p className="text-white text-sm font-bold uppercase tracking-wide">
             Loading Launchpad...
@@ -186,10 +186,10 @@ export default function LaunchpadPage() {
 
         <div ref={gridRef}>
           {featuredCollections.length === 0 ? (
-            <div className="text-center py-20 rounded-2xl border border-[#00C805]/20 bg-[#15181a] relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(0,200,5,0.12),transparent_55%)]" />
+            <div className="text-center py-20 rounded-2xl border border-[#2DE2FF]/20 bg-[#15181a] relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(45, 226, 255,0.12),transparent_55%)]" />
               <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 rounded-md bg-[#00C805] text-black text-xs font-black uppercase tracking-wider">
+                <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 rounded-md bg-[#2DE2FF] text-black text-xs font-black uppercase tracking-wider">
                   Robinhood Chain
                 </div>
                 <h2 className="text-2xl font-black text-white mb-2 tracking-tight">
@@ -202,7 +202,7 @@ export default function LaunchpadPage() {
                   <button
                     type="button"
                     onClick={handleOpenLaunchModal}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#00C805] hover:bg-[#CCFF00] text-black font-black uppercase tracking-wide transition-colors"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#2DE2FF] hover:bg-[#FF2BD6] text-black font-black uppercase tracking-wide transition-colors"
                   >
                     <Rocket className="h-4 w-4" />
                     Launch collection
@@ -226,11 +226,11 @@ export default function LaunchpadPage() {
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setShowLaunchModal(false)}
           />
-          <div className="relative w-full max-w-lg bg-[#15181a] border border-[#00C805]/40 rounded-2xl shadow-2xl max-h-[80vh] flex flex-col">
+          <div className="relative w-full max-w-lg bg-[#15181a] border border-[#2DE2FF]/40 rounded-2xl shadow-2xl max-h-[80vh] flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#0a0c0d] border border-[#00C805]/40">
-                  <Rocket className="h-5 w-5 text-[#00C805]" />
+                <div className="p-2 rounded-lg bg-[#0a0c0d] border border-[#2DE2FF]/40">
+                  <Rocket className="h-5 w-5 text-[#2DE2FF]" />
                 </div>
                 <h2 className="text-xl font-bold text-white uppercase tracking-wide">
                   Launch Collection
@@ -253,7 +253,7 @@ export default function LaunchpadPage() {
 
               {loadingUserCollections ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="w-10 h-10 border-3 border-[#00C805] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-10 h-10 border-3 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : userCollections.length === 0 ? (
                 <div className="text-center py-12">
@@ -263,7 +263,7 @@ export default function LaunchpadPage() {
                   </p>
                   <Link
                     href="/collections/create"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0a0c0d] border border-[#00C805] hover:bg-[#00C805] hover:text-black text-white font-bold transition-all uppercase tracking-wide"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0a0c0d] border border-[#2DE2FF] hover:bg-[#2DE2FF] hover:text-black text-white font-bold transition-all uppercase tracking-wide"
                   >
                     <Plus className="h-4 w-4" />
                     Create Collection
@@ -282,7 +282,7 @@ export default function LaunchpadPage() {
                           ? 'Marketplace'
                           : 'Draft'
                     const statusColor = isAlreadyLive || isLaunchpadReady
-                      ? 'text-[#00C805]'
+                      ? 'text-[#2DE2FF]'
                       : 'text-[#808080]'
 
                     return (
@@ -293,7 +293,7 @@ export default function LaunchpadPage() {
                           setShowLaunchModal(false)
                           router.push(`/collections/${col.id}/launch`)
                         }}
-                        className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[#00C805] bg-[#0a0c0d] hover:bg-[#15181a] transition-all text-left group"
+                        className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[#2DE2FF] bg-[#0a0c0d] hover:bg-[#15181a] transition-all text-left group"
                       >
                         <div className="w-14 h-14 overflow-hidden rounded-lg border border-white/10 bg-[#0a0c0d] flex-shrink-0">
                           {col.banner_image_url || col.mobile_image_url ? (
@@ -314,7 +314,7 @@ export default function LaunchpadPage() {
                             {statusLabel}
                           </span>
                         </div>
-                        <ChevronRight className="h-5 w-5 text-[#808080] group-hover:text-[#00C805] transition-colors flex-shrink-0" />
+                        <ChevronRight className="h-5 w-5 text-[#808080] group-hover:text-[#2DE2FF] transition-colors flex-shrink-0" />
                       </button>
                     )
                   })}

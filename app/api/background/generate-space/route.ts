@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 - Deep dark space with rich purples and blues (#0a0e27, #1a1f3a, #0f172a)
 - Thousands of sparkling stars scattered throughout
 - Glowing translucent purple and blue cubic shapes floating in space
-- Subtle nebula clouds in purple (#8b5cf6) and blue (#39FF14) tones
+- Subtle nebula clouds in purple (#8b5cf6) and blue (#2DE2FF) tones
 - Mysterious cosmic atmosphere with depth and dimension
 - No text, no objects, just pure cosmic space background
 - High quality, detailed, 4K resolution, cinematic lighting

@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       const searchedWallets = [watchingWallet, walletAddress].filter(Boolean).map((w: string) => w.toLowerCase())
       const message = `Wallet not found in snapshot. Searched for: ${searchedWallets.join(', ')}. ` +
         `Snapshot contains ${holders.length} holders. ` +
-        `If you believe this is an error, please verify your payment address matches the wallet that holds your ordmakers.`
+        `If you believe this is an error, please verify your payment address matches the wallet that holds your pieces.`
       
       return NextResponse.json({
         success: true,

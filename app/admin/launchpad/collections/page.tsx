@@ -121,13 +121,13 @@ export default function AdminLaunchpadCollectionsPage() {
               <p className="text-[#b4b4c8]">Loading collection stats...</p>
             </div>
           ) : collections.length === 0 ? (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md p-12 text-center">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md p-12 text-center">
               <p className="text-[#a8a8b8]/80 text-lg">No launched collections found</p>
             </div>
           ) : (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md overflow-hidden">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md overflow-hidden">
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-[#00C805]/20 text-sm">
+                <table className="min-w-full divide-y divide-[#2DE2FF]/20 text-sm">
                   <thead className="bg-[#0a0e27]/80">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase">Collection</th>
@@ -141,7 +141,7 @@ export default function AdminLaunchpadCollectionsPage() {
                       <th className="px-4 py-3 text-left text-xs font-medium text-white/70 uppercase">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#00C805]/20">
+                  <tbody className="divide-y divide-[#2DE2FF]/20">
                     {collections.map((collection) => {
                       const supply = collection.total_supply ?? 0
                       const confirmed = collection.confirmed_mints ?? 0
@@ -152,7 +152,7 @@ export default function AdminLaunchpadCollectionsPage() {
                       const pct = supply > 0 ? ((confirmed / supply) * 100).toFixed(1) : '0'
 
                       return (
-                        <tr key={collection.id} className="hover:bg-[#00C805]/5">
+                        <tr key={collection.id} className="hover:bg-[#2DE2FF]/5">
                           <td className="px-4 py-3">
                             <div className="font-medium text-white">{collection.name}</div>
                             <div className="text-xs font-mono text-[#a8a8b8]/80">{collection.id.slice(0, 8)}...</div>
@@ -161,7 +161,7 @@ export default function AdminLaunchpadCollectionsPage() {
                             {supply.toLocaleString()}
                           </td>
                           <td className="px-4 py-3">
-                            <div className="text-[#00C805] font-semibold">{confirmed.toLocaleString()}</div>
+                            <div className="text-[#2DE2FF] font-semibold">{confirmed.toLocaleString()}</div>
                             <div className="text-xs text-[#a8a8b8]/80">{pct}%</div>
                           </td>
                           <td className="px-4 py-3">
@@ -173,7 +173,7 @@ export default function AdminLaunchpadCollectionsPage() {
                           <td className="px-4 py-3 text-[#a8a8b8]">
                             {minters.toLocaleString()}
                           </td>
-                          <td className="px-4 py-3 text-[#00C805]">
+                          <td className="px-4 py-3 text-[#2DE2FF]">
                             {formatSol(revenue)}
                           </td>
                           <td className="px-4 py-3 text-xs text-[#a8a8b8]/80">
@@ -189,7 +189,7 @@ export default function AdminLaunchpadCollectionsPage() {
                               </Link>
                               <Link
                                 href={`/admin/collections/${collection.id}`}
-                                className="px-3 py-1.5 text-xs font-medium bg-[#14141e] border border-[#00C805]/30 hover:border-[#00C805]/50 text-white rounded transition-colors"
+                                className="px-3 py-1.5 text-xs font-medium bg-[#14141e] border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-white rounded transition-colors"
                               >
                                 Manage
                               </Link>

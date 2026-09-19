@@ -390,7 +390,7 @@ export default function Tester11Page() {
                   onClick={() => setBackgroundMode("original")}
                   className={`flex-1 rounded-lg border px-4 py-2 text-sm font-semibold transition ${
                     backgroundMode === "original"
-                      ? "border-emerald-400 bg-[#00C805]/20 text-emerald-200"
+                      ? "border-emerald-400 bg-[#2DE2FF]/20 text-emerald-200"
                       : "border-slate-700 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24]/60 text-slate-300 hover:border-slate-500"
                   }`}
                 >
@@ -539,7 +539,7 @@ export default function Tester11Page() {
                       )}
                     </button>
                     {saveMessage && (
-                      <div className="rounded-lg border border-[#00C805]/30 bg-emerald-500/10 p-2 text-xs text-[#00C805]">
+                      <div className="rounded-lg border border-[#2DE2FF]/30 bg-emerald-500/10 p-2 text-xs text-[#2DE2FF]">
                         {saveMessage}
                       </div>
                     )}

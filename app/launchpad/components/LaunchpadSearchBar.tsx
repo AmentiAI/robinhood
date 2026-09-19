@@ -26,7 +26,7 @@ export function LaunchpadSearchBar({
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
           placeholder="Search collections..."
-          className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#15181a] border border-white/10 hover:border-[#00C805]/35 focus:border-[#00C805] text-white text-sm placeholder:text-[#71717A] outline-none transition-colors"
+          className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#15181a] border border-white/10 hover:border-[#2DE2FF]/35 focus:border-[#2DE2FF] text-white text-sm placeholder:text-[#71717A] outline-none transition-colors"
         />
       </div>
       <div className="flex items-center gap-2">
@@ -37,8 +37,8 @@ export function LaunchpadSearchBar({
             onClick={() => onFilterChange(status)}
             className={`px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wider transition-colors ${
               filterStatus === status
-                ? 'bg-[#00C805] text-black shadow-[0_0_20px_rgba(0,200,5,0.35)]'
-                : 'bg-[#15181a] border border-white/10 text-[#a8aab2] hover:border-[#00C805]/40 hover:text-white'
+                ? 'bg-[#2DE2FF] text-black shadow-[0_0_20px_rgba(45, 226, 255,0.35)]'
+                : 'bg-[#15181a] border border-white/10 text-[#a8aab2] hover:border-[#2DE2FF]/40 hover:text-white'
             }`}
           >
             {status}

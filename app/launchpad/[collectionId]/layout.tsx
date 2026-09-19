@@ -39,15 +39,15 @@ export async function generateMetadata({
 
   if (!collection) {
     return {
-      title: 'Collection - OrdMaker.Fun',
-      description: 'Mint ordinals on OrdMaker.Fun',
+      title: 'Collection - HoodGFX',
+      description: 'Mint ordinals on HoodGFX',
     }
   }
 
-  const title = `${collection.name} - OrdMaker.Fun Launchpad`
-  const description = collection.description || `Mint ${collection.name} on OrdMaker.Fun Launchpad`
-  const imageUrl = collection.banner_image_url || '/logo.png'
-  const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ordmaker.fun'
+  const title = `${collection.name} - HoodGFX Launchpad`
+  const description = collection.description || `Mint ${collection.name} on HoodGFX Launchpad`
+  const imageUrl = collection.banner_image_url || '/hoodgfx-hero.png'
+  const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodgfx.com'
   const pageUrl = `${siteUrl}/${collectionId}`
 
   return {
@@ -57,7 +57,7 @@ export async function generateMetadata({
       title,
       description,
       url: pageUrl,
-      siteName: 'OrdMaker.Fun',
+      siteName: 'HoodGFX',
       images: [
         {
           url: imageUrl,
@@ -73,7 +73,7 @@ export async function generateMetadata({
       title,
       description,
       images: [imageUrl],
-      creator: '@ordmakerfun',
+      creator: '@hoodgfx',
     },
     alternates: {
       canonical: pageUrl,

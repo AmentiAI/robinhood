@@ -39,7 +39,7 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
         <button
           type="button"
           onClick={() => router.push('/collections')}
-          className="text-xs font-bold uppercase tracking-wider text-[#00C805] hover:text-[#CCFF00] transition-colors"
+          className="text-xs font-bold uppercase tracking-wider text-[#2DE2FF] hover:text-[#FF2BD6] transition-colors"
         >
           View All
         </button>
@@ -58,7 +58,7 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
               key={collection.id}
               type="button"
               onClick={() => router.push(`/launchpad/${collection.id}`)}
-              className="group text-left rounded-2xl overflow-hidden bg-[#15181a] border border-white/10 hover:border-[#00C805]/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_32px_rgba(0,200,5,0.18)]"
+              className="group text-left rounded-2xl overflow-hidden bg-[#15181a] border border-white/10 hover:border-[#2DE2FF]/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_32px_rgba(45, 226, 255,0.18)]"
             >
               <div className="relative aspect-[4/3] bg-[#0a0c0d] overflow-hidden">
                 {collection.image_url ? (
@@ -68,7 +68,7 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-3xl text-[#00C805]/40">
+                  <div className="w-full h-full flex items-center justify-center text-3xl text-[#2DE2FF]/40">
                     ◆
                   </div>
                 )}
@@ -76,7 +76,7 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
                   <span
                     className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${
                       status === 'live'
-                        ? 'bg-[#00C805] text-black'
+                        ? 'bg-[#2DE2FF] text-black'
                         : 'bg-[#7c3aed] text-white'
                     }`}
                   >
@@ -94,7 +94,7 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
                       {Number(collection.mint_price)} ETH
                     </p>
                   </div>
-                  <span className="w-8 h-8 rounded-full border border-[#00C805]/40 flex items-center justify-center text-[#00C805] group-hover:bg-[#00C805] group-hover:text-black transition-colors shrink-0">
+                  <span className="w-8 h-8 rounded-full border border-[#2DE2FF]/40 flex items-center justify-center text-[#2DE2FF] group-hover:bg-[#2DE2FF] group-hover:text-black transition-colors shrink-0">
                     <ArrowUpRight className="h-3.5 w-3.5" />
                   </span>
                 </div>
@@ -105,11 +105,11 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
                       {collection.minted_count.toLocaleString()} /{' '}
                       {collection.total_supply.toLocaleString()} minted
                     </span>
-                    <span className="text-[#00C805] font-bold">{Math.round(progress)}%</span>
+                    <span className="text-[#2DE2FF] font-bold">{Math.round(progress)}%</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-[#1f2326] overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#00C805] to-[#CCFF00]"
+                      className="h-full rounded-full bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6]"
                       style={{ width: `${progress}%` }}
                     />
                   </div>

@@ -399,7 +399,7 @@ export default function AdminPage() {
       case 'expired':
         return 'bg-red-900/30 border-[#EF4444]/20 text-red-300'
       default:
-        return 'bg-[#14141e]/30 border-[#00C805]/20 text-white'
+        return 'bg-[#14141e]/30 border-[#2DE2FF]/20 text-white'
     }
   }
 
@@ -407,14 +407,14 @@ export default function AdminPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] flex items-center justify-center p-8">
         <div className="max-w-md w-full">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#00C805]/20 rounded-2xl p-8 text-center shadow-xl shadow-[#00C805]/10 backdrop-blur-md">
+          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#2DE2FF]/20 rounded-2xl p-8 text-center shadow-xl shadow-[#2DE2FF]/10 backdrop-blur-md">
             <div className="text-6xl mb-6 animate-[solanaFloat_4s_ease-in-out_infinite]">🔐</div>
-            <h1 className="text-3xl font-black bg-gradient-to-r from-[#00C805] via-[#39FF14] to-[#00C805] bg-clip-text text-transparent mb-4">Admin Dashboard</h1>
+            <h1 className="text-3xl font-black bg-gradient-to-r from-[#2DE2FF] via-[#2DE2FF] to-[#2DE2FF] bg-clip-text text-transparent mb-4">Admin Dashboard</h1>
             <p className="text-[#a8a8b8] mb-6">Please connect your wallet to access the admin dashboard.</p>
             <div className="flex justify-center mb-4">
               <WalletConnect />
             </div>
-            <Link href="/" className="text-[#00C805] hover:text-[#00C805] transition-colors">
+            <Link href="/" className="text-[#2DE2FF] hover:text-[#2DE2FF] transition-colors">
               ← Back to Home
             </Link>
           </div>
@@ -429,10 +429,10 @@ export default function AdminPage() {
       <div className="min-h-screen bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] flex items-center justify-center">
         <div className="text-center">
           <div className="relative w-20 h-20 mx-auto mb-6">
-            <div className="absolute inset-0 border-4 border-[#00C805]/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-[#00C805] border-t-transparent rounded-full animate-spin" />
-            <div className="absolute inset-2 border-4 border-[#00C805]/20 rounded-full" />
-            <div className="absolute inset-2 border-4 border-[#00C805] border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+            <div className="absolute inset-0 border-4 border-[#2DE2FF]/20 rounded-full" />
+            <div className="absolute inset-0 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
+            <div className="absolute inset-2 border-4 border-[#2DE2FF]/20 rounded-full" />
+            <div className="absolute inset-2 border-4 border-[#2DE2FF] border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
           </div>
           <p className="text-white text-lg font-bold mb-2">Verifying admin access...</p>
           <p className="text-[#a8a8b8] text-sm">Please wait...</p>
@@ -455,7 +455,7 @@ export default function AdminPage() {
             <p className="text-[#a8a8b8]/80 text-xs mb-4">
               Admin status is checked from the database profile.
             </p>
-            <Link href="/" className="text-[#00C805] hover:text-[#00C805] transition-colors">
+            <Link href="/" className="text-[#2DE2FF] hover:text-[#2DE2FF] transition-colors">
               ← Back to Home
             </Link>
           </div>
@@ -504,7 +504,7 @@ export default function AdminPage() {
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                   activeTab === 'users'
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#00C805]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
+                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#2DE2FF]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
                 }`}
               >
                 Users
@@ -514,7 +514,7 @@ export default function AdminPage() {
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                   activeTab === 'transactions'
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#00C805]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
+                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#2DE2FF]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
                 }`}
               >
                 Transactions
@@ -524,7 +524,7 @@ export default function AdminPage() {
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                   activeTab === 'credit-costs'
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#00C805]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
+                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#2DE2FF]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
                 }`}
               >
                 Credit Costs
@@ -534,7 +534,7 @@ export default function AdminPage() {
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                   activeTab === 'generation-jobs'
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#00C805]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
+                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#2DE2FF]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
                 }`}
               >
                 Generation Jobs
@@ -544,7 +544,7 @@ export default function AdminPage() {
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                   activeTab === 'generated-images'
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#00C805]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
+                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#2DE2FF]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
                 }`}
               >
                 Generated Images
@@ -554,7 +554,7 @@ export default function AdminPage() {
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
                   activeTab === 'homepage-visibility'
                     ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/30'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#00C805]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
+                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#2DE2FF]/20 text-white hover:bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90'
                 }`}
               >
                 Homepage Visibility
@@ -750,7 +750,7 @@ export default function AdminPage() {
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                       optInFilter === 'all'
-                        ? 'bg-[#00C805] text-white'
+                        ? 'bg-[#2DE2FF] text-white'
                         : 'bg-[#1a1a24]/80 text-white hover:bg-gray-600'
                     }`}
                   >
@@ -787,7 +787,7 @@ export default function AdminPage() {
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-[#00C805]/20">
+                      <tr className="border-b border-[#2DE2FF]/20">
                         <th className="text-left py-4 px-4 text-white font-semibold">User</th>
                         <th className="text-left py-4 px-4 text-white font-semibold">Wallet</th>
                         <th className="text-left py-4 px-4 text-white font-semibold">Credits</th>
@@ -836,7 +836,7 @@ export default function AdminPage() {
                                     type="text"
                                     value={editUsername}
                                     onChange={(e) => setEditUsername(e.target.value)}
-                                    className="px-3 py-2 bg-[#14141e] border border-[#00C805]/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-3 py-2 bg-[#14141e] border border-[#2DE2FF]/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Username"
                                     disabled={savingProfile === user.wallet_address}
                                     autoFocus
@@ -847,7 +847,7 @@ export default function AdminPage() {
                                       checked={editOptIn}
                                       onChange={(e) => setEditOptIn(e.target.checked)}
                                       disabled={savingProfile === user.wallet_address}
-                                      className="w-4 h-4 rounded border-[#00C805]/30 bg-[#14141e] text-[#00C805] focus:ring-2 focus:ring-blue-500"
+                                      className="w-4 h-4 rounded border-[#2DE2FF]/30 bg-[#14141e] text-[#2DE2FF] focus:ring-2 focus:ring-blue-500"
                                     />
                                     <span className="text-white text-sm">Opt In</span>
                                   </label>
@@ -875,10 +875,10 @@ export default function AdminPage() {
                                       <img
                                         src={user.profile.avatar_url}
                                         alt={user.profile.username}
-                                        className="w-10 h-10 rounded-full border-2 border-[#00C805]/20"
+                                        className="w-10 h-10 rounded-full border-2 border-[#2DE2FF]/20"
                                       />
                                     ) : (
-                                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white font-bold border-2 border-[#00C805]/20">
+                                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white font-bold border-2 border-[#2DE2FF]/20">
                                         {(user.profile.display_name || user.profile.username).charAt(0).toUpperCase()}
                                       </div>
                                     )}
@@ -975,7 +975,7 @@ export default function AdminPage() {
                                     min="0"
                                     value={editCreditValue}
                                     onChange={(e) => setEditCreditValue(e.target.value)}
-                                    className="px-3 py-2 bg-[#14141e] border border-[#00C805]/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-3 py-2 bg-[#14141e] border border-[#2DE2FF]/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="0.00"
                                     disabled={savingCredits === user.wallet_address}
                                     autoFocus
@@ -984,7 +984,7 @@ export default function AdminPage() {
                                     type="text"
                                     value={editCreditReason}
                                     onChange={(e) => setEditCreditReason(e.target.value)}
-                                    className="px-3 py-2 bg-[#14141e] border border-[#00C805]/30 rounded-lg text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="px-3 py-2 bg-[#14141e] border border-[#2DE2FF]/30 rounded-lg text-white text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Reason (optional)"
                                     disabled={savingCredits === user.wallet_address}
                                   />
@@ -1155,7 +1155,7 @@ export default function AdminPage() {
                                               onClick={() => setCurrentPage(pageNum)}
                                               className={`px-3 py-2 rounded-lg transition-colors ${
                                                 currentPage === pageNum
-                                                  ? 'bg-[#00C805] text-white'
+                                                  ? 'bg-[#2DE2FF] text-white'
                                                   : 'bg-[#1a1a24] hover:bg-[#1a1a24]/80 text-white'
                                               }`}
                                             >
@@ -1220,7 +1220,7 @@ export default function AdminPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="border-b border-[#00C805]/20">
+                        <tr className="border-b border-[#2DE2FF]/20">
                           <th className="text-left py-4 px-4 text-white font-semibold">Date</th>
                           <th className="text-left py-4 px-4 text-white font-semibold">Wallet</th>
                           <th className="text-left py-4 px-4 text-white font-semibold">Credits</th>
@@ -1345,7 +1345,7 @@ export default function AdminPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full">
                       <thead>
-                        <tr className="border-b border-[#00C805]/20">
+                        <tr className="border-b border-[#2DE2FF]/20">
                           <th className="text-left py-4 px-4 text-white font-semibold">Date</th>
                           <th className="text-left py-4 px-4 text-white font-semibold">Wallet</th>
                           <th className="text-left py-4 px-4 text-white font-semibold">Amount</th>
@@ -1555,7 +1555,7 @@ function GenerationJobsManager({ walletAddress }: { walletAddress: string }) {
       case 'failed':
         return 'bg-red-900/30 text-red-300 border-[#EF4444]/20'
       default:
-        return 'bg-[#1a1a24] text-[#a8a8b8] border-[#00C805]/20'
+        return 'bg-[#1a1a24] text-[#a8a8b8] border-[#2DE2FF]/20'
     }
   }
 
@@ -1660,7 +1660,7 @@ function GenerationJobsManager({ walletAddress }: { walletAddress: string }) {
           <button
             onClick={handleProcessJobs}
             disabled={processing || loading}
-            className="px-6 py-3 bg-gradient-to-r from-[#00C805] to-[#00C805] hover:opacity-90 text-white rounded-lg font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            className="px-6 py-3 bg-gradient-to-r from-[#2DE2FF] to-[#2DE2FF] hover:opacity-90 text-white rounded-lg font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             title="Manually process queued generation jobs"
           >
             {processing ? '⏳ Processing...' : '🚀 Process Jobs Now'}
@@ -1668,7 +1668,7 @@ function GenerationJobsManager({ walletAddress }: { walletAddress: string }) {
           <button
             onClick={loadJobs}
             disabled={loading}
-            className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50"
+            className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50"
           >
             {loading ? 'Loading...' : 'Refresh'}
           </button>
@@ -1741,7 +1741,7 @@ function GenerationJobsManager({ walletAddress }: { walletAddress: string }) {
           onClick={() => setStatusFilter('processing')}
           className={`px-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
             statusFilter === 'processing'
-              ? 'bg-[#00C805] text-white'
+              ? 'bg-[#2DE2FF] text-white'
               : 'bg-[#1a1a24]/80 text-white hover:bg-gray-600'
           }`}
         >
@@ -1784,7 +1784,7 @@ function GenerationJobsManager({ walletAddress }: { walletAddress: string }) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#00C805]/20">
+                <tr className="border-b border-[#2DE2FF]/20">
                   <th className="text-left py-3 px-4 text-white">Status</th>
                   <th className="text-left py-3 px-4 text-white">Collection</th>
                   <th className="text-left py-3 px-4 text-white">Owner</th>
@@ -2009,7 +2009,7 @@ function CreditCostsManager({ walletAddress }: { walletAddress: string }) {
 
         <div className="space-y-4">
           {costs.map((cost) => (
-            <div key={cost.id} className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#00C805]/20 rounded-lg p-4">
+            <div key={cost.id} className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90/50 border border-[#2DE2FF]/20 rounded-lg p-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-white mb-1">
@@ -2019,7 +2019,7 @@ function CreditCostsManager({ walletAddress }: { walletAddress: string }) {
                     type="text"
                     value={cost.action_type}
                     disabled
-                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24]/50 border border-[#00C805]/20 rounded-lg text-[#a8a8b8] cursor-not-allowed"
+                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24]/50 border border-[#2DE2FF]/20 rounded-lg text-[#a8a8b8] cursor-not-allowed"
                   />
                 </div>
                 <div>
@@ -2032,7 +2032,7 @@ function CreditCostsManager({ walletAddress }: { walletAddress: string }) {
                     min="0"
                     value={cost.cost_per_unit}
                     onChange={(e) => updateCost(cost.action_type, 'cost_per_unit', parseFloat(e.target.value) || 0)}
-                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#00C805]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#2DE2FF]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
                 <div>
@@ -2043,7 +2043,7 @@ function CreditCostsManager({ walletAddress }: { walletAddress: string }) {
                     type="text"
                     value={cost.unit_name}
                     onChange={(e) => updateCost(cost.action_type, 'unit_name', e.target.value)}
-                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#00C805]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#2DE2FF]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
                 <div>
@@ -2054,7 +2054,7 @@ function CreditCostsManager({ walletAddress }: { walletAddress: string }) {
                     type="text"
                     value={cost.description || ''}
                     onChange={(e) => updateCost(cost.action_type, 'description', e.target.value)}
-                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#00C805]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full px-3 py-2 bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] border border-[#2DE2FF]/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
               </div>
@@ -2313,7 +2313,7 @@ function GeneratedImagesManager({ walletAddress }: { walletAddress: string }) {
           <button
             onClick={loadImages}
             disabled={loading}
-            className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50"
+            className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50"
           >
             {loading ? 'Loading...' : 'Refresh'}
           </button>
@@ -2345,7 +2345,7 @@ function GeneratedImagesManager({ walletAddress }: { walletAddress: string }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search by collection name, ID, or ordinal number..."
-              className="w-full px-4 py-2 bg-[#14141e] border border-[#00C805]/20 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-[#14141e] border border-[#2DE2FF]/20 rounded-lg text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
             />
           </div>
           <div className="sm:w-64">
@@ -2356,7 +2356,7 @@ function GeneratedImagesManager({ walletAddress }: { walletAddress: string }) {
                 setCollectionFilter(e.target.value)
                 setPage(1)
               }}
-              className="w-full px-4 py-2 bg-[#14141e] border border-[#00C805]/20 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-[#14141e] border border-[#2DE2FF]/20 rounded-lg text-white focus:border-purple-500 focus:outline-none"
             >
               <option value="">All Collections</option>
               {collections.map(collection => (
@@ -2414,7 +2414,7 @@ function GeneratedImagesManager({ walletAddress }: { walletAddress: string }) {
                 type="checkbox"
                 checked={selectedIds.size === images.length && images.length > 0}
                 onChange={handleSelectAll}
-                className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#00C805]/20 rounded focus:ring-purple-500"
+                className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#2DE2FF]/20 rounded focus:ring-purple-500"
               />
               <span className="text-sm text-[#a8a8b8]">
                 {selectedIds.size > 0 ? `${selectedIds.size} selected` : 'Select all'}
@@ -2429,7 +2429,7 @@ function GeneratedImagesManager({ walletAddress }: { walletAddress: string }) {
                     className={`border-2 rounded-lg overflow-hidden transition-all ${
                       selectedIds.has(image.id)
                         ? 'border-purple-500 bg-purple-500/10'
-                        : 'border-[#00C805]/20 hover:border-[#00C805]/30'
+                        : 'border-[#2DE2FF]/20 hover:border-[#2DE2FF]/30'
                     }`}
                   >
                     {/* Header */}
@@ -2438,7 +2438,7 @@ function GeneratedImagesManager({ walletAddress }: { walletAddress: string }) {
                         type="checkbox"
                         checked={selectedIds.has(image.id)}
                         onChange={() => handleSelect(image.id)}
-                        className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#00C805]/20 rounded focus:ring-purple-500"
+                        className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#2DE2FF]/20 rounded focus:ring-purple-500"
                       />
                       <div className="flex-1 flex items-center gap-4">
                         <div className="w-20 h-20 rounded-lg overflow-hidden bg-[#14141e] flex-shrink-0">
@@ -2486,7 +2486,7 @@ function GeneratedImagesManager({ walletAddress }: { walletAddress: string }) {
                               e.stopPropagation()
                               handleDownloadImage(image.image_url, `${image.collection_name}_${image.ordinal_number || image.id}.png`)
                             }}
-                            className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-semibold transition-all flex items-center gap-2"
+                            className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-semibold transition-all flex items-center gap-2"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -3032,7 +3032,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
           <button
             onClick={loadOrdinals}
             disabled={loading}
-            className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50"
+            className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50"
           >
             {loading ? 'Loading...' : 'Refresh'}
           </button>
@@ -3099,7 +3099,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                   ? 'border-purple-500 bg-purple-500/10'
                   : collection.hidden_from_homepage
                   ? 'border-red-500/50 bg-red-500/5'
-                  : 'border-[#00C805]/20 hover:border-[#00C805]/30'
+                  : 'border-[#2DE2FF]/20 hover:border-[#2DE2FF]/30'
               }`}
               onClick={() => {
                 const newSelected = new Set(selectedCollectionIds)
@@ -3117,7 +3117,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                   checked={selectedCollectionIds.has(collection.id)}
                   onChange={() => {}}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-4 h-4 text-purple-600 bg-[#14141e] border-[#00C805]/20 rounded focus:ring-purple-500"
+                  className="w-4 h-4 text-purple-600 bg-[#14141e] border-[#2DE2FF]/20 rounded focus:ring-purple-500"
                 />
                 {collection.hidden_from_homepage && (
                   <span className="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-bold">HIDDEN</span>
@@ -3172,7 +3172,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                     ? 'border-blue-500 bg-blue-500/10'
                     : enabled
                       ? 'border-green-500/60 bg-green-500/5'
-                      : 'border-[#00C805]/20 hover:border-[#00C805]/30'
+                      : 'border-[#2DE2FF]/20 hover:border-[#2DE2FF]/30'
                 }`}
                 onClick={() => {
                   const next = new Set(selectedTickerCollectionIds)
@@ -3187,7 +3187,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                     checked={selected}
                     onChange={() => {}}
                     onClick={(e) => e.stopPropagation()}
-                    className="w-4 h-4 text-[#00C805] bg-[#14141e] border-[#00C805]/20 rounded focus:ring-blue-500"
+                    className="w-4 h-4 text-[#2DE2FF] bg-[#14141e] border-[#2DE2FF]/20 rounded focus:ring-blue-500"
                   />
                   {enabled ? (
                     <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded font-bold">ON</span>
@@ -3215,7 +3215,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                 setCollectionFilter(e.target.value)
                 setPage(1)
               }}
-              className="w-full px-4 py-2 bg-[#14141e] border border-[#00C805]/20 rounded-lg text-white focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-[#14141e] border border-[#2DE2FF]/20 rounded-lg text-white focus:border-purple-500 focus:outline-none"
             >
               <option value="">All Collections</option>
               {collections.map(collection => (
@@ -3232,7 +3232,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                   setShowHiddenOnly(e.target.checked)
                   setPage(1)
                 }}
-                className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#00C805]/20 rounded focus:ring-purple-500"
+                className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#2DE2FF]/20 rounded focus:ring-purple-500"
               />
               <span className="text-sm text-white">Show hidden only</span>
             </label>
@@ -3279,7 +3279,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                 type="checkbox"
                 checked={selectedIds.size === ordinals.length && ordinals.length > 0}
                 onChange={handleSelectAll}
-                className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#00C805]/20 rounded focus:ring-purple-500"
+                className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#2DE2FF]/20 rounded focus:ring-purple-500"
               />
               <span className="text-sm text-[#a8a8b8]">
                 {selectedIds.size > 0 ? `${selectedIds.size} selected` : 'Select all'}
@@ -3294,7 +3294,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                       ? 'border-purple-500 bg-purple-500/10'
                       : ordinal.hidden_from_homepage || ordinal.collection_hidden
                       ? 'border-red-500/50 bg-red-500/5'
-                      : 'border-[#00C805]/20 hover:border-[#00C805]/30'
+                      : 'border-[#2DE2FF]/20 hover:border-[#2DE2FF]/30'
                   }`}
                 >
                   <div className="absolute top-2 left-2 z-10">
@@ -3302,7 +3302,7 @@ function HomepageVisibilityManager({ walletAddress }: { walletAddress: string })
                       type="checkbox"
                       checked={selectedIds.has(ordinal.id)}
                       onChange={() => handleSelect(ordinal.id)}
-                      className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#00C805]/20 rounded focus:ring-purple-500"
+                      className="w-5 h-5 text-purple-600 bg-[#14141e] border-[#2DE2FF]/20 rounded focus:ring-purple-500"
                     />
                   </div>
                   {(ordinal.hidden_from_homepage || ordinal.collection_hidden) && (

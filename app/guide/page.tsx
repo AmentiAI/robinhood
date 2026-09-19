@@ -65,7 +65,7 @@ export default function GuidePage() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-b border-[#00C805]/30">
+      <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-b border-[#2DE2FF]/30">
         <div className="container mx-auto px-6">
           <div className="flex gap-1 overflow-x-auto py-3 scrollbar-hide">
             {sections.map((section) => (
@@ -77,8 +77,8 @@ export default function GuidePage() {
                 }}
                 className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
                   activeSection === section.id
-                    ? 'bg-[#00C805] text-white shadow-lg'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md text-white/70 hover:text-white hover:bg-[#1a1f3a] border border-[#00C805]/30'
+                    ? 'bg-[#2DE2FF] text-white shadow-lg'
+                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md text-white/70 hover:text-white hover:bg-[#1a1f3a] border border-[#2DE2FF]/30'
                 }`}
               >
                 {section.icon} {section.label}
@@ -106,7 +106,7 @@ export default function GuidePage() {
             {/* Three Mode Cards - Simplified */}
             <div className="grid lg:grid-cols-3 gap-6 mb-8">
               {/* Maker Mode */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-[#4561ad] to-[#5a7bc4] px-5 py-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🎯</span>
@@ -122,7 +122,7 @@ export default function GuidePage() {
               </div>
 
               {/* Lazy Mode */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border-2 border-[#e27d0f] overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#e27d0f] overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-[#e27d0f] to-[#f09840] px-5 py-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🪄</span>
@@ -138,7 +138,7 @@ export default function GuidePage() {
               </div>
 
               {/* Artist Mode */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border-2 border-purple-500 overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-purple-500 overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-5 py-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🎨</span>
@@ -155,8 +155,8 @@ export default function GuidePage() {
             </div>
 
             {/* Art Styles Gallery */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 overflow-hidden">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md px-6 py-4 border-b border-[#00C805]/30">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md px-6 py-4 border-b border-[#2DE2FF]/30">
                 <h3 className="font-black text-white">Available Art Styles</h3>
                 <p className="text-sm text-[#a8a8b8]/80">Real examples from the generator</p>
               </div>
@@ -166,7 +166,7 @@ export default function GuidePage() {
                   const imageUrl = artStyleExamples[style.id] || style.fallbackImage
                   return (
                     <div key={style.id} className="group cursor-pointer">
-                      <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-transparent group-hover:border-[#4561ad] transition-all shadow-sm group-hover:shadow-lg">
+                      <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-transparent group-hover:border-[#4561ad] transition-all shadow-sm group-hover:shadow-lg">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={imageUrl}
@@ -181,7 +181,7 @@ export default function GuidePage() {
                   )
                 })}
                 <div className="group cursor-pointer">
-                  <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-2 border-dashed border-[#00C805]/30 flex items-center justify-center group-hover:border-[#4561ad] transition-all">
+                  <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-dashed border-[#2DE2FF]/30 flex items-center justify-center group-hover:border-[#4561ad] transition-all">
                     <span className="text-3xl">✏️</span>
                   </div>
                   <div className="mt-2 text-center">
@@ -192,7 +192,7 @@ export default function GuidePage() {
             </div>
 
             {/* Future Mode */}
-            <div className="mt-6 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 p-6">
+            <div className="mt-6 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl flex-shrink-0">
                   🔮
@@ -227,7 +227,7 @@ export default function GuidePage() {
 
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Promotion Flyer Tool */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border-2 border-[#e27d0f] overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#e27d0f] overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-[#e27d0f] to-[#f09840] px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">📣</span>
@@ -240,15 +240,15 @@ export default function GuidePage() {
                   </p>
                   
                   <div className="grid grid-cols-3 gap-2 mb-4">
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg p-2 text-center">
+                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-2 text-center">
                       <div className="text-lg">⬜</div>
                       <div className="text-[10px] font-bold text-[#a8a8b8]">Square</div>
                     </div>
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg p-2 text-center">
+                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-2 text-center">
                       <div className="text-lg">📱</div>
                       <div className="text-[10px] font-bold text-[#a8a8b8]">Portrait</div>
                     </div>
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-lg p-2 text-center">
+                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-2 text-center">
                       <div className="text-lg">🖼️</div>
                       <div className="text-[10px] font-bold text-[#a8a8b8]">Landscape</div>
                     </div>
@@ -262,7 +262,7 @@ export default function GuidePage() {
               </div>
 
               {/* Sticker Maker Tool */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-[#4561ad] to-[#5a7bc4] px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">🎨</span>
@@ -304,7 +304,7 @@ export default function GuidePage() {
 
             <div className="grid lg:grid-cols-2 gap-6 mb-8">
               {/* Selling Collections */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border-2 border-green-500 overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-green-500 overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">💰</span>
@@ -324,7 +324,7 @@ export default function GuidePage() {
                       { step: '4', text: 'Accept terms and list' },
                     ].map((item) => (
                       <div key={item.step} className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-full bg-[#00C805]/20 text-[#00C805] border border-[#00C805]/30 flex items-center justify-center text-xs font-black">
+                        <div className="w-6 h-6 rounded-full bg-[#2DE2FF]/20 text-[#2DE2FF] border border-[#2DE2FF]/30 flex items-center justify-center text-xs font-black">
                           {item.step}
                         </div>
                         <span className="text-sm text-[#a8a8b8]">{item.text}</span>
@@ -332,11 +332,11 @@ export default function GuidePage() {
                     ))}
                   </div>
 
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-xl p-3 border border-[#00C805]/30">
+                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-xl p-3 border border-[#2DE2FF]/30">
                     <div className="text-xs font-bold text-[#a8a8b8] mb-1">Payment Options:</div>
                     <div className="flex gap-2">
                       <span className="px-2 py-1 bg-[#DC1FFF]/20 text-[#DC1FFF] rounded text-xs font-bold border border-[#DC1FFF]/30">₿ Bitcoin</span>
-                      <span className="px-2 py-1 bg-[#00C805]/20 text-[#00C805] rounded text-xs font-bold border border-[#00C805]/30">💳 Credits</span>
+                      <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] rounded text-xs font-bold border border-[#2DE2FF]/30">💳 Credits</span>
                       <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs font-bold border border-purple-500/30">Both</span>
                     </div>
                   </div>
@@ -344,7 +344,7 @@ export default function GuidePage() {
               </div>
 
               {/* Buying Collections */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-[#4561ad] to-[#5a7bc4] px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">🛒</span>
@@ -368,14 +368,14 @@ export default function GuidePage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-[#DC1FFF]/30">
+                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-[#DC1FFF]/30">
                       <div className="text-lg">₿</div>
                       <div className="text-xs font-bold text-[#DC1FFF]">Pay with BTC</div>
                       <div className="text-[10px] text-[#a8a8b8]/80">Direct to seller</div>
                     </div>
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-[#00C805]/30">
+                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-[#2DE2FF]/30">
                       <div className="text-lg">💳</div>
-                      <div className="text-xs font-bold text-[#00C805]">Pay with Credits</div>
+                      <div className="text-xs font-bold text-[#2DE2FF]">Pay with Credits</div>
                       <div className="text-[10px] text-[#a8a8b8]/80">Instant transfer</div>
                     </div>
                   </div>
@@ -385,21 +385,21 @@ export default function GuidePage() {
 
             {/* Marketplace Info Cards */}
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-xl border border-[#00C805]/30 p-5">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30 p-5">
                 <div className="text-2xl mb-2">🔒</div>
                 <h4 className="font-black text-white mb-1">Collection Locking</h4>
                 <p className="text-xs text-white/70">
                   Collections must be locked before listing. This prevents modifications while for sale.
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-xl border border-[#00C805]/30 p-5">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30 p-5">
                 <div className="text-2xl mb-2">🤝</div>
                 <h4 className="font-black text-white mb-1">Secure Transfer</h4>
                 <p className="text-xs text-white/70">
                   Ownership transfers automatically when payment confirms. All collaborators are removed.
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-xl border border-[#00C805]/30 p-5">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30 p-5">
                 <div className="text-2xl mb-2">📣</div>
                 <h4 className="font-black text-white mb-1">Promos Included</h4>
                 <p className="text-xs text-white/70">
@@ -409,7 +409,7 @@ export default function GuidePage() {
             </div>
 
             {/* BTC Payment Flow */}
-            <div className="mt-8 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#DC1FFF]/30 p-6">
+            <div className="mt-8 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#DC1FFF]/30 p-6">
               <h3 className="font-black text-white mb-4 flex items-center gap-2">
                 <span className="text-2xl">₿</span> Bitcoin Payment Flow
               </h3>
@@ -445,7 +445,7 @@ export default function GuidePage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 p-6 hover:border-green-400/50 hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6 hover:border-green-400/50 hover:shadow-xl transition-all">
                 <div className="text-4xl mb-3">💎</div>
                 <div className="text-2xl font-black text-white">Under 10KB</div>
                 <div className="text-sm text-[#a8a8b8]/80 mt-1">Best value inscriptions</div>
@@ -453,7 +453,7 @@ export default function GuidePage() {
                   <div className="h-full w-full bg-gradient-to-r from-green-400 to-green-600" />
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 p-6 hover:border-[#e27d0f]/50 hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6 hover:border-[#e27d0f]/50 hover:shadow-xl transition-all">
                 <div className="text-4xl mb-3">⚖️</div>
                 <div className="text-2xl font-black text-white">10-50KB</div>
                 <div className="text-sm text-[#a8a8b8]/80 mt-1">Balanced quality/cost</div>
@@ -461,7 +461,7 @@ export default function GuidePage() {
                   <div className="h-full w-3/4 bg-gradient-to-r from-yellow-400 to-[#e27d0f]" />
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 p-6 hover:border-red-400/50 hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6 hover:border-red-400/50 hover:shadow-xl transition-all">
                 <div className="text-4xl mb-3">🔥</div>
                 <div className="text-2xl font-black text-white">50KB+</div>
                 <div className="text-sm text-[#a8a8b8]/80 mt-1">Premium inscriptions</div>
@@ -471,37 +471,37 @@ export default function GuidePage() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#4561ad]/10 to-[#4561ad]/5 px-6 py-4 border-b border-[#00C805]/30">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#4561ad]/10 to-[#4561ad]/5 px-6 py-4 border-b border-[#2DE2FF]/30">
                 <h3 className="font-black text-white">Recommended Settings</h3>
               </div>
               <div className="p-6 grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-[#00C805]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
                     <span className="text-white/70 font-medium">Format</span>
-                    <span className="font-black text-[#00C805]">WebP</span>
+                    <span className="font-black text-[#2DE2FF]">WebP</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#00C805]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
                     <span className="text-white/70 font-medium">Resolution</span>
-                    <span className="font-black text-[#00C805]">666 × 666px</span>
+                    <span className="font-black text-[#2DE2FF]">666 × 666px</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#00C805]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
                     <span className="text-white/70 font-medium">Quality</span>
-                    <span className="font-black text-[#00C805]">70-80%</span>
+                    <span className="font-black text-[#2DE2FF]">70-80%</span>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-[#00C805]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
                     <span className="text-white/70 font-medium">Target Size</span>
-                    <span className="font-black text-[#00C805]">Under 50KB</span>
+                    <span className="font-black text-[#2DE2FF]">Under 50KB</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#00C805]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
                     <span className="text-white/70 font-medium">Maximum</span>
                     <span className="font-black text-[#DC1FFF]">350KB</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#00C805]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
                     <span className="text-white/70 font-medium">Color Space</span>
-                    <span className="font-black text-[#00C805]">sRGB</span>
+                    <span className="font-black text-[#2DE2FF]">sRGB</span>
                   </div>
                 </div>
               </div>
@@ -520,11 +520,11 @@ export default function GuidePage() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 overflow-hidden">
+            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md text-white">
+                    <tr className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md text-white">
                       <th className="px-4 py-4 text-left font-black">Size</th>
                       {feeRates.map(rate => (
                         <th key={rate} className="px-4 py-4 text-center font-black">
@@ -536,8 +536,8 @@ export default function GuidePage() {
                   </thead>
                   <tbody>
                     {fileSizes.map((size, idx) => (
-                      <tr key={size} className={`${idx % 2 === 0 ? 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md' : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md'} hover:bg-[#4561ad]/5 transition-colors`}>
-                        <td className="px-4 py-3 font-black text-white border-r border-[#00C805]/30">
+                      <tr key={size} className={`${idx % 2 === 0 ? 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md' : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md'} hover:bg-[#4561ad]/5 transition-colors`}>
+                        <td className="px-4 py-3 font-black text-white border-r border-[#2DE2FF]/30">
                           {size} KB
                         </td>
                         {feeRates.map(rate => {
@@ -554,7 +554,7 @@ export default function GuidePage() {
                   </tbody>
                 </table>
               </div>
-              <div className="px-6 py-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border-t border-[#00C805]/30 text-sm text-[#a8a8b8]/80">
+              <div className="px-6 py-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-t border-[#2DE2FF]/30 text-sm text-[#a8a8b8]/80">
                 * Commit transaction adds ~150-300 sats depending on wallet type and input count
               </div>
             </div>
@@ -574,7 +574,7 @@ export default function GuidePage() {
 
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 p-6">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
                   <h3 className="font-black text-white mb-4">How It Works</h3>
                   <div className="space-y-4">
                     {[
@@ -594,7 +594,7 @@ export default function GuidePage() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 rounded-2xl p-6">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-2xl p-6">
                   <h3 className="font-black text-white mb-3">✓ Benefits</h3>
                   <ul className="space-y-2 text-[#a8a8b8] text-sm">
                     <li>• No upfront inscription costs</li>
@@ -609,12 +609,12 @@ export default function GuidePage() {
               {/* Live Preview - Collection Card */}
               <div>
                 <div className="text-sm text-[#a8a8b8]/80 mb-3 font-medium">Preview: Collection Card</div>
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl overflow-hidden border border-[#00C805]/30 shadow-xl max-w-sm">
-                  <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-[#00C805]/30">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl overflow-hidden border border-[#2DE2FF]/30 shadow-xl max-w-sm">
+                  <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-[#2DE2FF]/30">
                     <span className="px-3 py-1 rounded-full text-xs font-black text-white bg-green-600">
                       🔴 LIVE
                     </span>
-                    <button className="px-3 py-2 rounded-xl border border-[#00C805]/30 text-white">
+                    <button className="px-3 py-2 rounded-xl border border-[#2DE2FF]/30 text-white">
                       🔕
                     </button>
                   </div>
@@ -661,8 +661,8 @@ export default function GuidePage() {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-500/10 to-purple-500/5 px-6 py-4 border-b border-[#00C805]/30">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
+                <div className="bg-gradient-to-r from-purple-500/10 to-purple-500/5 px-6 py-4 border-b border-[#2DE2FF]/30">
                   <h3 className="font-black text-white">The Inscription Process</h3>
                 </div>
                 <div className="p-6 space-y-6">
@@ -688,7 +688,7 @@ export default function GuidePage() {
               {/* Live Preview - Batch Row */}
               <div>
                 <div className="text-sm text-[#a8a8b8]/80 mb-3 font-medium">Preview: Batch Selection</div>
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 overflow-hidden shadow-xl">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden shadow-xl">
                   {[
                     { batch: 1, status: 'complete', count: '10/10', cost: 52340 },
                     { batch: 2, status: 'pending', count: '5/10', cost: 51280 },
@@ -696,29 +696,29 @@ export default function GuidePage() {
                   ].map((row) => (
                     <div
                       key={row.batch}
-                      className={`px-4 py-3 border-b border-[#00C805]/30 flex items-center gap-4 ${
-                        row.status === 'complete' ? 'bg-[#00C805]/10 border-l-4 border-l-[#00C805]' :
+                      className={`px-4 py-3 border-b border-[#2DE2FF]/30 flex items-center gap-4 ${
+                        row.status === 'complete' ? 'bg-[#2DE2FF]/10 border-l-4 border-l-[#2DE2FF]' :
                         row.status === 'pending' ? 'bg-[#DC1FFF]/10 border-l-4 border-l-[#DC1FFF]' : ''
                       }`}
                     >
                       {row.status === 'complete' ? (
-                        <div className="w-6 h-6 rounded bg-[#00C805] text-white flex items-center justify-center text-sm">✓</div>
+                        <div className="w-6 h-6 rounded bg-[#2DE2FF] text-white flex items-center justify-center text-sm">✓</div>
                       ) : (
-                        <input type="checkbox" className="w-5 h-5 rounded border-[#00C805]/30" defaultChecked={row.status === 'pending'} />
+                        <input type="checkbox" className="w-5 h-5 rounded border-[#2DE2FF]/30" defaultChecked={row.status === 'pending'} />
                       )}
                       <div className="font-black text-white">Batch {row.batch}</div>
                       <div className="flex-1" />
                       <div className={`px-2 py-1 rounded-lg text-xs font-black ${
-                        row.status === 'complete' ? 'bg-[#00C805]/20 text-[#00C805] border border-[#00C805]/30' :
+                        row.status === 'complete' ? 'bg-[#2DE2FF]/20 text-[#2DE2FF] border border-[#2DE2FF]/30' :
                         row.status === 'pending' ? 'bg-[#DC1FFF]/20 text-[#DC1FFF] border border-[#DC1FFF]/30' :
-                        'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md text-white/70'
+                        'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md text-white/70'
                       }`}>
                         {row.status === 'complete' ? `✓ ${row.count}` : row.status === 'pending' ? `⏳ ${row.count}` : 'Ready'}
                       </div>
                       <div className="font-black text-[#e27d0f]">{row.cost.toLocaleString()} sats</div>
                     </div>
                   ))}
-                  <div className="px-4 py-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md flex items-center justify-between">
+                  <div className="px-4 py-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md flex items-center justify-between">
                     <div className="text-sm text-[#a8a8b8]/80">3 batches selected</div>
                     <button className="px-4 py-2 bg-[#4561ad] text-white rounded-xl font-black text-sm hover:bg-[#3a5294] transition-colors">
                       Inscribe Selected
@@ -727,15 +727,15 @@ export default function GuidePage() {
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 rounded-xl p-4">
-                    <div className="text-sm text-[#00C805] font-medium">Advantages</div>
+                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-xl p-4">
+                    <div className="text-sm text-[#2DE2FF] font-medium">Advantages</div>
                     <div className="mt-2 text-sm text-[#a8a8b8] space-y-1">
                       <div>✓ Own all inscriptions</div>
                       <div>✓ Control fee rates</div>
                       <div>✓ Batch processing</div>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#DC1FFF]/30 rounded-xl p-4">
+                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#DC1FFF]/30 rounded-xl p-4">
                     <div className="text-sm text-[#DC1FFF] font-medium">Considerations</div>
                     <div className="mt-2 text-sm text-[#a8a8b8] space-y-1">
                       <div>• Upfront costs</div>
@@ -761,14 +761,14 @@ export default function GuidePage() {
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl overflow-hidden border border-[#00C805]/30">
-                <div className="px-6 py-4 border-b border-[#00C805]/30 flex items-center justify-between">
+              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl overflow-hidden border border-[#2DE2FF]/30">
+                <div className="px-6 py-4 border-b border-[#2DE2FF]/30 flex items-center justify-between">
                   <div className="text-sm text-white/70">metadata.json</div>
-                  <button className="px-3 py-1 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md border border-[#00C805]/30 text-white/70 hover:text-white hover:border-[#00C805]/50 rounded-lg text-sm transition-colors">
+                  <button className="px-3 py-1 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 text-white/70 hover:text-white hover:border-[#2DE2FF]/50 rounded-lg text-sm transition-colors">
                     Copy
                   </button>
                 </div>
-                <pre className="p-6 text-sm text-[#00C805] overflow-x-auto font-mono">
+                <pre className="p-6 text-sm text-[#2DE2FF] overflow-x-auto font-mono">
 {`[
   {
     "name": "My Collection #1",
@@ -788,18 +788,18 @@ export default function GuidePage() {
               </div>
 
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 p-6">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
                   <h3 className="font-black text-white mb-4">Export Options</h3>
                   <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-xl border border-[#00C805]/30">
+                    <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30">
                       <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-xl">📋</div>
                       <div className="flex-1">
                         <div className="font-bold text-white">Copy JSON</div>
                         <div className="text-sm text-[#a8a8b8]/80">Copy to clipboard</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-xl border border-[#00C805]/30">
-                      <div className="w-10 h-10 rounded-xl bg-[#00C805]/20 border border-[#00C805]/30 flex items-center justify-center text-xl">💾</div>
+                    <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30">
+                      <div className="w-10 h-10 rounded-xl bg-[#2DE2FF]/20 border border-[#2DE2FF]/30 flex items-center justify-center text-xl">💾</div>
                       <div className="flex-1">
                         <div className="font-bold text-white">Download File</div>
                         <div className="text-sm text-[#a8a8b8]/80">{`{collection}-metadata.json`}</div>
@@ -808,7 +808,7 @@ export default function GuidePage() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md rounded-2xl border border-[#00C805]/30 p-6">
+                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
                   <h3 className="font-black text-white mb-4">Included Fields</h3>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     {['name', 'ordinal_number', 'inscription_id', 'commit_tx', 'reveal_tx', 'attributes', 'image_url', 'content_type'].map((field) => (

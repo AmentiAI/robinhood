@@ -301,7 +301,7 @@ export default function AdminLaunchpadTransactionsPage() {
             </div>
             <Link
               href="/admin/launchpad"
-              className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium"
+              className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded-lg text-sm font-medium"
             >
               Back to Launchpad Hub
             </Link>
@@ -314,7 +314,7 @@ export default function AdminLaunchpadTransactionsPage() {
               <select
                 value={collectionFilter}
                 onChange={(e) => { setCollectionFilter(e.target.value); setPage(0) }}
-                className="w-full px-3 py-2 bg-[#0f0f1e] border border-[#00C805]/30 text-white rounded-lg focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50"
+                className="w-full px-3 py-2 bg-[#0f0f1e] border border-[#2DE2FF]/30 text-white rounded-lg focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50"
               >
                 <option value="">All Collections</option>
                 {collections.map((col) => (
@@ -327,7 +327,7 @@ export default function AdminLaunchpadTransactionsPage() {
               <select
                 value={statusFilter}
                 onChange={(e) => { setStatusFilter(e.target.value); setPage(0) }}
-                className="w-full px-3 py-2 bg-[#0f0f1e] border border-[#00C805]/30 text-white rounded-lg focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50"
+                className="w-full px-3 py-2 bg-[#0f0f1e] border border-[#2DE2FF]/30 text-white rounded-lg focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50"
               >
                 <option value="">All Statuses</option>
                 <option value="pending">Pending</option>
@@ -347,13 +347,13 @@ export default function AdminLaunchpadTransactionsPage() {
                 value={walletFilter}
                 onChange={(e) => { setWalletFilter(e.target.value); setPage(0) }}
                 placeholder="Filter by wallet..."
-                className="w-full px-3 py-2 bg-[#0f0f1e] border border-[#00C805]/30 text-white rounded-lg font-mono text-sm focus:ring-2 focus:ring-[#00C805] focus:border-[#00C805]/50 placeholder:text-white/40"
+                className="w-full px-3 py-2 bg-[#0f0f1e] border border-[#2DE2FF]/30 text-white rounded-lg font-mono text-sm focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF]/50 placeholder:text-white/40"
               />
             </div>
             <div className="flex items-end">
               <button
                 onClick={loadTransactions}
-                className="w-full px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg font-medium"
+                className="w-full px-4 py-2 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded-lg font-medium"
               >
                 Refresh
               </button>
@@ -366,7 +366,7 @@ export default function AdminLaunchpadTransactionsPage() {
               <div className="text-sm text-[#b4b4c8]">
                 Showing {transactions.length} of {totalCount} transactions
                 {selectedTransactions.size > 0 && (
-                  <span className="ml-2 text-[#00C805] font-medium">
+                  <span className="ml-2 text-[#2DE2FF] font-medium">
                     ({selectedTransactions.size} selected)
                   </span>
                 )}
@@ -375,7 +375,7 @@ export default function AdminLaunchpadTransactionsPage() {
                 <button
                   onClick={() => setPage(Math.max(0, page - 1))}
                   disabled={page === 0}
-                  className="px-3 py-1 bg-[#1a1a2e] border border-[#00C805]/30 hover:border-[#00C805]/50 text-white rounded text-sm disabled:opacity-50"
+                  className="px-3 py-1 bg-[#1a1a2e] border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-white rounded text-sm disabled:opacity-50"
                 >
                   Previous
                 </button>
@@ -385,25 +385,25 @@ export default function AdminLaunchpadTransactionsPage() {
                 <button
                   onClick={() => setPage(page + 1)}
                   disabled={(page + 1) * limit >= totalCount}
-                  className="px-3 py-1 bg-[#1a1a2e] border border-[#00C805]/30 hover:border-[#00C805]/50 text-white rounded text-sm disabled:opacity-50"
+                  className="px-3 py-1 bg-[#1a1a2e] border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-white rounded text-sm disabled:opacity-50"
                 >
                   Next
                 </button>
               </div>
             </div>
             {selectedTransactions.size > 0 && (
-              <div className="flex items-center gap-2 pt-3 border-t border-[#00C805]/20">
+              <div className="flex items-center gap-2 pt-3 border-t border-[#2DE2FF]/20">
                 <span className="text-sm text-[#b4b4c8]">Bulk:</span>
                 <button
                   onClick={handleBulkUpdateStatus}
                   disabled={bulkProcessing}
-                  className="px-3 py-1 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded text-sm disabled:opacity-50"
+                  className="px-3 py-1 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded text-sm disabled:opacity-50"
                 >
                   Update Status
                 </button>
                 <button
                   onClick={() => setSelectedTransactions(new Set())}
-                  className="px-3 py-1 bg-[#1a1a2e] border border-[#00C805]/30 text-white rounded text-sm"
+                  className="px-3 py-1 bg-[#1a1a2e] border border-[#2DE2FF]/30 text-white rounded text-sm"
                 >
                   Clear
                 </button>
@@ -422,7 +422,7 @@ export default function AdminLaunchpadTransactionsPage() {
         {/* Table */}
         {loading ? (
           <div className="bg-[#0f0f1e] border border-[#00E5FF]/20 rounded-lg p-12 text-center">
-            <div className="w-16 h-16 border-4 border-[#00C805] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <div className="w-16 h-16 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
             <p className="text-[#b4b4c8]">Loading transactions...</p>
           </div>
         ) : transactions.length === 0 ? (
@@ -491,7 +491,7 @@ export default function AdminLaunchpadTransactionsPage() {
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap">
                         {tx.nft_mint_address ? (
-                          <span className="text-xs font-mono text-[#00C805]" title={tx.nft_mint_address}>
+                          <span className="text-xs font-mono text-[#2DE2FF]" title={tx.nft_mint_address}>
                             {tx.nft_mint_address.slice(0, 8)}...
                           </span>
                         ) : (
@@ -504,7 +504,7 @@ export default function AdminLaunchpadTransactionsPage() {
                             href={explorerUrl(tx.mint_tx_signature)}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-[#00C805] hover:text-[#7C3AED] font-mono"
+                            className="text-xs text-[#2DE2FF] hover:text-[#7C3AED] font-mono"
                           >
                             {tx.mint_tx_signature.slice(0, 10)}...
                           </a>
@@ -515,7 +515,7 @@ export default function AdminLaunchpadTransactionsPage() {
                       <td className="px-3 py-3 whitespace-nowrap text-xs text-green-400">
                         {formatSol(tx.mint_price_lamports || 0)}
                       </td>
-                      <td className="px-3 py-3 whitespace-nowrap text-xs text-[#00C805]">
+                      <td className="px-3 py-3 whitespace-nowrap text-xs text-[#2DE2FF]">
                         {formatSol(tx.platform_fee_lamports || 0)}
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap text-xs text-[#b4b4c8]">
@@ -528,7 +528,7 @@ export default function AdminLaunchpadTransactionsPage() {
                         <div className="flex flex-col gap-1">
                           <button
                             onClick={() => handleEdit(tx)}
-                            className="px-2 py-1 bg-[#1a1a2e] hover:bg-[#252540] border border-[#00C805]/30 text-white rounded text-xs"
+                            className="px-2 py-1 bg-[#1a1a2e] hover:bg-[#252540] border border-[#2DE2FF]/30 text-white rounded text-xs"
                           >
                             Edit
                           </button>
@@ -552,7 +552,7 @@ export default function AdminLaunchpadTransactionsPage() {
         {/* Edit Modal */}
         {editingTransaction && (
           <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-            <div className="bg-[#0f0f1e] border border-[#00C805]/30 rounded-lg shadow-xl max-w-lg w-full">
+            <div className="bg-[#0f0f1e] border border-[#2DE2FF]/30 rounded-lg shadow-xl max-w-lg w-full">
               <div className="p-6">
                 <h2 className="text-xl font-bold text-white mb-4">Edit Transaction</h2>
                 <div className="text-xs text-[#b4b4c8] font-mono mb-4">{editingTransaction.id}</div>
@@ -563,7 +563,7 @@ export default function AdminLaunchpadTransactionsPage() {
                     <select
                       value={editForm.mint_status}
                       onChange={(e) => setEditForm({ ...editForm, mint_status: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#0a0a14] border border-[#00C805]/30 text-white rounded-lg"
+                      className="w-full px-3 py-2 bg-[#0a0a14] border border-[#2DE2FF]/30 text-white rounded-lg"
                     >
                       <option value="pending">Pending</option>
                       <option value="building">Building</option>
@@ -582,7 +582,7 @@ export default function AdminLaunchpadTransactionsPage() {
                       type="text"
                       value={editForm.error_message}
                       onChange={(e) => setEditForm({ ...editForm, error_message: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#0a0a14] border border-[#00C805]/30 text-white rounded-lg placeholder:text-white/40"
+                      className="w-full px-3 py-2 bg-[#0a0a14] border border-[#2DE2FF]/30 text-white rounded-lg placeholder:text-white/40"
                       placeholder="Error message (empty to clear)"
                     />
                   </div>
@@ -593,23 +593,23 @@ export default function AdminLaunchpadTransactionsPage() {
                       type="datetime-local"
                       value={editForm.confirmed_at}
                       onChange={(e) => setEditForm({ ...editForm, confirmed_at: e.target.value })}
-                      className="w-full px-3 py-2 bg-[#0a0a14] border border-[#00C805]/30 text-white rounded-lg"
+                      className="w-full px-3 py-2 bg-[#0a0a14] border border-[#2DE2FF]/30 text-white rounded-lg"
                     />
                     <p className="text-xs text-[#b4b4c8] mt-1">Leave empty to set NULL</p>
                   </div>
                 </div>
 
-                <div className="flex gap-3 mt-6 pt-4 border-t border-[#00C805]/20">
+                <div className="flex gap-3 mt-6 pt-4 border-t border-[#2DE2FF]/20">
                   <button
                     onClick={handleSaveEdit}
                     disabled={processing === `edit-${editingTransaction.id}`}
-                    className="px-4 py-2 bg-[#00C805] hover:bg-[#7C3AED] text-white rounded-lg font-medium disabled:opacity-50"
+                    className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#7C3AED] text-white rounded-lg font-medium disabled:opacity-50"
                   >
                     {processing === `edit-${editingTransaction.id}` ? 'Saving...' : 'Save Changes'}
                   </button>
                   <button
                     onClick={() => setEditingTransaction(null)}
-                    className="px-4 py-2 bg-[#1a1a2e] border border-[#00C805]/30 hover:border-[#00C805]/50 text-white rounded-lg font-medium"
+                    className="px-4 py-2 bg-[#1a1a2e] border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-white rounded-lg font-medium"
                   >
                     Cancel
                   </button>

@@ -11,17 +11,17 @@ interface SolanaPageHeaderProps {
 
 export function SolanaPageHeader({ title, description, children, actions }: SolanaPageHeaderProps) {
   return (
-    <div className="relative bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] text-white border-b border-[#00C805]/20 overflow-hidden">
+    <div className="relative bg-gradient-to-br from-[#0a0a0f] via-[#14141e] to-[#1a1a24] text-white border-b border-[#2DE2FF]/20 overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-[#00C805]/20 rounded-full blur-3xl animate-[solanaFloat_6s_ease-in-out_infinite]" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#00C805]/15 rounded-full blur-3xl animate-[solanaFloat_8s_ease-in-out_infinite]" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-10 left-10 w-72 h-72 bg-[#2DE2FF]/20 rounded-full blur-3xl animate-[solanaFloat_6s_ease-in-out_infinite]" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#2DE2FF]/15 rounded-full blur-3xl animate-[solanaFloat_8s_ease-in-out_infinite]" style={{ animationDelay: '1s' }} />
       </div>
       
       <div className="container mx-auto px-6 py-10 relative z-10">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div className="flex-1">
-            <h1 className="text-5xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-[#00C805] via-[#39FF14] to-[#00C805] bg-clip-text text-transparent mb-2 animate-[solanaGradientShift_8s_ease_infinite] bg-[length:200%_auto]">
+            <h1 className="text-5xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-[#2DE2FF] via-[#2DE2FF] to-[#2DE2FF] bg-clip-text text-transparent mb-2 animate-[solanaGradientShift_8s_ease_infinite] bg-[length:200%_auto]">
               {title}
             </h1>
             {description && (
@@ -51,7 +51,7 @@ interface SolanaEmptyStateProps {
 
 export function SolanaEmptyState({ icon = '📦', title, description, action }: SolanaEmptyStateProps) {
   return (
-    <div className="py-20 text-center bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#00C805]/20 rounded-2xl backdrop-blur-md">
+    <div className="py-20 text-center bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 border border-[#2DE2FF]/20 rounded-2xl backdrop-blur-md">
       <div className="text-6xl mb-6 opacity-50 animate-[solanaFloat_4s_ease-in-out_infinite]">{icon}</div>
       <h3 className="text-2xl font-black text-white mb-3">{title}</h3>
       <p className="text-[#a8a8b8] text-lg font-medium mb-8 max-w-md mx-auto">{description}</p>
@@ -69,10 +69,10 @@ export function SolanaLoadingState({ message = 'Loading...' }: SolanaLoadingStat
     <div className="flex items-center justify-center min-h-[400px]">
       <div className="text-center">
         <div className="relative w-20 h-20 mx-auto mb-6">
-          <div className="absolute inset-0 border-4 border-[#00C805]/20 rounded-full" />
-          <div className="absolute inset-0 border-4 border-[#00C805] border-t-transparent rounded-full animate-spin" />
-          <div className="absolute inset-2 border-4 border-[#00C805]/20 rounded-full" />
-          <div className="absolute inset-2 border-4 border-[#00C805] border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
+          <div className="absolute inset-0 border-4 border-[#2DE2FF]/20 rounded-full" />
+          <div className="absolute inset-0 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
+          <div className="absolute inset-2 border-4 border-[#2DE2FF]/20 rounded-full" />
+          <div className="absolute inset-2 border-4 border-[#2DE2FF] border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
         </div>
         <p className="text-white text-lg font-bold mb-2">{message}</p>
         <p className="text-[#a8a8b8] text-sm">Please wait...</p>
@@ -89,7 +89,7 @@ interface SolanaCardProps {
 
 export function SolanaCard({ children, className = '', hover = true }: SolanaCardProps) {
   return (
-    <div className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#00C805]/20 backdrop-blur-md shadow-xl shadow-[#00C805]/10 ${hover ? 'hover:border-[#00C805]/50 hover:shadow-2xl hover:shadow-[#00C805]/15 transition-all duration-300' : ''} ${className}`}>
+    <div className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md shadow-xl shadow-[#2DE2FF]/10 ${hover ? 'hover:border-[#2DE2FF]/50 hover:shadow-2xl hover:shadow-[#2DE2FF]/15 transition-all duration-300' : ''} ${className}`}>
       {children}
     </div>
   )
@@ -103,10 +103,10 @@ interface SolanaBadgeProps {
 
 export function SolanaBadge({ children, variant = 'purple', className = '' }: SolanaBadgeProps) {
   const variants = {
-    purple: 'bg-gradient-to-r from-[#00C805]/20 to-[#DC1FFF]/20 border-[#00C805]/40 text-[#00C805]',
-    green: 'bg-gradient-to-r from-[#00C805]/20 to-[#19FB9B]/20 border-[#00C805]/40 text-[#00C805]',
-    cyan: 'bg-gradient-to-r from-[#39FF14]/20 to-[#00C805]/20 border-[#39FF14]/40 text-[#39FF14]',
-    pink: 'bg-gradient-to-r from-[#DC1FFF]/20 to-[#00C805]/20 border-[#DC1FFF]/40 text-[#DC1FFF]',
+    purple: 'bg-gradient-to-r from-[#2DE2FF]/20 to-[#DC1FFF]/20 border-[#2DE2FF]/40 text-[#2DE2FF]',
+    green: 'bg-gradient-to-r from-[#2DE2FF]/20 to-[#19FB9B]/20 border-[#2DE2FF]/40 text-[#2DE2FF]',
+    cyan: 'bg-gradient-to-r from-[#2DE2FF]/20 to-[#2DE2FF]/20 border-[#2DE2FF]/40 text-[#2DE2FF]',
+    pink: 'bg-gradient-to-r from-[#DC1FFF]/20 to-[#2DE2FF]/20 border-[#DC1FFF]/40 text-[#DC1FFF]',
   }
 
   return (

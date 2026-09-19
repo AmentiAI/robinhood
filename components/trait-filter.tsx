@@ -91,7 +91,7 @@ export function TraitFilter({ nfts, onFiltersChange }: TraitFilterProps) {
   }
 
   return (
-    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#00C805]/20 rounded-lg p-4">
+    <div className="bg-[#FDFCFA] dark:bg-[#1a1a24] border border-gray-200 dark:border-[#2DE2FF]/20 rounded-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Trait Filters</h3>
@@ -119,7 +119,7 @@ export function TraitFilter({ nfts, onFiltersChange }: TraitFilterProps) {
             <select
               value={selectedTraits[category as keyof TraitFilters][0] || ""}
               onChange={(e) => handleTraitChange(category as keyof TraitFilters, e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-[#00C805]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-[#2DE2FF]/30 rounded-md bg-[#FDFCFA] dark:bg-[#14141e] text-gray-900 dark:text-gray-100 text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
             >
               <option value="">All {category}</option>
               {traits.map((trait) => (

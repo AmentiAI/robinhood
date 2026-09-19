@@ -10,11 +10,11 @@ async function downloadImageToBlob(url: string): Promise<Blob> {
 }
 
 const flyerPrompts = {
-  'what-is-solmaker': {
-    title: 'What is SolMaker.Fun',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
+  'what-is-hoodgfx': {
+    title: 'What is HoodGFX',
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#2DE2FF gold, black background).
 
-Main headline: "SOLMAKER.FUN - Become an Artist. Create High-Quality Art."
+Main headline: "HOODGFX - Become an Artist. Create High-Quality Art."
 
 Subheading: "Anyone Can Be an Artist"
 
@@ -24,14 +24,14 @@ Key messages to include:
 - "Professional-grade quality ready for NFT marketplace"
 - "Built-in tools to mint and sell your creations"
 
-Visual style: Modern, luxury, premium feel with gold accents, clean typography, professional layout. Include subtle artistic elements like paint splashes or creative icons. Footer should say "START CREATING TODAY" and "www.solmaker.fun"
+Visual style: Modern, luxury, premium feel with gold accents, clean typography, professional layout. Include subtle artistic elements like paint splashes or creative icons. Footer should say "START CREATING TODAY" and "www.hoodgfx.com"
 
 The flyer should feel high-end, empowering, and accessible to beginners.`
   },
 
   'launchpad': {
     title: 'Launchpad Features',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#2DE2FF gold, black background).
 
 Main headline: "LAUNCHPAD - Mint Fresh NFT Collections"
 
@@ -44,14 +44,14 @@ Key Features to highlight:
 - "Live Analytics - Real-time mint progress, rarity reveals, and collection statistics"
 - "Instant Reveals - See your NFT immediately after minting"
 
-Visual style: Modern, exciting, dynamic with gold accents. Include rocket/launch imagery. Footer: "EXPLORE LAUNCHPAD" and "www.solmaker.fun/launchpad"
+Visual style: Modern, exciting, dynamic with gold accents. Include rocket/launch imagery. Footer: "EXPLORE LAUNCHPAD" and "www.hoodgfx.com/launchpad"
 
 The flyer should feel exciting and trustworthy.`
   },
 
   'marketplace': {
     title: 'Marketplace Features',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#2DE2FF gold, black background).
 
 Main headline: "MARKETPLACE - Buy, Sell & Trade NFTs"
 
@@ -64,14 +64,14 @@ Key Features to highlight:
 - "Secure Escrow - Safe peer-to-peer trading with smart contract protection"
 - "Price Analytics - Historical pricing data and market trends"
 
-Visual style: Professional, trustworthy, premium with gold accents. Include marketplace/shopping imagery. Footer: "START TRADING" and "www.solmaker.fun/marketplace"
+Visual style: Professional, trustworthy, premium with gold accents. Include marketplace/shopping imagery. Footer: "START TRADING" and "www.hoodgfx.com/marketplace"
 
 The flyer should feel secure and professional.`
   },
 
   'collection-creator': {
     title: 'Collection Creator',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#2DE2FF gold, black background).
 
 Main headline: "COLLECTION CREATOR - Build Your NFT Empire"
 
@@ -84,14 +84,14 @@ Key Features to highlight:
 - "Full Control - Edit, regenerate, or replace individual NFTs until perfect"
 - "Batch Operations - Generate hundreds or thousands of unique NFTs in one click"
 
-Visual style: Creative, powerful, inspiring with gold accents. Include artistic/creative tools imagery. Footer: "CREATE COLLECTION" and "www.solmaker.fun/collections/create"
+Visual style: Creative, powerful, inspiring with gold accents. Include artistic/creative tools imagery. Footer: "CREATE COLLECTION" and "www.hoodgfx.com/collections/create"
 
 The flyer should feel empowering and creative.`
   },
 
   'ai-tools': {
     title: 'AI-Powered Tools',
-    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#00C805 gold, black background).
+    prompt: `Create a professional marketing flyer with a luxury gold and black color scheme (#2DE2FF gold, black background).
 
 Main headline: "AI-POWERED TOOLS - Create Like a Professional"
 
@@ -104,14 +104,14 @@ Key Features to highlight:
 - "Smart Composition - Automatic layering, positioning, and sizing for perfect results"
 - "Character Consistency - Generate entire collections with consistent characters and style"
 
-Visual style: Futuristic, magical, high-tech with gold accents. Include AI/technology imagery. Footer: "UNLEASH CREATIVITY" and "www.solmaker.fun"
+Visual style: Futuristic, magical, high-tech with gold accents. Include AI/technology imagery. Footer: "UNLEASH CREATIVITY" and "www.hoodgfx.com"
 
 The flyer should feel innovative and powerful.`
   },
 
   'founder-vision': {
-    title: 'Founder Vision - The SolMaker Story',
-    prompt: `Create an inspiring, professional founder's vision flyer with luxury gold and black color scheme (#00C805 gold, black background).
+    title: 'Founder Vision - The HoodGFX Story',
+    prompt: `Create an inspiring, professional founder's vision flyer with luxury gold and black color scheme (#2DE2FF gold, black background).
 
 MAIN HEADLINE: "REVOLUTIONIZING NFT CREATION"
 Subheading: "Making Everyone an Artist & Community Leader"
@@ -127,7 +127,7 @@ Traditional NFT creation is:
 • Too exclusive - only tech-savvy creators can participate
 • Too fragmented - multiple tools needed (design, minting, marketplace, promotion)
 
-OUR SOLUTION - SOLMAKER.FUN:
+OUR SOLUTION - HOODGFX:
 The world's first all-in-one AI-powered NFT creation platform that turns anyone into a professional NFT creator in minutes, not months.
 
 CORE THESIS:
@@ -155,14 +155,14 @@ WHAT MAKES US DIFFERENT:
 5. BUILT FOR CREATORS: Royalty management, analytics, community tools
 
 THE VISION:
-"In 5 years, when someone says 'I want to launch an NFT collection,' they won't need a team of developers and designers. They'll just need SolMaker.Fun and their imagination."
+"In 5 years, when someone says 'I want to launch an NFT collection,' they won't need a team of developers and designers. They'll just need HoodGFX and their imagination."
 
 CALL TO ACTION:
 "Join the revolution. Start creating today."
 
 Visual style: Professional, inspiring, visionary. Include subtle tech/blockchain imagery, creative elements, and a professional photo placeholder area for the founder. Gold accents throughout. Should feel premium, trustworthy, and revolutionary.
 
-Footer: "SOLMAKER.FUN - Empowering the Next Generation of Digital Creators" • www.solmaker.fun`
+Footer: "HOODGFX - Empowering the Next Generation of Digital Creators" • www.hoodgfx.com`
   }
 }
 

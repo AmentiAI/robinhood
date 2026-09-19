@@ -3,57 +3,111 @@
 import { useState, useEffect, type CSSProperties } from 'react'
 import Image from 'next/image'
 import { toast } from 'sonner'
-import { Syne, Plus_Jakarta_Sans } from 'next/font/google'
+import { Space_Grotesk, DM_Sans } from 'next/font/google'
 import { useEvmWallet } from '@/lib/wallet/evm-wallet-context'
 import { useSiteLock } from '@/components/site-lock-provider'
 import { useRouter } from 'next/navigation'
+import {
+  Wallet,
+  ArrowRight,
+  Crown,
+  Trophy,
+  Layers,
+  Settings2,
+  ImageDown,
+  Megaphone,
+  ChevronRight,
+  ClipboardList,
+  CircleHelp,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react'
 
-const display = Syne({
+const display = Space_Grotesk({
   subsets: ['latin'],
-  weight: ['500', '600', '700', '800'],
-  variable: '--font-splash-display',
+  weight: ['500', '600', '700'],
+  variable: '--f-display',
 })
 
-const body = Plus_Jakarta_Sans({
+const body = DM_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-splash-body',
+  variable: '--f-body',
 })
 
-const ACCENT = '#2DE2FF'
-const ACCENT_HOT = '#FF2BD6'
-
-const FEATURES = [
-  {
-    n: '01',
-    title: 'Create',
-    body: 'Produce complete, high-quality collections — art, traits, and metadata — at a fraction of traditional cost and time.',
-  },
-  {
-    n: '02',
-    title: 'Market',
-    body: 'Sticker Maker and Video Maker generate campaign-ready assets so your drop leaves the studio ready to promote.',
-  },
-  {
-    n: '03',
-    title: 'Launch',
-    body: 'Deploy and mint on Robinhood Chain from the same workspace. One platform from concept to live collection.',
-  },
-]
+const CYAN = '#2DE2FF'
+const MAGENTA = '#FF2BD6'
+const PURPLE = '#A855F7'
 
 function shortAddr(addr: string) {
   return `${addr.slice(0, 6)}…${addr.slice(-4)}`
 }
 
+const FEATURES = [
+  {
+    icon: Layers,
+    title: 'Easy NFT Creation',
+    body: 'Build full collections with layers, traits, and AI generation in one flow.',
+  },
+  {
+    icon: Settings2,
+    title: 'Advanced Tools',
+    body: 'Deploy, mint, and manage drops on Robinhood Chain without leaving HoodGFX.',
+  },
+  {
+    icon: ImageDown,
+    title: 'Asset Pipeline',
+    body: 'Generate art, metadata, and collection assets ready for launch.',
+  },
+  {
+    icon: Megaphone,
+    title: 'Marketing Suite',
+    body: 'Promote with Sticker Maker, Video Maker, and campaign tools in-product.',
+  },
+]
+
+const CSS = `
+  @keyframes hgIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hgFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes hgGlow {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.8; }
+  }
+  @keyframes hgPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.35); }
+    50% { box-shadow: 0 0 40px 8px rgba(45, 226, 255, 0.18); }
+  }
+  .hg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .hg-logo-text {
+    background: linear-gradient(100deg, #2DE2FF 0%, #E879F9 45%, #FF2BD6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.04em;
+    font-style: italic;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+`
+
 export default function HomePage() {
   const router = useRouter()
   const { isConnected, address, connect, disconnect } = useEvmWallet()
-  const { locked, status, loading, refresh } = useSiteLock()
+  const { locked, allowed, isAdmin, status, loading, refresh } = useSiteLock()
   const [email, setEmail] = useState('')
   const [twitter, setTwitter] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [connecting, setConnecting] = useState(false)
   const [entered, setEntered] = useState(false)
+  const [wlPanel, setWlPanel] = useState<'board' | 'spots' | 'how' | 'req'>('board')
   const [wlEntries, setWlEntries] = useState<
     { wallet_address: string; status: string; created_at: string }[]
   >([])
@@ -119,360 +173,435 @@ export default function HomePage() {
     }
   }
 
-  if (!loading && !locked) {
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const anim = (delay: string): CSSProperties =>
+    entered
+      ? { animation: `hgIn 0.7s cubic-bezier(0.22,1,0.36,1) ${delay} both` }
+      : { opacity: 0 }
+
+  const onList = status === 'pending' || status === 'approved'
+
+  if (!loading && allowed) {
     return (
-      <div className={`${display.variable} ${body.variable} relative min-h-screen bg-black overflow-hidden`}>
-        <div className="absolute inset-0 flex items-center justify-center opacity-50">
-          <Image
-            src="/hoodgfx-hero.png"
-            alt="HoodGFX"
-            width={900}
-            height={900}
-            priority
-            className="w-[min(90vw,560px)] h-auto"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-black" />
-        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 text-center gap-8">
-          <p
-            className="text-[11px] font-semibold uppercase tracking-[0.35em]"
-            style={{ fontFamily: 'var(--font-splash-body)', color: ACCENT }}
-          >
-            HoodGFX
-          </p>
-          <h1
-            className="text-4xl sm:text-5xl font-bold text-white tracking-tight"
-            style={{ fontFamily: 'var(--font-splash-display)' }}
-          >
-            Platform open
-          </h1>
-          <button
-            type="button"
-            onClick={handleEnter}
-            className="px-10 py-4 text-black text-sm font-semibold tracking-wide transition-opacity hover:opacity-90"
-            style={{ fontFamily: 'var(--font-splash-body)', background: ACCENT }}
-          >
-            Enter Launchpad
-          </button>
-        </div>
+      <div
+        className={`${display.variable} ${body.variable} ${body.className} min-h-svh bg-black text-white flex flex-col items-center justify-center gap-6 px-6`}
+      >
+        <Image src="/hoodgfx-hero.png" alt="HoodGFX" width={180} height={180} priority className="w-[140px] h-auto" />
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ fontFamily: 'var(--f-display)' }}>
+          Welcome back{isAdmin ? ' (admin)' : ''}
+        </h1>
+        <button
+          type="button"
+          onClick={handleEnter}
+          className="h-14 px-10 rounded-full text-black text-base font-bold tracking-wide"
+          style={{ background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})` }}
+        >
+          Enter platform
+        </button>
       </div>
     )
   }
 
-  const onList = status === 'pending' || status === 'approved'
-  const fade = (delay: string) =>
-    ({
-      opacity: entered ? 1 : 0,
-      transform: entered ? 'translateY(0)' : 'translateY(18px)',
-      transition: `opacity 0.9s cubic-bezier(0.22,1,0.36,1) ${delay}, transform 0.9s cubic-bezier(0.22,1,0.36,1) ${delay}`,
-    }) as CSSProperties
-
   return (
     <div
-      className={`${display.variable} ${body.variable} relative min-h-screen bg-black text-white overflow-x-hidden`}
-      style={{ fontFamily: 'var(--font-splash-body)' }}
+      className={`${display.variable} ${body.variable} ${body.className} relative min-h-svh bg-black text-white overflow-x-hidden`}
     >
-      {/* HoodGFX mark as atmospheric background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%]">
-          <Image
-            src="/hoodgfx-hero.png"
-            alt=""
-            width={1100}
-            height={1100}
-            priority
-            className="w-[min(120vw,820px)] h-auto opacity-40 lg:opacity-55 select-none"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/88 to-black/35" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/60" />
-        <div
-          className="absolute top-[10%] right-[5%] w-[50vw] h-[50vw] rounded-full blur-[110px]"
-          style={{
-            background: `radial-gradient(circle, ${ACCENT} 0%, transparent 70%)`,
-            animation: 'splashGlow 10s ease-in-out infinite alternate',
-          }}
-        />
-        <div
-          className="absolute bottom-[5%] left-[10%] w-[40vw] h-[40vw] rounded-full blur-[120px]"
-          style={{
-            background: `radial-gradient(circle, ${ACCENT_HOT} 0%, transparent 70%)`,
-            animation: 'splashGlow 12s ease-in-out infinite alternate-reverse',
-            opacity: 0.35,
-          }}
-        />
-      </div>
+      <style>{CSS}</style>
 
-      <style>{`
-        @keyframes splashGlow {
-          0% { opacity: 0.12; transform: translate(0, 0) scale(1); }
-          100% { opacity: 0.22; transform: translate(-3%, 5%) scale(1.06); }
-        }
-      `}</style>
-
-      <div className="relative z-10 min-h-screen flex flex-col">
+      <div className="relative z-10 mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+        {/* Header */}
         <header
-          className="flex items-center justify-between px-6 sm:px-10 lg:px-14 pt-8 pb-4"
-          style={fade('0.05s')}
+          className="flex items-center justify-between gap-4 mb-6 sm:mb-8 py-2"
+          style={anim('0s')}
         >
-          <div className="flex items-center gap-3">
-            <Image
-              src="/hoodgfx-hero.png"
-              alt="HoodGFX"
-              width={72}
-              height={72}
-              priority
-              className="h-12 w-12 sm:h-14 sm:w-14 object-contain"
-            />
+          <a href="#" className="flex items-center gap-2 shrink-0 group">
+            <Crown className="h-5 w-5 text-[#A855F7] group-hover:text-[#2DE2FF] transition-colors" />
             <span
-              className="text-xl sm:text-2xl font-bold tracking-tight text-white"
-              style={{ fontFamily: 'var(--font-splash-display)' }}
+              className="hg-logo-text text-2xl sm:text-3xl leading-none"
+              style={{ fontFamily: 'var(--f-display)' }}
             >
-              Hood<span style={{ color: ACCENT_HOT }}>GFX</span>
+              HoodGFX
             </span>
-          </div>
-          <div className="flex items-center gap-3 text-[11px] font-medium tracking-[0.2em] uppercase text-white/45">
-            <span className="hidden sm:inline">Robinhood Chain</span>
-            <span className="w-1 h-1 rounded-full" style={{ background: ACCENT }} />
-            <span style={{ color: ACCENT }}>Private access</span>
-          </div>
+          </a>
+
+          <button
+            type="button"
+            onClick={handleConnect}
+            disabled={connecting || (isConnected && !!address)}
+            className="inline-flex items-center gap-2.5 h-12 sm:h-14 px-5 sm:px-6 rounded-xl border-2 border-[#2DE2FF]/70 bg-black/40 text-sm sm:text-[15px] font-bold text-white hover:bg-[#2DE2FF]/10 hover:border-[#2DE2FF] transition-all disabled:opacity-80"
+          >
+            <Wallet className="h-5 w-5 text-[#2DE2FF]" />
+            {isConnected && address
+              ? shortAddr(address)
+              : connecting
+                ? 'Connecting…'
+                : 'Connect Wallet'}
+          </button>
         </header>
 
-        <main className="flex-1 flex flex-col lg:flex-row lg:items-center gap-12 lg:gap-16 px-6 sm:px-10 lg:px-14 py-10 lg:py-6 max-w-[1400px] w-full mx-auto">
-          <div className="flex-1 max-w-2xl space-y-10 lg:space-y-12">
-            <div className="space-y-6" style={fade('0.15s')}>
-              <p
-                className="text-[11px] font-semibold uppercase tracking-[0.32em]"
-                style={{ color: ACCENT }}
-              >
-                One place. Full stack.
-              </p>
-              <h1
-                className="text-[2.75rem] sm:text-6xl lg:text-[4.25rem] font-bold tracking-[-0.035em] leading-[0.98] text-white"
-                style={{ fontFamily: 'var(--font-splash-display)' }}
-              >
-                Stop stacking tools.
-                <br />
-                <span className="text-white/90">Start shipping </span>
-                <span style={{ color: ACCENT }}>drops.</span>
-              </h1>
-              <p className="text-base sm:text-lg text-white/55 max-w-xl leading-relaxed font-normal">
-                HoodGFX is the professional studio for high-quality NFT collections on Robinhood Chain.
-                Create, market with Sticker Maker &amp; Video Maker, and launch — without a fragmented toolchain.
-              </p>
-            </div>
-
-            <div
-              className="grid sm:grid-cols-3 gap-8 pt-2 border-t border-white/10"
-              style={fade('0.3s')}
+        {/* Hero grid */}
+        <main
+          id="create"
+          className="grid lg:grid-cols-[1.05fr_0.95fr_0.9fr] gap-8 lg:gap-6 items-center mb-10 sm:mb-14"
+        >
+          {/* Left copy */}
+          <div className="space-y-5 sm:space-y-6 order-1" style={anim('0.05s')}>
+            <p
+              className="text-[13px] sm:text-sm font-semibold tracking-[0.22em] uppercase"
+              style={{ color: MAGENTA }}
             >
-              {FEATURES.map((f) => (
-                <div key={f.title} className="space-y-3 pt-6">
-                  <div className="flex items-baseline gap-3">
-                    <span
-                      className="text-[11px] font-medium tracking-[0.2em]"
-                      style={{ color: `${ACCENT}B3` }}
-                    >
-                      {f.n}
-                    </span>
-                    <h2
-                      className="text-lg font-semibold tracking-tight text-white"
-                      style={{ fontFamily: 'var(--font-splash-display)' }}
-                    >
-                      {f.title}
-                    </h2>
-                  </div>
-                  <p className="text-sm text-white/45 leading-relaxed">{f.body}</p>
-                </div>
-              ))}
+              Create · Mint · Grow
+            </p>
+
+            <div>
+              <div className="flex items-start gap-2 mb-1">
+                <Crown className="h-6 w-6 sm:h-7 sm:w-7 text-[#A855F7] mt-1 shrink-0" />
+                <h1
+                  className="hg-logo-text text-[3.2rem] sm:text-[4.2rem] lg:text-[4.6rem] leading-[0.92]"
+                  style={{ fontFamily: 'var(--f-display)' }}
+                >
+                  HoodGFX
+                </h1>
+              </div>
+              <p
+                className="mt-3 text-sm sm:text-base font-bold tracking-[0.12em] uppercase"
+                style={{ color: CYAN }}
+              >
+                The Ultimate NFT Creation Platform
+              </p>
             </div>
 
-            <p className="text-sm text-white/35 leading-relaxed max-w-lg" style={fade('0.4s')}>
-              Free mint coming soon for whitelist. All revenue will go to the platform.
+            <p className="text-[15px] sm:text-base text-white/55 leading-relaxed max-w-[28rem]">
+              Build high-quality NFT collections with AI generation, marketing tools, and
+              Robinhood Chain minting — all in one studio.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => scrollTo('whitelist')}
+              className="inline-flex items-center gap-3 h-14 sm:h-16 px-8 sm:px-10 rounded-full text-base sm:text-lg font-bold text-white transition-transform hover:scale-[1.02]"
+              style={{
+                background: `linear-gradient(90deg, ${PURPLE} 0%, ${CYAN} 100%)`,
+                boxShadow: '0 0 36px rgba(168, 85, 247, 0.35)',
+              }}
+            >
+              Start Creating
+              <ArrowRight className="h-5 w-5" />
+            </button>
+          </div>
+
+          {/* Center logo stage */}
+          <div
+            className="relative flex flex-col items-center justify-center order-2 py-4"
+            style={anim('0.1s')}
+          >
+            <div
+              className="relative z-10 w-full max-w-[340px] sm:max-w-[380px]"
+              style={{ animation: 'hgFloat 5s ease-in-out infinite' }}
+            >
+              <Image
+                src="/hoodgfx-hero.png"
+                alt="HoodGFX"
+                width={480}
+                height={480}
+                priority
+                className="w-full h-auto"
+              />
+            </div>
+            {/* Pedestal rings */}
+            <div className="relative mt-[-8%] w-[70%] max-w-[280px]">
+              <div
+                className="h-3 rounded-full blur-[1px]"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${CYAN}, ${MAGENTA}, transparent)`,
+                  animation: 'hgPulse 3s ease-in-out infinite',
+                }}
+              />
+              <div className="mt-1.5 h-2 rounded-full bg-white/10 blur-[0.5px]" />
+              <div className="mt-1 h-1.5 rounded-full bg-white/5" />
+            </div>
+            <p
+              className="mt-5 text-lg sm:text-xl font-bold italic tracking-wide"
+              style={{
+                fontFamily: 'var(--f-display)',
+                color: MAGENTA,
+                textShadow: `0 0 20px ${MAGENTA}66`,
+              }}
+            >
+              YOUR VISION OUR TOOLS
             </p>
           </div>
 
-          <aside className="w-full lg:w-[400px] xl:w-[420px] shrink-0" style={fade('0.35s')} id="whitelist">
-            <div className="relative border border-white/10 bg-black/70 backdrop-blur-xl p-7 sm:p-8 shadow-[0_24px_80px_rgba(0,0,0,0.65)]">
-              <div
-                className="absolute top-0 left-0 right-0 h-px"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${ACCENT}, ${ACCENT_HOT}, transparent)`,
-                }}
-              />
-
-              <div className="space-y-1 mb-7">
-                <p
-                  className="text-[11px] font-semibold uppercase tracking-[0.28em]"
-                  style={{ color: ACCENT }}
-                >
+          {/* Right whitelist panels */}
+          <div
+            id="whitelist"
+            className="order-3 space-y-4"
+            style={anim('0.14s')}
+          >
+            {/* Menu card */}
+            <div
+              className="rounded-2xl border bg-black/50 backdrop-blur-md overflow-hidden"
+              style={{
+                borderColor: 'rgba(168, 85, 247, 0.45)',
+                boxShadow: '0 0 30px rgba(168, 85, 247, 0.15)',
+              }}
+            >
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10">
+                <Crown className="h-4 w-4 text-[#A855F7]" />
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/70">
                   Whitelist
-                </p>
-                <h2
-                  className="text-2xl font-semibold tracking-tight text-white"
-                  style={{ fontFamily: 'var(--font-splash-display)' }}
-                >
-                  Get a whitelist spot
-                </h2>
-                <p className="text-sm text-white/45 pt-1 leading-relaxed">
-                  Free mint coming soon. All revenue will go to the platform.
-                </p>
+                </span>
+              </div>
+              <div className="p-2 space-y-1">
+                {[
+                  { id: 'board' as const, label: 'Whitelist Board', icon: ClipboardList },
+                  { id: 'spots' as const, label: 'My Spots', icon: Sparkles },
+                  { id: 'how' as const, label: 'How it Works', icon: CircleHelp },
+                  { id: 'req' as const, label: 'Requirements', icon: ShieldCheck },
+                ].map((item) => {
+                  const Icon = item.icon
+                  const active = wlPanel === item.id
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setWlPanel(item.id)}
+                      className={`w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-left text-sm font-semibold transition-all ${
+                        active
+                          ? 'text-white'
+                          : 'text-white/55 hover:text-white hover:bg-white/[0.04]'
+                      }`}
+                      style={
+                        active
+                          ? {
+                              background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})`,
+                            }
+                          : undefined
+                      }
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="flex-1">{item.label}</span>
+                      <ChevronRight className="h-4 w-4 opacity-70" />
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Board / action card */}
+            <div
+              className="rounded-2xl border bg-black/50 backdrop-blur-md overflow-hidden"
+              style={{
+                borderColor: 'rgba(45, 226, 255, 0.35)',
+                boxShadow: '0 0 30px rgba(45, 226, 255, 0.12)',
+              }}
+            >
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10">
+                <Trophy className="h-4 w-4 text-[#2DE2FF]" />
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/70">
+                  {wlPanel === 'board'
+                    ? 'Whitelist Board'
+                    : wlPanel === 'spots'
+                      ? 'My Spots'
+                      : wlPanel === 'how'
+                        ? 'How it Works'
+                        : 'Requirements'}
+                </span>
               </div>
 
-              <div className="space-y-5">
-                {!isConnected || !address ? (
-                  <button
-                    type="button"
-                    onClick={handleConnect}
-                    disabled={connecting}
-                    className="w-full h-12 text-black text-sm font-semibold tracking-wide transition-opacity hover:opacity-90 disabled:opacity-60"
-                    style={{ background: ACCENT }}
-                  >
-                    {connecting ? 'Connecting…' : 'Connect wallet'}
-                  </button>
-                ) : (
+              <div className="p-4 min-h-[220px]">
+                {wlPanel === 'board' && (
                   <>
-                    <div className="flex items-center justify-between gap-3 border border-white/10 bg-black/50 px-4 py-3">
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/35">
-                          Connected
-                        </p>
-                        <p className="font-mono text-sm truncate mt-0.5" style={{ color: ACCENT }}>
-                          {shortAddr(address)}
-                        </p>
-                      </div>
+                    <div className="grid grid-cols-[36px_1fr_56px] gap-2 text-[10px] uppercase tracking-wider text-white/35 mb-2 px-1">
+                      <span>#</span>
+                      <span>Wallet</span>
+                      <span className="text-right">Status</span>
+                    </div>
+                    <div className="max-h-[160px] overflow-y-auto space-y-1.5 mb-4">
+                      {wlLoading ? (
+                        <p className="text-sm text-white/40 py-4 text-center">Loading…</p>
+                      ) : wlEntries.length === 0 ? (
+                        <p className="text-sm text-white/40 py-4 text-center">No wallets yet — be first.</p>
+                      ) : (
+                        wlEntries.slice(0, 10).map((e, i) => (
+                          <div
+                            key={`${e.wallet_address}-${i}`}
+                            className="grid grid-cols-[36px_1fr_56px] gap-2 items-center px-2 py-2 rounded-lg bg-white/[0.03] border border-white/[0.05]"
+                          >
+                            <span className="text-xs font-bold tabular-nums" style={{ color: CYAN }}>
+                              {String(i + 1).padStart(2, '0')}
+                            </span>
+                            <span className="font-mono text-[12px] text-white/75 truncate">
+                              {shortAddr(e.wallet_address)}
+                            </span>
+                            <span
+                              className="text-[10px] font-bold uppercase text-right"
+                              style={{ color: e.status === 'approved' ? CYAN : MAGENTA }}
+                            >
+                              {e.status === 'approved' ? 'ok' : 'wait'}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    <p className="text-[11px] text-white/35 text-center">
+                      {wlLoading ? '…' : `${wlEntries.length} spots claimed`}
+                    </p>
+                  </>
+                )}
+
+                {wlPanel === 'spots' && (
+                  <div className="space-y-3">
+                    {!isConnected || !address ? (
                       <button
                         type="button"
-                        onClick={() => disconnect()}
-                        className="text-[11px] font-medium uppercase tracking-wider text-white/40 hover:text-white/70 transition-colors shrink-0"
+                        onClick={handleConnect}
+                        disabled={connecting}
+                        className="w-full h-12 rounded-xl text-black text-sm font-bold disabled:opacity-50"
+                        style={{ background: CYAN }}
                       >
-                        Disconnect
+                        {connecting ? 'Connecting…' : 'Connect wallet'}
                       </button>
-                    </div>
-
-                    {status === 'rejected' ? (
-                      <div className="border border-[#ff5052]/25 bg-[#ff5052]/5 px-4 py-4 text-center">
-                        <p className="text-sm font-semibold text-[#ff5052]">Not approved</p>
-                        <p className="text-xs text-white/45 mt-1.5">This wallet was not approved.</p>
-                      </div>
-                    ) : onList ? (
-                      <div
-                        className="border px-4 py-5 text-center space-y-1"
-                        style={{ borderColor: `${ACCENT}40`, background: `${ACCENT}0D` }}
-                      >
-                        <p
-                          className="text-base font-semibold text-white"
-                          style={{ fontFamily: 'var(--font-splash-display)' }}
-                        >
-                          You&apos;re on the list
-                        </p>
-                        <p className="text-xs text-white/45 leading-relaxed">
-                          Free mint coming soon. All revenue will go to the platform.
-                        </p>
-                      </div>
                     ) : (
                       <>
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-[10px] font-medium uppercase tracking-[0.18em] text-white/40 mb-2">
-                              Email <span className="text-white/25">optional</span>
-                            </label>
-                            <input
-                              type="email"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                              placeholder="you@company.com"
-                              className="w-full h-11 px-4 bg-black/50 border border-white/10 text-sm text-white placeholder:text-white/25 outline-none transition-colors focus:border-[#2DE2FF]/50"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[10px] font-medium uppercase tracking-[0.18em] text-white/40 mb-2">
-                              X / Twitter <span className="text-white/25">optional</span>
-                            </label>
-                            <input
-                              type="text"
-                              value={twitter}
-                              onChange={(e) => setTwitter(e.target.value)}
-                              placeholder="@handle"
-                              className="w-full h-11 px-4 bg-black/50 border border-white/10 text-sm text-white placeholder:text-white/25 outline-none transition-colors focus:border-[#2DE2FF]/50"
-                            />
-                          </div>
+                        <div className="flex items-center justify-between rounded-xl border border-white/10 bg-black/40 px-3 py-2.5">
+                          <span className="font-mono text-[13px]" style={{ color: CYAN }}>
+                            {shortAddr(address)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => disconnect()}
+                            className="text-[11px] text-white/40 hover:text-white"
+                          >
+                            Disconnect
+                          </button>
                         </div>
-                        <button
-                          type="button"
-                          onClick={handleJoin}
-                          disabled={submitting || loading}
-                          className="w-full h-12 text-black text-sm font-semibold tracking-wide transition-opacity hover:opacity-90 disabled:opacity-60"
-                          style={{ background: ACCENT }}
-                        >
-                          {submitting ? 'Submitting…' : 'Request whitelist spot'}
-                        </button>
+                        {status === 'rejected' ? (
+                          <p className="text-center text-sm text-red-400 py-2">Not approved</p>
+                        ) : onList ? (
+                          <div
+                            className="rounded-xl border px-4 py-4 text-center"
+                            style={{ borderColor: `${CYAN}40`, background: `${CYAN}12` }}
+                          >
+                            <p className="text-sm font-bold" style={{ color: CYAN }}>
+                              You&apos;re on the list
+                            </p>
+                            <p className="text-[12px] text-white/45 mt-1">Free mint coming soon</p>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="grid grid-cols-2 gap-2">
+                              <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Email (optional)"
+                                className="h-11 rounded-lg px-3 bg-black/50 border border-white/10 text-[12px] text-white placeholder:text-white/25 outline-none focus:border-[#2DE2FF]/50"
+                              />
+                              <input
+                                type="text"
+                                value={twitter}
+                                onChange={(e) => setTwitter(e.target.value)}
+                                placeholder="@handle"
+                                className="h-11 rounded-lg px-3 bg-black/50 border border-white/10 text-[12px] text-white placeholder:text-white/25 outline-none focus:border-[#FF2BD6]/50"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleJoin}
+                              disabled={submitting || loading}
+                              className="w-full h-12 rounded-xl text-black text-sm font-bold disabled:opacity-50"
+                              style={{ background: `linear-gradient(90deg, ${CYAN}, ${MAGENTA})` }}
+                            >
+                              {submitting ? 'Submitting…' : 'Request whitelist spot'}
+                            </button>
+                          </>
+                        )}
                       </>
                     )}
-                  </>
+                  </div>
+                )}
+
+                {wlPanel === 'how' && (
+                  <ul className="space-y-3 text-[13px] text-white/60 leading-relaxed">
+                    <li>1. Connect your Robinhood Chain wallet.</li>
+                    <li>2. Request a whitelist spot from My Spots.</li>
+                    <li>3. Wait for approval — free mint coming soon.</li>
+                    <li>4. When the site unlocks, enter and start creating.</li>
+                  </ul>
+                )}
+
+                {wlPanel === 'req' && (
+                  <ul className="space-y-3 text-[13px] text-white/60 leading-relaxed">
+                    <li>• Compatible EVM wallet on Robinhood Chain</li>
+                    <li>• Valid 0x address to join the list</li>
+                    <li>• Optional email / X handle for updates</li>
+                    <li>• 18+ and agree to HoodGFX Terms</li>
+                  </ul>
                 )}
               </div>
             </div>
-          </aside>
+          </div>
         </main>
 
-        {/* Public whitelist roster */}
-        <section className="px-6 sm:px-10 lg:px-14 pb-10 max-w-[1400px] w-full mx-auto" style={fade('0.45s')}>
-          <div className="border border-white/10 bg-black/60 backdrop-blur-md">
-            <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-white/10">
-              <div>
-                <p
-                  className="text-[11px] font-semibold uppercase tracking-[0.28em]"
-                  style={{ color: ACCENT }}
+        {/* Features */}
+        <section id="features" className="mb-10 sm:mb-12" style={anim('0.18s')}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-4 border-y border-white/[0.08] py-8">
+            {FEATURES.map((f, i) => {
+              const Icon = f.icon
+              return (
+                <div
+                  key={f.title}
+                  className={`px-2 sm:px-4 ${i > 0 ? 'lg:border-l border-white/[0.08]' : ''}`}
                 >
-                  Whitelisted wallets
-                </p>
-                <p className="text-sm text-white/40 mt-1">
-                  {wlLoading ? 'Loading…' : `${wlEntries.length} on the list`}
-                </p>
-              </div>
-            </div>
-            <div className="max-h-[280px] overflow-y-auto">
-              {wlLoading ? (
-                <p className="px-6 py-8 text-sm text-white/35">Loading wallets…</p>
-              ) : wlEntries.length === 0 ? (
-                <p className="px-6 py-8 text-sm text-white/35">No wallets yet — be the first.</p>
-              ) : (
-                <ul className="divide-y divide-white/5">
-                  {wlEntries.map((e, i) => (
-                    <li
-                      key={`${e.wallet_address}-${i}`}
-                      className="flex items-center justify-between gap-4 px-5 sm:px-6 py-3.5 hover:bg-white/[0.03] transition-colors"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className="text-[11px] font-mono text-white/25 w-7 shrink-0">
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                        <span className="font-mono text-sm text-white/80 truncate">
-                          <span className="sm:hidden">{shortAddr(e.wallet_address)}</span>
-                          <span className="hidden sm:inline">{e.wallet_address}</span>
-                        </span>
-                      </div>
-                      <span
-                        className="text-[10px] font-semibold uppercase tracking-[0.16em] shrink-0"
-                        style={{ color: e.status === 'approved' ? ACCENT : ACCENT_HOT }}
-                      >
-                        {e.status}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+                  <Icon className="h-8 w-8 mb-3" style={{ color: i % 2 === 0 ? CYAN : MAGENTA }} />
+                  <h3
+                    className="text-[13px] font-bold uppercase tracking-[0.12em] mb-2"
+                    style={{ color: CYAN, fontFamily: 'var(--f-display)' }}
+                  >
+                    {f.title}
+                  </h3>
+                  <p className="text-[13px] text-white/45 leading-relaxed">{f.body}</p>
+                </div>
+              )
+            })}
           </div>
         </section>
 
-        <footer
-          className="px-6 sm:px-10 lg:px-14 py-6 flex items-center justify-between text-[11px] tracking-wide text-white/25"
-          style={fade('0.5s')}
-        >
-          <span>© {new Date().getFullYear()} HoodGFX</span>
-          <span className="uppercase tracking-[0.2em]">Built for creators</span>
+        {/* Roadmap teaser */}
+        <section id="roadmap" className="mb-8" style={anim('0.2s')}>
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-5 sm:px-8 sm:py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A855F7] mb-1">
+                Roadmap
+              </p>
+              <p className="text-white/70 text-sm sm:text-base">
+                Whitelist → Free mint → Full studio unlock on Robinhood Chain
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => scrollTo('whitelist')}
+              className="h-12 px-6 rounded-xl border border-[#2DE2FF]/50 text-sm font-bold text-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-colors"
+            >
+              Join whitelist
+            </button>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-4 pb-6 border-t border-white/[0.06] text-[12px]">
+          <p className="tracking-[0.14em] uppercase font-semibold" style={{ color: MAGENTA }}>
+            Build · Mint · Market · On HoodGFX
+          </p>
+          <div className="flex items-center gap-2 text-white/50">
+            <Crown className="h-3.5 w-3.5 text-[#A855F7]" />
+            <span className="font-semibold text-white/80">HoodGFX</span>
+            <span className="text-white/35">· Turn your ideas into NFTs</span>
+          </div>
         </footer>
       </div>
     </div>

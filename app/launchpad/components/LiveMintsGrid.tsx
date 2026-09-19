@@ -26,7 +26,7 @@ export function LiveMintsGrid({ collections }: LiveMintsGridProps) {
     <section className="mt-10">
       <div className="flex items-end justify-between mb-6 gap-4">
         <div>
-          <p className="text-[#00C805] text-xs font-bold uppercase tracking-[0.2em] mb-2">Live now</p>
+          <p className="text-[#2DE2FF] text-xs font-bold uppercase tracking-[0.2em] mb-2">Live now</p>
           <h2 className="text-3xl font-black text-white tracking-tight">Active mints</h2>
         </div>
         <span className="text-sm text-[#a8aab2] font-medium">{collections.length} live</span>
@@ -44,7 +44,7 @@ export function LiveMintsGrid({ collections }: LiveMintsGridProps) {
               key={collection.id}
               type="button"
               onClick={() => router.push(`/launchpad/${collection.id}`)}
-              className="group text-left bg-[#15181a] border border-white/5 hover:border-[#00C805]/50 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(0,200,5,0.15)]"
+              className="group text-left bg-[#15181a] border border-white/5 hover:border-[#2DE2FF]/50 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_40px_rgba(45, 226, 255,0.15)]"
             >
               <div className="relative aspect-[4/3] bg-[#0a0c0d] overflow-hidden">
                 {collection.image_url ? (
@@ -57,7 +57,7 @@ export function LiveMintsGrid({ collections }: LiveMintsGridProps) {
                   <div className="w-full h-full flex items-center justify-center text-4xl opacity-40">◆</div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c0d] via-transparent to-transparent" />
-                <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#00C805] text-black text-[10px] font-black uppercase tracking-wider">
+                <div className="absolute top-3 left-3 px-2.5 py-1 bg-[#2DE2FF] text-black text-[10px] font-black uppercase tracking-wider">
                   Live
                 </div>
               </div>
@@ -70,7 +70,7 @@ export function LiveMintsGrid({ collections }: LiveMintsGridProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-[#71717A]">Price</p>
-                    <p className="text-base font-black text-[#00C805] tabular-nums">
+                    <p className="text-base font-black text-[#2DE2FF] tabular-nums">
                       {collection.mint_price} ETH
                     </p>
                   </div>
@@ -83,7 +83,7 @@ export function LiveMintsGrid({ collections }: LiveMintsGridProps) {
                 </div>
                 <div className="h-1 bg-[#1f2326] overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-[#00C805] to-[#CCFF00]"
+                    className="h-full bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6]"
                     style={{ width: `${progress}%` }}
                   />
                 </div>

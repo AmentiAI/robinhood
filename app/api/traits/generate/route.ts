@@ -1,8 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { hasEnoughCredits, deductCredits } from '@/lib/credits/credits';
+import { hasEnoughCredits, deductCredits, refundUsageCredits } from '@/lib/credits/credits';
 import { calculateCreditsNeeded } from '@/lib/credits/credit-costs';
 import { sql } from '@/lib/database';
+
+function parseOpenAiError(payload: any): { message: string; code: string; type: string } {
+  const nested = payload?.error && typeof payload.error === 'object' ? payload.error : payload
+  return {
+    message: String(nested?.message || payload?.message || (typeof payload === 'string' ? payload : 'Unknown OpenAI error')),
+    code: String(nested?.code || payload?.code || ''),
+    type: String(nested?.type || payload?.type || ''),
+  }
+}
+
+function isProviderBillingError(message: string, code: string, type: string): boolean {
+  const hay = `${message} ${code} ${type}`.toLowerCase()
+  return (
+    code === 'insufficient_quota' ||
+    type === 'insufficient_quota' ||
+    code === 'billing_not_active' ||
+    type === 'billing_not_active' ||
+    hay.includes('insufficient_quota') ||
+    hay.includes('billing_not_active') ||
+    hay.includes('billing') ||
+    hay.includes('quota') ||
+    hay.includes('insufficient funds') ||
+    hay.includes('payment method') ||
+    hay.includes('account is not active')
+  )
+}
 
 // POST /api/traits/generate - Generate multiple AI traits with descriptions
 export async function POST(request: NextRequest) {
@@ -10,9 +36,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Database connection not available' }, { status: 500 });
   }
 
+  let deductedAmount = 0
+  let refundWallet: string | null = null
+
   try {
     const body = await request.json();
     const { layer_id, theme, quantity = 1, use_item_word = true, rarity_weight = 40, wallet_address } = body;
+    refundWallet = wallet_address || null
 
     if (!layer_id || !theme) {
       return NextResponse.json({ error: 'Layer ID and theme are required' }, { status: 400 });
@@ -51,6 +81,7 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+    deductedAmount = creditsNeeded
 
     // Get layer and collection information for context
     const [layerInfo] = await sql`
@@ -65,7 +96,7 @@ export async function POST(request: NextRequest) {
     ` as any[];
 
     if (!layerInfo) {
-      return NextResponse.json({ error: 'Layer not found' }, { status: 404 });
+      throw new Error('Layer not found')
     }
 
     // Check if this is a character body layer and pixel-perfect is enabled
@@ -85,7 +116,7 @@ export async function POST(request: NextRequest) {
     // Generate AI traits using OpenAI
     const openaiApiKey = process.env.OPENAI_API_KEY;
     if (!openaiApiKey) {
-      return NextResponse.json({ error: 'OpenAI API key not configured' }, { status: 500 });
+      throw new Error('OpenAI API key not configured')
     }
 
     const layerType = use_item_word ? `${layerInfo.layer_name} item` : layerInfo.layer_name;
@@ -260,53 +291,33 @@ DESCRIPTION: [detailed visual description]
     });
 
     if (!response.ok) {
-      let error: any
+      let errorPayload: any
       const contentType = response.headers.get("content-type")
       
       try {
         if (contentType?.includes("application/json")) {
-          error = await response.json()
+          errorPayload = await response.json()
         } else {
           const textError = await response.text()
-          error = { message: textError }
+          errorPayload = { message: textError }
         }
-      } catch (parseError) {
+      } catch {
         try {
           const textError = await response.text()
-          error = { message: textError }
+          errorPayload = { message: textError }
         } catch {
-          error = { message: "Unknown error from OpenAI API" }
+          errorPayload = { message: "Unknown error from OpenAI API" }
         }
       }
-      
-      // Check if error is related to API key credits/quota
-      const errorMessage = typeof error === 'object' && error !== null && 'message' in error 
-        ? String((error as any).message) 
-        : String(error)
-      const errorCode = typeof error === 'object' && error !== null && 'code' in error 
-        ? String((error as any).code) 
-        : ''
-      const errorType = typeof error === 'object' && error !== null && 'type' in error 
-        ? String((error as any).type) 
-        : ''
-      
-      const isQuotaError = 
-        errorCode === 'insufficient_quota' ||
-        errorType === 'insufficient_quota' ||
-        errorMessage.toLowerCase().includes('insufficient_quota') ||
-        errorMessage.toLowerCase().includes('quota') ||
-        errorMessage.toLowerCase().includes('billing') ||
-        errorMessage.toLowerCase().includes('insufficient funds') ||
-        errorMessage.toLowerCase().includes('payment method') ||
-        errorCode === 'billing_not_active' ||
-        errorType === 'billing_not_active'
-      
-      // Return generic message for quota/billing errors
-      if (isQuotaError) {
-        return NextResponse.json({ error: "The system is temporarily down. Please try again later." }, { status: 503 })
+
+      const { message, code, type } = parseOpenAiError(errorPayload)
+      console.error('OpenAI trait generation failed:', { status: response.status, message, code, type })
+
+      if (isProviderBillingError(message, code, type)) {
+        throw Object.assign(new Error('AI_BILLING_INACTIVE'), { isBilling: true, detail: message })
       }
-      
-      throw new Error(`OpenAI API error: ${response.status} - ${errorMessage}`)
+
+      throw new Error(`OpenAI API error: ${response.status} - ${message}`)
     }
 
     const data = await response.json();
@@ -400,20 +411,34 @@ DESCRIPTION: [detailed visual description]
 
   } catch (error: any) {
     console.error('Error generating traits:', error);
-    
-    // Check if error is related to API key credits/quota
-    const errorMessage = error?.message || String(error)
-    const isQuotaError = 
-      errorMessage?.toLowerCase().includes('insufficient_quota') ||
-      errorMessage?.toLowerCase().includes('quota') ||
-      errorMessage?.toLowerCase().includes('billing') ||
-      errorMessage?.toLowerCase().includes('insufficient funds') ||
-      errorMessage?.toLowerCase().includes('payment method')
-    
-    if (isQuotaError) {
-      return NextResponse.json({ error: "The system is temporarily down. Please try again later." }, { status: 503 })
+
+    if (deductedAmount > 0 && refundWallet) {
+      try {
+        await refundUsageCredits(
+          refundWallet,
+          deductedAmount,
+          `Refund: trait generation failed (${deductedAmount} credits)`
+        )
+      } catch (refundErr) {
+        console.error('Failed to refund credits after trait generation error:', refundErr)
+      }
     }
     
-    return NextResponse.json({ error: 'Failed to generate traits' }, { status: 500 });
+    const errorMessage = error?.message || String(error)
+    const isBilling =
+      error?.isBilling ||
+      isProviderBillingError(errorMessage, error?.code || '', error?.type || '')
+    
+    if (isBilling) {
+      return NextResponse.json(
+        {
+          error:
+            'AI generation is unavailable: OpenAI billing is inactive. Add a payment method / settle billing at platform.openai.com, then try again. Your credits were refunded.',
+        },
+        { status: 503 }
+      )
+    }
+    
+    return NextResponse.json({ error: errorMessage || 'Failed to generate traits' }, { status: 500 });
   }
 }
