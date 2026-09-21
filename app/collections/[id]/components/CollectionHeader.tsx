@@ -50,20 +50,21 @@ export function CollectionHeader({
         <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
           <div className="min-w-0">
             <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[#2DE2FF] mb-2">
-              Collection
+              Collection studio
             </p>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight break-words">
               <span className="hg-gradient-text">{collection.name}</span>
             </h1>
             <p className="text-sm text-zinc-500 mt-1.5">
-              {collaboratorCount} collaborator{collaboratorCount === 1 ? '' : 's'}
+              Manage layers, generate images, compression & launch · {collaboratorCount}{' '}
+              collaborator{collaboratorCount === 1 ? '' : 's'}
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2 shrink-0">
             <Link
               href={`/collections/${collection.id}/edit`}
-              className="inline-flex h-9 px-4 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-all duration-200"
+              className="hg-btn-glow inline-flex h-10 px-4 items-center rounded-full border border-white/[0.12] bg-white/[0.04] text-sm font-semibold text-zinc-100 hover:border-[#2DE2FF]/50 hover:text-[#2DE2FF] transition-all"
             >
               Settings
             </Link>
@@ -71,21 +72,27 @@ export function CollectionHeader({
               <button
                 type="button"
                 onClick={onShowCollaborators}
-                className="inline-flex h-9 px-4 items-center rounded-full border border-[#FF2BD6]/35 text-sm font-semibold text-[#FF2BD6] hover:bg-[#FF2BD6]/10 transition-all duration-200"
+                className="inline-flex h-10 px-4 items-center rounded-full border border-[#FF2BD6]/35 text-sm font-semibold text-[#FF2BD6] hover:bg-[#FF2BD6]/10 transition-all"
               >
                 Invite
               </button>
             )}
             <Link
               href={`/collections/${collection.id}/launch`}
-              className="hg-btn-glow inline-flex h-9 px-4 items-center rounded-full bg-gradient-to-r from-[#2DE2FF] to-[#7aefff] text-[#0a0a0c] text-sm font-bold"
+              className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-gradient-to-r from-[#2DE2FF] to-[#7aefff] text-[#0a0a0c] text-sm font-bold"
             >
               Launch
+            </Link>
+            <Link
+              href={`/collections/${collection.id}/self-inscribe`}
+              className="inline-flex h-10 px-4 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:border-white/25 hover:text-white transition-all"
+            >
+              Self-inscribe
             </Link>
             <button
               type="button"
               onClick={onDelete}
-              className="inline-flex h-9 px-4 items-center rounded-full border border-red-500/25 text-sm font-semibold text-red-400 hover:border-red-500/50 hover:bg-red-500/10 transition-all duration-200"
+              className="inline-flex h-10 px-4 items-center rounded-full border border-red-500/25 text-sm font-semibold text-red-400 hover:border-red-500/50 hover:bg-red-500/10 transition-all"
             >
               Delete
             </button>

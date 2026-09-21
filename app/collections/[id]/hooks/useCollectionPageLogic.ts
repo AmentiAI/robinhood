@@ -5,6 +5,8 @@ import { useCredits } from '@/lib/credits-context'
 import JSZip from 'jszip'
 import { toast } from 'sonner'
 import { GeneratedOrdinal } from '../types'
+import { useWallet } from '@/lib/wallet/compatibility'
+import { generateApiAuth } from '@/lib/wallet/api-auth'
 
 interface Collection {
   id: string
@@ -23,6 +25,7 @@ interface Layer {
 
 export function useCollectionPageLogic(collectionId: string | string[] | undefined, currentAddress: string | null | undefined) {
   const router = useRouter()
+  const { signMessage } = useWallet()
   const [collection, setCollection] = useState<Collection | null>(null)
   const [layers, setLayers] = useState<Layer[]>([])
   const [loading, setLoading] = useState(true)
@@ -400,16 +403,39 @@ export function useCollectionPageLogic(collectionId: string | string[] | undefin
 
   const handleDeleteConfirm = async () => {
     if (!collectionId) return
-    setDeleting(true)
+    if (!currentAddress) {
+      toast.error('Wallet Required', { description: 'Please connect your wallet to delete this collection.' })
+      return
+    }
+    if (!signMessage) {
+      toast.error('Wallet signing not available', {
+        description: 'Please disconnect and reconnect your wallet, then try again.',
+      })
+      return
+    }
+
     try {
+      // Sign before setState so the wallet popup is not killed by a re-render
+      const auth = await generateApiAuth(currentAddress, signMessage)
+      if (!auth) {
+        toast.error('Failed to sign request', {
+          description: 'Please ensure your wallet is unlocked and connected, then try again.',
+        })
+        return
+      }
+
+      setDeleting(true)
       const response = await fetch(`/api/collections/${collectionId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(auth),
       })
       if (response.ok) {
+        toast.success('Collection deleted')
         router.push('/collections')
       } else {
         const error = await response.json()
-        toast.error('Delete Failed', { description: `Error: ${error.error || 'Unknown error'}` })
+        toast.error('Delete Failed', { description: error.error || 'Unknown error' })
         setDeleting(false)
         setShowDeleteConfirm(false)
       }

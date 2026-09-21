@@ -175,15 +175,16 @@ export function MintPhasesStep({
                       setNewPhaseMaxPerWallet(null)
                     } else {
                       const numValue = Number(value)
-                      setNewPhaseMaxPerWallet(Math.min(Math.max(1, numValue), 10))
+                      if (!Number.isNaN(numValue)) {
+                        setNewPhaseMaxPerWallet(Math.max(1, Math.floor(numValue)))
+                      }
                     }
                   }}
                   min={1}
-                  max={10}
                   placeholder="Unlimited"
                   className={inputCls}
                 />
-                <p className="text-xs text-zinc-500 mt-2">Maximum: 10 per wallet</p>
+                <p className="text-xs text-zinc-500 mt-2">Leave blank for unlimited per wallet</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-zinc-400 mb-2">Phase allocation</label>

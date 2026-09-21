@@ -271,23 +271,46 @@ export default function CollectionDetailsPage() {
           </div>
         )}
           <LayersSection collectionId={collection.id} layers={layers} onLayerDeleted={loadAllData} />
-          
-          {/* Tabs */}
+
+          {/* Generate controls — always visible */}
+          <div className="mt-6">
+            <GenerationSection
+              collection={collection}
+              layers={layers}
+              queuedJobs={queuedJobs}
+              processingJobs={processingJobs}
+              traitFilters={traitFilters}
+              layerTraits={layerTraits}
+              generateQuantity={generateQuantity}
+              setGenerateQuantity={setGenerateQuantity}
+              useClassicMode={useClassicMode}
+              setUseClassicMode={setUseClassicMode}
+              generating={generating}
+              currentAddress={currentAddress}
+              onGenerate={handleGenerate}
+              onClearFilters={clearFilters}
+              onFilterChange={handleFilterChange}
+            />
+          </div>
+
+          {/* Studio tabs: manage images + compression */}
           <div className="mt-8 mb-0">
-            <div className="inline-flex gap-1 p-1 rounded-xl bg-[#0c0c10] border border-white/[0.08]">
+            <div className="inline-flex gap-1 p-1 rounded-full bg-[#0c0c10] border border-white/[0.08]">
               <button
+                type="button"
                 onClick={() => setActiveTab('generated')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
                   activeTab === 'generated'
                     ? 'bg-white text-black'
                     : 'text-zinc-500 hover:text-white'
                 }`}
               >
-                Generated NFTs
+                Images
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('compression')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
                   activeTab === 'compression'
                     ? 'bg-white text-black'
                     : 'text-zinc-500 hover:text-white'
@@ -298,81 +321,99 @@ export default function CollectionDetailsPage() {
             </div>
           </div>
 
-          {/* Tab Content */}
           {activeTab === 'generated' && (
-            <div className="mt-4 rounded-2xl border border-white/[0.08] bg-[#131318] p-5 sm:p-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
-              <GenerationSection
-                collection={collection}
-                layers={layers}
-                queuedJobs={queuedJobs}
-                processingJobs={processingJobs}
-                traitFilters={traitFilters}
-                layerTraits={layerTraits}
-                generateQuantity={generateQuantity}
-                setGenerateQuantity={setGenerateQuantity}
-                useClassicMode={useClassicMode}
-                setUseClassicMode={setUseClassicMode}
-                generating={generating}
-                currentAddress={currentAddress}
-                onGenerate={handleGenerate}
-                onClearFilters={clearFilters}
-                onFilterChange={handleFilterChange}
-              />
-              <div className="mt-6 mb-6 flex flex-wrap gap-3">
+            <div className="mt-4 space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2DE2FF]/70 mb-1">
+                    Gallery
+                  </p>
+                  <h2 className="text-xl font-bold text-white tracking-tight">
+                    Generated images
+                    {totalOrdinals > 0 ? (
+                      <span className="text-zinc-500 font-medium text-base ml-2">({totalOrdinals})</span>
+                    ) : null}
+                  </h2>
+                </div>
                 <button
+                  type="button"
                   onClick={() => setShowOrphanedTraits(!showOrphanedTraits)}
-                className={`px-4 py-2 rounded-full font-semibold text-sm transition-colors ${
-                  showOrphanedTraits
-                    ? 'bg-[#2DE2FF] text-[#0a0a0c]'
-                    : 'border border-white/[0.1] text-zinc-400 hover:text-white'
-                }`}
+                  className={`inline-flex h-10 px-4 items-center rounded-full text-sm font-semibold transition-all ${
+                    showOrphanedTraits
+                      ? 'hg-btn-glow bg-[#2DE2FF] text-[#0a0a0c]'
+                      : 'border border-white/[0.1] text-zinc-400 hover:text-white hover:border-white/25'
+                  }`}
                 >
-                  {showOrphanedTraits ? '✓ Showing Orphaned Traits' : 'Show orphaned traits'}
+                  {showOrphanedTraits ? 'Showing orphaned traits' : 'Show orphaned traits'}
                 </button>
               </div>
-              <NftsGrid
-                nfts={ordinals}
-                totalNfts={totalOrdinals}
-                currentPage={currentPage}
-                imageSliders={imageSliders}
-                setImageSliders={setImageSliders}
-                expandedTraits={expandedTraits}
-                setExpandedTraits={setExpandedTraits}
-                showPromptId={showPromptId}
-                setShowPromptId={setShowPromptId}
-                flippingNft={flippingOrdinal}
-                onDownload={handleDownloadOrdinal}
-                onDelete={handleDeleteOrdinal}
-                onFlip={handleFlipOrdinal}
-                onShowCompression={(nft) => { setCompressionModalOrdinal(nft); setCompressionModalSlider(50); setShowCompressionModal(true) }}
-                collectionArtStyle={(collection as Collection)?.art_style}
-              />
-              {ordinals.length === 0 && (
-                <div className="text-center py-8 text-zinc-500">No NFTs generated yet. Click the button above to generate your first one!</div>
-              )}
-              {totalPages > 1 && (
-                <div className="flex justify-center items-center gap-2 mt-6">
-                  <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="h-9 px-4 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold hover:bg-[#7aefff] disabled:opacity-40 transition-colors">
-                    Previous
-                  </button>
-                  <span className="text-zinc-400 text-sm">Page {currentPage} of {totalPages}</span>
-                  <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="h-9 px-4 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold hover:bg-[#7aefff] disabled:opacity-40 transition-colors">
-                    Next
-                  </button>
-                </div>
-              )}
+
+              <div className="rounded-2xl border border-white/[0.1] bg-[#131318] p-4 sm:p-5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+                <NftsGrid
+                  nfts={ordinals}
+                  totalNfts={totalOrdinals}
+                  currentPage={currentPage}
+                  imageSliders={imageSliders}
+                  setImageSliders={setImageSliders}
+                  expandedTraits={expandedTraits}
+                  setExpandedTraits={setExpandedTraits}
+                  showPromptId={showPromptId}
+                  setShowPromptId={setShowPromptId}
+                  flippingNft={flippingOrdinal}
+                  onDownload={handleDownloadOrdinal}
+                  onDelete={handleDeleteOrdinal}
+                  onFlip={handleFlipOrdinal}
+                  onShowCompression={(nft) => {
+                    setCompressionModalOrdinal(nft)
+                    setCompressionModalSlider(50)
+                    setShowCompressionModal(true)
+                  }}
+                  collectionArtStyle={(collection as Collection)?.art_style}
+                />
+                {ordinals.length === 0 && (
+                  <div className="text-center py-12 text-zinc-500 text-sm">
+                    No images yet — use Generate above to create your first NFTs.
+                  </div>
+                )}
+                {totalPages > 1 && (
+                  <div className="flex justify-center items-center gap-3 mt-4 pt-4 border-t border-white/[0.06]">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                      className="hg-btn-glow h-10 px-5 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-40"
+                    >
+                      Previous
+                    </button>
+                    <span className="text-zinc-400 text-sm tabular-nums">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                      className="hg-btn-glow h-10 px-5 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-40"
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
           {activeTab === 'compression' && (
-            <div className="mt-4 rounded-2xl border border-white/[0.08] bg-[#131318] p-5 sm:p-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+            <div className="mt-4 rounded-2xl border border-white/[0.1] bg-[#131318] p-5 sm:p-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
               {/* Compression Settings Section */}
               <div className="mb-6 border-b border-white/[0.08] pb-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Image Compression Settings</h3>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2DE2FF]/70 mb-1">
+                  Output
+                </p>
+                <h3 className="text-xl font-bold text-white mb-4 tracking-tight">Compression settings</h3>
                 
                 {/* Compression Settings Changed Warning */}
                 {compressionSettingsChanged && (
-                  <div className="mb-4 bg-[#131318] border border-white/[0.08] rounded-xl border border-[#2DE2FF]/50 rounded-lg p-4">
+                  <div className="mb-4 rounded-xl border border-[#2DE2FF]/40 bg-[#2DE2FF]/[0.06] p-4">
                     <div className="flex items-start gap-3">
                       <svg className="w-5 h-5 text-[#2DE2FF] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -381,31 +422,16 @@ export default function CollectionDetailsPage() {
                         <p className="text-sm font-medium text-[#2DE2FF]">
                           Compression settings have changed
                         </p>
-                        <p className="text-xs text-white/70 mt-1">
-                          Existing compressed images won't be affected. Would you like to wipe all existing compressions so they can be re-compressed with the new settings?
+                        <p className="text-xs text-zinc-400 mt-1">
+                          Existing compressed images won&apos;t be affected. Wipe compressions to re-compress with the new settings.
                         </p>
                         <button
                           type="button"
                           onClick={handleWipeCompressions}
                           disabled={wipingCompressions}
-                          className="mt-3 px-3 py-1.5 bg-[#2DE2FF] hover:bg-[#2DE2FF] disabled:bg-[#2DE2FF]/50 text-white text-xs font-medium rounded transition-colors flex items-center gap-2 "
+                          className="hg-btn-glow mt-3 inline-flex h-9 px-4 items-center gap-2 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-xs font-bold disabled:opacity-50"
                         >
-                          {wipingCompressions ? (
-                            <>
-                              <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                              </svg>
-                              Wiping...
-                            </>
-                          ) : (
-                            <>
-                              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                              Wipe Compressions
-                            </>
-                          )}
+                          {wipingCompressions ? 'Wiping…' : 'Wipe compressions'}
                         </button>
                       </div>
                     </div>
@@ -414,23 +440,23 @@ export default function CollectionDetailsPage() {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-white mb-2">
-                      File Format
+                    <label className="block text-sm font-semibold text-zinc-400 mb-2">
+                      File format
                     </label>
                     <select
                       value={compressionFormat}
                       onChange={(e) => setCompressionFormat(e.target.value as 'jpg' | 'png' | 'webp')}
-                      className="w-full border border-white/[0.08] rounded px-3 py-2 bg-[#131318] border border-white/[0.08] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
+                      className="w-full rounded-xl border border-white/[0.1] bg-[#0c0c10] px-3 py-2.5 text-white focus:border-[#2DE2FF] focus:outline-none"
                     >
-                      <option value="webp" className="bg-[#0a0e27]">WebP (Recommended - Best compression)</option>
-                      <option value="jpg" className="bg-[#0a0e27]">JPEG (Good compression, widely supported)</option>
-                      <option value="png" className="bg-[#0a0e27]">PNG (Lossless, larger file size)</option>
+                      <option value="webp" className="bg-[#0a0a0c]">WebP (Recommended)</option>
+                      <option value="jpg" className="bg-[#0a0a0c]">JPEG</option>
+                      <option value="png" className="bg-[#0a0a0c]">PNG (Lossless)</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white mb-2">
-                      Compression Quality: {compressionQuality}%
+                    <label className="block text-sm font-semibold text-zinc-400 mb-2">
+                      Quality: {compressionQuality}%
                     </label>
                     <input
                       type="range"
@@ -443,8 +469,8 @@ export default function CollectionDetailsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-white mb-2">
-                      Image Dimensions (Width × Height)
+                    <label className="block text-sm font-semibold text-zinc-400 mb-2">
+                      Dimensions (square, max 1024)
                     </label>
                     <div className="flex gap-2 items-center">
                       <input
@@ -464,35 +490,13 @@ export default function CollectionDetailsPage() {
                             }
                           }
                         }}
-                        className="w-24 border border-white/[0.08] rounded px-3 py-2 bg-[#131318] border border-white/[0.08] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
-                        placeholder="Width"
+                        className="w-28 rounded-xl border border-white/[0.1] bg-[#0c0c10] px-3 py-2.5 text-white focus:border-[#2DE2FF] focus:outline-none"
+                        placeholder="Size"
                       />
-                      <span className="text-white">×</span>
-                      <input
-                        type="number"
-                        min="1"
-                        max="1024"
-                        value={compressionDimensions}
-                        onChange={(e) => {
-                          const val = e.target.value
-                          if (val === '') {
-                            setCompressionDimensions('')
-                          } else {
-                            const numVal = parseInt(val)
-                            if (!isNaN(numVal)) {
-                              const clamped = Math.max(1, Math.min(1024, numVal))
-                              setCompressionDimensions(clamped)
-                            }
-                          }
-                        }}
-                        className="w-24 border border-white/[0.08] rounded px-3 py-2 bg-[#131318] border border-white/[0.08] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
-                        placeholder="Height"
-                      />
-                      <span className="text-white/70 text-sm">px (square, max 1024×1024)</span>
+                      <span className="text-zinc-500 text-sm">× {compressionDimensions || '—'} px</span>
                     </div>
                   </div>
 
-                  {/* Estimated File Size */}
                   {(() => {
                     if (compressionDimensions === '' || compressionDimensions === null) {
                       return null
@@ -517,29 +521,20 @@ export default function CollectionDetailsPage() {
                       baseEstimatedKB = (pixels * bitsPerPixel) / 8 / 1024
                     }
                     
-                    // Increase baseline by 10% to account for underestimation, then another 15%
                     const adjustedBase = baseEstimatedKB * 1.1 * 1.15
-                    
-                    // Lower bound: adjusted base (typical images)
-                    // Upper bound: adjusted base * 1.5 (bright/colorful images compress less efficiently)
                     const lowerKB = Math.max(10, Math.round(adjustedBase))
                     const upperKB = Math.max(10, Math.round(adjustedBase * 1.5))
-                    
                     const formatName = compressionFormat === 'jpg' ? 'JPEG' : compressionFormat.toUpperCase()
                     
                     return (
-                      <div className="bg-[#131318] border border-white/[0.08] rounded-xl border border-white/[0.08] rounded-lg p-3">
+                      <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] p-3.5">
                         <p className="text-sm font-medium text-[#2DE2FF]">
-                          Estimated File Size: <span className="font-bold text-white">{lowerKB}-{upperKB} KB</span> ({formatName})
+                          Estimated size:{' '}
+                          <span className="font-bold text-white">
+                            {lowerKB}-{upperKB} KB
+                          </span>{' '}
+                          ({formatName})
                         </p>
-                        <p className="text-xs text-white/70 mt-1">
-                          Range accounts for typical images (lower) to bright/colorful images (upper)
-                        </p>
-                        {compressionFormat === 'png' && (
-                          <p className="text-xs text-white/70 mt-1">
-                            PNG is lossless but produces larger files than compressed formats.
-                          </p>
-                        )}
                       </div>
                     )
                   })()}
@@ -550,9 +545,9 @@ export default function CollectionDetailsPage() {
                     type="button"
                     onClick={handleSaveCompressionSettings}
                     disabled={savingCompression || dimensionsBlank}
-                    className="bg-[#2DE2FF] text-white px-4 py-2 rounded hover:bg-[#2DE2FF]/80 disabled:opacity-50 disabled:cursor-not-allowed  transition-all font-bold "
+                    className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {savingCompression ? 'Saving...' : 'Save Changes'}
+                    {savingCompression ? 'Saving…' : 'Save changes'}
                   </button>
                 </div>
               </div>

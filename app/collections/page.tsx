@@ -9,6 +9,7 @@ import { useCredits } from '@/lib/credits-context'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { BrandLoader } from '@/components/brand-loader'
 import { ToolWorkspace } from '@/components/tool-workspace'
+import { generateApiAuth } from '@/lib/wallet/api-auth'
 
 interface Collection {
   id: string
@@ -28,7 +29,7 @@ interface Collection {
 }
  
 export default function CollectionsPage() {
-  const { isConnected, currentAddress } = useWallet()
+  const { isConnected, currentAddress, signMessage } = useWallet()
   const { credits, loading: loadingCredits } = useCredits()
   
   const { activeWalletAddress, activeWalletConnected } = useMemo(() => {
@@ -136,11 +137,34 @@ export default function CollectionsPage() {
 
   const handleDeleteConfirm = async () => {
     if (!deleteConfirm.collectionId) return
+    if (!currentAddress) {
+      toast.error('Please connect your wallet to delete this collection')
+      return
+    }
+    if (!signMessage) {
+      toast.error('Wallet signing not available', {
+        description: 'Please disconnect and reconnect your wallet, then try again.',
+      })
+      return
+    }
 
-    setDeleting(true)
     try {
-      const response = await fetch(`/api/collections/${deleteConfirm.collectionId}`, { method: 'DELETE' })
+      const auth = await generateApiAuth(currentAddress, signMessage)
+      if (!auth) {
+        toast.error('Failed to sign request', {
+          description: 'Please ensure your wallet is unlocked and connected, then try again.',
+        })
+        return
+      }
+
+      setDeleting(true)
+      const response = await fetch(`/api/collections/${deleteConfirm.collectionId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(auth),
+      })
       if (response.ok) {
+        toast.success('Collection deleted')
         await loadCollections()
         setDeleteConfirm({ isOpen: false, collectionId: null, collectionName: '' })
       } else {

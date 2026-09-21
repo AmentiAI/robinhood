@@ -414,9 +414,9 @@ export default function CollectionLaunchPage() {
     }
 
     const newAddresses = newWhitelistAddresses
-      .split('\n')
-        .map(a => a.trim())
-        .filter(a => a.length > 0)
+      .split(/[\n,]+/)
+      .map((a) => a.trim())
+      .filter((a) => a.length > 0)
       
     if (!isEditing && newAddresses.length === 0) {
       toast.error('At least one valid address is required')

@@ -1978,12 +1978,9 @@ export default function CreateCollectionPage() {
                       </>
                     ) : (
                       <>
-                        <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Auto-Create Layers & Traits</h3>
-                        <p className="text-zinc-400 text-xs sm:text-sm text-center px-2 font-medium">
-                          Automatically creates 6 layers and 48 traits for you
-                        </p>
-                        <p className="text-orange-200 text-xs text-center px-2 mt-1">
-                          No manual setup needed - ready to generate!
+                        <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Lazy Mode</h3>
+                        <p className="text-zinc-700 text-xs sm:text-sm text-center px-2 font-medium">
+                          Auto-creates 6 layers + 48 traits — ready to generate
                         </p>
                       </>
                     )}

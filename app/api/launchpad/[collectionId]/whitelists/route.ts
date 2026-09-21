@@ -3,6 +3,73 @@ import { sql } from '@/lib/database'
 import { isAuthorized } from '@/lib/auth/access-control'
 import { requireWalletAuth } from '@/lib/auth/signature-verification'
 
+/** Allow large address pastes (no practical cap on whitelist size). */
+export const maxDuration = 120
+
+type WhitelistEntryInput = {
+  wallet_address?: string
+  allocation?: number | null
+  notes?: string | null
+}
+
+/** Bulk upsert whitelist addresses — no max_entries / count cap. */
+async function upsertWhitelistEntries(
+  whitelistId: string,
+  entries: WhitelistEntryInput[],
+  addedBy: string
+) {
+  if (!sql || !Array.isArray(entries) || entries.length === 0) return 0
+
+  const seen = new Set<string>()
+  const cleaned: { wallet: string; allocation: number | null; notes: string | null }[] = []
+  for (const entry of entries) {
+    const wallet = String(entry?.wallet_address || '').trim()
+    if (!wallet) continue
+    const key = wallet.toLowerCase()
+    if (seen.has(key)) continue
+    seen.add(key)
+    cleaned.push({
+      wallet,
+      // null allocation = unlimited for that address (phase max_per_wallet still applies)
+      allocation:
+        entry.allocation === undefined || entry.allocation === null
+          ? null
+          : Math.max(1, Math.floor(Number(entry.allocation)) || 1),
+      notes: entry.notes || null,
+    })
+  }
+
+  if (cleaned.length === 0) return 0
+
+  // Batch in chunks to keep query size reasonable
+  const CHUNK = 500
+  for (let i = 0; i < cleaned.length; i += CHUNK) {
+    const chunk = cleaned.slice(i, i + CHUNK)
+    for (const row of chunk) {
+      await sql`
+        INSERT INTO whitelist_entries (
+          whitelist_id,
+          wallet_address,
+          allocation,
+          notes,
+          added_by
+        ) VALUES (
+          ${whitelistId},
+          ${row.wallet},
+          ${row.allocation},
+          ${row.notes},
+          ${addedBy}
+        )
+        ON CONFLICT (whitelist_id, wallet_address) DO UPDATE SET
+          allocation = EXCLUDED.allocation,
+          notes = COALESCE(EXCLUDED.notes, whitelist_entries.notes)
+      `
+    }
+  }
+
+  return cleaned.length
+}
+
 /**
  * GET /api/launchpad/[collectionId]/whitelists - Get all whitelists for a collection
  * Optional query param: whitelist_id - if provided, returns entries for that whitelist
@@ -126,8 +193,7 @@ export async function POST(
     const {
       name,
       description,
-      max_entries,
-      entries, // Array of { wallet_address, allocation?, notes? }
+      entries, // Array of { wallet_address, allocation?, notes? } — no count cap
     } = body
 
     if (!name) {
@@ -177,7 +243,7 @@ export async function POST(
         ${collectionId},
         ${name},
         ${description || null},
-        ${max_entries || null},
+        NULL,
         ${wallet_address}
       )
       RETURNING *
@@ -188,30 +254,9 @@ export async function POST(
       throw new Error('Failed to create whitelist')
     }
 
-    // Add entries if provided
+    // Add entries if provided — no address count cap
     if (entries && Array.isArray(entries) && entries.length > 0) {
-      for (const entry of entries) {
-        if (entry.wallet_address) {
-          await sql`
-            INSERT INTO whitelist_entries (
-              whitelist_id,
-              wallet_address,
-              allocation,
-              notes,
-              added_by
-            ) VALUES (
-              ${whitelist.id},
-              ${entry.wallet_address.trim()},
-              ${entry.allocation || 1},
-              ${entry.notes || null},
-              ${wallet_address}
-            )
-            ON CONFLICT (whitelist_id, wallet_address) DO UPDATE SET
-              allocation = EXCLUDED.allocation,
-              notes = EXCLUDED.notes
-          `
-        }
-      }
+      await upsertWhitelistEntries(whitelist.id, entries, wallet_address)
 
       // Update entries count
       const updateResult = await sql`
@@ -261,8 +306,7 @@ export async function PATCH(
       whitelist_id,
       name,
       description,
-      max_entries,
-      add_entries, // Array of entries to add
+      add_entries, // Array of entries to add — no count cap
       remove_entries, // Array of wallet addresses to remove
     } = body
 
@@ -301,42 +345,21 @@ export async function PATCH(
       return NextResponse.json({ error: 'Not authorized' }, { status: 403 })
     }
 
-    // Update whitelist metadata
-    if (name || description !== undefined || max_entries !== undefined) {
+    // Update whitelist metadata — always keep max_entries unlimited (NULL)
+    if (name || description !== undefined) {
       await sql`
         UPDATE mint_phase_whitelists SET
           name = COALESCE(${name}, name),
           description = COALESCE(${description}, description),
-          max_entries = COALESCE(${max_entries}, max_entries),
+          max_entries = NULL,
           updated_at = NOW()
         WHERE id = ${whitelist_id} AND collection_id = ${collectionId}
       `
     }
 
-    // Add entries
-    if (add_entries && Array.isArray(add_entries)) {
-      for (const entry of add_entries) {
-        if (entry.wallet_address) {
-          await sql`
-            INSERT INTO whitelist_entries (
-              whitelist_id,
-              wallet_address,
-              allocation,
-              notes,
-              added_by
-            ) VALUES (
-              ${whitelist_id},
-              ${entry.wallet_address.trim()},
-              ${entry.allocation || 1},
-              ${entry.notes || null},
-              ${wallet_address}
-            )
-            ON CONFLICT (whitelist_id, wallet_address) DO UPDATE SET
-              allocation = EXCLUDED.allocation,
-              notes = EXCLUDED.notes
-          `
-        }
-      }
+    // Add entries — no address count cap
+    if (add_entries && Array.isArray(add_entries) && add_entries.length > 0) {
+      await upsertWhitelistEntries(whitelist_id, add_entries, wallet_address)
     }
 
     // Remove entries

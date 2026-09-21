@@ -100,7 +100,7 @@ export function WhitelistsStep({
                 <label className="block text-sm font-medium text-zinc-400 mb-2">
                   Existing addresses ({existingWhitelistAddresses.length})
                 </label>
-                <div className="max-h-48 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#131318] p-3">
+                <div className="max-h-80 overflow-y-auto rounded-xl border border-white/[0.08] bg-[#131318] p-3">
                   <div className="space-y-2">
                     {existingWhitelistAddresses.map((address, idx) => (
                       <div
@@ -128,10 +128,25 @@ export function WhitelistsStep({
               <textarea
                 value={newWhitelistAddresses}
                 onChange={(e) => setNewWhitelistAddresses(e.target.value)}
-                rows={6}
-                placeholder={editingWhitelistId ? 'Add new addresses (one per line)' : 'bc1q...\n3...'}
-                className={`${inputCls} font-mono text-sm resize-none`}
+                rows={14}
+                placeholder={
+                  editingWhitelistId
+                    ? 'Paste as many addresses as you want (one per line)\n0x...\n0x...'
+                    : 'Paste as many addresses as you want — no limit\n0x...\n0x...'
+                }
+                className={`${inputCls} font-mono text-sm min-h-[220px] resize-y`}
               />
+              <p className="text-xs text-zinc-500 mt-2">
+                {(() => {
+                  const count = newWhitelistAddresses
+                    .split(/[\n,]+/)
+                    .map((a) => a.trim())
+                    .filter(Boolean).length
+                  return count > 0
+                    ? `${count.toLocaleString()} address${count === 1 ? '' : 'es'} ready to add · no cap`
+                    : 'No address limit — paste thousands if needed'
+                })()}
+              </p>
             </div>
             <div className="flex gap-3 pt-2 border-t border-white/[0.06]">
               <button

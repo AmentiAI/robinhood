@@ -1132,8 +1132,20 @@
   animation: hg-gradient-text 6s ease infinite;
 }
 
+@keyframes hg-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .hg-card {
   position: relative;
+  animation: hg-card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     border-color 0.3s ease,
@@ -1149,17 +1161,58 @@
 }
 
 .hg-btn-glow {
+  position: relative;
+  overflow: hidden;
   transition:
-    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.25s ease,
     background-color 0.2s ease,
-    filter 0.2s ease;
+    filter 0.2s ease,
+    border-color 0.2s ease;
+}
+.hg-btn-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
 }
 .hg-btn-glow:hover {
-  transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 0 24px rgba(45, 226, 255, 0.45), 0 8px 20px rgba(255, 43, 214, 0.15);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 28px rgba(45, 226, 255, 0.4), 0 10px 24px rgba(255, 43, 214, 0.18);
+}
+.hg-btn-glow:hover::after {
+  transform: translateX(120%);
 }
 .hg-btn-glow:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Global interactive press for buttons + pill links */
+button:not([disabled]):not([aria-disabled='true']):not(.no-anim),
+a.hg-btn-glow,
+.hg-interactive {
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+button:not([disabled]):not([aria-disabled='true']):not(.no-anim):hover,
+.hg-interactive:hover {
+  transform: translateY(-1px);
+}
+button:not([disabled]):not([aria-disabled='true']):not(.no-anim):active,
+.hg-interactive:active {
   transform: translateY(0) scale(0.98);
 }
 
@@ -1176,12 +1229,25 @@
   .hg-gradient-text,
   .hg-pill-active,
   .hg-card,
-  .hg-btn-glow {
+  .hg-btn-glow,
+  .hg-loader-bar,
+  .hg-loader-logo,
+  .hg-nav-dropdown,
+  .hg-nav-dropdown-item,
+  .hg-nav-overlay {
     animation: none !important;
-    transition: none !important;
   }
   .hg-card:hover,
-  .hg-btn-glow:hover {
+  .hg-btn-glow:hover,
+  button:not([disabled]):hover,
+  .hg-interactive:hover {
+    transform: none !important;
+  }
+  .hg-btn-glow::after {
+    display: none;
+  }
+  .hg-loader-bar {
+    width: 70%;
     transform: none;
   }
 }
@@ -1238,20 +1304,6 @@
 
 .hg-nav-overlay {
   animation: hg-nav-fade 0.2s ease-out both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hg-loader-bar,
-  .hg-loader-logo,
-  .hg-nav-dropdown,
-  .hg-nav-dropdown-item,
-  .hg-nav-overlay {
-    animation: none !important;
-  }
-  .hg-loader-bar {
-    width: 70%;
-    transform: none;
-  }
 }
 
 

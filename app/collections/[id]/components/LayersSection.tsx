@@ -7,6 +7,7 @@ import { useWallet } from '@/lib/wallet/compatibility'
 import { generateApiAuth } from '@/lib/wallet/api-auth'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useRouter } from 'next/navigation'
+import { BrandLoader } from '@/components/brand-loader'
 
 interface Layer {
   id: string
@@ -81,7 +82,7 @@ export function LayersSection({ collectionId, layers, onLayerDeleted }: LayersSe
 
       if (response.ok) {
         const data = await response.json()
-        toast.success(`Successfully created ${data.layersCreated} layers with ${data.totalTraits} traits!`)
+        toast.success(`Lazy Mode: created ${data.layersCreated} layers with ${data.totalTraits} traits!`)
         router.refresh()
         if (onLayerDeleted) onLayerDeleted()
       } else {
@@ -98,93 +99,114 @@ export function LayersSection({ collectionId, layers, onLayerDeleted }: LayersSe
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5 pt-8">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2DE2FF]/70 mb-1">
-            Structure
-          </p>
-          <h2 className="text-xl font-bold text-white">Layers</h2>
-        </div>
-        <Link
-          href={`/collections/${collectionId}/layers/create`}
-          className="hg-btn-glow inline-flex h-9 px-4 items-center justify-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
-        >
-          Add layer
-        </Link>
-      </div>
-
-      {layers.length > 0 ? (
-        <div className="rounded-2xl border border-white/[0.08] bg-[#131318] overflow-hidden shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
-          <div className="divide-y divide-white/[0.06]">
-            {layers.map((layer) => (
-              <div
-                key={layer.id}
-                className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3.5 hover:bg-white/[0.02] transition-colors"
+      <section className="hg-rise rounded-2xl border border-white/[0.1] bg-[#131318] p-5 sm:p-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-5">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2DE2FF]/70 mb-1">
+              Structure
+            </p>
+            <h2 className="text-xl font-bold text-white tracking-tight">Layers & traits</h2>
+            <p className="text-sm text-zinc-500 mt-1">
+              Build your stack manually or use Lazy Mode to auto-generate a starter set.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 shrink-0">
+            {layers.length === 0 && (
+              <button
+                type="button"
+                onClick={handleLazyMode}
+                disabled={generatingLazy || !currentAddress}
+                className="hg-btn-glow inline-flex h-10 px-5 items-center gap-2 rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
+                style={{ backgroundSize: '200% 100%', animation: generatingLazy ? undefined : 'hg-shimmer 5s linear infinite' }}
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <button
-                    onClick={() => handleDeleteClick(layer.id, layer.name)}
-                    className="h-8 w-8 shrink-0 rounded-full border border-red-500/25 text-red-400 hover:border-red-500/50 flex items-center justify-center transition-colors"
-                    title="Delete layer"
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
-                  </button>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-white truncate">{layer.name}</p>
-                    <p className="text-xs text-zinc-500">
-                      {layer.trait_count} traits · order {layer.display_order}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-2 sm:justify-end pl-11 sm:pl-0">
-                  <Link
-                    href={`/collections/${collectionId}/layers/${layer.id}`}
-                    className="hg-btn-glow inline-flex h-8 px-3.5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-xs font-bold hover:bg-[#7aefff] transition-colors"
-                  >
-                    Traits
-                  </Link>
-                  <Link
-                    href={`/collections/${collectionId}/layers/${layer.id}/edit`}
-                    className="inline-flex h-8 px-3.5 items-center rounded-full border border-white/[0.1] text-xs font-semibold text-zinc-300 hover:border-[#FF2BD6]/40 hover:text-[#FF2BD6] transition-colors"
-                  >
-                    Edit
-                  </Link>
-                </div>
-              </div>
-            ))}
+                {generatingLazy ? (
+                  <BrandLoader variant="inline" label="Lazy Mode" />
+                ) : (
+                  'Lazy Mode'
+                )}
+              </button>
+            )}
+            <Link
+              href={`/collections/${collectionId}/layers/create`}
+              className="hg-btn-glow inline-flex h-10 px-5 items-center justify-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+            >
+              Add layer
+            </Link>
           </div>
         </div>
-      ) : (
-        <div className="rounded-2xl border border-dashed border-white/[0.12] bg-[#131318]/60 px-6 py-10 text-center">
-          <p className="text-sm text-zinc-400 mb-4">
-            No layers yet. Add one manually or auto-generate a starter set.
-          </p>
-          <button
-            onClick={handleLazyMode}
-            disabled={generatingLazy || !currentAddress}
-            className="hg-btn-glow inline-flex h-10 px-5 items-center gap-2 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold hover:bg-[#7aefff] transition-colors disabled:opacity-50"
-          >
-            {generatingLazy ? (
-              <>
-                <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                Generating…
-              </>
-            ) : (
-              'Auto-generate layers & traits'
+
+        {layers.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-[#2DE2FF]/30 bg-[#0c0c10] px-6 py-10 text-center">
+            <p className="text-base font-semibold text-white mb-2">No layers yet</p>
+            <p className="text-sm text-zinc-400 mb-6 max-w-md mx-auto">
+              Hit <span className="text-[#2DE2FF] font-semibold">Lazy Mode</span> to auto-create 6 layers
+              (Background, Skin, Eyes, Mouth, Outfit, Headwear) with 8 AI traits each — or add a layer manually.
+            </p>
+            <button
+              type="button"
+              onClick={handleLazyMode}
+              disabled={generatingLazy || !currentAddress}
+              className="hg-btn-glow inline-flex h-12 px-7 items-center gap-2 rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
+              style={{ backgroundSize: '200% 100%', animation: generatingLazy ? undefined : 'hg-shimmer 5s linear infinite' }}
+            >
+              {generatingLazy ? (
+                <>
+                  <BrandLoader variant="inline" label="Generating" />
+                </>
+              ) : (
+                'Run Lazy Mode'
+              )}
+            </button>
+            {!currentAddress && (
+              <p className="text-xs text-amber-400/90 mt-3">Connect your wallet to use Lazy Mode</p>
             )}
-          </button>
-          <p className="text-xs text-zinc-600 mt-3 max-w-md mx-auto">
-            Creates 6 layers (Background, Skin, Eyes, Mouth, Outfit, Headwear) with 8 AI traits each
-          </p>
-        </div>
-      )}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] overflow-hidden">
+            <div className="divide-y divide-white/[0.06]">
+              {layers.map((layer, i) => (
+                <div
+                  key={layer.id}
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3.5 hover:bg-white/[0.03] transition-colors hg-rise"
+                  style={{ animationDelay: `${Math.min(i, 6) * 40}ms` }}
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs font-bold text-[#2DE2FF] tabular-nums">
+                      {layer.display_order}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white truncate">{layer.name}</p>
+                      <p className="text-xs text-zinc-500">{layer.trait_count} traits</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 sm:justify-end pl-11 sm:pl-0">
+                    <Link
+                      href={`/collections/${collectionId}/layers/${layer.id}`}
+                      className="hg-btn-glow inline-flex h-9 px-4 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-xs font-bold"
+                    >
+                      Traits
+                    </Link>
+                    <Link
+                      href={`/collections/${collectionId}/layers/${layer.id}/edit`}
+                      className="inline-flex h-9 px-4 items-center rounded-full border border-white/[0.1] text-xs font-semibold text-zinc-300 hover:border-[#FF2BD6]/40 hover:text-[#FF2BD6] transition-all"
+                    >
+                      Edit
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteClick(layer.id, layer.name)}
+                      className="inline-flex h-9 px-3 items-center rounded-full border border-red-500/25 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all"
+                      title="Delete layer"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
 
       <ConfirmDialog
         isOpen={!!showDeleteConfirm}

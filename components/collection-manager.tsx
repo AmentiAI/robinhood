@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { generateApiAuth } from '@/lib/wallet/api-auth'
 // Collection type definitions
 interface Collection {
   id: string
@@ -45,7 +46,7 @@ function validateTraitSelections(traitSelections: TraitSelections): { valid: boo
 }
 
 export function CollectionManager({ onCollectionChange }: CollectionManagerProps) {
-  const { isConnected, currentAddress } = useWallet()
+  const { isConnected, currentAddress, signMessage } = useWallet()
   // Determine active wallet (Bitcoin only)
   const { activeWalletAddress, activeWalletConnected } = useMemo(() => {
     if (currentAddress && isConnected) {
@@ -241,11 +242,31 @@ export function CollectionManager({ onCollectionChange }: CollectionManagerProps
 
   const handleDeleteConfirm = async () => {
     if (!deleteConfirm.collectionId) return
+    if (!currentAddress) {
+      toast.error('Please connect your wallet to delete this collection')
+      return
+    }
+    if (!signMessage) {
+      toast.error('Wallet signing not available', {
+        description: 'Please disconnect and reconnect your wallet, then try again.',
+      })
+      return
+    }
 
-    setDeleting(true)
     try {
+      const auth = await generateApiAuth(currentAddress, signMessage)
+      if (!auth) {
+        toast.error('Failed to sign request', {
+          description: 'Please ensure your wallet is unlocked and connected, then try again.',
+        })
+        return
+      }
+
+      setDeleting(true)
       const response = await fetch(`/api/collections/${deleteConfirm.collectionId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(auth),
       })
 
       if (response.ok) {
@@ -255,6 +276,7 @@ export function CollectionManager({ onCollectionChange }: CollectionManagerProps
           onCollectionChange?.(null)
         }
         setDeleteConfirm({ isOpen: false, collectionId: null, collectionName: '' })
+        toast.success('Collection deleted')
       } else {
         const error = await response.json()
         toast.error('Error deleting collection', { description: error.error || 'Unknown error' })
