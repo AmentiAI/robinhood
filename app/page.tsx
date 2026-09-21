@@ -429,13 +429,13 @@ export default function HomePage() {
                       <span>#</span>
                       <span>Wallet</span>
                     </div>
-                    <div className="max-h-[160px] overflow-y-auto space-y-1.5 mb-4">
+                    <div className="max-h-[320px] sm:max-h-[380px] overflow-y-auto space-y-1.5 mb-4">
                       {wlLoading ? (
                         <p className="text-sm text-white/40 py-4 text-center">Loading…</p>
                       ) : wlEntries.length === 0 ? (
                         <p className="text-sm text-white/40 py-4 text-center">No wallets yet — be first.</p>
                       ) : (
-                        wlEntries.slice(0, 10).map((e, i) => (
+                        wlEntries.map((e, i) => (
                           <div
                             key={`${e.wallet_address}-${i}`}
                             className="grid grid-cols-[36px_1fr] gap-2 items-center px-2 py-2 rounded-lg bg-white/[0.03] border border-white/[0.05]"

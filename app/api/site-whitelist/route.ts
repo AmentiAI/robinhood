@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         FROM site_whitelist
         WHERE status IN ('pending', 'approved')
         ORDER BY created_at DESC
-        LIMIT 200
+        LIMIT 2000
       `) as any[]
       entries = (rows || []).map((r) => ({
         wallet_address: r.wallet_address,
