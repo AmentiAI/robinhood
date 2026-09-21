@@ -72,9 +72,9 @@ export async function GET(request: NextRequest) {
     const wallet = request.nextUrl.searchParams.get('wallet')
     const wantList = request.nextUrl.searchParams.get('list') === '1'
     const locked = await isSiteLocked()
-    const admin = await isAdminWallet(wallet)
-    // Site stays locked for the public, but admins may enter the platform
-    const allowed = !locked || admin
+    const admin = wallet ? await isAdminWallet(wallet) : false
+    // While locked: only admins may enter. When unlocked: everyone.
+    const allowed = locked ? admin : true
 
     let entries: { wallet_address: string; status: string; created_at: string }[] = []
     if (wantList || !wallet) {

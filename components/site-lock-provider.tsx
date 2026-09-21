@@ -12,7 +12,7 @@ interface SiteLockContextValue {
   isAdmin: boolean
   status: WhitelistStatus
   loading: boolean
-  refresh: () => Promise<void>
+  refresh: (walletOverride?: string | null) => Promise<void>
 }
 
 const SiteLockContext = createContext<SiteLockContextValue>({
@@ -40,10 +40,12 @@ export function SiteLockProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<WhitelistStatus>(null)
   const [loading, setLoading] = useState(true)
 
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (walletOverride?: string | null) => {
     try {
-      const url = currentAddress
-        ? `/api/site-whitelist?wallet=${encodeURIComponent(currentAddress)}`
+      const wallet =
+        walletOverride !== undefined ? walletOverride : currentAddress
+      const url = wallet
+        ? `/api/site-whitelist?wallet=${encodeURIComponent(wallet)}`
         : '/api/site-whitelist'
       const res = await fetch(url)
       const data = await res.json()
@@ -52,8 +54,8 @@ export function SiteLockProvider({ children }: { children: React.ReactNode }) {
       const admin = Boolean(data.isAdmin)
       setLocked(isLocked)
       setIsAdminUser(admin)
-      // Public stays locked; admins get platform access while lock is on
-      setAllowed(Boolean(data.allowed) || !isLocked || admin)
+      // While locked: only admins. When unlocked: everyone.
+      setAllowed(isLocked ? admin : true)
       setStatus((data.status as WhitelistStatus) || null)
     } catch (e) {
       console.error('[SiteLock]', e)

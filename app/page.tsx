@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, type CSSProperties } from 'react'
+import { useState, useEffect, useRef, type CSSProperties } from 'react'
 import Image from 'next/image'
 import { toast } from 'sonner'
 import { Space_Grotesk, DM_Sans } from 'next/font/google'
@@ -20,6 +20,7 @@ import {
   CircleHelp,
   ShieldCheck,
   Sparkles,
+  Wallet,
 } from 'lucide-react'
 
 const display = Space_Grotesk({
@@ -99,11 +100,11 @@ const CSS = `
 
 export default function HomePage() {
   const router = useRouter()
-  const { address } = useEvmWallet()
-  const { allowed, isAdmin, status, loading, refresh } = useSiteLock()
-  const [formWallet, setFormWallet] = useState('')
+  const { address, isConnected, connect, disconnect } = useEvmWallet()
+  const { locked, allowed, isAdmin, status, loading, refresh } = useSiteLock()
   const [twitter, setTwitter] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [connecting, setConnecting] = useState(false)
   const [showJoinModal, setShowJoinModal] = useState(false)
   const [joinSuccess, setJoinSuccess] = useState(false)
   const [entered, setEntered] = useState(false)
@@ -133,6 +134,53 @@ export default function HomePage() {
 
   const handleEnter = () => router.push('/launchpad')
 
+  const handleConnect = async () => {
+    setConnecting(true)
+    try {
+      const ok = await connect()
+      if (!ok) {
+        toast.error('Connection cancelled')
+        return
+      }
+      // Wagmi address updates async — poll briefly then check admin access
+      let connectedAddr: string | null = null
+      for (let i = 0; i < 20; i++) {
+        await new Promise((r) => setTimeout(r, 100))
+        const { ethereum } = window as any
+        if (ethereum?.selectedAddress) {
+          connectedAddr = ethereum.selectedAddress
+          break
+        }
+        if (address) {
+          connectedAddr = address
+          break
+        }
+      }
+      await refresh(connectedAddr)
+    } catch {
+      toast.error('Failed to connect wallet')
+    } finally {
+      setConnecting(false)
+    }
+  }
+
+  // After connect, only admins may enter while the site is locked
+  const deniedToastRef = useRef(false)
+  useEffect(() => {
+    if (loading || !isConnected || !address) {
+      deniedToastRef.current = false
+      return
+    }
+    // Don't interrupt whitelist application flow
+    if (showJoinModal) return
+    if (locked && !isAdmin && !deniedToastRef.current) {
+      deniedToastRef.current = true
+      toast.error('Platform access is admin-only until launch')
+    }
+  }, [loading, isConnected, address, locked, isAdmin, showJoinModal])
+
+  const canEnter = !loading && allowed
+
   const openJoinModal = () => {
     setJoinSuccess(false)
     setShowJoinModal(true)
@@ -148,15 +196,15 @@ export default function HomePage() {
   }
 
   const handleJoin = async () => {
-    const wallet = formWallet.trim()
+    const wallet = address?.trim() || ''
     const handle = twitter.trim()
 
-    if (!wallet.startsWith('0x') || wallet.length < 42) {
-      toast.error('Paste a valid 0x wallet address')
+    if (!isConnected || !wallet.startsWith('0x') || wallet.length < 42) {
+      toast.error('Connect your wallet to apply')
       return
     }
     if (!handle) {
-      toast.error('Enter your X handle')
+      toast.error('Enter your X (Twitter) handle')
       return
     }
 
@@ -174,7 +222,7 @@ export default function HomePage() {
       if (!res.ok) throw new Error(data.error || 'Failed to join')
       toast.success(data.message || "You're on the whitelist")
       setJoinSuccess(true)
-      await refresh()
+      await refresh(wallet)
       await loadWhitelist()
     } catch (e: any) {
       toast.error(e.message || 'Failed to join whitelist')
@@ -190,7 +238,7 @@ export default function HomePage() {
 
   const onList = status === 'pending' || status === 'approved'
 
-  if (!loading && allowed) {
+  if (canEnter) {
     return (
       <div
         className={`${display.variable} ${body.variable} ${body.className} min-h-svh bg-black text-white flex flex-col items-center justify-center gap-6 px-6`}
@@ -199,6 +247,9 @@ export default function HomePage() {
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight" style={{ fontFamily: 'var(--f-display)' }}>
           Welcome back{isAdmin ? ' (admin)' : ''}
         </h1>
+        {address ? (
+          <p className="font-mono text-sm text-white/45">{shortAddr(address)}</p>
+        ) : null}
         <button
           type="button"
           onClick={handleEnter}
@@ -207,6 +258,15 @@ export default function HomePage() {
         >
           Enter platform
         </button>
+        {isConnected ? (
+          <button
+            type="button"
+            onClick={() => disconnect()}
+            className="text-sm text-white/40 hover:text-white transition-colors"
+          >
+            Disconnect
+          </button>
+        ) : null}
       </div>
     )
   }
@@ -258,6 +318,26 @@ export default function HomePage() {
               </svg>
               <span className="hidden sm:inline">Discord</span>
             </a>
+            {isConnected && address ? (
+              <button
+                type="button"
+                onClick={() => disconnect()}
+                className="inline-flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-5 rounded-xl border border-white/20 bg-black/40 text-sm font-bold text-white/80 hover:text-white hover:border-white/40 transition-all"
+              >
+                <Wallet className="w-4 h-4 text-[#2DE2FF]" />
+                <span className="font-mono text-[12px] sm:text-sm">{shortAddr(address)}</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleConnect}
+                disabled={connecting}
+                className="inline-flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-5 rounded-xl border border-[#2DE2FF]/60 bg-gradient-to-r from-[#2DE2FF]/15 to-[#FF2BD6]/15 text-sm font-bold text-white hover:border-[#2DE2FF] transition-all disabled:opacity-60"
+              >
+                <Wallet className="w-4 h-4 text-[#2DE2FF]" />
+                {connecting ? 'Connecting…' : 'Connect'}
+              </button>
+            )}
           </div>
         </header>
 
@@ -480,7 +560,7 @@ export default function HomePage() {
                     ) : (
                       <>
                         <p className="text-[13px] text-white/50 leading-relaxed">
-                          Paste your wallet address and X handle to request a spot.
+                          Connect your wallet and submit your X handle to apply.
                         </p>
                         <button
                           type="button"
@@ -576,7 +656,7 @@ export default function HomePage() {
 
       {showJoinModal && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
           onClick={() => {
             if (submitting) return
             setShowJoinModal(false)
@@ -584,33 +664,41 @@ export default function HomePage() {
           }}
         >
           <div
-            className="relative w-full max-w-md rounded-2xl border bg-[#0a0a0c] p-6 sm:p-7 shadow-2xl"
+            className="relative w-full max-w-[440px] rounded-2xl border bg-[#08080a] p-6 sm:p-8 shadow-2xl"
             style={{
-              borderColor: 'rgba(45, 226, 255, 0.35)',
-              boxShadow: '0 0 40px rgba(168, 85, 247, 0.2)',
+              borderColor: 'rgba(255, 255, 255, 0.12)',
+              boxShadow: '0 24px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(45,226,255,0.08)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="absolute inset-x-0 top-0 h-px rounded-t-2xl"
-              style={{ background: `linear-gradient(90deg, transparent, ${CYAN}, ${MAGENTA}, transparent)` }}
+              className="absolute inset-x-8 top-0 h-px"
+              style={{ background: `linear-gradient(90deg, transparent, ${CYAN}, ${PURPLE}, transparent)` }}
             />
-            <div className="flex items-start justify-between gap-3 mb-5">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#A855F7] mb-1">
-                  HoodGFX
-                </p>
-                <h2
-                  className="text-xl sm:text-2xl font-bold text-white"
-                  style={{ fontFamily: 'var(--f-display)' }}
+
+            <div className="flex items-start justify-between gap-3 mb-6">
+              <div className="flex items-start gap-3">
+                <div
+                  className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.03]"
                 >
-                  {joinSuccess ? "You're on the list" : 'Join the whitelist'}
-                </h2>
-                <p className="text-sm text-white/45 mt-1.5">
-                  {joinSuccess
-                    ? 'Share HoodGFX with your network on X.'
-                    : 'Paste your wallet address and X handle.'}
-                </p>
+                  <ShieldCheck className="h-5 w-5" style={{ color: CYAN }} />
+                </div>
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/40 mb-1">
+                    Official application
+                  </p>
+                  <h2
+                    className="text-xl sm:text-2xl font-bold text-white tracking-tight"
+                    style={{ fontFamily: 'var(--f-display)' }}
+                  >
+                    {joinSuccess ? 'Application received' : 'Whitelist application'}
+                  </h2>
+                  <p className="text-sm text-white/45 mt-1.5 leading-relaxed max-w-[18rem]">
+                    {joinSuccess
+                      ? 'Your wallet is registered. Share HoodGFX on X to help grow the community.'
+                      : 'Connect your wallet and provide your X handle to request access.'}
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
@@ -619,7 +707,7 @@ export default function HomePage() {
                   setJoinSuccess(false)
                 }}
                 disabled={submitting}
-                className="text-white/40 hover:text-white text-sm font-medium"
+                className="text-white/35 hover:text-white text-sm font-medium shrink-0"
               >
                 Close
               </button>
@@ -627,30 +715,32 @@ export default function HomePage() {
 
             {joinSuccess ? (
               <div className="space-y-5">
-                <div className="flex flex-col items-center text-center gap-3 rounded-xl border border-white/10 bg-black/50 p-5">
+                <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/[0.06] px-4 py-3.5 flex items-start gap-3">
+                  <ShieldCheck className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-white">Status: Pending review</p>
+                    <p className="text-[13px] text-white/50 mt-0.5 font-mono truncate">
+                      {address ? shortAddr(address) : 'Wallet registered'}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-center gap-3 rounded-xl border border-white/[0.08] bg-black/40 p-5">
                   <Image
                     src="/hoodgfx-hero.png"
                     alt="HoodGFX"
-                    width={120}
-                    height={120}
-                    className="w-24 h-24 object-contain"
+                    width={96}
+                    height={96}
+                    className="w-20 h-20 object-contain"
                   />
-                  <p className="text-sm text-white/80 leading-relaxed max-w-[18rem]">
+                  <p className="text-sm text-white/75 leading-relaxed max-w-[18rem]">
                     Join HoodGFX whitelist {BRAND_X}{' '}
                     <span style={{ color: CYAN }}>hoodgfx.com</span>
                   </p>
-                  <div className="flex flex-wrap items-center justify-center gap-2 text-[12px] text-white/45">
-                    <span className="font-mono" style={{ color: CYAN }}>
-                      hoodgfx.com
-                    </span>
-                    <span>·</span>
-                    <span style={{ color: MAGENTA }}>{BRAND_X}</span>
-                  </div>
                 </div>
                 <button
                   type="button"
                   onClick={handleShareToX}
-                  className="w-full h-14 rounded-xl text-black text-[15px] font-bold inline-flex items-center justify-center gap-2"
+                  className="w-full h-[52px] rounded-xl text-black text-[15px] font-bold inline-flex items-center justify-center gap-2"
                   style={{ background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})` }}
                 >
                   Share to X
@@ -661,7 +751,6 @@ export default function HomePage() {
                   onClick={() => {
                     setShowJoinModal(false)
                     setJoinSuccess(false)
-                    setFormWallet('')
                     setTwitter('')
                   }}
                   className="w-full text-sm text-white/40 hover:text-white transition-colors"
@@ -670,37 +759,102 @@ export default function HomePage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-3.5">
-                <div>
-                  <label className="block text-[12px] text-white/50 mb-1.5">Wallet address</label>
-                  <input
-                    type="text"
-                    value={formWallet}
-                    onChange={(e) => setFormWallet(e.target.value)}
-                    placeholder="0x…"
-                    autoComplete="off"
-                    className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white font-mono placeholder:text-white/25 outline-none focus:border-[#2DE2FF]/55"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[12px] text-white/50 mb-1.5">X handle</label>
-                  <input
-                    type="text"
-                    value={twitter}
-                    onChange={(e) => setTwitter(e.target.value)}
-                    placeholder="@yourhandle"
-                    autoComplete="off"
-                    className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#FF2BD6]/55"
-                  />
-                </div>
+              <div className="space-y-5">
+                {/* Step 1 — Wallet */}
+                <section className="rounded-xl border border-white/[0.09] bg-white/[0.02] p-4 sm:p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span
+                      className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-black"
+                      style={{ background: CYAN }}
+                    >
+                      1
+                    </span>
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/55">
+                      Verify wallet
+                    </p>
+                  </div>
+
+                  {isConnected && address ? (
+                    <div className="flex items-center justify-between gap-3 rounded-lg border border-[#2DE2FF]/25 bg-[#2DE2FF]/[0.06] px-3.5 py-3">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Wallet className="h-4 w-4 shrink-0" style={{ color: CYAN }} />
+                        <div className="min-w-0">
+                          <p className="text-[11px] text-white/40 font-medium">Connected</p>
+                          <p className="font-mono text-sm text-white truncate">{shortAddr(address)}</p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => disconnect()}
+                        className="text-[12px] text-white/40 hover:text-white shrink-0"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleConnect}
+                      disabled={connecting}
+                      className="w-full h-12 rounded-xl border border-[#2DE2FF]/45 bg-gradient-to-r from-[#2DE2FF]/10 to-[#A855F7]/10 text-sm font-bold text-white inline-flex items-center justify-center gap-2 hover:border-[#2DE2FF] transition-all disabled:opacity-60"
+                    >
+                      <Wallet className="h-4 w-4" style={{ color: CYAN }} />
+                      {connecting ? 'Connecting…' : 'Connect wallet'}
+                    </button>
+                  )}
+                </section>
+
+                {/* Step 2 — Social */}
+                <section className="rounded-xl border border-white/[0.09] bg-white/[0.02] p-4 sm:p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span
+                      className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-black"
+                      style={{ background: isConnected ? MAGENTA : 'rgba(255,255,255,0.2)' }}
+                    >
+                      2
+                    </span>
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-white/55">
+                      Social identity
+                    </p>
+                  </div>
+                  <label className="block text-[12px] text-white/45 mb-1.5">X (Twitter) handle</label>
+                  <div className="relative">
+                    <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/30 text-sm font-medium">
+                      @
+                    </span>
+                    <input
+                      type="text"
+                      value={twitter.replace(/^@/, '')}
+                      onChange={(e) => setTwitter(e.target.value.replace(/^@/, ''))}
+                      placeholder="yourhandle"
+                      autoComplete="off"
+                      disabled={!isConnected}
+                      className="w-full h-12 rounded-xl pl-8 pr-4 bg-black border border-white/12 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#FF2BD6]/50 disabled:opacity-40 disabled:cursor-not-allowed"
+                    />
+                  </div>
+                </section>
+
+                <p className="text-[11px] text-white/30 leading-relaxed px-0.5">
+                  By submitting, you confirm this wallet is yours and agree to HoodGFX{' '}
+                  <a href="/terms" className="text-white/50 underline underline-offset-2 hover:text-white">
+                    Terms
+                  </a>{' '}
+                  and{' '}
+                  <a href="/privacy" className="text-white/50 underline underline-offset-2 hover:text-white">
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
+
                 <button
                   type="button"
                   onClick={handleJoin}
-                  disabled={submitting}
-                  className="w-full h-14 rounded-xl text-black text-[15px] font-bold disabled:opacity-50 transition-opacity"
+                  disabled={submitting || !isConnected || !twitter.trim()}
+                  className="w-full h-[52px] rounded-xl text-black text-[15px] font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-opacity inline-flex items-center justify-center gap-2"
                   style={{ background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})` }}
                 >
-                  {submitting ? 'Submitting…' : 'Submit'}
+                  {submitting ? 'Submitting application…' : 'Submit application'}
+                  {!submitting ? <ArrowRight className="h-4 w-4" /> : null}
                 </button>
               </div>
             )}
