@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useArtStyleExamples } from '@/lib/art-styles-client'
+import { PageHeader } from '@/components/page-header'
 
 export default function GuidePage() {
   const [activeSection, setActiveSection] = useState<string>('creation')
@@ -24,14 +25,14 @@ export default function GuidePage() {
   const feeRates = [0.15, 0.2, 0.3, 0.5, 0.75, 1.0]
 
   const sections = [
-    { id: 'creation', label: 'Create Collection', icon: '🎨' },
-    { id: 'tools', label: 'Tools', icon: '🧰' },
-    { id: 'marketplace', label: 'Marketplace', icon: '🏪' },
-    { id: 'compression', label: 'Compression', icon: '🗜️' },
-    { id: 'cost-table', label: 'Cost Table', icon: '💰' },
-    { id: 'launchpad', label: 'Launchpad', icon: '🚀' },
-    { id: 'self-inscribe', label: 'Self-Inscribe', icon: '⚡' },
-    { id: 'metadata', label: 'Metadata', icon: '📋' },
+    { id: 'creation', label: 'Create' },
+    { id: 'tools', label: 'Tools' },
+    { id: 'marketplace', label: 'Marketplace' },
+    { id: 'compression', label: 'Compression' },
+    { id: 'cost-table', label: 'Cost table' },
+    { id: 'launchpad', label: 'Launchpad' },
+    { id: 'self-inscribe', label: 'Self-inscribe' },
+    { id: 'metadata', label: 'Metadata' },
   ]
 
   const artStyles = [
@@ -49,25 +50,16 @@ export default function GuidePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#050510] via-[#0f0f1e] to-[#15152a]">
-      {/* Hero Header */}
-      <div className="bg-gradient-to-r from-[#050510] via-[#0f0f1e] to-[#15152a] text-white border-b border-[#00E5FF]/30">
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">Collection Creation Guide</h1>
-              <p className="text-[#b4b4c8] mt-2 text-lg">
-                Everything you need to know about creating, compressing, and inscribing your ordinal collection.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Collection guide"
+        subtitle="Everything you need to know about creating, compressing, and launching collections."
+      />
 
       {/* Navigation Tabs */}
-      <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-b border-[#2DE2FF]/30">
-        <div className="container mx-auto px-6">
-          <div className="flex gap-1 overflow-x-auto py-3 scrollbar-hide">
+      <div className="px-4 sm:px-6 lg:px-8 pb-2">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex gap-1 overflow-x-auto py-2 px-1.5 rounded-2xl border border-white/[0.08] bg-[#131318] scrollbar-hide">
             {sections.map((section) => (
               <button
                 key={section.id}
@@ -75,13 +67,13 @@ export default function GuidePage() {
                   setActiveSection(section.id)
                   document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' })
                 }}
-                className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all ${
+                className={`px-3.5 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
                   activeSection === section.id
-                    ? 'bg-[#2DE2FF] text-white shadow-lg'
-                    : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md text-white/70 hover:text-white hover:bg-[#1a1f3a] border border-[#2DE2FF]/30'
+                    ? 'bg-white text-[#0a0a0c]'
+                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.06]'
                 }`}
               >
-                {section.icon} {section.label}
+                {section.label}
               </button>
             ))}
           </div>
@@ -94,11 +86,11 @@ export default function GuidePage() {
           {/* Section 1: Collection Creation - Three Modes */}
           <section id="creation" className="scroll-mt-32">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#e27d0f] to-[#f09840] flex items-center justify-center text-2xl">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2DE2FF] to-[#f09840] flex items-center justify-center text-2xl">
                 🎨
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Image Creation</h2>
+                <h2 className="text-2xl font-semibold text-white">Image Creation</h2>
                 <p className="text-[#a8a8b8]/80">Choose your creation mode</p>
               </div>
             </div>
@@ -106,58 +98,58 @@ export default function GuidePage() {
             {/* Three Mode Cards - Simplified */}
             <div className="grid lg:grid-cols-3 gap-6 mb-8">
               {/* Maker Mode */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
-                <div className="bg-gradient-to-r from-[#4561ad] to-[#5a7bc4] px-5 py-4">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border-2 border-[#FF2BD6] overflow-hidden hover:shadow-xl transition-all">
+                <div className="bg-gradient-to-r from-[#FF2BD6] to-[#5a7bc4] px-5 py-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🎯</span>
-                    <h3 className="font-black text-white text-lg">Maker Mode</h3>
+                    <h3 className="font-semibold text-white text-lg">Maker Mode</h3>
                   </div>
                 </div>
                 <div className="p-5">
                   <p className="text-[#a8a8b8] text-sm mb-4">You give prompts, AI generates the traits</p>
-                  <div className="bg-[#4561ad]/5 rounded-xl p-3 text-xs text-center">
-                    <span className="font-bold text-[#4561ad]">Guided creation with AI assistance</span>
+                  <div className="bg-[#FF2BD6]/5 rounded-xl p-3 text-xs text-center">
+                    <span className="font-bold text-[#FF2BD6]">Guided creation with AI assistance</span>
                   </div>
                 </div>
               </div>
 
               {/* Lazy Mode */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#e27d0f] overflow-hidden hover:shadow-xl transition-all">
-                <div className="bg-gradient-to-r from-[#e27d0f] to-[#f09840] px-5 py-4">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border-2 border-[#2DE2FF] overflow-hidden hover:shadow-xl transition-all">
+                <div className="bg-gradient-to-r from-[#2DE2FF] to-[#f09840] px-5 py-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🪄</span>
-                    <h3 className="font-black text-white text-lg">Lazy Mode</h3>
+                    <h3 className="font-semibold text-white text-lg">Lazy Mode</h3>
                   </div>
                 </div>
                 <div className="p-5">
                   <p className="text-[#a8a8b8] text-sm mb-4">AI does everything for you</p>
-                  <div className="bg-[#e27d0f]/5 rounded-xl p-3 text-xs text-center">
-                    <span className="font-bold text-[#e27d0f]">Fastest way to get started</span>
+                  <div className="bg-[#2DE2FF]/5 rounded-xl p-3 text-xs text-center">
+                    <span className="font-bold text-[#2DE2FF]">Fastest way to get started</span>
                   </div>
                 </div>
               </div>
 
               {/* Artist Mode */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-purple-500 overflow-hidden hover:shadow-xl transition-all">
-                <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-5 py-4">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-[#A855F7]/40 overflow-hidden hover:shadow-xl transition-all">
+                <div className="bg-gradient-to-r from-[#2DE2FF] to-[#A855F7] px-5 py-4">
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">🎨</span>
-                    <h3 className="font-black text-white text-lg">Artist Mode</h3>
+                    <h3 className="font-semibold text-white text-lg">Artist Mode</h3>
                   </div>
                 </div>
                 <div className="p-5">
                   <p className="text-[#a8a8b8] text-sm mb-4">Manual setup, upload your own images</p>
-                  <div className="bg-purple-500/5 rounded-xl p-3 text-xs text-center">
-                    <span className="font-bold text-purple-600">Full control for artists</span>
+                  <div className="bg-[#A855F7]/10 rounded-xl p-3 text-xs text-center">
+                    <span className="font-bold text-[#A855F7]">Full control for artists</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Art Styles Gallery */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md px-6 py-4 border-b border-[#2DE2FF]/30">
-                <h3 className="font-black text-white">Available Art Styles</h3>
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] overflow-hidden">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md px-6 py-4 border-b border-white/[0.08]">
+                <h3 className="font-semibold text-white">Available Art Styles</h3>
                 <p className="text-sm text-[#a8a8b8]/80">Real examples from the generator</p>
               </div>
               <div className="p-6 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -166,7 +158,7 @@ export default function GuidePage() {
                   const imageUrl = artStyleExamples[style.id] || style.fallbackImage
                   return (
                     <div key={style.id} className="group cursor-pointer">
-                      <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-transparent group-hover:border-[#4561ad] transition-all shadow-sm group-hover:shadow-lg">
+                      <div className="aspect-square rounded-xl overflow-hidden bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 border-transparent group-hover:border-[#FF2BD6] transition-all shadow-sm group-hover:shadow-lg">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={imageUrl}
@@ -181,7 +173,7 @@ export default function GuidePage() {
                   )
                 })}
                 <div className="group cursor-pointer">
-                  <div className="aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-dashed border-[#2DE2FF]/30 flex items-center justify-center group-hover:border-[#4561ad] transition-all">
+                  <div className="aspect-square rounded-xl overflow-hidden bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 border-dashed border-white/[0.08] flex items-center justify-center group-hover:border-[#FF2BD6] transition-all">
                     <span className="text-3xl">✏️</span>
                   </div>
                   <div className="mt-2 text-center">
@@ -192,20 +184,20 @@ export default function GuidePage() {
             </div>
 
             {/* Future Mode */}
-            <div className="mt-6 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
+            <div className="mt-6 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6">
               <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-2xl flex-shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#A855F7] to-[#FF2BD6] flex items-center justify-center text-2xl flex-shrink-0">
                   🔮
                 </div>
                 <div>
-                  <h3 className="font-black text-white text-lg">Future Mode (Reference Image)</h3>
+                  <h3 className="font-semibold text-white text-lg">Future Mode (Reference Image)</h3>
                   <p className="text-white/70 mt-1 text-sm">
                     Upload a reference image and AI will analyze it to auto-fill art style, colors, lighting, and settings.
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs font-medium border border-purple-500/30">Auto-detect style</span>
+                    <span className="px-2 py-1 bg-[#A855F7]/15 text-[#E879F9] rounded text-xs font-medium border border-[#A855F7]/30">Auto-detect style</span>
                     <span className="px-2 py-1 bg-pink-500/20 text-pink-300 rounded text-xs font-medium border border-pink-500/30">Extract colors</span>
-                    <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs font-medium border border-purple-500/30">Match lighting</span>
+                    <span className="px-2 py-1 bg-[#A855F7]/15 text-[#E879F9] rounded text-xs font-medium border border-[#A855F7]/30">Match lighting</span>
                   </div>
                 </div>
               </div>
@@ -220,18 +212,18 @@ export default function GuidePage() {
                 🧰
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Marketing Tools</h2>
+                <h2 className="text-2xl font-semibold text-white">Marketing Tools</h2>
                 <p className="text-[#a8a8b8]/80">Create promotional content for your collection</p>
               </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6">
               {/* Promotion Flyer Tool */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#e27d0f] overflow-hidden hover:shadow-xl transition-all">
-                <div className="bg-gradient-to-r from-[#e27d0f] to-[#f09840] px-6 py-5">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border-2 border-[#2DE2FF] overflow-hidden hover:shadow-xl transition-all">
+                <div className="bg-gradient-to-r from-[#2DE2FF] to-[#f09840] px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">📣</span>
-                    <h3 className="font-black text-white text-xl">Promotion Flyers</h3>
+                    <h3 className="font-semibold text-white text-xl">Promotion Flyers</h3>
                   </div>
                 </div>
                 <div className="p-6">
@@ -240,33 +232,33 @@ export default function GuidePage() {
                   </p>
                   
                   <div className="grid grid-cols-3 gap-2 mb-4">
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-2 text-center">
+                    <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg p-2 text-center">
                       <div className="text-lg">⬜</div>
                       <div className="text-[10px] font-bold text-[#a8a8b8]">Square</div>
                     </div>
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-2 text-center">
+                    <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg p-2 text-center">
                       <div className="text-lg">📱</div>
                       <div className="text-[10px] font-bold text-[#a8a8b8]">Portrait</div>
                     </div>
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-2 text-center">
+                    <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg p-2 text-center">
                       <div className="text-lg">🖼️</div>
                       <div className="text-[10px] font-bold text-[#a8a8b8]">Landscape</div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 bg-[#e27d0f]/5 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-[#2DE2FF]/5 rounded-xl">
                     <span className="text-sm font-medium text-[#a8a8b8]">Cost</span>
-                    <span className="font-black text-[#e27d0f]">1 credit</span>
+                    <span className="font-semibold text-[#2DE2FF]">1 credit</span>
                   </div>
                 </div>
               </div>
 
               {/* Sticker Maker Tool */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
-                <div className="bg-gradient-to-r from-[#4561ad] to-[#5a7bc4] px-6 py-5">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border-2 border-[#FF2BD6] overflow-hidden hover:shadow-xl transition-all">
+                <div className="bg-gradient-to-r from-[#FF2BD6] to-[#5a7bc4] px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">🎨</span>
-                    <h3 className="font-black text-white text-xl">Sticker Maker</h3>
+                    <h3 className="font-semibold text-white text-xl">Sticker Maker</h3>
                   </div>
                 </div>
                 <div className="p-6">
@@ -274,16 +266,16 @@ export default function GuidePage() {
                     Describe any sticker idea, AI generates a transparent PNG sticker
                   </p>
                   
-                  <div className="bg-[#4561ad]/5 rounded-xl p-3 mb-4">
-                    <div className="text-xs font-bold text-[#4561ad] mb-1">Examples:</div>
+                  <div className="bg-[#FF2BD6]/5 rounded-xl p-3 mb-4">
+                    <div className="text-xs font-bold text-[#FF2BD6] mb-1">Examples:</div>
                     <div className="text-xs text-white/70">
                       "Happy Bitcoin mascot" • "Cat astronaut" • "Pixel treasure chest"
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between p-3 bg-[#4561ad]/5 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-[#FF2BD6]/5 rounded-xl">
                     <span className="text-sm font-medium text-[#a8a8b8]">Cost</span>
-                    <span className="font-black text-[#4561ad]">1 credit</span>
+                    <span className="font-semibold text-[#FF2BD6]">1 credit</span>
                   </div>
                 </div>
               </div>
@@ -297,18 +289,18 @@ export default function GuidePage() {
                 🏪
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Collection Marketplace</h2>
+                <h2 className="text-2xl font-semibold text-white">Collection Marketplace</h2>
                 <p className="text-[#a8a8b8]/80">Buy and sell complete collections</p>
               </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6 mb-8">
               {/* Selling Collections */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-green-500 overflow-hidden hover:shadow-xl transition-all">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border-2 border-green-500 overflow-hidden hover:shadow-xl transition-all">
                 <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">💰</span>
-                    <h3 className="font-black text-white text-xl">Sell Your Collection</h3>
+                    <h3 className="font-semibold text-white text-xl">Sell Your Collection</h3>
                   </div>
                 </div>
                 <div className="p-6">
@@ -324,7 +316,7 @@ export default function GuidePage() {
                       { step: '4', text: 'Accept terms and list' },
                     ].map((item) => (
                       <div key={item.step} className="flex items-center gap-3">
-                        <div className="w-6 h-6 rounded-full bg-[#2DE2FF]/20 text-[#2DE2FF] border border-[#2DE2FF]/30 flex items-center justify-center text-xs font-black">
+                        <div className="w-6 h-6 rounded-full bg-[#2DE2FF]/20 text-[#2DE2FF] border border-white/[0.08] flex items-center justify-center text-xs font-semibold">
                           {item.step}
                         </div>
                         <span className="text-sm text-[#a8a8b8]">{item.text}</span>
@@ -332,23 +324,23 @@ export default function GuidePage() {
                     ))}
                   </div>
 
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-xl p-3 border border-[#2DE2FF]/30">
+                  <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md bg-[#0f172a]/80 rounded-xl p-3 border border-white/[0.08]">
                     <div className="text-xs font-bold text-[#a8a8b8] mb-1">Payment Options:</div>
                     <div className="flex gap-2">
-                      <span className="px-2 py-1 bg-[#DC1FFF]/20 text-[#DC1FFF] rounded text-xs font-bold border border-[#DC1FFF]/30">₿ Bitcoin</span>
-                      <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] rounded text-xs font-bold border border-[#2DE2FF]/30">💳 Credits</span>
-                      <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded text-xs font-bold border border-purple-500/30">Both</span>
+                      <span className="px-2 py-1 bg-[#FF2BD6]/20 text-[#FF2BD6] rounded text-xs font-bold border border-[#FF2BD6]/30">₿ Bitcoin</span>
+                      <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] rounded text-xs font-bold border border-white/[0.08]">💳 Credits</span>
+                      <span className="px-2 py-1 bg-[#A855F7]/15 text-[#E879F9] rounded text-xs font-bold border border-[#A855F7]/30">Both</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Buying Collections */}
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border-2 border-[#4561ad] overflow-hidden hover:shadow-xl transition-all">
-                <div className="bg-gradient-to-r from-[#4561ad] to-[#5a7bc4] px-6 py-5">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border-2 border-[#FF2BD6] overflow-hidden hover:shadow-xl transition-all">
+                <div className="bg-gradient-to-r from-[#FF2BD6] to-[#5a7bc4] px-6 py-5">
                   <div className="flex items-center gap-4">
                     <span className="text-4xl">🛒</span>
-                    <h3 className="font-black text-white text-xl">Buy a Collection</h3>
+                    <h3 className="font-semibold text-white text-xl">Buy a Collection</h3>
                   </div>
                 </div>
                 <div className="p-6">
@@ -356,8 +348,8 @@ export default function GuidePage() {
                     Purchase ready-made collections with all images and promotional materials included.
                   </p>
                   
-                  <div className="bg-[#4561ad]/5 rounded-xl p-4 mb-4">
-                    <div className="text-xs font-bold text-[#4561ad] mb-2">What You Get:</div>
+                  <div className="bg-[#FF2BD6]/5 rounded-xl p-4 mb-4">
+                    <div className="text-xs font-bold text-[#FF2BD6] mb-2">What You Get:</div>
                     <ul className="text-xs text-[#a8a8b8] space-y-1">
                       <li>✓ Full ownership of all generated images</li>
                       <li>✓ Ability to generate more images</li>
@@ -368,12 +360,12 @@ export default function GuidePage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-[#DC1FFF]/30">
+                    <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-[#FF2BD6]/30">
                       <div className="text-lg">₿</div>
-                      <div className="text-xs font-bold text-[#DC1FFF]">Pay with BTC</div>
+                      <div className="text-xs font-bold text-[#FF2BD6]">Pay with BTC</div>
                       <div className="text-[10px] text-[#a8a8b8]/80">Direct to seller</div>
                     </div>
-                    <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-[#2DE2FF]/30">
+                    <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md bg-[#0f172a]/80 rounded-lg p-3 text-center border border-white/[0.08]">
                       <div className="text-lg">💳</div>
                       <div className="text-xs font-bold text-[#2DE2FF]">Pay with Credits</div>
                       <div className="text-[10px] text-[#a8a8b8]/80">Instant transfer</div>
@@ -385,23 +377,23 @@ export default function GuidePage() {
 
             {/* Marketplace Info Cards */}
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30 p-5">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-xl border border-white/[0.08] p-5">
                 <div className="text-2xl mb-2">🔒</div>
-                <h4 className="font-black text-white mb-1">Collection Locking</h4>
+                <h4 className="font-semibold text-white mb-1">Collection Locking</h4>
                 <p className="text-xs text-white/70">
                   Collections must be locked before listing. This prevents modifications while for sale.
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30 p-5">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-xl border border-white/[0.08] p-5">
                 <div className="text-2xl mb-2">🤝</div>
-                <h4 className="font-black text-white mb-1">Secure Transfer</h4>
+                <h4 className="font-semibold text-white mb-1">Secure Transfer</h4>
                 <p className="text-xs text-white/70">
                   Ownership transfers automatically when payment confirms. All collaborators are removed.
                 </p>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30 p-5">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-xl border border-white/[0.08] p-5">
                 <div className="text-2xl mb-2">📣</div>
-                <h4 className="font-black text-white mb-1">Promos Included</h4>
+                <h4 className="font-semibold text-white mb-1">Promos Included</h4>
                 <p className="text-xs text-white/70">
                   Promotional flyers created for the collection transfer to the new owner with the sale.
                 </p>
@@ -409,8 +401,8 @@ export default function GuidePage() {
             </div>
 
             {/* BTC Payment Flow */}
-            <div className="mt-8 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#DC1FFF]/30 p-6">
-              <h3 className="font-black text-white mb-4 flex items-center gap-2">
+            <div className="mt-8 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-[#FF2BD6]/30 p-6">
+              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
                 <span className="text-2xl">₿</span> Bitcoin Payment Flow
               </h3>
               <div className="grid md:grid-cols-4 gap-4">
@@ -421,7 +413,7 @@ export default function GuidePage() {
                   { step: '4', title: 'Confirm', desc: 'Wait for blockchain confirmation' },
                 ].map((item) => (
                   <div key={item.step} className="text-center">
-                    <div className="w-10 h-10 rounded-full bg-[#DC1FFF] text-white flex items-center justify-center font-black mx-auto mb-2">
+                    <div className="w-10 h-10 rounded-full bg-[#FF2BD6] text-white flex items-center justify-center font-semibold mx-auto mb-2">
                       {item.step}
                     </div>
                     <div className="font-bold text-white text-sm">{item.title}</div>
@@ -435,35 +427,35 @@ export default function GuidePage() {
           {/* Section 2: Compression */}
           <section id="compression" className="scroll-mt-32">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4561ad] to-[#5a7bc4] flex items-center justify-center text-2xl">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FF2BD6] to-[#5a7bc4] flex items-center justify-center text-2xl">
                 🗜️
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Image Compression</h2>
+                <h2 className="text-2xl font-semibold text-white">Image Compression</h2>
                 <p className="text-[#a8a8b8]/80">Optimize for affordable inscriptions</p>
               </div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-4 mb-8">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6 hover:border-green-400/50 hover:shadow-xl transition-all">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6 hover:border-green-400/50 hover:shadow-xl transition-all">
                 <div className="text-4xl mb-3">💎</div>
-                <div className="text-2xl font-black text-white">Under 10KB</div>
+                <div className="text-2xl font-semibold text-white">Under 10KB</div>
                 <div className="text-sm text-[#a8a8b8]/80 mt-1">Best value inscriptions</div>
                 <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
                   <div className="h-full w-full bg-gradient-to-r from-green-400 to-green-600" />
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6 hover:border-[#e27d0f]/50 hover:shadow-xl transition-all">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6 hover:border-[#2DE2FF]/50 hover:shadow-xl transition-all">
                 <div className="text-4xl mb-3">⚖️</div>
-                <div className="text-2xl font-black text-white">10-50KB</div>
+                <div className="text-2xl font-semibold text-white">10-50KB</div>
                 <div className="text-sm text-[#a8a8b8]/80 mt-1">Balanced quality/cost</div>
                 <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-full w-3/4 bg-gradient-to-r from-yellow-400 to-[#e27d0f]" />
+                  <div className="h-full w-3/4 bg-gradient-to-r from-yellow-400 to-[#2DE2FF]" />
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6 hover:border-red-400/50 hover:shadow-xl transition-all">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6 hover:border-red-400/50 hover:shadow-xl transition-all">
                 <div className="text-4xl mb-3">🔥</div>
-                <div className="text-2xl font-black text-white">50KB+</div>
+                <div className="text-2xl font-semibold text-white">50KB+</div>
                 <div className="text-sm text-[#a8a8b8]/80 mt-1">Premium inscriptions</div>
                 <div className="mt-4 h-2 bg-white/10 rounded-full overflow-hidden">
                   <div className="h-full w-1/2 bg-gradient-to-r from-red-400 to-red-600" />
@@ -471,37 +463,37 @@ export default function GuidePage() {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
-              <div className="bg-gradient-to-r from-[#4561ad]/10 to-[#4561ad]/5 px-6 py-4 border-b border-[#2DE2FF]/30">
-                <h3 className="font-black text-white">Recommended Settings</h3>
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] overflow-hidden">
+              <div className="bg-gradient-to-r from-[#FF2BD6]/10 to-[#FF2BD6]/5 px-6 py-4 border-b border-white/[0.08]">
+                <h3 className="font-semibold text-white">Recommended Settings</h3>
               </div>
               <div className="p-6 grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-white/[0.08]">
                     <span className="text-white/70 font-medium">Format</span>
-                    <span className="font-black text-[#2DE2FF]">WebP</span>
+                    <span className="font-semibold text-[#2DE2FF]">WebP</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-white/[0.08]">
                     <span className="text-white/70 font-medium">Resolution</span>
-                    <span className="font-black text-[#2DE2FF]">666 × 666px</span>
+                    <span className="font-semibold text-[#2DE2FF]">666 × 666px</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-white/[0.08]">
                     <span className="text-white/70 font-medium">Quality</span>
-                    <span className="font-black text-[#2DE2FF]">70-80%</span>
+                    <span className="font-semibold text-[#2DE2FF]">70-80%</span>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-white/[0.08]">
                     <span className="text-white/70 font-medium">Target Size</span>
-                    <span className="font-black text-[#2DE2FF]">Under 50KB</span>
+                    <span className="font-semibold text-[#2DE2FF]">Under 50KB</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-white/[0.08]">
                     <span className="text-white/70 font-medium">Maximum</span>
-                    <span className="font-black text-[#DC1FFF]">350KB</span>
+                    <span className="font-semibold text-[#FF2BD6]">350KB</span>
                   </div>
-                  <div className="flex justify-between items-center py-3 border-b border-[#2DE2FF]/30">
+                  <div className="flex justify-between items-center py-3 border-b border-white/[0.08]">
                     <span className="text-white/70 font-medium">Color Space</span>
-                    <span className="font-black text-[#2DE2FF]">sRGB</span>
+                    <span className="font-semibold text-[#2DE2FF]">sRGB</span>
                   </div>
                 </div>
               </div>
@@ -511,23 +503,23 @@ export default function GuidePage() {
           {/* Section 3: Cost Table */}
           <section id="cost-table" className="scroll-mt-32">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#e27d0f] to-[#f09840] flex items-center justify-center text-2xl">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2DE2FF] to-[#f09840] flex items-center justify-center text-2xl">
                 💰
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Inscription Cost Table</h2>
+                <h2 className="text-2xl font-semibold text-white">Inscription Cost Table</h2>
                 <p className="text-[#a8a8b8]/80">Total cost = reveal fee + 330 sat dust output</p>
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md text-white">
-                      <th className="px-4 py-4 text-left font-black">Size</th>
+                    <tr className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md text-white">
+                      <th className="px-4 py-4 text-left font-semibold">Size</th>
                       {feeRates.map(rate => (
-                        <th key={rate} className="px-4 py-4 text-center font-black">
+                        <th key={rate} className="px-4 py-4 text-center font-semibold">
                           <div>{rate}</div>
                           <div className="text-xs font-medium text-[#a8a8b8]/80">sat/vB</div>
                         </th>
@@ -536,15 +528,15 @@ export default function GuidePage() {
                   </thead>
                   <tbody>
                     {fileSizes.map((size, idx) => (
-                      <tr key={size} className={`${idx % 2 === 0 ? 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md' : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md'} hover:bg-[#4561ad]/5 transition-colors`}>
-                        <td className="px-4 py-3 font-black text-white border-r border-[#2DE2FF]/30">
+                      <tr key={size} className={`${idx % 2 === 0 ? 'bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md' : 'bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md'} hover:bg-[#FF2BD6]/5 transition-colors`}>
+                        <td className="px-4 py-3 font-semibold text-white border-r border-white/[0.08]">
                           {size} KB
                         </td>
                         {feeRates.map(rate => {
                           const { total } = calculateCost(size, rate)
                           return (
                             <td key={rate} className="px-4 py-3 text-center">
-                              <div className="font-black text-[#e27d0f]">{total.toLocaleString()}</div>
+                              <div className="font-semibold text-[#2DE2FF]">{total.toLocaleString()}</div>
                               <div className="text-xs text-[#a8a8b8]/80">{(total / 100000000).toFixed(8)}</div>
                             </td>
                           )
@@ -554,7 +546,7 @@ export default function GuidePage() {
                   </tbody>
                 </table>
               </div>
-              <div className="px-6 py-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-t border-[#2DE2FF]/30 text-sm text-[#a8a8b8]/80">
+              <div className="px-6 py-4 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-t border-white/[0.08] text-sm text-[#a8a8b8]/80">
                 * Commit transaction adds ~150-300 sats depending on wallet type and input count
               </div>
             </div>
@@ -567,15 +559,15 @@ export default function GuidePage() {
                 🚀
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Launchpad Minting</h2>
+                <h2 className="text-2xl font-semibold text-white">Launchpad Minting</h2>
                 <p className="text-[#a8a8b8]/80">Let collectors pay for inscriptions</p>
               </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
-                  <h3 className="font-black text-white mb-4">How It Works</h3>
+                <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6">
+                  <h3 className="font-semibold text-white mb-4">How It Works</h3>
                   <div className="space-y-4">
                     {[
                       { step: 1, text: 'Upload your collection images' },
@@ -585,7 +577,7 @@ export default function GuidePage() {
                       { step: 5, text: 'Collectors mint and inscribe on-demand' },
                     ].map(({ step, text }) => (
                       <div key={step} className="flex gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#4561ad] text-white flex items-center justify-center font-black text-sm flex-shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-[#FF2BD6] text-white flex items-center justify-center font-semibold text-sm flex-shrink-0">
                           {step}
                         </div>
                         <div className="text-[#a8a8b8] pt-1">{text}</div>
@@ -594,8 +586,8 @@ export default function GuidePage() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-2xl p-6">
-                  <h3 className="font-black text-white mb-3">✓ Benefits</h3>
+                <div className="bg-[#131318] rounded-2xl border border-white/[0.08] rounded-2xl p-6">
+                  <h3 className="font-semibold text-white mb-3">✓ Benefits</h3>
                   <ul className="space-y-2 text-[#a8a8b8] text-sm">
                     <li>• No upfront inscription costs</li>
                     <li>• Collectors pay network fees</li>
@@ -609,20 +601,20 @@ export default function GuidePage() {
               {/* Live Preview - Collection Card */}
               <div>
                 <div className="text-sm text-[#a8a8b8]/80 mb-3 font-medium">Preview: Collection Card</div>
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl overflow-hidden border border-[#2DE2FF]/30 shadow-xl max-w-sm">
-                  <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-[#2DE2FF]/30">
-                    <span className="px-3 py-1 rounded-full text-xs font-black text-white bg-green-600">
+                <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl overflow-hidden border border-white/[0.08] shadow-xl max-w-sm">
+                  <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-white/[0.08]">
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold text-white bg-green-600">
                       🔴 LIVE
                     </span>
-                    <button className="px-3 py-2 rounded-xl border border-[#2DE2FF]/30 text-white">
+                    <button className="px-3 py-2 rounded-xl border border-white/[0.08] text-white">
                       🔕
                     </button>
                   </div>
-                  <div className="relative aspect-[16/10] bg-gradient-to-br from-[#4561ad]/20 to-[#e27d0f]/20 flex items-center justify-center">
+                  <div className="relative aspect-[16/10] bg-gradient-to-br from-[#FF2BD6]/20 to-[#2DE2FF]/20 flex items-center justify-center">
                     <span className="text-6xl">🎨</span>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4">
-                      <div className="text-white text-xl font-black drop-shadow">Example Collection</div>
+                      <div className="text-white text-xl font-semibold drop-shadow">Example Collection</div>
                       <div className="mt-1 text-white/85 text-sm font-semibold">
                         Phase: <span className="text-white">Public Mint</span>
                       </div>
@@ -631,15 +623,15 @@ export default function GuidePage() {
                   <div className="p-5">
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-sm font-semibold text-white/70">Price</div>
-                      <div className="text-base font-black text-[#e27d0f]">5,000 sats</div>
+                      <div className="text-base font-semibold text-[#2DE2FF]">5,000 sats</div>
                     </div>
                     <div className="mt-3">
                       <div className="flex justify-between text-xs mb-1">
                         <span className="text-[#a8a8b8]/80">150 / 500</span>
-                        <span className="text-[#e27d0f] font-semibold">30%</span>
+                        <span className="text-[#2DE2FF] font-semibold">30%</span>
                       </div>
                       <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full w-[30%] bg-gradient-to-r from-[#e27d0f] to-[#f09840]" />
+                        <div className="h-full w-[30%] bg-gradient-to-r from-[#2DE2FF] to-[#f09840]" />
                       </div>
                     </div>
                   </div>
@@ -651,19 +643,19 @@ export default function GuidePage() {
           {/* Section 5: Self-Inscribe */}
           <section id="self-inscribe" className="scroll-mt-32">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-2xl">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#2DE2FF] to-[#A855F7] flex items-center justify-center text-2xl">
                 ⚡
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Self-Inscribing</h2>
+                <h2 className="text-2xl font-semibold text-white">Self-Inscribing</h2>
                 <p className="text-[#a8a8b8]/80">Full control - inscribe directly to your wallet</p>
               </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-500/10 to-purple-500/5 px-6 py-4 border-b border-[#2DE2FF]/30">
-                  <h3 className="font-black text-white">The Inscription Process</h3>
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] overflow-hidden">
+                <div className="bg-gradient-to-r from-[#A855F7]/10 to-[#A855F7]/5 px-6 py-4 border-b border-white/[0.08]">
+                  <h3 className="font-semibold text-white">The Inscription Process</h3>
                 </div>
                 <div className="p-6 space-y-6">
                   {[
@@ -673,11 +665,11 @@ export default function GuidePage() {
                     { icon: '✅', title: 'Export Metadata', desc: 'Download JSON with inscription IDs' },
                   ].map((step, idx) => (
                     <div key={idx} className="flex gap-4">
-                      <div className="w-12 h-12 rounded-2xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-2xl flex-shrink-0">
+                      <div className="w-12 h-12 rounded-2xl bg-[#A855F7]/15 border border-[#A855F7]/30 flex items-center justify-center text-2xl flex-shrink-0">
                         {step.icon}
                       </div>
                       <div>
-                        <div className="font-black text-white">{step.title}</div>
+                        <div className="font-semibold text-white">{step.title}</div>
                         <div className="text-sm text-[#a8a8b8]/80">{step.desc}</div>
                       </div>
                     </div>
@@ -688,7 +680,7 @@ export default function GuidePage() {
               {/* Live Preview - Batch Row */}
               <div>
                 <div className="text-sm text-[#a8a8b8]/80 mb-3 font-medium">Preview: Batch Selection</div>
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 overflow-hidden shadow-xl">
+                <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] overflow-hidden shadow-xl">
                   {[
                     { batch: 1, status: 'complete', count: '10/10', cost: 52340 },
                     { batch: 2, status: 'pending', count: '5/10', cost: 51280 },
@@ -696,38 +688,38 @@ export default function GuidePage() {
                   ].map((row) => (
                     <div
                       key={row.batch}
-                      className={`px-4 py-3 border-b border-[#2DE2FF]/30 flex items-center gap-4 ${
+                      className={`px-4 py-3 border-b border-white/[0.08] flex items-center gap-4 ${
                         row.status === 'complete' ? 'bg-[#2DE2FF]/10 border-l-4 border-l-[#2DE2FF]' :
-                        row.status === 'pending' ? 'bg-[#DC1FFF]/10 border-l-4 border-l-[#DC1FFF]' : ''
+                        row.status === 'pending' ? 'bg-[#FF2BD6]/10 border-l-4 border-l-[#FF2BD6]' : ''
                       }`}
                     >
                       {row.status === 'complete' ? (
                         <div className="w-6 h-6 rounded bg-[#2DE2FF] text-white flex items-center justify-center text-sm">✓</div>
                       ) : (
-                        <input type="checkbox" className="w-5 h-5 rounded border-[#2DE2FF]/30" defaultChecked={row.status === 'pending'} />
+                        <input type="checkbox" className="w-5 h-5 rounded border-white/[0.08]" defaultChecked={row.status === 'pending'} />
                       )}
-                      <div className="font-black text-white">Batch {row.batch}</div>
+                      <div className="font-semibold text-white">Batch {row.batch}</div>
                       <div className="flex-1" />
-                      <div className={`px-2 py-1 rounded-lg text-xs font-black ${
-                        row.status === 'complete' ? 'bg-[#2DE2FF]/20 text-[#2DE2FF] border border-[#2DE2FF]/30' :
-                        row.status === 'pending' ? 'bg-[#DC1FFF]/20 text-[#DC1FFF] border border-[#DC1FFF]/30' :
-                        'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md text-white/70'
+                      <div className={`px-2 py-1 rounded-lg text-xs font-semibold ${
+                        row.status === 'complete' ? 'bg-[#2DE2FF]/20 text-[#2DE2FF] border border-white/[0.08]' :
+                        row.status === 'pending' ? 'bg-[#FF2BD6]/20 text-[#FF2BD6] border border-[#FF2BD6]/30' :
+                        'bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md text-white/70'
                       }`}>
                         {row.status === 'complete' ? `✓ ${row.count}` : row.status === 'pending' ? `⏳ ${row.count}` : 'Ready'}
                       </div>
-                      <div className="font-black text-[#e27d0f]">{row.cost.toLocaleString()} sats</div>
+                      <div className="font-semibold text-[#2DE2FF]">{row.cost.toLocaleString()} sats</div>
                     </div>
                   ))}
-                  <div className="px-4 py-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md flex items-center justify-between">
+                  <div className="px-4 py-4 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md flex items-center justify-between">
                     <div className="text-sm text-[#a8a8b8]/80">3 batches selected</div>
-                    <button className="px-4 py-2 bg-[#4561ad] text-white rounded-xl font-black text-sm hover:bg-[#3a5294] transition-colors">
+                    <button className="px-4 py-2 bg-[#FF2BD6] text-white rounded-xl font-semibold text-sm hover:bg-[#d91fb8] transition-colors">
                       Inscribe Selected
                     </button>
                   </div>
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-xl p-4">
+                  <div className="bg-[#131318] rounded-2xl border border-white/[0.08] rounded-xl p-4">
                     <div className="text-sm text-[#2DE2FF] font-medium">Advantages</div>
                     <div className="mt-2 text-sm text-[#a8a8b8] space-y-1">
                       <div>✓ Own all inscriptions</div>
@@ -735,8 +727,8 @@ export default function GuidePage() {
                       <div>✓ Batch processing</div>
                     </div>
                   </div>
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#DC1FFF]/30 rounded-xl p-4">
-                    <div className="text-sm text-[#DC1FFF] font-medium">Considerations</div>
+                  <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border border-[#FF2BD6]/30 rounded-xl p-4">
+                    <div className="text-sm text-[#FF2BD6] font-medium">Considerations</div>
                     <div className="mt-2 text-sm text-[#a8a8b8] space-y-1">
                       <div>• Upfront costs</div>
                       <div>• Wallet required</div>
@@ -755,16 +747,16 @@ export default function GuidePage() {
                 📋
               </div>
               <div>
-                <h2 className="text-2xl font-black text-white">Metadata Export</h2>
+                <h2 className="text-2xl font-semibold text-white">Metadata Export</h2>
                 <p className="text-[#a8a8b8]/80">Get your collection data for marketplaces</p>
               </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl overflow-hidden border border-[#2DE2FF]/30">
-                <div className="px-6 py-4 border-b border-[#2DE2FF]/30 flex items-center justify-between">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl overflow-hidden border border-white/[0.08]">
+                <div className="px-6 py-4 border-b border-white/[0.08] flex items-center justify-between">
                   <div className="text-sm text-white/70">metadata.json</div>
-                  <button className="px-3 py-1 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 text-white/70 hover:text-white hover:border-[#2DE2FF]/50 rounded-lg text-sm transition-colors">
+                  <button className="px-3 py-1 bg-[#131318] rounded-2xl border border-white/[0.08] text-white/70 hover:text-white hover:border-white/16/50 rounded-lg text-sm transition-colors">
                     Copy
                   </button>
                 </div>
@@ -788,18 +780,18 @@ export default function GuidePage() {
               </div>
 
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
-                  <h3 className="font-black text-white mb-4">Export Options</h3>
+                <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6">
+                  <h3 className="font-semibold text-white mb-4">Export Options</h3>
                   <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30">
-                      <div className="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-xl">📋</div>
+                    <div className="flex items-center gap-4 p-4 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-xl border border-white/[0.08]">
+                      <div className="w-10 h-10 rounded-xl bg-[#A855F7]/15 border border-[#A855F7]/30 flex items-center justify-center text-xl">📋</div>
                       <div className="flex-1">
                         <div className="font-bold text-white">Copy JSON</div>
                         <div className="text-sm text-[#a8a8b8]/80">Copy to clipboard</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl border border-[#2DE2FF]/30">
-                      <div className="w-10 h-10 rounded-xl bg-[#2DE2FF]/20 border border-[#2DE2FF]/30 flex items-center justify-center text-xl">💾</div>
+                    <div className="flex items-center gap-4 p-4 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-xl border border-white/[0.08]">
+                      <div className="w-10 h-10 rounded-xl bg-[#2DE2FF]/20 border border-white/[0.08] flex items-center justify-center text-xl">💾</div>
                       <div className="flex-1">
                         <div className="font-bold text-white">Download File</div>
                         <div className="text-sm text-[#a8a8b8]/80">{`{collection}-metadata.json`}</div>
@@ -808,12 +800,12 @@ export default function GuidePage() {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl border border-[#2DE2FF]/30 p-6">
-                  <h3 className="font-black text-white mb-4">Included Fields</h3>
+                <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6">
+                  <h3 className="font-semibold text-white mb-4">Included Fields</h3>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     {['name', 'ordinal_number', 'inscription_id', 'commit_tx', 'reveal_tx', 'attributes', 'image_url', 'content_type'].map((field) => (
                       <div key={field} className="flex items-center gap-2 text-white/70">
-                        <span className="w-2 h-2 rounded-full bg-[#4561ad]" />
+                        <span className="w-2 h-2 rounded-full bg-[#FF2BD6]" />
                         <code className="text-white">{field}</code>
                       </div>
                     ))}

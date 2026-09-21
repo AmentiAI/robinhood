@@ -21,20 +21,20 @@ export default function MetadataModal({
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-xl border border-gray-200 shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+        className="bg-white rounded-xl border border-white/[0.08] shadow-xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
+        <div className="p-4 border-b border-white/[0.08] flex items-center justify-between bg-[#0c0c10]">
           <div>
-            <h3 className="text-lg font-bold text-gray-900">
+            <h3 className="text-lg font-bold text-white">
               {collectionName} - NFT Metadata
             </h3>
-            <p className="text-sm text-[#a8a8b8]/80">{metadata.length} minted NFTs</p>
+            <p className="text-sm text-zinc-500">{metadata.length} minted NFTs</p>
           </div>
           <button
             onClick={onClose}
-            className="text-[#a8a8b8] hover:text-gray-600 text-2xl font-bold leading-none"
+            className="text-zinc-500 hover:text-zinc-400 text-2xl font-bold leading-none"
           >
             ×
           </button>
@@ -42,19 +42,19 @@ export default function MetadataModal({
 
         {/* JSON Content */}
         <div className="flex-1 overflow-auto p-4">
-          <pre className="bg-[#14141e] text-green-400 p-4 rounded-lg text-sm overflow-x-auto font-mono whitespace-pre-wrap">
+          <pre className="bg-[#0c0c10] text-green-400 p-4 rounded-lg text-sm overflow-x-auto font-mono whitespace-pre-wrap">
             {JSON.stringify(metadata, null, 2)}
           </pre>
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200 flex items-center justify-between bg-gray-50">
+        <div className="p-4 border-t border-white/[0.08] flex items-center justify-between bg-[#0c0c10]">
           <button
             onClick={() => {
               navigator.clipboard.writeText(JSON.stringify(metadata, null, 2))
               alert('Metadata copied to clipboard!')
             }}
-            className="px-4 py-2 bg-[#4561ad] hover:bg-[#3a5294] text-white rounded-lg font-semibold transition-colors"
+            className="px-4 py-2 bg-[#FF2BD6] hover:bg-[#d91fb8] text-white rounded-lg font-semibold transition-colors"
           >
             📋 Copy JSON
           </button>
@@ -69,7 +69,7 @@ export default function MetadataModal({
               a.click()
               URL.revokeObjectURL(url)
             }}
-            className="px-4 py-2 bg-[#e27d0f] hover:bg-[#c96a0a] text-white rounded-lg font-semibold transition-colors"
+            className="px-4 py-2 bg-[#2DE2FF] hover:opacity-90 text-white rounded-lg font-semibold transition-colors"
           >
             💾 Download JSON
           </button>

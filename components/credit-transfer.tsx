@@ -142,11 +142,11 @@ export function CreditTransfer() {
   }
 
   return (
-    <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#2DE2FF]/30 rounded-xl shadow-lg p-6">
+    <div className="bg-[#131318] border border-white/[0.08] rounded-xl border-white/[0.08] rounded-xl shadow-lg p-6">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-white mb-2">💳 Credits</h2>
         <div className="flex items-baseline gap-2">
-          <span className="text-4xl font-black text-[#2DE2FF]">
+          <span className="text-4xl font-semibold text-[#2DE2FF]">
             {creditsLoading ? '...' : credits ?? 0}
           </span>
           <span className="text-white/70 text-sm">credits</span>
@@ -166,16 +166,16 @@ export function CreditTransfer() {
               value={recipientUsername}
               onChange={(e) => setRecipientUsername(e.target.value)}
               placeholder="@username"
-              className="w-full px-4 py-2 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 rounded-lg focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF] text-white placeholder:text-white/50"
+              className="w-full px-4 py-2 bg-[#131318] border border-white/[0.08] rounded-xl rounded-lg focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF] text-white placeholder:text-white/50"
             />
             {lookingUp && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                <div className="w-4 h-4 border-2 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border border-white/[0.08] border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
           {recipientProfile && (
-            <div className="mt-2 p-2 bg-[#2DE2FF]/10 border border-[#2DE2FF]/30 rounded text-sm">
+            <div className="mt-2 p-2 bg-[#2DE2FF]/10 border border-white/[0.08] rounded text-sm">
               <p className="text-white">
                 <span className="font-semibold">@{recipientProfile.username}</span>
                 {recipientProfile.displayName && (
@@ -200,7 +200,7 @@ export function CreditTransfer() {
             placeholder="0"
             min={1}
             max={credits || 0}
-            className="w-full px-4 py-2 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 rounded-lg focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF] text-white placeholder:text-white/50"
+            className="w-full px-4 py-2 bg-[#131318] border border-white/[0.08] rounded-xl rounded-lg focus:ring-2 focus:ring-[#2DE2FF] focus:border-[#2DE2FF] text-white placeholder:text-white/50"
           />
           {amount && parseInt(amount) > 0 && (
             <p className="mt-1 text-xs text-[#a8a8b8]/80">

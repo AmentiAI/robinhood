@@ -7,6 +7,8 @@ import { useWallet } from '@/lib/wallet/compatibility'
 import { isAuthorized } from '@/lib/auth/access-control'
 import { estimateImageGenerationCost, buildFullPrompt, formatCost } from '@/lib/cost-estimation'
 import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace, ToolPanel } from '@/components/tool-workspace'
 
 interface SimpleImage {
   id: string
@@ -368,88 +370,77 @@ export default function SimpleGeneratePage() {
   // Access control check
   if (!isConnected || !authorized) {
     return (
-      <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center">
-        <div className="text-center space-y-4 max-w-md mx-auto px-6">
-          <h1 className="text-3xl font-bold text-[#EF4444]">Access Restricted</h1>
-          <p className="text-white">
-            This feature is only available to authorized users.
-          </p>
-          {!isConnected && (
-            <p className="text-[#808080] text-sm">Please connect your wallet to continue.</p>
-          )}
-          <Link
-            href="/"
-            className="inline-block px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition-colors"
-          >
-            Go Home
-          </Link>
-        </div>
+      <div className="min-h-screen bg-[#0a0a0c]">
+        <PageHeader
+          title="Simple image generator"
+          subtitle="Create unique images with edge-to-edge borders — no traits needed"
+        />
+        <ToolWorkspace>
+          <ToolPanel title="Access restricted" subtitle="This feature is only available to authorized users">
+            {!isConnected && (
+              <p className="text-sm text-zinc-500 mb-4">Please connect your wallet to continue.</p>
+            )}
+            <Link
+              href="/"
+              className="hg-btn-glow inline-flex h-10 items-center px-5 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+            >
+              Go home
+            </Link>
+          </ToolPanel>
+        </ToolWorkspace>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0c0d] w-full">
-      {/* Header */}
-      <header className="border-b border-gray-800 bg-black/40 backdrop-blur-sm sticky top-0 z-40 w-full">
-        <div className="w-full px-8 py-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-4xl font-bold text-white">Simple Image Generator</h1>
-            <Link
-              href="/"
-              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors text-lg"
-            >
-              Back to Collections
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#0a0a0c] w-full">
+      <PageHeader
+        title="Simple image generator"
+        subtitle="Create unique images with edge-to-edge borders — no traits needed"
+        action={
+          <Link
+            href="/collections"
+            className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+          >
+            Back to collections
+          </Link>
+        }
+      />
 
-      <main className="w-full px-8 py-12">
-        <div className="w-full max-w-[1800px] mx-auto">
-          {/* Generation Form */}
-          <div className="mb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              {/* Left: Generation Controls */}
-              <div className="space-y-8">
-                <div>
-                  <h2 className="text-3xl font-bold text-white mb-6">Generate Unique Images</h2>
-                  <p className="text-[#808080] text-lg mb-6">
-                    Create unique images with edge-to-edge borders. No traits needed - just describe what you want!
-                  </p>
-                </div>
-
-                <div className="space-y-6">
+      <ToolWorkspace>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-8">
+          <ToolPanel title="Generate" subtitle="Describe what you want — each image follows the same art style">
+            <div className="space-y-5">
                   {/* Image Description */}
                   <div>
-                    <label className="block text-lg font-medium text-white mb-3">
-                      Image Description *
+                    <label className="block text-sm font-semibold text-white mb-2">
+                      Image description *
                     </label>
                     <textarea
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       placeholder="Describe what you want to generate... (e.g., 'A mystical crystal glowing with blue energy', 'A medieval sword with ornate handle', etc.)"
-                      className="w-full h-40 p-4 border border-[#2DE2FF]/30 rounded-lg bg-[#15181a] text-white text-base placeholder-gray-500 focus:border-[#2DE2FF] focus:outline-none resize-none"
+                      className="w-full h-40 p-4 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white text-sm placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none resize-none"
                       disabled={isGenerating}
                     />
                   </div>
 
                   {/* Batch Count */}
                   <div>
-                    <label className="block text-lg font-medium text-white mb-3">
-                      Generate Count (1-10)
+                    <label className="block text-sm font-semibold text-white mb-2">
+                      Generate count (1-10)
                     </label>
-                    <div className="flex gap-3 mb-3">
+                    <div className="flex gap-2 mb-3">
                       {[1, 5, 10].map((count) => (
                         <button
                           key={count}
                           type="button"
                           onClick={() => setBatchCount(count)}
                           disabled={isGenerating}
-                          className={`flex-1 py-3 px-6 rounded-lg font-semibold text-lg transition-colors ${
+                          className={`flex-1 py-2.5 px-4 rounded-full font-semibold text-sm transition-colors ${
                             batchCount === count
-                              ? 'bg-purple-600 text-white'
-                              : 'bg-[#15181a] text-white hover:bg-[#15181a]/80'
+                              ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                              : 'bg-[#0c0c10] border border-white/[0.1] text-zinc-400 hover:text-white'
                           }`}
                         >
                           {count}
@@ -465,35 +456,34 @@ export default function SimpleGeneratePage() {
                         const val = Math.max(1, Math.min(10, parseInt(e.target.value) || 1))
                         setBatchCount(val)
                       }}
-                      className="w-full p-4 border border-[#2DE2FF]/30 rounded-lg bg-[#15181a] text-white text-base placeholder-gray-500 focus:border-[#2DE2FF] focus:outline-none"
+                      className="w-full p-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white text-sm placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
                       disabled={isGenerating}
                     />
-                    <p className="text-sm text-[#808080]/80 mt-2">
+                    <p className="text-xs text-zinc-500 mt-2">
                       Each image will be unique but follow the same art style and vibe
                     </p>
                   </div>
 
                   {/* Cost Estimation */}
                   {costEstimation && (
-                    <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 border border-blue-700/50 rounded-lg p-6">
-                      <h3 className="text-lg font-semibold text-blue-300 mb-4 flex items-center gap-2">
-                        <span>💰</span>
-                        Cost Estimation
+                    <div className="rounded-xl border border-[#2DE2FF]/25 bg-[#2DE2FF]/[0.06] p-4">
+                      <h3 className="text-sm font-semibold text-[#2DE2FF] mb-3">
+                        Cost estimation
                       </h3>
-                      <div className="space-y-3 text-base">
+                      <div className="space-y-2 text-sm">
                         <div className="flex justify-between items-center">
-                          <span className="text-[#808080]">Per Image:</span>
-                          <span className="text-white font-mono font-semibold text-lg">{formatCost(costEstimation.perImage)}</span>
+                          <span className="text-zinc-500">Per image</span>
+                          <span className="text-white font-mono font-semibold">{formatCost(costEstimation.perImage)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-[#808080]">Total ({batchCount} image{batchCount > 1 ? 's' : ''}):</span>
-                          <span className="text-green-400 font-mono font-bold text-xl">{formatCost(costEstimation.total)}</span>
+                          <span className="text-zinc-500">Total ({batchCount} image{batchCount > 1 ? 's' : ''})</span>
+                          <span className="text-emerald-400 font-mono font-bold">{formatCost(costEstimation.total)}</span>
                         </div>
-                        <div className="flex justify-between items-center text-sm text-[#808080]/80 pt-2 border-t border-[#2DE2FF]/20">
-                          <span>Estimated Prompt Length:</span>
+                        <div className="flex justify-between items-center text-xs text-zinc-500 pt-2 border-t border-white/[0.08]">
+                          <span>Estimated prompt length</span>
                           <span className="font-mono">{costEstimation.estimatedTokens} tokens</span>
                         </div>
-                        <div className="text-sm text-[#808080]/80 pt-1">
+                        <div className="text-xs text-zinc-500 pt-1">
                           <span>Model: gpt-image-2 | Size: {costEstimation.size} | Quality: {costEstimation.quality.toUpperCase()}</span>
                         </div>
                       </div>
@@ -502,28 +492,28 @@ export default function SimpleGeneratePage() {
 
                   {/* Art Style */}
                   <div>
-                    <label className="block text-lg font-medium text-white mb-3">
-                      Art Style
+                    <label className="block text-sm font-semibold text-white mb-2">
+                      Art style
                     </label>
                     <input
                       type="text"
                       value={artStyle}
                       onChange={(e) => setArtStyle(e.target.value)}
                       placeholder="Professional digital illustration style..."
-                      className="w-full p-4 border border-[#2DE2FF]/30 rounded-lg bg-[#15181a] text-white text-base placeholder-gray-500 focus:border-[#2DE2FF] focus:outline-none"
+                      className="w-full p-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white text-sm placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
                       disabled={isGenerating}
                     />
                   </div>
 
                   {/* Border Style */}
                   <div>
-                    <label className="block text-lg font-medium text-white mb-3">
-                      Border Style
+                    <label className="block text-sm font-semibold text-white mb-2">
+                      Border style
                     </label>
                     <select
                       value={borderStyle}
                       onChange={(e) => setBorderStyle(e.target.value)}
-                      className="w-full p-4 border border-[#2DE2FF]/30 rounded-lg bg-[#15181a] text-white text-base focus:border-[#2DE2FF] focus:outline-none"
+                      className="w-full p-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white text-sm focus:border-[#2DE2FF] focus:outline-none"
                       disabled={isGenerating}
                     >
                       {borderOptions.map((option) => (
@@ -538,92 +528,85 @@ export default function SimpleGeneratePage() {
                   <button
                     onClick={handleGenerate}
                     disabled={isGenerating || !description.trim()}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-5 px-8 rounded-lg text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    className="hg-btn-glow w-full inline-flex items-center justify-center gap-2 bg-[#2DE2FF] text-[#0a0a0c] font-bold py-3 px-6 rounded-full text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isGenerating ? (
                       <span className="flex flex-col items-center justify-center gap-2">
-                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                        <BrandLoader variant="inline" label="Generating" />
                         {generationProgress.total > 0 && (
-                          <span className="text-sm">
-                            Generating {generationProgress.current}/{generationProgress.total}...
+                          <span className="text-xs text-[#0a0a0c]/80">
+                            Generating {generationProgress.current}/{generationProgress.total}…
                           </span>
                         )}
                       </span>
                     ) : (
-                      `✨ Generate ${batchCount} Image${batchCount > 1 ? 's' : ''}`
+                      `Generate ${batchCount} image${batchCount > 1 ? 's' : ''}`
                     )}
                   </button>
 
                   {error && (
-                    <div className="bg-red-900/50 border border-[#EF4444]/20 text-red-200 px-4 py-3 rounded-lg">
+                    <div className="rounded-xl border border-red-500/30 bg-red-500/[0.08] text-red-300 px-4 py-3 text-sm">
                       {error}
                     </div>
                   )}
                   {successMessage && (
-                    <div className="bg-green-900/50 border border-green-700 text-green-200 px-4 py-3 rounded-lg">
-                      ✓ {successMessage}
+                    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.08] text-emerald-200 px-4 py-3 text-sm">
+                      {successMessage}
                     </div>
                   )}
-                </div>
-              </div>
-
-              {/* Right: Generation Prompt Display */}
-              <div className="bg-[#15181a] border border-[#2DE2FF]/20 rounded-lg shadow-lg">
-                <div className="flex items-center justify-between p-6 border-b border-[#2DE2FF]/20">
-                  <h3 className="text-2xl font-semibold text-white">Generation Prompt</h3>
-                  <div className="flex items-center gap-3">
-                    <span className="text-base text-[#808080]">
-                      {currentPrompt.length.toLocaleString()} characters
-                    </span>
-                    {currentPrompt && (
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(currentPrompt)
-                        }}
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-[#2DE2FF] text-base font-semibold"
-                      >
-                        Copy
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <textarea
-                    value={currentPrompt}
-                    onChange={(e) => setCurrentPrompt(e.target.value)}
-                    className="w-full h-[500px] p-4 border border-[#2DE2FF]/30 rounded-md bg-[#15181a] text-gray-100 font-mono text-base resize-none"
-                    placeholder="Generation prompt will appear here after creating an image..."
-                    readOnly
-                  />
-                </div>
-              </div>
             </div>
-          </div>
+          </ToolPanel>
+
+          <ToolPanel
+            title="Generation prompt"
+            action={
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-zinc-500">
+                  {currentPrompt.length.toLocaleString()} chars
+                </span>
+                {currentPrompt && (
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(currentPrompt)
+                    }}
+                    className="hg-btn-glow px-3.5 py-1.5 bg-[#2DE2FF] text-[#0a0a0c] rounded-full hover:opacity-90 text-xs font-bold"
+                  >
+                    Copy
+                  </button>
+                )}
+              </div>
+            }
+          >
+            <textarea
+              value={currentPrompt}
+              onChange={(e) => setCurrentPrompt(e.target.value)}
+              className="w-full h-[420px] p-4 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-zinc-100 font-mono text-sm resize-none focus:outline-none focus:border-[#2DE2FF]"
+              placeholder="Generation prompt will appear here after creating an image..."
+              readOnly
+            />
+          </ToolPanel>
+        </div>
 
           {/* Generated Images Grid */}
           {images.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-4xl font-bold text-white">
-                  Generated Images ({images.length})
-                </h2>
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+                  Generated images ({images.length})
+                </p>
                 <button
                   onClick={() => setImages([])}
-                  className="text-lg text-[#808080] hover:text-white font-semibold"
+                  className="text-sm font-semibold text-[#FF2BD6] hover:opacity-80"
                 >
-                  Clear All
+                  Clear all
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {images.map((image) => (
                   <div
                     key={image.id}
-                    className="bg-[#15181a] border border-[#2DE2FF]/20 rounded-lg overflow-hidden shadow-lg hover:border-[#2DE2FF]/40 transition-all"
+                    className="hg-card bg-[#131318] border border-white/[0.1] rounded-2xl overflow-hidden"
                   >
                     <div className="relative aspect-square">
                       <Image
@@ -633,40 +616,34 @@ export default function SimpleGeneratePage() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="p-5">
-                      <p className="text-base text-white mb-3 line-clamp-2">
+                    <div className="p-4">
+                      <p className="text-sm text-white mb-2 line-clamp-2">
                         {image.description}
                       </p>
-                      <p className="text-sm text-[#808080]/80 mb-4">
+                      <p className="text-xs text-zinc-500 mb-3">
                         {new Date(image.createdAt).toLocaleString()}
                       </p>
-                      <div className="flex gap-3">
+                      <div className="flex gap-2">
                         <button
                           onClick={() => handleSaveToCollection(image)}
                           disabled={!christmasCollectionId || savingImages.has(image.id)}
-                          className="flex-1 text-base bg-emerald-600 hover:bg-emerald-700 disabled:bg-[#15181a]/80 disabled:cursor-not-allowed text-white py-3 px-4 rounded font-semibold transition-colors"
+                          className="flex-1 text-xs bg-[#2DE2FF] hover:opacity-90 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-[#0a0a0c] py-2 px-3 rounded-full font-bold transition-colors"
                         >
                           {savingImages.has(image.id) ? (
-                            <span className="flex items-center justify-center gap-1">
-                              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                              </svg>
-                              Saving...
-                            </span>
+                            <BrandLoader variant="inline" label="Saving" />
                           ) : (
-                            '💾 Save to Christmas'
+                            'Save to Christmas'
                           )}
                         </button>
                         <button
                           onClick={() => handleDelete(image.id)}
-                          className="flex-1 text-base bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded font-semibold transition-colors"
+                          className="flex-1 text-xs rounded-full font-semibold bg-[#FF2BD6]/15 text-[#FF2BD6] border border-[#FF2BD6]/25 hover:bg-[#FF2BD6]/25 py-2 px-3 transition-colors"
                         >
                           Delete
                         </button>
                       </div>
                       {saveMessages[image.id] && (
-                        <p className={`text-sm mt-3 ${
+                        <p className={`text-xs mt-2 ${
                           saveMessages[image.id].startsWith('✅')
                             ? 'text-[#2DE2FF]'
                             : 'text-[#EF4444]'
@@ -682,14 +659,11 @@ export default function SimpleGeneratePage() {
           )}
 
           {images.length === 0 && !isGenerating && (
-            <div className="text-center py-32">
-              <div className="text-8xl mb-6">🎨</div>
-              <p className="text-3xl text-[#808080] mb-3">No images generated yet</p>
-              <p className="text-xl text-[#808080]/80">Describe what you want and generate your first image!</p>
-            </div>
+            <ToolPanel title="No images yet" subtitle="Describe what you want and generate your first image">
+              <p className="text-sm text-zinc-500">Results will appear here after generation.</p>
+            </ToolPanel>
           )}
-        </div>
-      </main>
+      </ToolWorkspace>
     </div>
   )
 }

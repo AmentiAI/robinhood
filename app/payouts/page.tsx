@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { useProfile } from '@/lib/profile/useProfile'
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
 
 interface Payout {
   id: string
@@ -206,7 +208,7 @@ export default function PayoutsPage() {
   if (!isConnected) {
     return (
       <div className="max-w-7xl mx-auto p-8">
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg shadow p-6 text-center border border-[#2DE2FF]/30">
+        <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg shadow p-6 text-center border border-white/[0.08]">
           <p className="text-white/70">Please connect your wallet to view payouts</p>
         </div>
       </div>
@@ -214,33 +216,24 @@ export default function PayoutsPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Header */}
-      <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#2DE2FF]/30">
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">Payouts</h1>
-              <p className="text-[#a5b4fc] mt-2 text-lg">
-                View your community revenue payout history
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Payouts"
+        subtitle="View your community revenue payout history"
+      />
 
-      <div className="max-w-7xl mx-auto p-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-red-500/50 rounded-lg">
+          <div className="mb-4 p-4 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border border-red-500/50 rounded-lg">
             <p className="text-[#EF4444]">{error}</p>
           </div>
         )}
 
         {/* Opt-In Card */}
         {profile && (profile.optIn !== true) && (
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
+          <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
             <h2 className="text-xl font-bold text-white mb-2">🔔 Opt-In Required</h2>
             {loadingOwed ? (
               <div className="flex items-center gap-3 mb-4">
@@ -255,7 +248,7 @@ export default function PayoutsPage() {
                 <button
                   onClick={handleOptIn}
                   disabled={optingIn}
-                  className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="hg-btn-glow px-6 py-3 bg-[#2DE2FF] hover:opacity-90 text-[#0a0a0c] rounded-full font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {optingIn ? 'Opting In...' : '✅ Opt-In to Payouts'}
                 </button>
@@ -282,14 +275,14 @@ export default function PayoutsPage() {
         {/* Live Preview Card - Shows what you'd get in the NEXT payout */}
         {profile?.optIn && (
           loadingPreview ? (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-green-500/30">
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-green-500/30">
               <div className="flex items-center gap-3">
                 <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
                 <p className="text-white/70">Loading live preview...</p>
               </div>
             </div>
           ) : previewData && previewData.in_preview && previewData.preview_data && previewData.user_data ? (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-green-500/50 rounded-lg shadow-lg p-6 mb-6">
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 border-green-500/50 rounded-lg shadow-lg p-6 mb-6">
               <h2 className="text-xl font-bold text-white mb-2">🔮 Next Payout Preview</h2>
               <p className="text-sm text-[#a8a8b8]/80 mb-4">Live estimate based on current holders and accumulated revenue since last payout</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -342,7 +335,7 @@ export default function PayoutsPage() {
               )}
             </div>
           ) : previewData && !previewData.in_preview ? (
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 border-yellow-500/50 rounded-lg shadow-lg p-6 mb-6">
               <h2 className="text-xl font-bold text-white mb-2">🔮 Next Payout Preview</h2>
               <p className="text-white/70 mb-4">{previewData.message || 'Unable to calculate preview'}</p>
               {previewData.preview_data && (
@@ -365,14 +358,13 @@ export default function PayoutsPage() {
 
         {/* Loading State */}
         {loading ? (
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg shadow p-12 text-center border border-[#2DE2FF]/30">
-            <div className="w-16 h-16 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-white/70">Loading payouts...</p>
+          <div className="rounded-2xl border border-white/[0.1] bg-[#131318]">
+            <BrandLoader variant="card" label="Loading payouts" />
           </div>
         ) : payoutsData ? (
           <>
             {/* Summary Card */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-[#2DE2FF]/30">
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg shadow p-6 mb-6 border border-white/[0.08]">
               <h2 className="text-xl font-bold text-white mb-4">Payout History</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -392,31 +384,31 @@ export default function PayoutsPage() {
 
             {/* Payouts List */}
             {payoutsData.payouts.length === 0 ? (
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg shadow p-12 text-center border border-[#2DE2FF]/30">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg shadow p-12 text-center border border-white/[0.08]">
                 <p className="text-white text-lg">No payouts yet</p>
                 <p className="text-[#a8a8b8]/80 text-sm mt-2">
                   Payouts will appear here once you receive community revenue distributions.
                 </p>
               </div>
             ) : (
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg shadow overflow-hidden border border-[#2DE2FF]/30">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg shadow overflow-hidden border border-white/[0.08]">
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-[#2DE2FF]/20">
-                    <thead className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md">
+                    <thead className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">
                           Date
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">
                           Amount
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">
                           Ordmakers
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">
                           Share
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">
                           Transaction
                         </th>
                       </tr>

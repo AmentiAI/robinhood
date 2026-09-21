@@ -7,6 +7,8 @@ import { PageHeader } from '@/components/page-header'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { useCredits } from '@/lib/credits-context'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace } from '@/components/tool-workspace'
 
 interface Collection {
   id: string
@@ -185,236 +187,265 @@ export default function CollectionsPage() {
   }, [activeTab, ownedCollections, collabCollections, statusFilter, searchQuery])
 
   if (loading || loadingCredits) {
-    return (
-      <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-[#2DE2FF] border-t-transparent animate-spin" />
-      </div>
-    )
+    return <BrandLoader label="Loading collections" />
   }
 
   if (isConnected && currentAddress && (credits === null || credits === 0)) {
     return (
-      <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center p-6">
-        <div className="max-w-md bg-[#15181a] border-2 border-[#2DE2FF] p-8 text-center">
-          <div className="w-20 h-20 mx-auto mb-6 bg-[#0a0c0d] border-2 border-[#2DE2FF] flex items-center justify-center">
-            <svg className="w-10 h-10 text-[#2DE2FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.08] bg-[#131318] p-8 text-center shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+          <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-[#0c0c10] border border-white/[0.08] flex items-center justify-center">
+            <svg className="w-7 h-7 text-[#2DE2FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-4 uppercase tracking-wide">NO CREDITS AVAILABLE</h2>
-          <p className="text-[#808080] mb-6">
-            You need credits to access the collection management page.
+          <h2 className="text-xl font-semibold text-white mb-2">No credits available</h2>
+          <p className="text-zinc-500 mb-6 text-sm leading-relaxed">
+            You need credits to manage collections.
           </p>
           <Link
-            href="/"
-            className="inline-block px-8 py-3 bg-[#0a0c0d] border-2 border-[#2DE2FF] text-[#2DE2FF] font-semibold uppercase tracking-wide hover:bg-[#2DE2FF] hover:text-black transition-all duration-300"
+            href="/buy-credits"
+            className="inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-bold text-sm hover:bg-[#7aefff] transition-colors"
           >
-            Purchase Credits
+            Buy credits
           </Link>
         </div>
       </div>
     )
   }
 
+  const statusLabel = (status?: string) => {
+    if (status === 'draft') return 'Draft'
+    if (status === 'launchpad' || status === 'launchpad_live') return 'Launchpad'
+    if (status === 'self_inscribe') return 'Inscribe'
+    if (status === 'marketplace') return 'Archived'
+    if (status === 'deleted') return 'Deleted'
+    return 'Collection'
+  }
+
   return (
-    <div className="min-h-screen bg-[#0a0c0d]">
+    <div className="min-h-screen bg-[#0a0a0c]">
       <PageHeader
         title="Collections"
-        subtitle="Manage and organize your NFT collections"
-      />
-
-      <div className="container mx-auto px-6 lg:px-12 py-12">
-        <div className="max-w-7xl mx-auto">
-          {/* Create Collection CTA - NEW Professional Card */}
+        subtitle="Build, manage, and launch your NFT projects"
+        action={
           <Link
             href="/collections/create"
-            className="block mb-12 group"
+            className="inline-flex h-10 px-5 items-center rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0a0a0c] text-sm font-bold hg-btn-glow"
+            style={{ backgroundSize: '200% 100%', animation: 'hg-shimmer 5s linear infinite' }}
           >
-            <div className="relative overflow-hidden bg-[#0a0c0d] border-2 border-[#2DE2FF] p-12 text-center transition-all duration-300 group-hover:bg-[#2DE2FF]">
-              <div className="relative z-10">
-                <div className="text-6xl mb-4">✨</div>
-                <h2 className="text-3xl font-bold text-white mb-2 uppercase tracking-wide group-hover:text-black transition-colors duration-300">Create New Collection</h2>
-                <p className="text-xl text-[#808080] group-hover:text-black transition-colors duration-300">Start building your NFT collection today</p>
-              </div>
-            </div>
+            Create collection
           </Link>
+        }
+      />
 
-          {/* Search and Filter Bar - NEW Professional */}
-          <div className="bg-[#15181a] border border-[#404040] p-6 mb-8">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#808080]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search collections..."
-                  className="w-full pl-12 pr-4 py-3 bg-[#0a0c0d] border-2 border-[#404040] focus:border-[#2DE2FF] text-white placeholder:text-[#808080] transition-all duration-300 outline-none"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setActiveTab('collections')}
-                  className={`px-6 py-3 font-semibold uppercase tracking-wide transition-all duration-300 ${
-                    activeTab === 'collections'
-                      ? 'bg-[#2DE2FF] text-black'
-                      : 'bg-[#0a0c0d] border-2 border-[#404040] text-[#808080] hover:text-white hover:border-[#2DE2FF]'
-                  }`}
-                >
-                  My Collections ({ownedCollections.length})
-                </button>
-                <button
-                  onClick={() => setActiveTab('collabs')}
-                  className={`px-6 py-3 font-semibold uppercase tracking-wide transition-all duration-300 ${
-                    activeTab === 'collabs'
-                      ? 'bg-[#2DE2FF] text-black'
-                      : 'bg-[#0a0c0d] border-2 border-[#404040] text-[#808080] hover:text-white hover:border-[#2DE2FF]'
-                  }`}
-                >
-                  Collaborations ({collabCollections.length})
-                </button>
-              </div>
+      <ToolWorkspace>
+        <div className="rounded-2xl border border-white/[0.1] bg-[#131318] p-4 sm:p-5 mb-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+          <div className="flex flex-col md:flex-row gap-3">
+            <div className="flex-1 relative">
+              <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search collections…"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#0c0c10] border border-white/[0.06] focus:border-[#2DE2FF]/40 text-white placeholder:text-zinc-600 outline-none text-sm"
+              />
             </div>
-
-            {/* Status Filters */}
-            {activeTab === 'collections' && (
-              <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-                {[
-                  { value: 'all', label: 'All' },
-                  { value: 'draft', label: 'Draft' },
-                  { value: 'launchpad', label: 'Launchpad' },
-                  { value: 'self_inscribe', label: 'Inscribe' },
-                  { value: 'deleted', label: 'Deleted' }
-                ].map(filter => (
-                  <button
-                    key={filter.value}
-                    onClick={() => setStatusFilter(filter.value as any)}
-                    className={`px-4 py-2 font-medium whitespace-nowrap uppercase tracking-wide transition-all duration-300 ${
-                      statusFilter === filter.value
-                        ? 'bg-[#0a0c0d] border-2 border-[#2DE2FF] text-[#2DE2FF]'
-                        : 'bg-[#0a0c0d] border border-[#404040] text-[#808080] hover:text-white hover:border-[#2DE2FF]'
-                    }`}
-                  >
-                    {filter.label}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="flex gap-1 p-1 rounded-full bg-[#0c0c10] border border-white/[0.08]">
+              <button
+                onClick={() => setActiveTab('collections')}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  activeTab === 'collections'
+                    ? 'bg-white text-black'
+                    : 'text-zinc-500 hover:text-white'
+                }`}
+              >
+                Mine ({ownedCollections.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('collabs')}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  activeTab === 'collabs'
+                    ? 'bg-white text-black'
+                    : 'text-zinc-500 hover:text-white'
+                }`}
+              >
+                Collabs ({collabCollections.length})
+              </button>
+            </div>
           </div>
 
-          {/* Collections Grid - NEW Professional Cards */}
-          {filteredCollections.length === 0 ? (
-            <div className="bg-[#15181a] border-2 border-[#404040] p-12 text-center">
-              <div className="text-6xl mb-4">🎨</div>
-              <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-wide">NO COLLECTIONS FOUND</h2>
-              <p className="text-[#808080] mb-6">
-                {searchQuery ? 'Try adjusting your search' : 'Create your first collection to get started'}
-              </p>
-              {!searchQuery && (
-                <Link
-                  href="/collections/create"
-                  className="inline-block px-8 py-3 bg-[#0a0c0d] border-2 border-[#2DE2FF] text-[#2DE2FF] font-semibold uppercase tracking-wide hover:bg-[#2DE2FF] hover:text-black transition-all duration-300"
+          {activeTab === 'collections' && (
+            <div className="flex gap-2 mt-4 overflow-x-auto pb-1">
+              {[
+                { value: 'all', label: 'All' },
+                { value: 'draft', label: 'Draft' },
+                { value: 'launchpad', label: 'Launchpad' },
+                { value: 'self_inscribe', label: 'Inscribe' },
+                { value: 'deleted', label: 'Deleted' },
+              ].map((filter) => (
+                <button
+                  key={filter.value}
+                  onClick={() => setStatusFilter(filter.value as any)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
+                    statusFilter === filter.value
+                      ? 'bg-white text-black'
+                      : 'bg-[#0c0c10] border border-white/[0.08] text-zinc-500 hover:text-white'
+                  }`}
                 >
-                  Create Collection
-                </Link>
-              )}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCollections.map((collection) => (
-                <div
-                  key={collection.id}
-                  className="bg-[#15181a] border-2 border-[#404040] overflow-hidden hover:border-[#2DE2FF] transition-all duration-300 group"
-                >
-                  {/* Collection Image */}
-                  <div className="relative aspect-video bg-[#0a0c0d] overflow-hidden">
-                    {thumbnails[collection.id] || collection.banner_image_url || collection.mobile_image_url ? (
-                      <img
-                        src={thumbnails[collection.id] || collection.banner_image_url || collection.mobile_image_url}
-                        alt={collection.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-6xl mb-2 opacity-50">🎨</div>
-                          <p className="text-[#808080] text-sm font-semibold uppercase tracking-wide">No Preview</p>
-                        </div>
-                      </div>
-                    )}
-                    {/* Status Badge Overlay */}
-                    <div className="absolute top-4 right-4">
-                      <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wide backdrop-blur-sm ${
-                        collection.status === 'draft' ? 'bg-[#808080]/80 text-white border border-white/20' :
-                        collection.status === 'launchpad' || collection.status === 'launchpad_live' ? 'bg-[#2DE2FF]/80 text-black border border-black/20' :
-                        collection.status === 'marketplace' ? 'bg-[#2DE2FF]/80 text-black border border-black/20' :
-                        'bg-[#2DE2FF]/80 text-black border border-black/20'
-                      }`}>
-                        {collection.status === 'draft' && '📝 Draft'}
-                        {(collection.status === 'launchpad' || collection.status === 'launchpad_live') && '🚀 Launchpad'}
-                        {collection.status === 'self_inscribe' && '⚡ Inscribe'}
-                        {collection.status === 'marketplace' && '📦 Archived'}
-                        {collection.status === 'deleted' && '🗑️ Deleted'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Collection Header */}
-                  <div className="p-6 border-b border-[#404040]">
-                    <div className="mb-3">
-                      <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">{collection.name}</h3>
-                      {collection.total_ordinals !== undefined && (
-                        <p className="text-sm text-[#2DE2FF] font-semibold uppercase tracking-wide">
-                          {collection.total_ordinals} {collection.total_ordinals === 1 ? 'Item' : 'Items'}
-                        </p>
-                      )}
-                    </div>
-                    {collection.description && (
-                      <p className="text-sm text-[#808080] line-clamp-2">{collection.description}</p>
-                    )}
-                  </div>
-
-                  {/* Collection Actions */}
-                  <div className="p-6 space-y-2">
-                    <Link
-                      href={`/collections/${collection.id}`}
-                      className="block w-full px-4 py-3 bg-[#2DE2FF] text-black font-semibold uppercase tracking-wide text-center transition-all duration-300 hover:bg-[#0a0c0d] hover:text-[#2DE2FF] border-2 border-[#2DE2FF]"
-                    >
-                      View Collection
-                    </Link>
-                    {collection.status !== 'deleted' && (
-                      <>
-                        <Link
-                          href={`/collections/${collection.id}/launch`}
-                          className="block w-full px-4 py-3 bg-[#0a0c0d] border-2 border-[#2DE2FF] hover:bg-[#2DE2FF] text-[#2DE2FF] hover:text-black font-semibold uppercase tracking-wide text-center transition-all duration-300"
-                        >
-                          🚀 Launchpad Settings
-                        </Link>
-                        <Link
-                          href={`/collections/${collection.id}/edit`}
-                          className="block w-full px-4 py-3 bg-[#0a0c0d] border-2 border-[#404040] hover:border-[#2DE2FF] text-white font-semibold uppercase tracking-wide text-center transition-all duration-300"
-                        >
-                          Edit Settings
-                        </Link>
-                        <button
-                          onClick={() => handleDeleteClick(collection.id, collection.name)}
-                          className="w-full px-4 py-3 bg-[#0a0c0d] border-2 border-red-500/40 hover:border-red-500 text-[#EF4444] font-semibold uppercase tracking-wide transition-all duration-300"
-                        >
-                          Delete
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
+                  {filter.label}
+                </button>
               ))}
             </div>
           )}
         </div>
-      </div>
 
-      {/* Delete Confirmation Dialog */}
+        {filteredCollections.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-white/[0.12] bg-[#131318]/60 px-6 py-16 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#2DE2FF]/70 mb-3">
+              Empty studio
+            </p>
+            <h2 className="text-xl font-semibold text-white mb-2">No collections yet</h2>
+            <p className="text-zinc-500 mb-6 text-sm max-w-sm mx-auto">
+              {searchQuery
+                ? 'Try a different search'
+                : 'Create your first collection to start generating NFTs'}
+            </p>
+            {!searchQuery && (
+              <Link
+                href="/collections/create"
+                className="inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-bold text-sm hover:bg-[#7aefff] transition-colors"
+              >
+                Create collection
+              </Link>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {filteredCollections.map((collection, index) => {
+              const thumb =
+                thumbnails[collection.id] ||
+                collection.banner_image_url ||
+                collection.mobile_image_url
+              const delayClass =
+                index % 5 === 0
+                  ? 'hg-rise'
+                  : index % 5 === 1
+                    ? 'hg-rise hg-rise-delay-1'
+                    : index % 5 === 2
+                      ? 'hg-rise hg-rise-delay-2'
+                      : index % 5 === 3
+                        ? 'hg-rise hg-rise-delay-3'
+                        : 'hg-rise hg-rise-delay-4'
+              return (
+                <div
+                  key={collection.id}
+                  className={`hg-card group relative overflow-hidden rounded-2xl border border-white/[0.1] bg-[#131318]/90 ${delayClass}`}
+                >
+                  <div className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full bg-gradient-to-b from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6]" />
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute right-0 top-0 h-28 w-28 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(45,226,255,0.25), transparent 70%)',
+                    }}
+                  />
+                  <div className="flex flex-col sm:flex-row gap-0 sm:gap-5 pl-4 sm:pl-5">
+                    <div className="relative w-full sm:w-40 md:w-48 aspect-[16/10] sm:aspect-square sm:shrink-0 bg-[#0c0c10] overflow-hidden sm:rounded-xl sm:my-4 sm:ml-1">
+                      {thumb ? (
+                        <img
+                          src={thumb}
+                          alt={collection.name}
+                          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#2DE2FF]/10 via-transparent to-[#FF2BD6]/10">
+                          <div className="h-10 w-10 rounded-xl border border-[#2DE2FF]/30 bg-[#131318] flex items-center justify-center shadow-[0_0_20px_rgba(45,226,255,0.2)]">
+                            <span className="text-[#2DE2FF] text-sm font-bold">
+                              {collection.name.slice(0, 1).toUpperCase()}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center gap-4 p-4 sm:py-4 sm:pr-5 sm:pl-0">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <h3 className="text-base sm:text-lg font-semibold text-white truncate group-hover:text-[#2DE2FF] transition-colors duration-300">
+                            {collection.name}
+                          </h3>
+                          <span
+                            className={`inline-flex px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide ${
+                              collection.status === 'draft'
+                                ? 'bg-white/[0.06] text-zinc-400'
+                                : collection.status === 'deleted'
+                                  ? 'bg-red-500/15 text-red-400'
+                                  : 'bg-gradient-to-r from-[#2DE2FF]/20 to-[#FF2BD6]/20 text-[#2DE2FF] border border-[#2DE2FF]/25'
+                            }`}
+                          >
+                            {statusLabel(collection.status)}
+                          </span>
+                        </div>
+                        {collection.description ? (
+                          <p className="text-sm text-zinc-500 line-clamp-1 mb-1.5">
+                            {collection.description}
+                          </p>
+                        ) : null}
+                        <p className="text-xs text-zinc-600">
+                          {collection.total_ordinals !== undefined
+                            ? `${collection.total_ordinals} ${
+                                collection.total_ordinals === 1 ? 'item' : 'items'
+                              }`
+                            : 'No items yet'}
+                          {collection.collaborator_role
+                            ? ` · ${collection.collaborator_role}`
+                            : ''}
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap sm:flex-nowrap gap-2 shrink-0">
+                        <Link
+                          href={`/collections/${collection.id}`}
+                          className="hg-btn-glow inline-flex h-9 px-4 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+                        >
+                          Open
+                        </Link>
+                        {collection.status !== 'deleted' && (
+                          <>
+                            <Link
+                              href={`/collections/${collection.id}/launch`}
+                              className="inline-flex h-9 px-4 items-center rounded-full border border-[#FF2BD6]/35 text-sm font-semibold text-[#FF2BD6] hover:bg-[#FF2BD6]/10 hover:border-[#FF2BD6]/55 transition-all duration-200"
+                            >
+                              Launch
+                            </Link>
+                            <Link
+                              href={`/collections/${collection.id}/edit`}
+                              className="inline-flex h-9 px-4 items-center rounded-full border border-white/[0.08] text-sm font-medium text-zinc-400 hover:text-white hover:border-[#2DE2FF]/35 transition-all duration-200"
+                            >
+                              Edit
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteClick(collection.id, collection.name)}
+                              className="inline-flex h-9 px-4 items-center rounded-full border border-red-500/25 text-sm font-medium text-red-400 hover:border-red-500/50 hover:bg-red-500/10 transition-all duration-200"
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </ToolWorkspace>
+
       <ConfirmDialog
         isOpen={deleteConfirm.isOpen}
         onClose={handleDeleteCancel}

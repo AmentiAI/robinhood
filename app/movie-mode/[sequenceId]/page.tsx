@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useWallet } from '@/lib/wallet/compatibility';
 import { useCredits } from '@/lib/credits-context';
 import { calculateCompositionCost, type VideoSequenceClipWithVideo, type TransitionType } from '@/types/movie-mode';
+import { BrandLoader } from '@/components/brand-loader';
 
 export default function SequenceEditorPage({ params }: { params: Promise<{ sequenceId: string }> }) {
   const resolvedParams = use(params);
@@ -426,21 +427,14 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--solana-purple)]"></div>
-          <p className="text-[var(--text-secondary)] mt-4">Loading sequence...</p>
-        </div>
-      </div>
-    );
+    return <BrandLoader label="Loading sequence" />;
   }
 
   if (!sequence) {
     return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-[var(--text-secondary)]">Sequence not found</p>
+          <p className="text-zinc-500">Sequence not found</p>
         </div>
       </div>
     );
@@ -451,7 +445,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
   const costEstimate = calculateCompositionCost(sequence.composition_mode, clips.length, transitionTypes);
 
   return (
-    <div className="min-h-screen bg-[var(--background)] p-4 md:p-8">
+    <div className="min-h-screen bg-[#0a0a0c] p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
@@ -462,7 +456,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                   type="text"
                   value={sequenceName}
                   onChange={(e) => setSequenceName(e.target.value)}
-                  className="text-2xl font-bold bg-[var(--surface)] border border-[var(--border)] rounded px-3 py-1 text-white"
+                  className="text-2xl font-bold bg-[#131318] border border-white/[0.08] rounded px-3 py-1 text-white"
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') updateSequenceName();
                     if (e.key === 'Escape') {
@@ -474,20 +468,20 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                 />
                 <button
                   onClick={updateSequenceName}
-                  className="px-3 py-1 bg-[var(--solana-purple)] text-white rounded text-sm"
+                  className="px-3 py-1 bg-[#2DE2FF] text-white rounded text-sm"
                 >
                   Save
                 </button>
               </div>
             ) : (
               <h1
-                className="text-2xl font-bold text-white cursor-pointer hover:text-[var(--solana-purple)]"
+                className="text-2xl font-bold text-white cursor-pointer hover:text-[#2DE2FF]"
                 onClick={() => setEditingName(true)}
               >
                 {sequence.name} ✏️
               </h1>
             )}
-            <div className="flex items-center gap-3 text-sm text-[var(--text-secondary)] mt-1">
+            <div className="flex items-center gap-3 text-sm text-zinc-500 mt-1">
               <span className="capitalize">{sequence.composition_mode} mode</span>
               <span>•</span>
               <span>{sequence.aspect_ratio}</span>
@@ -498,7 +492,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
 
           <button
             onClick={() => router.push('/movie-mode')}
-            className="px-4 py-2 bg-[var(--surface)] text-[var(--text-secondary)] rounded-lg hover:text-white transition-all"
+            className="px-4 py-2 bg-[#131318] text-zinc-500 rounded-lg hover:text-white transition-all"
           >
             ← Back to Sequences
           </button>
@@ -510,7 +504,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-yellow-400 font-medium">Composition in Progress</div>
-                <div className="text-sm text-[var(--text-secondary)] mt-1">
+                <div className="text-sm text-zinc-500 mt-1">
                   {compositionJob.current_stage || 'Processing...'}
                 </div>
               </div>
@@ -540,7 +534,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
         {sequence.status === 'failed' && compositionJob && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
             <div className="text-red-400 font-medium">❌ Composition Failed</div>
-            <div className="text-sm text-[var(--text-secondary)] mt-1">
+            <div className="text-sm text-zinc-500 mt-1">
               {compositionJob.error_message || 'Unknown error'}
             </div>
           </div>
@@ -550,12 +544,12 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
           {/* Left: Video Library & Generation */}
           <div className="lg:col-span-1 space-y-4">
             {/* Generate New Clip Panel */}
-            <div className="bg-[var(--surface)] rounded-lg border border-[var(--solana-purple)] p-4">
+            <div className="bg-[#131318] rounded-lg border border-[#2DE2FF] p-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-white">🎬 Generate New Clip</h2>
                 <button
                   onClick={() => setShowGeneratePanel(!showGeneratePanel)}
-                  className="text-sm text-[var(--solana-purple)] hover:underline"
+                  className="text-sm text-[#2DE2FF] hover:underline"
                 >
                   {showGeneratePanel ? 'Hide' : 'Show'}
                 </button>
@@ -564,7 +558,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
               {showGeneratePanel && (
                 <div className="space-y-3">
                   {clips.length === 0 ? (
-                    <div className="text-sm text-[var(--text-secondary)] mb-2">
+                    <div className="text-sm text-zinc-500 mb-2">
                       ✨ First clip: Start your story from scratch
                     </div>
                   ) : (
@@ -572,26 +566,26 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                       <div className="text-sm font-medium text-green-400 mb-1">
                         🔗 Automatic Continuity
                       </div>
-                      <div className="text-xs text-[var(--text-secondary)]">
+                      <div className="text-xs text-zinc-500">
                         This clip will start from where clip #{clips.length} ended, maintaining visual continuity
                       </div>
                     </div>
                   )}
 
                   {/* Character Reference Images Selector */}
-                  <div className="p-3 bg-[var(--background)] border border-[var(--solana-purple)]/30 rounded-lg">
+                  <div className="p-3 bg-[var(--background)] border border-[#2DE2FF]/30 rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <div className="text-sm font-medium text-white">
                         👥 Character References
                         {selectedCharacterImages.length > 0 && (
-                          <span className="ml-2 text-[var(--solana-purple)]">
+                          <span className="ml-2 text-[#2DE2FF]">
                             ({selectedCharacterImages.length}/{clips.length > 0 ? '7' : '8'})
                           </span>
                         )}
                       </div>
                       <button
                         onClick={() => setShowImageSelector(!showImageSelector)}
-                        className="text-xs text-[var(--solana-purple)] hover:underline font-medium"
+                        className="text-xs text-[#2DE2FF] hover:underline font-medium"
                       >
                         {showImageSelector ? '▲ Hide' : '▼ Show'}
                       </button>
@@ -604,7 +598,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                             <img
                               src={url}
                               alt={`Character ${idx + 1}`}
-                              className="w-12 h-12 object-cover rounded border border-[var(--solana-purple)]"
+                              className="w-12 h-12 object-cover rounded border border-[#2DE2FF]"
                             />
                             <button
                               onClick={() => toggleImageSelection(url)}
@@ -620,7 +614,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                     {showImageSelector && (
                       <div className="space-y-3">
                         <div>
-                          <label className="block text-xs text-[var(--text-secondary)] mb-1">
+                          <label className="block text-xs text-zinc-500 mb-1">
                             Select Collection
                           </label>
                           <select
@@ -630,7 +624,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                               loadCollectionImages(e.target.value);
                             }}
                             disabled={generating || sequence.status !== 'draft'}
-                            className="w-full bg-[var(--surface)] border border-[var(--border)] rounded px-3 py-2 text-white text-sm"
+                            className="w-full bg-[#131318] border border-white/[0.08] rounded px-3 py-2 text-white text-sm"
                           >
                             <option value="">Choose a collection...</option>
                             {collections.length === 0 && (
@@ -646,15 +640,15 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
 
                         {loadingImages && (
                           <div className="text-center py-4">
-                            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--solana-purple)]"></div>
-                            <p className="text-xs text-[var(--text-secondary)] mt-2">Loading images...</p>
+                            <div className="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-[#2DE2FF]"></div>
+                            <p className="text-xs text-zinc-500 mt-2">Loading images...</p>
                           </div>
                         )}
 
                         {!loadingImages && collectionImages.length > 0 && (
                           <div>
                             <div className="flex items-center justify-between mb-2">
-                              <label className="text-xs text-[var(--text-secondary)]">
+                              <label className="text-xs text-zinc-500">
                                 Click to select ({collectionImages.length} available)
                               </label>
                               {selectedCharacterImages.length > 0 && (
@@ -666,15 +660,15 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                                 </button>
                               )}
                             </div>
-                            <div className="grid grid-cols-4 gap-2 max-h-64 overflow-y-auto p-2 bg-[var(--surface)] rounded border border-[var(--border)]">
+                            <div className="grid grid-cols-4 gap-2 max-h-64 overflow-y-auto p-2 bg-[#131318] rounded border border-white/[0.08]">
                               {collectionImages.map((img) => (
                                 <div
                                   key={img.id}
                                   onClick={() => toggleImageSelection(img.image_url)}
-                                  className={`relative cursor-pointer rounded border-2 transition-all hover:scale-105 ${
+                                  className={`relative cursor-pointer rounded border-2 transition-all  ${
                                     selectedCharacterImages.includes(img.image_url)
-                                      ? 'border-[var(--solana-purple)] ring-2 ring-[var(--solana-purple)]/50'
-                                      : 'border-transparent hover:border-[var(--border)]'
+                                      ? 'border-[#2DE2FF] ring-2 ring-[var(--solana-purple)]/50'
+                                      : 'border-transparent hover:border-white/[0.08]'
                                   }`}
                                 >
                                   <img
@@ -683,12 +677,12 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                                     className="w-full h-20 object-cover rounded"
                                   />
                                   {selectedCharacterImages.includes(img.image_url) && (
-                                    <div className="absolute top-0 right-0 bg-[var(--solana-purple)] text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+                                    <div className="absolute top-0 right-0 bg-[#2DE2FF] text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
                                       ✓
                                     </div>
                                   )}
                                   {selectedCharacterImages.includes(img.image_url) && (
-                                    <div className="absolute bottom-0 left-0 right-0 bg-[var(--solana-purple)]/90 text-white text-xs text-center py-1">
+                                    <div className="absolute bottom-0 left-0 right-0 bg-[#2DE2FF]/90 text-white text-xs text-center py-1">
                                       #{selectedCharacterImages.indexOf(img.image_url) + 1}
                                     </div>
                                   )}
@@ -699,17 +693,17 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                         )}
 
                         {!loadingImages && selectedCollection && collectionImages.length === 0 && (
-                          <div className="text-center p-4 bg-[var(--surface)] rounded border border-[var(--border)]">
-                            <p className="text-sm text-[var(--text-secondary)]">No generated images in this collection yet</p>
-                            <p className="text-xs text-[var(--text-secondary)] mt-1">
+                          <div className="text-center p-4 bg-[#131318] rounded border border-white/[0.08]">
+                            <p className="text-sm text-zinc-500">No generated images in this collection yet</p>
+                            <p className="text-xs text-zinc-500 mt-1">
                               Generate some images in this collection first
                             </p>
                           </div>
                         )}
 
                         {!selectedCollection && (
-                          <div className="text-center p-4 bg-[var(--surface)] rounded border border-dashed border-[var(--border)]">
-                            <p className="text-sm text-[var(--text-secondary)]">
+                          <div className="text-center p-4 bg-[#131318] rounded border border-dashed border-white/[0.08]">
+                            <p className="text-sm text-zinc-500">
                               👆 Select a collection above to see images
                             </p>
                           </div>
@@ -717,7 +711,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                       </div>
                     )}
 
-                    <div className="text-xs text-[var(--text-secondary)] mt-2">
+                    <div className="text-xs text-zinc-500 mt-2">
                       {clips.length === 0
                         ? 'Select up to 8 images to define the characters in your video'
                         : 'Character references will be combined with the last frame for continuity'}
@@ -725,7 +719,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                   </div>
 
                   <div>
-                    <label className="block text-sm text-[var(--text-secondary)] mb-1">
+                    <label className="block text-sm text-zinc-500 mb-1">
                       Scene Description *
                     </label>
                     <input
@@ -734,12 +728,12 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                       onChange={(e) => setVideoScene(e.target.value)}
                       placeholder="e.g., A wizard casting a spell in a tower"
                       disabled={generating || sequence.status !== 'draft'}
-                      className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-3 py-2 text-white text-sm disabled:opacity-50"
+                      className="w-full bg-[var(--background)] border border-white/[0.08] rounded px-3 py-2 text-white text-sm disabled:opacity-50"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-[var(--text-secondary)] mb-1">
+                    <label className="block text-sm text-zinc-500 mb-1">
                       Actions *
                     </label>
                     <input
@@ -748,12 +742,12 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                       onChange={(e) => setVideoActions(e.target.value)}
                       placeholder="e.g., The spell creates a portal"
                       disabled={generating || sequence.status !== 'draft'}
-                      className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-3 py-2 text-white text-sm disabled:opacity-50"
+                      className="w-full bg-[var(--background)] border border-white/[0.08] rounded px-3 py-2 text-white text-sm disabled:opacity-50"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-[var(--text-secondary)] mb-1">
+                    <label className="block text-sm text-zinc-500 mb-1">
                       Speech (Optional)
                     </label>
                     <input
@@ -762,14 +756,14 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                       onChange={(e) => setVideoSpeech(e.target.value)}
                       placeholder="e.g., Dialog or narration"
                       disabled={generating || sequence.status !== 'draft'}
-                      className="w-full bg-[var(--background)] border border-[var(--border)] rounded px-3 py-2 text-white text-sm disabled:opacity-50"
+                      className="w-full bg-[var(--background)] border border-white/[0.08] rounded px-3 py-2 text-white text-sm disabled:opacity-50"
                     />
                   </div>
 
                   <button
                     onClick={generateNewClip}
                     disabled={generating || sequence.status !== 'draft' || !videoScene.trim() || !videoActions.trim()}
-                    className="w-full px-4 py-3 bg-gradient-to-r from-[var(--solana-purple)] to-[var(--solana-green)] text-white rounded-lg font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-3 bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-white rounded-lg font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {generating ? (
                       <span className="flex items-center justify-center gap-2">
@@ -782,12 +776,12 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                   </button>
 
                   {generating && (
-                    <div className="text-xs text-[var(--text-secondary)] text-center">
+                    <div className="text-xs text-zinc-500 text-center">
                       This may take 5-10 minutes. You can leave this page.
                     </div>
                   )}
 
-                  <div className="text-xs text-[var(--text-secondary)] pt-2 border-t border-[var(--border)]">
+                  <div className="text-xs text-zinc-500 pt-2 border-t border-white/[0.08]">
                     💡 Tip: Each clip costs 4 credits. The system automatically uses the last frame of the previous clip to ensure seamless transitions.
                   </div>
                 </div>
@@ -795,11 +789,11 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
             </div>
 
             {/* Video Library */}
-            <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] p-4">
+            <div className="bg-[#131318] rounded-lg border border-white/[0.08] p-4">
               <h2 className="text-lg font-semibold text-white mb-4">📚 Existing Videos</h2>
               <div className="space-y-2 max-h-[600px] overflow-y-auto">
                 {availableVideos.length === 0 ? (
-                  <p className="text-sm text-[var(--text-secondary)]">
+                  <p className="text-sm text-zinc-500">
                     No videos available. Generate some videos first!
                   </p>
                 ) : (
@@ -816,7 +810,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                             ? 'border-green-500/50 bg-green-500/10'
                             : !matchesSequence
                             ? 'border-red-500/50 bg-red-500/10 opacity-50'
-                            : 'border-[var(--border)] hover:border-[var(--solana-purple)] cursor-pointer'
+                            : 'border-white/[0.08] hover:border-[#2DE2FF] cursor-pointer'
                         }`}
                         onClick={() => {
                           if (!isInSequence && matchesSequence && sequence.status === 'draft') {
@@ -825,7 +819,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                         }}
                       >
                         <video src={video.image_url} className="w-full rounded mb-2" muted />
-                        <div className="text-xs text-[var(--text-secondary)]">
+                        <div className="text-xs text-zinc-500">
                           {aspectRatio}
                           {isInSequence && <span className="ml-2 text-green-400">✓ Added</span>}
                           {!matchesSequence && <span className="ml-2 text-red-400">Wrong ratio</span>}
@@ -841,18 +835,18 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
           {/* Right: Timeline & Controls */}
           <div className="lg:col-span-2">
             {/* Timeline */}
-            <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] p-4 mb-6">
+            <div className="bg-[#131318] rounded-lg border border-white/[0.08] p-4 mb-6">
               <h2 className="text-lg font-semibold text-white mb-4">🎬 Timeline ({clips.length} clips)</h2>
               {clips.length === 0 ? (
-                <p className="text-sm text-[var(--text-secondary)]">
+                <p className="text-sm text-zinc-500">
                   Add videos from the library to start building your sequence
                 </p>
               ) : (
                 <div className="space-y-3">
                   {clips.map((clip, index) => (
-                    <div key={clip.id} className="border border-[var(--border)] rounded-lg p-3">
+                    <div key={clip.id} className="border border-white/[0.08] rounded-lg p-3">
                       <div className="flex items-center gap-3">
-                        <div className="text-[var(--text-secondary)] font-mono text-sm w-8">
+                        <div className="text-zinc-500 font-mono text-sm w-8">
                           #{index + 1}
                         </div>
                         <video src={clip.video_url} className="w-24 h-16 object-cover rounded" muted />
@@ -863,7 +857,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                               value={clip.transition_type}
                               onChange={(e) => updateClipTransition(clip.id, e.target.value as TransitionType)}
                               disabled={sequence.status !== 'draft'}
-                              className="mt-1 text-xs bg-[var(--background)] border border-[var(--border)] rounded px-2 py-1 text-white"
+                              className="mt-1 text-xs bg-[var(--background)] border border-white/[0.08] rounded px-2 py-1 text-white"
                             >
                               <option value="none">No Transition</option>
                               <option value="cut">Cut</option>
@@ -890,16 +884,16 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
 
             {/* Cost & Compose */}
             {clips.length >= 2 && sequence.status === 'draft' && (
-              <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] p-6">
+              <div className="bg-[#131318] rounded-lg border border-white/[0.08] p-6">
                 <h3 className="text-lg font-semibold text-white mb-4">Cost Estimate</h3>
                 <div className="space-y-2 mb-4">
                   {costEstimate.breakdown.map((item, i) => (
                     <div key={i} className="flex justify-between text-sm">
-                      <span className="text-[var(--text-secondary)]">{item.description}</span>
+                      <span className="text-zinc-500">{item.description}</span>
                       <span className="text-white">{item.cost} credits</span>
                     </div>
                   ))}
-                  <div className="border-t border-[var(--border)] pt-2 mt-2">
+                  <div className="border-t border-white/[0.08] pt-2 mt-2">
                     <div className="flex justify-between font-semibold">
                       <span className="text-white">Total</span>
                       <span className="text-[var(--solana-green)]">{costEstimate.total_cost} credits</span>
@@ -910,7 +904,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                 <button
                   onClick={triggerComposition}
                   disabled={composing || clips.length < 2}
-                  className="w-full px-6 py-3 bg-gradient-to-r from-[var(--solana-purple)] to-[var(--solana-green)] text-white rounded-lg font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full px-6 py-3 bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-white rounded-lg font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {composing ? 'Starting Composition...' : `Compose Video (${costEstimate.total_cost} credits)`}
                 </button>

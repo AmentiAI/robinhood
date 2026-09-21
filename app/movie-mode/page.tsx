@@ -9,7 +9,18 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWallet } from '@/lib/wallet/compatibility';
 import Link from 'next/link';
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace, ToolPanel } from '@/components/tool-workspace'
 import type { VideoSequenceWithDetails } from '@/types/movie-mode';
+
+const FILTERS: Array<'all' | 'draft' | 'processing' | 'completed' | 'failed'> = [
+  'all',
+  'draft',
+  'processing',
+  'completed',
+  'failed',
+]
 
 export default function MovieModePage() {
   const router = useRouter();
@@ -112,113 +123,82 @@ export default function MovieModePage() {
 
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-white mb-4">🎬 Movie Mode</h1>
-          <p className="text-[var(--text-secondary)] mb-6">Connect your wallet to create video sequences</p>
-          <div className="text-sm text-[var(--text-secondary)]">
-            Please connect your wallet to access Movie Mode
-          </div>
-        </div>
+      <div className="min-h-screen bg-[#0a0a0c]">
+        <PageHeader
+          title="Movie Mode"
+          subtitle="Chain AI-generated videos together with seamless transitions"
+        />
+        <ToolWorkspace>
+          <ToolPanel title="Connect wallet" subtitle="Required to create and manage sequences">
+            <p className="text-sm text-zinc-400">
+              Connect your wallet to access Movie Mode and build video sequences.
+            </p>
+          </ToolPanel>
+        </ToolWorkspace>
       </div>
     );
   }
 
+  const createButton = (
+    <button
+      type="button"
+      onClick={() => setShowCreateModal(true)}
+      className="hg-btn-glow inline-flex h-10 items-center px-5 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+    >
+      Create sequence
+    </button>
+  );
+
   return (
-    <div className="min-h-screen bg-[var(--background)] p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
-            🎬 Movie Mode
-          </h1>
-          <p className="text-[var(--text-secondary)]">
-            Chain your AI-generated videos together with seamless transitions
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Movie Mode"
+        subtitle="Chain AI-generated videos together with seamless transitions"
+        action={createButton}
+      />
 
-        {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setFilterStatus('all')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                filterStatus === 'all'
-                  ? 'bg-[var(--solana-purple)] text-white'
-                  : 'bg-[var(--surface)] text-[var(--text-secondary)] hover:text-white'
-              }`}
-            >
-              All
-            </button>
-            <button
-              onClick={() => setFilterStatus('draft')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                filterStatus === 'draft'
-                  ? 'bg-[var(--solana-purple)] text-white'
-                  : 'bg-[var(--surface)] text-[var(--text-secondary)] hover:text-white'
-              }`}
-            >
-              Draft
-            </button>
-            <button
-              onClick={() => setFilterStatus('processing')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                filterStatus === 'processing'
-                  ? 'bg-[var(--solana-purple)] text-white'
-                  : 'bg-[var(--surface)] text-[var(--text-secondary)] hover:text-white'
-              }`}
-            >
-              Processing
-            </button>
-            <button
-              onClick={() => setFilterStatus('completed')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                filterStatus === 'completed'
-                  ? 'bg-[var(--solana-purple)] text-white'
-                  : 'bg-[var(--surface)] text-[var(--text-secondary)] hover:text-white'
-              }`}
-            >
-              Completed
-            </button>
+      <ToolWorkspace>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div className="flex flex-wrap gap-1 p-1 rounded-full bg-[#131318] border border-white/[0.08]">
+            {FILTERS.map((status) => (
+              <button
+                key={status}
+                type="button"
+                onClick={() => setFilterStatus(status)}
+                className={`px-3.5 py-2 rounded-full text-sm font-semibold capitalize transition-colors ${
+                  filterStatus === status
+                    ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                    : 'text-zinc-500 hover:text-white'
+                }`}
+              >
+                {status}
+              </button>
+            ))}
           </div>
-
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="px-6 py-3 bg-gradient-to-r from-[var(--solana-purple)] to-[var(--solana-green)] text-white rounded-lg font-medium hover:opacity-90 transition-all"
-          >
-            + Create New Sequence
-          </button>
         </div>
 
-        {/* Sequences Grid */}
         {loading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--solana-purple)]"></div>
-            <p className="text-[var(--text-secondary)] mt-4">Loading sequences...</p>
-          </div>
+          <ToolPanel>
+            <BrandLoader variant="card" label="Loading sequences" />
+          </ToolPanel>
         ) : sequences.length === 0 ? (
-          <div className="text-center py-12 bg-[var(--surface)] rounded-lg border border-[var(--border)]">
-            <div className="text-6xl mb-4">🎬</div>
-            <h3 className="text-xl font-semibold text-white mb-2">No sequences yet</h3>
-            <p className="text-[var(--text-secondary)] mb-6">
-              Create your first video sequence to get started
-            </p>
+          <ToolPanel title="No sequences yet" subtitle="Create your first video sequence to get started">
             <button
+              type="button"
               onClick={() => setShowCreateModal(true)}
-              className="px-6 py-3 bg-gradient-to-r from-[var(--solana-purple)] to-[var(--solana-green)] text-white rounded-lg font-medium hover:opacity-90 transition-all"
+              className="hg-btn-glow inline-flex h-10 items-center px-5 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
             >
-              Create Sequence
+              Create sequence
             </button>
-          </div>
+          </ToolPanel>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {sequences.map((sequence: any) => (
               <div
                 key={sequence.id}
-                className="bg-[var(--surface)] rounded-lg border border-[var(--border)] overflow-hidden hover:border-[var(--solana-purple)] transition-all"
+                className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] overflow-hidden hover:border-[#2DE2FF]/50 transition-all"
               >
-                {/* Thumbnail */}
-                <div className="aspect-video bg-gradient-to-br from-[var(--solana-purple)]/20 to-[var(--solana-green)]/20 flex items-center justify-center">
+                <div className="aspect-video bg-[#0c0c10] flex items-center justify-center border-b border-white/[0.06]">
                   {sequence.output_video_url ? (
                     <video
                       src={sequence.output_video_url}
@@ -228,51 +208,51 @@ export default function MovieModePage() {
                       playsInline
                     />
                   ) : (
-                    <div className="text-6xl">🎬</div>
+                    <span className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-600">
+                      No preview
+                    </span>
                   )}
                 </div>
 
-                {/* Content */}
-                <div className="p-4">
+                <div className="p-4 sm:p-5">
                   <h3 className="text-lg font-semibold text-white mb-2 truncate">{sequence.name}</h3>
 
-                  <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)] mb-3">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-500 mb-3">
                     <span>{sequence.clip_count || 0} clips</span>
-                    <span>•</span>
+                    <span className="text-zinc-700">·</span>
                     <span className="capitalize">{sequence.composition_mode}</span>
-                    <span>•</span>
+                    <span className="text-zinc-700">·</span>
                     <span>{sequence.aspect_ratio}</span>
                   </div>
 
-                  {/* Status Badge */}
-                  <div className="mb-3">
+                  <div className="mb-4">
                     <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                      className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold capitalize ${
                         sequence.status === 'completed'
-                          ? 'bg-green-500/20 text-green-400'
+                          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
                           : sequence.status === 'processing'
-                          ? 'bg-yellow-500/20 text-yellow-400'
+                          ? 'bg-amber-500/15 text-amber-300 border border-amber-500/25'
                           : sequence.status === 'failed'
-                          ? 'bg-red-500/20 text-red-400'
-                          : 'bg-gray-500/20 text-gray-400'
+                          ? 'bg-red-500/15 text-red-400 border border-red-500/25'
+                          : 'bg-white/[0.06] text-zinc-400 border border-white/[0.08]'
                       }`}
                     >
                       {sequence.status}
                     </span>
                   </div>
 
-                  {/* Actions */}
                   <div className="flex gap-2">
                     <Link
                       href={`/movie-mode/${sequence.id}`}
-                      className="flex-1 px-4 py-2 bg-[var(--solana-purple)] text-white text-center rounded-lg text-sm font-medium hover:opacity-90 transition-all"
+                      className="hg-btn-glow flex-1 px-4 py-2.5 bg-[#2DE2FF] text-[#0a0a0c] text-center rounded-full text-sm font-bold hover:opacity-90 transition-all"
                     >
                       {sequence.status === 'completed' ? 'View' : 'Edit'}
                     </Link>
                     {sequence.status !== 'processing' && (
                       <button
+                        type="button"
                         onClick={() => deleteSequence(sequence.id)}
-                        className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm font-medium hover:bg-red-500/30 transition-all"
+                        className="px-4 py-2.5 rounded-full text-sm font-semibold bg-[#FF2BD6]/15 text-[#FF2BD6] border border-[#FF2BD6]/25 hover:bg-[#FF2BD6]/25 transition-all"
                       >
                         Delete
                       </button>
@@ -283,36 +263,35 @@ export default function MovieModePage() {
             ))}
           </div>
         )}
-      </div>
+      </ToolWorkspace>
 
-      {/* Create Sequence Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-[var(--surface)] rounded-lg border border-[var(--border)] max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Create New Sequence</h2>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-[#131318] rounded-2xl border border-white/[0.1] max-w-md w-full p-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+            <h2 className="text-xl font-bold text-white mb-5">Create new sequence</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-                  Sequence Name
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  Sequence name
                 </label>
                 <input
                   type="text"
                   value={newSequenceName}
                   onChange={(e) => setNewSequenceName(e.target.value)}
                   placeholder="e.g., Epic Adventure Trailer"
-                  className="w-full px-4 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-white focus:border-[var(--solana-purple)] focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-[#0c0c10] border border-white/[0.1] rounded-xl text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-                  Composition Mode
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  Composition mode
                 </label>
                 <select
                   value={newSequenceMode}
                   onChange={(e) => setNewSequenceMode(e.target.value as 'simple' | 'transitions')}
-                  className="w-full px-4 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-white focus:border-[var(--solana-purple)] focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-[#0c0c10] border border-white/[0.1] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none"
                 >
                   <option value="simple">Simple (Fast & Cheap)</option>
                   <option value="transitions">Transitions (AI-Powered)</option>
@@ -320,13 +299,13 @@ export default function MovieModePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-                  Aspect Ratio
+                <label className="block text-sm font-medium text-zinc-400 mb-2">
+                  Aspect ratio
                 </label>
                 <select
                   value={newSequenceAspectRatio}
                   onChange={(e) => setNewSequenceAspectRatio(e.target.value as '16:9' | '9:16' | '1:1')}
-                  className="w-full px-4 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-white focus:border-[var(--solana-purple)] focus:outline-none"
+                  className="w-full px-4 py-2.5 bg-[#0c0c10] border border-white/[0.1] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none"
                 >
                   <option value="16:9">16:9 (Landscape)</option>
                   <option value="9:16">9:16 (Portrait)</option>
@@ -337,17 +316,19 @@ export default function MovieModePage() {
 
             <div className="flex gap-3 mt-6">
               <button
+                type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-4 py-2 bg-[var(--background)] text-[var(--text-secondary)] rounded-lg font-medium hover:text-white transition-all"
+                className="flex-1 px-4 py-2.5 rounded-full bg-white/[0.06] border border-white/[0.1] text-zinc-300 font-semibold hover:text-white transition-all"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={createSequence}
                 disabled={creating || !newSequenceName.trim()}
-                className="flex-1 px-4 py-2 bg-gradient-to-r from-[var(--solana-purple)] to-[var(--solana-green)] text-white rounded-lg font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hg-btn-glow flex-1 px-4 py-2.5 rounded-full bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-[#0a0a0c] font-bold hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
               >
-                {creating ? 'Creating...' : 'Create'}
+                {creating ? <BrandLoader variant="inline" label="Creating" /> : 'Create'}
               </button>
             </div>
           </div>

@@ -32,16 +32,14 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
 
   return (
     <section>
-      <div className="flex items-end justify-between mb-5 gap-4">
-        <h2 className="text-sm font-black uppercase tracking-[0.2em] text-white">
-          Featured Collections
-        </h2>
+      <div className="flex items-end justify-between mb-4 gap-4">
+        <h2 className="text-base font-semibold text-white">Featured collections</h2>
         <button
           type="button"
           onClick={() => router.push('/collections')}
-          className="text-xs font-bold uppercase tracking-wider text-[#2DE2FF] hover:text-[#FF2BD6] transition-colors"
+          className="text-xs font-semibold text-[#2DE2FF] hover:text-[#7aefff] transition-colors"
         >
-          View All
+          View all
         </button>
       </div>
 
@@ -58,26 +56,27 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
               key={collection.id}
               type="button"
               onClick={() => router.push(`/launchpad/${collection.id}`)}
-              className="group text-left rounded-2xl overflow-hidden bg-[#15181a] border border-white/10 hover:border-[#2DE2FF]/50 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_32px_rgba(45, 226, 255,0.18)]"
+              className="hg-card hg-rise group text-left rounded-2xl overflow-hidden bg-[#131318] border border-white/[0.1] hover:border-white/18 transition-all shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
             >
-              <div className="relative aspect-[4/3] bg-[#0a0c0d] overflow-hidden">
+              <div className="relative aspect-[4/3] bg-[#0c0c10] overflow-hidden">
                 {collection.image_url ? (
                   <img
                     src={collection.image_url}
                     alt={collection.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-3xl text-[#2DE2FF]/40">
-                    ◆
+                  <div className="w-full h-full flex items-center justify-center text-zinc-600 text-sm">
+                    No image
                   </div>
                 )}
+                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#131318] to-transparent" />
                 <div className="absolute top-3 left-3">
                   <span
-                    className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider ${
+                    className={`px-2.5 py-1 rounded-full text-[10px] font-bold capitalize ${
                       status === 'live'
-                        ? 'bg-[#2DE2FF] text-black'
-                        : 'bg-[#7c3aed] text-white'
+                        ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                        : 'bg-[#1c1c24] text-zinc-200 border border-white/10'
                     }`}
                   >
                     {status}
@@ -85,29 +84,27 @@ export function FeaturedCollectionsGrid({ collections }: FeaturedCollectionsGrid
                 </div>
               </div>
 
-              <div className="p-4 space-y-3">
+              <div className="p-4 space-y-3 -mt-2 relative">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <h3 className="text-base font-bold text-white truncate">{collection.name}</h3>
-                    <p className="text-[11px] text-[#71717A] mt-0.5">
-                      {collection.total_supply.toLocaleString()} items ·{' '}
-                      {Number(collection.mint_price)} ETH
+                    <h3 className="text-[15px] font-semibold text-white truncate">{collection.name}</h3>
+                    <p className="text-[11px] text-zinc-500 mt-0.5">
+                      {collection.total_supply.toLocaleString()} items · {Number(collection.mint_price)} ETH
                     </p>
                   </div>
-                  <span className="w-8 h-8 rounded-full border border-[#2DE2FF]/40 flex items-center justify-center text-[#2DE2FF] group-hover:bg-[#2DE2FF] group-hover:text-black transition-colors shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-white/[0.04] border border-white/10 flex items-center justify-center text-zinc-400 group-hover:bg-[#2DE2FF] group-hover:text-black group-hover:border-transparent transition-colors shrink-0">
                     <ArrowUpRight className="h-3.5 w-3.5" />
                   </span>
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-[10px] text-[#a8aab2] mb-1.5 tabular-nums">
+                  <div className="flex justify-between text-[10px] text-zinc-500 mb-1.5 tabular-nums">
                     <span>
-                      {collection.minted_count.toLocaleString()} /{' '}
-                      {collection.total_supply.toLocaleString()} minted
+                      {collection.minted_count.toLocaleString()} / {collection.total_supply.toLocaleString()}
                     </span>
-                    <span className="text-[#2DE2FF] font-bold">{Math.round(progress)}%</span>
+                    <span className="text-zinc-300 font-semibold">{Math.round(progress)}%</span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-[#1f2326] overflow-hidden">
+                  <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
                     <div
                       className="h-full rounded-full bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6]"
                       style={{ width: `${progress}%` }}

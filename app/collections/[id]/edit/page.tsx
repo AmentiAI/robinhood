@@ -9,6 +9,9 @@ import { useArtStyleExamples } from '@/lib/art-styles-client'
 import WireframeEditor, { type WireframeConfig } from '@/app/components/WireframeEditor'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { generateApiAuth } from '@/lib/wallet/api-auth'
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace, ToolPanel } from '@/components/tool-workspace'
 
 interface Collection {
   id: string
@@ -336,50 +339,36 @@ export default function EditCollectionPage() {
   // Not connected - show connect prompt
   if (!isConnected || !currentAddress) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto text-center py-12">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#DC1FFF]/50 rounded-xl p-8">
-            <div className="text-6xl mb-4">🔐</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Wallet Connection Required</h2>
-            <p className="text-[#a8a8b8] mb-6">
-              Please connect your wallet to edit collections.
-            </p>
-            <Link href="/collections" className="px-6 py-3 bg-[#9945FF] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors inline-block shadow-lg shadow-[#9945FF]/20">
-              Go to Collections
-            </Link>
-          </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center">
+          <h2 className="text-xl font-semibold text-white mb-2">Wallet required</h2>
+          <p className="text-zinc-500 mb-6 text-sm">
+            Connect your wallet to edit collections.
+          </p>
+          <Link href="/collections" className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold">
+            Go to collections
+          </Link>
         </div>
       </div>
     )
   }
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center py-8">
-            <div className="text-[#a8a8b8]">Loading collection...</div>
-          </div>
-        </div>
-      </div>
-    )
+    return <BrandLoader label="Loading collection" />
   }
 
   // Access denied
   if (accessDenied) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto text-center py-12">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#EF4444]/50 rounded-xl p-8">
-            <div className="text-6xl mb-4">🚫</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Access Denied</h2>
-            <p className="text-[#a8a8b8] mb-6">
-              You don't have permission to edit this collection. Only the collection owner or authorized collaborators can edit collections.
-            </p>
-            <Link href="/collections" className="px-6 py-3 bg-[#9945FF] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors inline-block shadow-lg shadow-[#9945FF]/20">
-              Go to Collections
-            </Link>
-          </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-red-500/30 bg-[#131318] p-8 text-center">
+          <h2 className="text-xl font-semibold text-white mb-2">Access denied</h2>
+          <p className="text-zinc-500 mb-6 text-sm">
+            You don&apos;t have permission to edit this collection. Only the collection owner or authorized collaborators can edit collections.
+          </p>
+          <Link href="/collections" className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold">
+            Go to collections
+          </Link>
         </div>
       </div>
     )
@@ -387,127 +376,86 @@ export default function EditCollectionPage() {
 
   if (!collection) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center py-8">
-            <div className="text-[#a8a8b8]">Collection not found</div>
-            <Link href="/collections" className="text-[#9945FF] hover:text-[#14F195] mt-4 inline-block transition-colors">
-              ← Back to Collections
-            </Link>
-          </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center">
+          <h2 className="text-xl font-semibold text-white mb-2">Collection not found</h2>
+          <Link href="/collections" className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold mt-4">
+            Back to collections
+          </Link>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-6">
-          <Link 
-            href={`/collections/${collection.id}`} 
-            className="text-[#9945FF] hover:text-[#14F195] mb-4 inline-block transition-colors"
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Edit collection"
+        subtitle="Update settings, art style, and generation rules"
+        action={
+          <Link
+            href={`/collections/${collection.id}`}
+            className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-colors"
           >
-            ← Back to Collection
+            Back
           </Link>
-          <h1 className="text-3xl font-bold text-white">Edit Collection</h1>
-        </div>
-
+        }
+      />
+      <ToolWorkspace className="space-y-6">
         {/* Instructions - Collapsible */}
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg mb-6 overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setShowInstructions(!showInstructions)}
-            className="w-full flex items-center justify-between p-4 hover:bg-[#9945FF]/10 transition-colors"
-          >
-            <h3 className="text-sm font-bold text-[#9945FF] flex items-center gap-2">
-              <span className="text-lg">💡</span> How to Edit Your Collection
-            </h3>
-            <svg
-              className={`w-5 h-5 text-[#9945FF] transition-transform duration-200 ${showInstructions ? 'transform rotate-180' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+        <ToolPanel
+          title="How to edit"
+          action={
+            <button
+              type="button"
+              onClick={() => setShowInstructions(!showInstructions)}
+              className="text-sm text-zinc-500 hover:text-white transition-colors"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          {showInstructions && (
-            <div className="px-4 pb-4">
-              <ul className="text-sm text-[#a8a8b8] space-y-1.5 ml-6 list-disc">
-                <li><strong>Collection Name & Description:</strong> Basic info about your collection. Name is required, description is optional.</li>
-                <li><strong>Art Style:</strong> Describe the visual style you want (e.g., "pixel art", "anime style", "realistic 3D"). Use the "Auto" button to have AI generate suggestions based on your collection name/description.</li>
-                <li><strong>Optional Fields:</strong> All fields except name are optional. Empty fields won't be included in the generation prompt, giving you more control.</li>
-                <li><strong>Custom Rules:</strong> Add specific requirements like "always include shadows" or "use warm colors only". These rules will be applied to all generations.</li>
-                <li><strong>PFP Collections:</strong> Check this if your collection is for profile pictures. This enables pose/facing direction and body visibility settings.</li>
-                <li><strong>Compression Settings:</strong> Configure image compression settings from the Compression tab on the collection detail page.</li>
-                <li><strong>Collaboration:</strong> Invite team members from the collection detail page. They can help add layers, traits, and generate ordinals.</li>
+              {showInstructions ? 'Hide' : 'Show'}
+            </button>
+          }
+        >
+          {showInstructions ? (
+              <ul className="text-sm text-zinc-500 space-y-1.5 ml-4 list-disc">
+                <li><strong className="text-zinc-300">Collection Name & Description:</strong> Basic info about your collection. Name is required, description is optional.</li>
+                <li><strong className="text-zinc-300">Art Style:</strong> Describe the visual style you want. Use Auto to have AI generate suggestions.</li>
+                <li><strong className="text-zinc-300">Optional Fields:</strong> Empty fields won't be included in the generation prompt.</li>
+                <li><strong className="text-zinc-300">Custom Rules:</strong> Add requirements applied to all generations.</li>
+                <li><strong className="text-zinc-300">PFP Collections:</strong> Enables pose/facing and body visibility settings.</li>
+                <li><strong className="text-zinc-300">Compression:</strong> Configure from the Compression tab on the collection detail page.</li>
               </ul>
-            </div>
+          ) : (
+            <p className="text-sm text-zinc-500">Expand for editing tips.</p>
           )}
-        </div>
+        </ToolPanel>
 
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-6">
+        <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] overflow-hidden shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+        <div className="p-6 sm:p-8">
           {/* Tabs */}
-          <div className="flex border-b border-[#9945FF]/30 mb-6 -mx-6 px-6">
-            <button
-              type="button"
-              onClick={() => setActiveTab('general')}
-              className={`px-4 py-3 text-sm font-semibold transition-colors relative ${
-                activeTab === 'general'
-                  ? 'text-[#9945FF] border-b-2 border-[#9945FF] -mb-[1px]'
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              General
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('settings')}
-              className={`px-4 py-3 text-sm font-semibold transition-colors relative ${
-                activeTab === 'settings'
-                  ? 'text-[#9945FF] border-b-2 border-[#9945FF] -mb-[1px]'
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              Settings
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('color')}
-              className={`px-4 py-3 text-sm font-semibold transition-colors relative ${
-                activeTab === 'color'
-                  ? 'text-[#9945FF] border-b-2 border-[#9945FF] -mb-[1px]'
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              Color
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('lighting')}
-              className={`px-4 py-3 text-sm font-semibold transition-colors relative ${
-                activeTab === 'lighting'
-                  ? 'text-[#9945FF] border-b-2 border-[#9945FF] -mb-[1px]'
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              Lighting
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('pfp')}
-              className={`px-4 py-3 text-sm font-semibold transition-colors relative ${
-                activeTab === 'pfp'
-                  ? 'text-[#9945FF] border-b-2 border-[#9945FF] -mb-[1px]'
-                  : 'text-white/70 hover:text-white'
-              }`}
-            >
-              PFP
-            </button>
+          <div className="inline-flex flex-wrap gap-1 p-1 mb-8 rounded-full bg-[#0c0c10] border border-white/[0.08]">
+            {([
+              ['general', 'General'],
+              ['settings', 'Settings'],
+              ['color', 'Color'],
+              ['lighting', 'Lighting'],
+              ['pfp', 'PFP'],
+            ] as const).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setActiveTab(id)}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  activeTab === id
+                    ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                    : 'text-zinc-500 hover:text-white'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Tab */}
             {activeTab === 'general' && (
               <>
@@ -519,7 +467,7 @@ export default function EditCollectionPage() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                    className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                     placeholder="Enter collection name"
                     required
                   />
@@ -532,50 +480,46 @@ export default function EditCollectionPage() {
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                    className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                     placeholder="Enter collection description"
                     rows={3}
                   />
                 </div>
 
                 {/* Image Source Tabs: Prompt Image vs Reference Image */}
-                <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-xl overflow-hidden">
+                <div className="rounded-2xl border border-white/[0.1] bg-[#0c0c10] overflow-hidden">
                   {/* Tab Headers */}
-                  <div className="flex border-b border-[#9945FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md">
-                    <button
-                      type="button"
-                      onClick={() => setImageSourceTab('prompt')}
-                      className={`flex-1 px-3 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors relative ${
-                        imageSourceTab === 'prompt'
-                          ? 'text-[#9945FF] bg-[#9945FF]/10'
-                          : 'text-white/70 hover:text-white hover:bg-[#9945FF]/5'
-                      }`}
-                    >
-                      <span className="hidden sm:inline">Prompt Image</span>
-                      <span className="sm:hidden">Prompt</span>
-                      {imageSourceTab === 'prompt' && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9945FF]"></div>
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setImageSourceTab('reference')}
-                      className={`flex-1 px-3 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold transition-colors relative ${
-                        imageSourceTab === 'reference'
-                          ? 'text-[#9945FF] bg-[#9945FF]/10'
-                          : 'text-white/70 hover:text-white hover:bg-[#9945FF]/5'
-                      }`}
-                    >
-                      <span className="hidden sm:inline">Reference Image</span>
-                      <span className="sm:hidden">Reference</span>
-                      {imageSourceTab === 'reference' && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-purple-600"></div>
-                      )}
-                    </button>
+                  <div className="p-3 sm:p-4 border-b border-white/[0.06]">
+                    <div className="inline-flex w-full sm:w-auto gap-1 p-1 rounded-full bg-[#131318] border border-white/[0.08]">
+                      <button
+                        type="button"
+                        onClick={() => setImageSourceTab('prompt')}
+                        className={`flex-1 sm:flex-none px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${
+                          imageSourceTab === 'prompt'
+                            ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                            : 'text-zinc-500 hover:text-white'
+                        }`}
+                      >
+                        <span className="hidden sm:inline">Prompt Image</span>
+                        <span className="sm:hidden">Prompt</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setImageSourceTab('reference')}
+                        className={`flex-1 sm:flex-none px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-colors ${
+                          imageSourceTab === 'reference'
+                            ? 'bg-[#FF2BD6] text-[#0a0a0c]'
+                            : 'text-zinc-500 hover:text-white'
+                        }`}
+                      >
+                        <span className="hidden sm:inline">Reference Image</span>
+                        <span className="sm:hidden">Reference</span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* Tab Content */}
-                  <div className="p-4 sm:p-6">
+                  <div className="p-5 sm:p-6">
                     {imageSourceTab === 'prompt' && (
                       <div className="space-y-3 sm:space-y-4">
                         <p className="text-xs sm:text-sm text-white/70">
@@ -592,7 +536,7 @@ export default function EditCollectionPage() {
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] gap-4 items-start">
-                          <div className="rounded-xl border border-[#9945FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md overflow-hidden">
+                          <div className="rounded-xl border border-white/[0.08] bg-[#131318] overflow-hidden">
                             {futureImagePreview ? (
                               <img src={futureImagePreview} alt="Reference preview" className="w-full h-[160px] object-cover" />
                             ) : (
@@ -626,7 +570,7 @@ export default function EditCollectionPage() {
                               />
                               <label
                                 htmlFor="futureImageUpload"
-                                className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg font-semibold text-sm bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer transition-colors"
+                                className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold cursor-pointer transition-colors"
                               >
                                 Upload Reference
                               </label>
@@ -634,7 +578,7 @@ export default function EditCollectionPage() {
                                 type="button"
                                 onClick={analyzeFutureImage}
                                 disabled={!futureImage || !referenceType || futureAnalyzing}
-                                className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg font-semibold text-sm bg-[#e27d0f] hover:bg-[#c96a0a] disabled:bg-white/10 disabled:text-white/50 text-white transition-colors"
+                                className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#FF2BD6] text-[#0a0a0c] text-sm font-bold disabled:opacity-50 transition-colors"
                               >
                                 {futureAnalyzing ? (
                                   <span className="flex items-center gap-2">
@@ -649,25 +593,25 @@ export default function EditCollectionPage() {
 
                             {/* Reference Type Selection - Only show when image is uploaded */}
                             {futureImage && !referenceType && (
-                              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-3 space-y-2">
-                                <p className="text-sm font-semibold text-white mb-2">What type of reference is this?</p>
+                              <div className="rounded-xl border border-white/[0.08] bg-[#131318] p-4 space-y-3">
+                                <p className="text-sm font-semibold text-white">What type of reference is this?</p>
                                 <div className="flex flex-col sm:flex-row gap-2">
                                   <button
                                     type="button"
                                     onClick={() => setReferenceType('pfp')}
-                                    className="flex-1 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium text-sm transition-colors"
+                                    className="flex-1 h-10 px-5 rounded-full bg-[#FF2BD6] text-[#0a0a0c] font-semibold text-sm hover:opacity-90 transition-colors"
                                   >
                                     🎭 PFP (Profile Picture)
                                   </button>
                                   <button
                                     type="button"
                                     onClick={() => setReferenceType('artwork')}
-                                    className="flex-1 px-4 py-2.5 bg-[#9945FF] hover:bg-[#7C3AED] text-white rounded-lg font-medium text-sm transition-colors"
+                                    className="flex-1 h-10 px-5 rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-semibold text-sm hover:opacity-90 transition-colors"
                                   >
-                                    🎨 Artwork
+                                    Artwork
                                   </button>
                                 </div>
-                                <p className="text-xs text-[#a8a8b8]/80 mt-1">
+                                <p className="text-xs text-zinc-500 mt-1">
                                   PFP: Character-focused images for profile pictures. Artwork: General artwork style reference.
                                 </p>
                               </div>
@@ -675,18 +619,18 @@ export default function EditCollectionPage() {
 
                             {/* Character Prompt Checkbox - Only show when PFP is selected */}
                             {referenceType === 'pfp' && (
-                              <div className="flex items-start gap-2 pt-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-3">
+                              <div className="flex items-start gap-3 rounded-xl border border-white/[0.08] bg-[#131318] p-4">
                                 <input
                                   type="checkbox"
                                   id="generateCharacterPrompt"
                                   checked={generateCharacterPrompt}
                                   onChange={(e) => setGenerateCharacterPrompt(e.target.checked)}
-                                  className="w-4 h-4 mt-0.5 text-[#9945FF] border-[#9945FF]/30 rounded focus:ring-[#9945FF] bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md flex-shrink-0"
+                                  className="w-4 h-4 mt-0.5 text-[#2DE2FF] border-white/[0.1] rounded focus:ring-[#2DE2FF] bg-[#0c0c10] flex-shrink-0"
                                 />
-                                <label htmlFor="generateCharacterPrompt" className="text-xs sm:text-sm text-[#a8a8b8] cursor-pointer">
+                                <label htmlFor="generateCharacterPrompt" className="text-xs sm:text-sm text-zinc-500 cursor-pointer">
                                   <span className="font-semibold text-white">Generate hardcoded character & trait description prompt</span>
                                   <br />
-                                  <span className="text-[#a8a8b8]/80">
+                                  <span className="text-zinc-500">
                                     This will create a detailed prompt describing the character's features, gender, expressions, colors, lighting, and background. The prompt will fill in the description, colors, and lighting fields.
                                   </span>
                                 </label>
@@ -694,21 +638,21 @@ export default function EditCollectionPage() {
                             )}
 
                             {referenceType && (
-                              <div className="text-xs text-[#a8a8b8]/80">
+                              <div className="text-xs text-zinc-500">
                                 <p className="font-medium mb-1">
                                   {referenceType === 'pfp' 
                                     ? '🎭 PFP Mode: Will analyze character features and generate basic character description.'
-                                    : '🎨 Artwork Mode: Will analyze art style and composition settings.'}
+                                    : 'Artwork Mode: Will analyze art style and composition settings.'}
                                 </p>
                                 {referenceType === 'pfp' && generateCharacterPrompt && (
-                                  <p className="text-[#9945FF] mt-1">
-                                    ✨ Enhanced mode: Will generate comprehensive character & trait description with colors and lighting.
+                                  <p className="text-[#2DE2FF] mt-1">
+                                    Enhanced mode: Will generate comprehensive character & trait description with colors and lighting.
                                   </p>
                                 )}
                               </div>
                             )}
 
-                            <p className="text-[10px] sm:text-xs text-[#a8a8b8]/80 break-words">
+                            <p className="text-[10px] sm:text-xs text-zinc-500 break-words">
                               Tip: Use a single, representative image (same style you want for the collection). You can edit any fields after it fills.
                             </p>
                           </div>
@@ -719,11 +663,11 @@ export default function EditCollectionPage() {
                 </div>
 
                 {/* Art Style Section - Compact horizontal layout with hover preview */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-4">
-              <div className="flex items-start gap-4">
+            <div className="rounded-2xl border border-white/[0.1] bg-[#0c0c10] p-5">
+              <div className="flex items-start gap-5">
                 {/* Preview Image - Larger thumbnail with hover support */}
                 <div className="flex-shrink-0">
-                  <div className="relative w-[160px] h-[160px] rounded-lg overflow-hidden border-2 border-[#9945FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md shadow-inner">
+                  <div className="relative w-[160px] h-[160px] rounded-xl overflow-hidden border border-white/[0.1] bg-[#131318]">
                     {(() => {
                       const displayStyle = artStyleDropdownOpen && hoveredArtStyle ? hoveredArtStyle : selectedArtStyleId
                       return displayStyle !== 'custom' ? (
@@ -755,7 +699,7 @@ export default function EditCollectionPage() {
                       type="button"
                       onClick={() => handleAutoGenerate('art_style', setArtStyle)}
                       disabled={generatingAuto === 'art_style'}
-                      className="text-xs bg-[#9945FF] hover:bg-[#7C3AED] disabled:bg-gray-600 text-white px-2 py-0.5 rounded transition-colors"
+                      className="text-xs inline-flex h-7 px-3 items-center rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] hover:bg-[#2DE2FF]/20 font-semibold transition-colors disabled:opacity-50"
                     >
                       {generatingAuto === 'art_style' ? '...' : 'Auto'}
                     </button>
@@ -766,7 +710,7 @@ export default function EditCollectionPage() {
                     type="button"
                     onClick={() => setArtStyleDropdownOpen(!artStyleDropdownOpen)}
                     onBlur={() => setTimeout(() => setArtStyleDropdownOpen(false), 200)}
-                    className="w-full border border-[#9945FF]/30 rounded px-3 py-1.5 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white text-sm focus:border-[#9945FF] focus:outline-none text-left flex items-center justify-between hover:bg-white/10 transition-colors"
+                    className="w-full px-4 py-2.5 border border-white/[0.1] rounded-xl bg-[#131318] text-white text-sm focus:border-[#2DE2FF] focus:outline-none text-left flex items-center justify-between hover:border-[#2DE2FF]/30 transition-colors"
                   >
                     <span>{ART_STYLES.find(s => s.id === selectedArtStyleId)?.name || 'Select style'}</span>
                     <svg
@@ -781,7 +725,7 @@ export default function EditCollectionPage() {
 
                   {/* Custom Dropdown Menu */}
                   {artStyleDropdownOpen && (
-                    <div className="absolute z-[9999] w-full mt-1 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg shadow-lg max-h-60 overflow-y-auto bg-[#0a0e27]">
+                    <div className="absolute z-[9999] w-full mt-1 rounded-xl border border-white/[0.1] bg-[#131318] shadow-lg max-h-60 overflow-y-auto">
                       {ART_STYLES.map(style => (
                         <button
                           key={style.id}
@@ -796,10 +740,10 @@ export default function EditCollectionPage() {
                           }}
                           onMouseEnter={() => setHoveredArtStyle(style.id)}
                           onMouseLeave={() => setHoveredArtStyle(null)}
-                          className={`w-full text-left px-3 py-0.5 text-sm transition-colors ${
+                          className={`w-full text-left px-3 py-2 text-sm transition-colors ${
                             selectedArtStyleId === style.id
-                              ? 'bg-green-100 text-green-900 font-medium'
-                              : 'hover:bg-white/10 text-white'
+                              ? 'bg-[#2DE2FF]/15 text-[#2DE2FF] font-semibold'
+                              : 'hover:bg-white/[0.05] text-zinc-300'
                           }`}
                         >
                           {style.name}
@@ -820,7 +764,7 @@ export default function EditCollectionPage() {
                         }
                       }
                     }}
-                    className="w-full mt-2 border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 text-sm focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                    className="w-full mt-3 px-4 py-3 border border-white/[0.1] rounded-xl bg-[#131318] text-white placeholder:text-zinc-600 text-sm focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                     placeholder="Describe the art style..."
                     rows={2}
                   />
@@ -832,7 +776,7 @@ export default function EditCollectionPage() {
 
             {/* Settings Tab */}
             {activeTab === 'settings' && (
-              <div className="space-y-4">
+              <div className="space-y-6 pt-2">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <label className="block text-sm font-medium text-white">
@@ -842,7 +786,7 @@ export default function EditCollectionPage() {
                       type="button"
                       onClick={() => handleAutoGenerate('border_requirements', setBorderRequirements)}
                       disabled={generatingAuto === 'border_requirements'}
-                      className="text-xs bg-[#9945FF] hover:bg-[#14F195] disabled:bg-gray-600 text-white px-2 py-1 rounded transition-colors shadow-lg shadow-[#9945FF]/20"
+                      className="text-xs inline-flex h-7 px-3 items-center rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] hover:bg-[#2DE2FF]/20 font-semibold transition-colors disabled:opacity-50"
                     >
                       {generatingAuto === 'border_requirements' ? 'Generating...' : 'Auto'}
                     </button>
@@ -850,7 +794,7 @@ export default function EditCollectionPage() {
                   <textarea
                     value={borderRequirements}
                     onChange={(e) => setBorderRequirements(e.target.value)}
-                    className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                    className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                     placeholder="Describe border requirements (e.g., 'no borders', '2px solid black border', 'rounded corners')"
                     rows={3}
                   />
@@ -865,7 +809,7 @@ export default function EditCollectionPage() {
                       type="button"
                       onClick={() => handleAutoGenerate('custom_rules', setCustomRules)}
                       disabled={generatingAuto === 'custom_rules'}
-                      className="text-xs bg-[#9945FF] hover:bg-[#14F195] disabled:bg-gray-600 text-white px-2 py-1 rounded transition-colors shadow-lg shadow-[#9945FF]/20"
+                      className="text-xs inline-flex h-7 px-3 items-center rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] hover:bg-[#2DE2FF]/20 font-semibold transition-colors disabled:opacity-50"
                     >
                       {generatingAuto === 'custom_rules' ? 'Generating...' : 'Auto'}
                     </button>
@@ -873,7 +817,7 @@ export default function EditCollectionPage() {
                   <textarea
                     value={customRules}
                     onChange={(e) => setCustomRules(e.target.value)}
-                    className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                    className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                     placeholder="Enter custom rules for AI generation (e.g., 'always include shadows', 'use warm colors only', 'maintain consistent lighting')"
                     rows={4}
                   />
@@ -883,7 +827,7 @@ export default function EditCollectionPage() {
 
             {/* Color Tab */}
             {activeTab === 'color' && (
-              <div>
+              <div className="pt-2 space-y-2">
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium text-white">
                     Colors Description (Optional)
@@ -892,7 +836,7 @@ export default function EditCollectionPage() {
                     type="button"
                     onClick={() => handleAutoGenerate('colors_description', setColorsDescription)}
                     disabled={generatingAuto === 'colors_description'}
-                    className="text-xs bg-[#9945FF] hover:bg-[#14F195] disabled:bg-gray-600 text-white px-2 py-1 rounded transition-colors shadow-lg shadow-[#9945FF]/20"
+                    className="text-xs bg-[#2DE2FF] hover:bg-[#2DE2FF] disabled:bg-white/10 text-white px-2 py-1 rounded transition-colors shadow-lg shadow-[#2DE2FF]/20"
                   >
                     {generatingAuto === 'colors_description' ? 'Generating...' : 'Auto'}
                   </button>
@@ -900,11 +844,11 @@ export default function EditCollectionPage() {
                 <textarea
                   value={colorsDescription}
                   onChange={(e) => setColorsDescription(e.target.value)}
-                  className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                  className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                   placeholder="Enter color description for AI generation (e.g., 'Deep saturated colors, metallic accents, bright glows, rich colored shadows, smooth gradients, high contrast')"
                   rows={3}
                 />
-                <p className="text-xs text-[#a8a8b8]/80 mt-1">
+                <p className="text-xs text-zinc-500 mt-1">
                   If left empty, the COLORS section will not be included in the generation prompt
                 </p>
               </div>
@@ -912,7 +856,7 @@ export default function EditCollectionPage() {
 
             {/* Lighting Tab */}
             {activeTab === 'lighting' && (
-              <div>
+              <div className="pt-2 space-y-2">
                 <div className="flex items-center justify-between mb-2">
                   <label className="block text-sm font-medium text-white">
                     Lighting Description (Optional)
@@ -921,7 +865,7 @@ export default function EditCollectionPage() {
                     type="button"
                     onClick={() => handleAutoGenerate('lighting_description', setLightingDescription)}
                     disabled={generatingAuto === 'lighting_description'}
-                    className="text-xs bg-[#9945FF] hover:bg-[#14F195] disabled:bg-gray-600 text-white px-2 py-1 rounded transition-colors shadow-lg shadow-[#9945FF]/20"
+                    className="text-xs bg-[#2DE2FF] hover:bg-[#2DE2FF] disabled:bg-white/10 text-white px-2 py-1 rounded transition-colors shadow-lg shadow-[#2DE2FF]/20"
                   >
                     {generatingAuto === 'lighting_description' ? 'Generating...' : 'Auto'}
                   </button>
@@ -929,11 +873,11 @@ export default function EditCollectionPage() {
                 <textarea
                   value={lightingDescription}
                   onChange={(e) => setLightingDescription(e.target.value)}
-                  className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                  className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                   placeholder="Enter lighting description for AI generation (e.g., 'Multiple sources, dramatic setup, warm key light, cool fill light, rim lighting, atmospheric effects')"
                   rows={3}
                 />
-                <p className="text-xs text-[#a8a8b8]/80 mt-1">
+                <p className="text-xs text-zinc-500 mt-1">
                   If left empty, the LIGHTING section will not be included in the generation prompt
                 </p>
               </div>
@@ -941,14 +885,14 @@ export default function EditCollectionPage() {
 
             {/* PFP Tab */}
             {activeTab === 'pfp' && (
-              <div className="space-y-4">
+              <div className="space-y-6 pt-2">
                 <div className="flex items-center gap-3">
                   <input
                     type="checkbox"
                     id="isPfpCollection"
                     checked={isPfpCollection}
                     onChange={(e) => setIsPfpCollection(e.target.checked)}
-                    className="w-4 h-4 text-[#9945FF] bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-[#9945FF]/30 rounded focus:ring-[#9945FF]"
+                    className="w-4 h-4 text-[#2DE2FF] bg-[#0c0c10] border-white/[0.1] rounded focus:ring-[#2DE2FF]"
                   />
                   <label htmlFor="isPfpCollection" className="text-sm font-medium text-white">
                     This is a PFP (Profile Picture) Collection
@@ -961,13 +905,13 @@ export default function EditCollectionPage() {
                     id="pixelPerfect"
                     checked={pixelPerfect}
                     onChange={(e) => setPixelPerfect(e.target.checked)}
-                    className="w-4 h-4 text-[#9945FF] bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-[#9945FF]/30 rounded focus:ring-[#9945FF]"
+                    className="w-4 h-4 text-[#2DE2FF] bg-[#0c0c10] border-white/[0.1] rounded focus:ring-[#2DE2FF]"
                   />
                   <label htmlFor="pixelPerfect" className="text-sm font-medium text-white">
                     Use pixel-perfect character bodies
                   </label>
                 </div>
-                <p className="text-xs text-[#a8a8b8]/80 ml-7">
+                <p className="text-xs text-zinc-500 ml-7">
                   When enabled, character skin/body traits will include precise positioning prompts for consistent body alignment across all variations
                 </p>
 
@@ -980,15 +924,15 @@ export default function EditCollectionPage() {
                       <select
                         value={facingDirection}
                         onChange={(e) => setFacingDirection(e.target.value)}
-                        className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                        className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                       >
-                        <option value="left" className="bg-[#0a0e27]">Left</option>
-                        <option value="left-front" className="bg-[#0a0e27]">Left-Front</option>
-                        <option value="front" className="bg-[#0a0e27]">Front</option>
-                        <option value="right-front" className="bg-[#0a0e27]">Right-Front</option>
-                        <option value="right" className="bg-[#0a0e27]">Right</option>
+                        <option value="left" className="bg-[#0c0c10]">Left</option>
+                        <option value="left-front" className="bg-[#0c0c10]">Left-Front</option>
+                        <option value="front" className="bg-[#0c0c10]">Front</option>
+                        <option value="right-front" className="bg-[#0c0c10]">Right-Front</option>
+                        <option value="right" className="bg-[#0c0c10]">Right</option>
                       </select>
-                      <p className="text-xs text-[#a8a8b8]/80 mt-1">
+                      <p className="text-xs text-zinc-500 mt-1">
                         The direction the character will face in generated images
                       </p>
                     </div>
@@ -1000,20 +944,20 @@ export default function EditCollectionPage() {
                       <select
                         value={bodyStyle}
                         onChange={(e) => setBodyStyle(e.target.value as 'full' | 'half' | 'headonly')}
-                        className="w-full border border-[#9945FF]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white focus:border-[#9945FF] focus:outline-none focus:ring-2 focus:ring-[#9945FF]/20"
+                        className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                       >
-                        <option value="full" className="bg-[#0a0e27]">Full Body</option>
-                        <option value="half" className="bg-[#0a0e27]">Upper Body Only (waist up)</option>
-                        <option value="headonly" className="bg-[#0a0e27]">Head & Shoulders Only</option>
+                        <option value="full" className="bg-[#0c0c10]">Full Body</option>
+                        <option value="half" className="bg-[#0c0c10]">Upper Body Only (waist up)</option>
+                        <option value="headonly" className="bg-[#0c0c10]">Head & Shoulders Only</option>
                       </select>
-                      <p className="text-xs text-[#a8a8b8]/80 mt-1">
+                      <p className="text-xs text-zinc-500 mt-1">
                         Choose how much of the character to show in generated images
                       </p>
                     </div>
 
                     {/* Wireframe Editor - Show when pixel perfect + headonly */}
                     {pixelPerfect && bodyStyle === 'headonly' && (
-                      <div className="mt-6 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#9945FF]/30 rounded-lg">
+                      <div className="mt-6 p-5 rounded-xl border border-white/[0.1] bg-[#131318]">
                         <WireframeEditor
                           config={wireframeConfig}
                           onChange={setWireframeConfig}
@@ -1027,24 +971,25 @@ export default function EditCollectionPage() {
             )}
 
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex flex-wrap gap-3 pt-4 border-t border-white/[0.06]">
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-[#9945FF] text-white px-4 py-2 rounded hover:bg-[#14F195] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#9945FF]/20 transition-all"
+                className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
               >
-                {saving ? 'Saving...' : 'Save Changes'}
+                {saving ? <BrandLoader variant="inline" label="Saving" /> : 'Save changes'}
               </button>
               <Link
                 href={`/collections/${collection.id}`}
-                className="bg-gradient-to-r from-[#9945FF] to-[#DC1FFF] hover:from-[#14F195] hover:to-[#9945FF] text-white px-4 py-2 rounded shadow-lg shadow-[#9945FF]/20 transition-all duration-200"
+                className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:text-white transition-colors"
               >
                 Cancel
               </Link>
             </div>
           </form>
         </div>
-      </div>
+        </div>
+      </ToolWorkspace>
     </div>
   )
 }

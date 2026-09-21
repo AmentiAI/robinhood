@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace, ToolPanel, ToolTip } from '@/components/tool-workspace'
 import { useWallet } from '@/lib/wallet/compatibility'
 
 interface ProcessResult {
@@ -273,42 +274,38 @@ export default function StickerMakerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0c0d]">
+    <div className="min-h-screen bg-[#0a0a0c]">
       <PageHeader
         title="Sticker Creator"
         subtitle="Transform any image into a sticker with transparent backgrounds"
         action={
-          <div className="px-4 py-2 bg-[#15181a] border-2 border-[#2DE2FF] text-xs sm:text-sm font-bold whitespace-nowrap">
+          <div className="px-3.5 py-2 rounded-full bg-[#131318] border border-white/[0.08] text-xs sm:text-sm font-semibold whitespace-nowrap">
             <span className="text-[#2DE2FF]">{CREDITS_PER_STICKER} credit{CREDITS_PER_STICKER > 1 ? 's' : ''} / sticker</span>
           </div>
         }
       />
 
-      <div className="w-full px-6 lg:px-12 py-8 lg:py-12">
-        <div className="w-full">
-
+      <ToolWorkspace className="space-y-5">
         {!activeWalletConnected && (
-          <div className="rounded-lg border border-[#2DE2FF]/50 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 text-[#2DE2FF]">
-            <p className="text-sm">Please connect your wallet to use Sticker Creator Beta.</p>
-          </div>
+          <ToolTip tone="cyan">
+            Please connect your wallet to use Sticker Creator Beta.
+          </ToolTip>
         )}
 
         {activeWalletConnected && credits !== null && typeof credits === 'number' && credits < CREDITS_PER_STICKER && (
-          <div className="rounded-lg border border-[#EF4444]/50 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 text-[#EF4444]">
-            <p className="text-sm">
-              Insufficient credits. You need {CREDITS_PER_STICKER} credit{CREDITS_PER_STICKER > 1 ? 's' : ''} to generate a sticker. 
-              You have {credits.toFixed(1)} credit{credits !== 1 ? 's' : ''}. Please purchase credits.
-            </p>
-          </div>
+          <ToolTip tone="amber">
+            Insufficient credits. You need {CREDITS_PER_STICKER} credit{CREDITS_PER_STICKER > 1 ? 's' : ''} to generate a sticker.
+            You have {credits.toFixed(1)} credit{credits !== 1 ? 's' : ''}. Please purchase credits.
+          </ToolTip>
         )}
 
-        <section className="grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-2">
-          <div className="space-y-4 sm:space-y-6 md:space-y-8 rounded-xl border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 sm:p-6 md:p-8 shadow-xl">
-            <div className="space-y-3">
-              <div className="block text-sm font-semibold text-white">
-                Reference Image{selectedFiles.length > 1 ? 's' : ''} {selectedFiles.length > 0 && `(${selectedFiles.length})`}
-              </div>
-              <div className="relative flex flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-6 text-center">
+        <section className="grid gap-5 lg:grid-cols-2">
+          <ToolPanel
+            title="Create"
+            subtitle={`Reference image${selectedFiles.length > 1 ? 's' : ''}${selectedFiles.length > 0 ? ` (${selectedFiles.length})` : ''}`}
+          >
+            <div className="space-y-5">
+              <div className="relative flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-white/[0.12] bg-[#0c0c10] p-6 text-center">
                 <input
                   type="file"
                   accept="image/*"
@@ -319,222 +316,217 @@ export default function StickerMakerPage() {
                 />
                 <label
                   htmlFor="sticker-maker-file-input"
-                  className="relative z-20 inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#2DE2FF] hover:from-[#00B8D4] hover:to-[#12D87A] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#00E5FF]/20 transition-all duration-200 pointer-events-none"
+                  className="hg-btn-glow relative z-20 inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#2DE2FF] hover:opacity-90 px-4 py-2 text-sm font-bold text-[#0a0a0c] transition-all duration-200 pointer-events-none"
                 >
                   {selectedFiles.length > 0 ? `Change Image${selectedFiles.length > 1 ? 's' : ''}` : "Select Image(s)"}
                 </label>
-                <p className="relative z-20 text-xs text-white/70 pointer-events-none">
+                <p className="relative z-20 text-xs text-zinc-500 pointer-events-none">
                   Supported formats: PNG, JPG, WEBP. Max size 12MB per image.
                   {selectedFiles.length === 0 && <><br />Upload up to {MAX_IMAGES} images to combine elements in one sticker.</>}
                 </p>
               </div>
-            </div>
 
-            {previewUrls.length > 0 && (
-              <div className="space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
-                  Preview{selectedFiles.length > 1 ? 's' : ''}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {previewUrls.map((url, index) => (
-                    <div key={index} className="relative space-y-2">
-                      <div className="relative overflow-hidden rounded-lg border border-[#2DE2FF]/30">
-                        <Image
-                          src={url}
-                          alt={`Selected image ${index + 1} preview`}
-                          width={400}
-                          height={400}
-                          className="h-auto w-full object-contain"
-                          unoptimized
-                        />
-                        <button
-                          onClick={() => removeFile(index)}
-                          className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold transition"
-                          title="Remove image"
-                        >
-                          ×
-                        </button>
+              {previewUrls.length > 0 && (
+                <div className="space-y-3">
+                  <p className="text-xs font-semibold text-zinc-400">
+                    Preview{selectedFiles.length > 1 ? 's' : ''}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {previewUrls.map((url, index) => (
+                      <div key={index} className="relative space-y-2">
+                        <div className="relative overflow-hidden rounded-xl border border-white/[0.08]">
+                          <Image
+                            src={url}
+                            alt={`Selected image ${index + 1} preview`}
+                            width={400}
+                            height={400}
+                            className="h-auto w-full object-contain"
+                            unoptimized
+                          />
+                          <button
+                            onClick={() => removeFile(index)}
+                            className="absolute top-2 right-2 bg-[#FF2BD6]/90 hover:bg-[#FF2BD6] text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold transition"
+                            title="Remove image"
+                          >
+                            ×
+                          </button>
+                        </div>
+                        <p className="text-xs text-zinc-500">
+                          Image {index + 1}: {selectedFiles[index]?.name} · {(((selectedFiles[index]?.size ?? 0) / 1024)).toFixed(1)} KB
+                        </p>
                       </div>
-                      <p className="text-xs text-gray-600">
-                        Image {index + 1}: {selectedFiles[index]?.name} • {(((selectedFiles[index]?.size ?? 0) / 1024)).toFixed(1)} KB
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                {selectedFiles.length > 1 && (
-                  <div className="bg-yellow-50 border border-yellow-200 rounded p-2 mt-2">
-                    <p className="text-yellow-800 text-xs font-semibold">
-                      💡 Take anything from multiple images and make it all in one image
-                    </p>
+                    ))}
                   </div>
-                )}
-              </div>
-            )}
+                  {selectedFiles.length > 1 && (
+                    <ToolTip tone="amber">
+                      Combine elements from multiple images into one sticker.
+                    </ToolTip>
+                  )}
+                </div>
+              )}
 
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label htmlFor="sticker-maker-custom-instructions" className="block text-sm font-semibold text-gray-900">
-                  Custom Instructions (Optional)
-                </label>
-                {customInstructions && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="sticker-maker-custom-instructions" className="block text-sm font-semibold text-white">
+                    Custom instructions (optional)
+                  </label>
+                  {customInstructions && (
+                    <button
+                      type="button"
+                      onClick={() => setCustomInstructions("")}
+                      className="text-xs font-semibold text-zinc-500 hover:text-[#FF2BD6]"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <textarea
+                  id="sticker-maker-custom-instructions"
+                  placeholder={selectedFiles.length > 1
+                    ? "Describe how you want the sticker to look. Use prompts like 'combine all elements from the images' or 'make it more colorful'."
+                    : "Describe how you want the sticker to look. Examples: 'make it more colorful', 'add sparkles', 'make it cute', etc."}
+                  value={customInstructions}
+                  onChange={(event) => setCustomInstructions(event.target.value)}
+                  className="h-32 w-full rounded-xl border border-white/[0.1] bg-[#0c0c10] p-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/50"
+                />
+                <p className="text-xs text-zinc-500">
+                  Optional: Add custom instructions to modify the sticker style or appearance.
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <span className="block text-sm font-semibold text-white">Background</span>
+                <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => setCustomInstructions("")}
-                    className="text-xs font-semibold text-gray-600 hover:text-gray-900"
+                    onClick={() => setBackgroundMode("original")}
+                    className={`flex-1 min-w-[140px] rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                      backgroundMode === "original"
+                        ? "border-[#2DE2FF] bg-[#2DE2FF]/15 text-[#2DE2FF]"
+                        : "border-white/[0.1] bg-[#0c0c10] text-zinc-400 hover:text-white"
+                    }`}
                   >
-                    Clear
+                    Keep original
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => setBackgroundMode("transparent")}
+                    className={`flex-1 min-w-[140px] rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                      backgroundMode === "transparent"
+                        ? "border-[#2DE2FF] bg-[#2DE2FF]/15 text-[#2DE2FF]"
+                        : "border-white/[0.1] bg-[#0c0c10] text-zinc-400 hover:text-white"
+                    }`}
+                  >
+                    Transparent
+                  </button>
+                </div>
+                <p className="text-xs text-zinc-500">
+                  Transparent mode creates a sticker with no background. Original mode preserves the full scene.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <button
+                  onClick={handleProcess}
+                  disabled={selectedFiles.length === 0 || isProcessing || !activeWalletConnected || (credits !== null && typeof credits === 'number' && credits < CREDITS_PER_STICKER)}
+                  className="hg-btn-glow inline-flex items-center gap-2 rounded-full bg-[#2DE2FF] hover:opacity-90 px-5 py-2.5 text-sm font-bold text-[#0a0a0c] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isProcessing ? (
+                    <BrandLoader variant="inline" label="Creating sticker" />
+                  ) : (
+                    <>Create sticker ({CREDITS_PER_STICKER} credit{CREDITS_PER_STICKER > 1 ? 's' : ''})</>
+                  )}
+                </button>
+                {lastUpdated && (
+                  <p className="text-xs text-zinc-500">Last processed: {lastUpdated}</p>
                 )}
               </div>
-              <textarea
-                id="sticker-maker-custom-instructions"
-                placeholder={selectedFiles.length > 1 
-                  ? "Describe how you want the sticker to look. Use prompts like 'combine all elements from the images' or 'make it more colorful'."
-                  : "Describe how you want the sticker to look. Examples: 'make it more colorful', 'add sparkles', 'make it cute', etc."}
-                value={customInstructions}
-                onChange={(event) => setCustomInstructions(event.target.value)}
-                className="h-32 w-full rounded-lg border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/50"
-              />
-              <p className="text-xs text-[#808080]/80">
-                Optional: Add custom instructions to modify the sticker style or appearance.
-              </p>
-            </div>
 
-            <div className="space-y-3">
-              <span className="block text-sm font-semibold text-white">Background</span>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setBackgroundMode("original")}
-                  className={`flex-1 rounded-lg border px-4 py-2 text-sm font-semibold transition ${
-                    backgroundMode === "original"
-                      ? "border-[#2DE2FF] bg-[#2DE2FF]/20 text-[#2DE2FF]"
-                      : "border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl text-white/70 hover:border-[#2DE2FF]/50 hover:text-white"
-                  }`}
-                >
-                  Keep Original Background
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setBackgroundMode("transparent")}
-                  className={`flex-1 rounded-lg border px-4 py-2 text-sm font-semibold transition ${
-                    backgroundMode === "transparent"
-                      ? "border-[#2DE2FF] bg-[#2DE2FF]/20 text-[#2DE2FF]"
-                      : "border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl text-white/70 hover:border-[#2DE2FF]/50 hover:text-white"
-                  }`}
-                >
-                  Transparent Background
-                </button>
-              </div>
-              <p className="text-xs text-[#808080]/80">
-                Transparent mode creates a sticker with no background. Original mode preserves the full scene.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <button
-                onClick={handleProcess}
-                disabled={selectedFiles.length === 0 || isProcessing || !activeWalletConnected || (credits !== null && typeof credits === 'number' && credits < CREDITS_PER_STICKER)}
-                className="inline-flex items-center gap-2 rounded-lg bg-[#2DE2FF] hover:from-[#00B8D4] hover:to-[#12D87A] px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-[#00E5FF]/20 transition-all duration-200 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed disabled:text-gray-200"
-              >
-                {isProcessing ? (
-                  <>
-                    <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/70 border-t-transparent" />
-                    Creating Sticker…
-                  </>
-                ) : (
-                  <>Create Sticker ({CREDITS_PER_STICKER} credit{CREDITS_PER_STICKER > 1 ? 's' : ''})</>
-                )}
-              </button>
-              {lastUpdated && (
-                <p className="text-xs text-[#808080]/80">Last processed: {lastUpdated}</p>
+              {error && (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/[0.08] p-3 text-sm text-red-300">
+                  {error}
+                </div>
               )}
             </div>
+          </ToolPanel>
 
-            {error && (
-              <div className="rounded-lg border border-[#EF4444]/50 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-3 text-sm text-[#EF4444]">
-                {error}
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-4 sm:space-y-6 md:space-y-8">
-            <div className="rounded-xl border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 sm:p-6 md:p-8 shadow-xl">
-              <div className="mb-4 sm:mb-6 flex items-center justify-between">
-                <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white">AI Analysis</h2>
-                {result?.analysis && (
+          <div className="space-y-5">
+            <ToolPanel
+              title="Analysis"
+              action={
+                result?.analysis ? (
                   <button
                     onClick={() => navigator.clipboard.writeText(result.analysis)}
-                    className="text-xs font-semibold text-[#2DE2FF] hover:text-[#2DE2FF] transition-colors"
+                    className="text-xs font-semibold text-[#2DE2FF] hover:opacity-80 transition-opacity"
                   >
-                    Copy Text
+                    Copy text
                   </button>
-                )}
-              </div>
-
+                ) : null
+              }
+            >
               <textarea
                 readOnly
                 value={formattedAnalysis}
                 placeholder="Detailed description of the uploaded image will appear here after processing."
-                className="h-48 w-full resize-none rounded-lg border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 font-mono text-sm leading-relaxed text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/50"
+                className="h-48 w-full resize-none rounded-xl border border-white/[0.1] bg-[#0c0c10] p-4 font-mono text-sm leading-relaxed text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/50"
               />
-            </div>
+            </ToolPanel>
 
-            <div className="rounded-xl border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 sm:p-6 md:p-8 shadow-xl">
-              <div className="mb-4 sm:mb-6 flex items-center justify-between">
-                <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white">Generation Prompt</h2>
-                {result?.chromaticPrompt && (
+            <ToolPanel
+              title="Prompt"
+              action={
+                result?.chromaticPrompt ? (
                   <button
                     onClick={() => navigator.clipboard.writeText(result.chromaticPrompt)}
-                    className="text-xs font-semibold text-[#2DE2FF] hover:text-[#2DE2FF] transition-colors"
+                    className="text-xs font-semibold text-[#2DE2FF] hover:opacity-80 transition-opacity"
                   >
-                    Copy Prompt
+                    Copy prompt
                   </button>
-                )}
-              </div>
+                ) : null
+              }
+            >
               <textarea
                 readOnly
                 value={result?.chromaticPrompt ?? ""}
                 placeholder="The sticker generation prompt will appear here after processing."
-                className="h-48 w-full resize-none rounded-lg border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 font-mono text-sm leading-relaxed text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/50"
+                className="h-48 w-full resize-none rounded-xl border border-white/[0.1] bg-[#0c0c10] p-4 font-mono text-sm leading-relaxed text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/50"
               />
-            </div>
+            </ToolPanel>
 
             {result?.chromaticImageUrl && (
-              <div className="space-y-4 sm:space-y-6 rounded-xl border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl p-4 sm:p-6 md:p-8 shadow-xl">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-base sm:text-lg md:text-xl font-semibold text-white">Your Sticker</h2>
-                  <div className="flex items-center gap-3 text-xs text-white/70">
-                    <a
-                      href={result.chromaticImageUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="font-semibold text-[#2DE2FF] hover:text-[#2DE2FF] transition-colors"
-                    >
-                      Open Full Size
-                    </a>
+              <ToolPanel
+                title="Result"
+                action={
+                  <a
+                    href={result.chromaticImageUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs font-semibold text-[#2DE2FF] hover:opacity-80 transition-opacity"
+                  >
+                    Open full size
+                  </a>
+                }
+              >
+                <div className="space-y-4">
+                  <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0c10]">
+                    <Image
+                      src={result.chromaticImageUrl}
+                      alt="Generated sticker"
+                      width={1024}
+                      height={1024}
+                      className="h-auto w-full object-contain"
+                      unoptimized
+                    />
                   </div>
+                  <ToolTip tone="cyan">
+                    Right-click the image and select &quot;Save image as…&quot; to download your sticker.
+                  </ToolTip>
                 </div>
-                <div className="relative overflow-hidden rounded-lg border border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl">
-                  <Image
-                    src={result.chromaticImageUrl}
-                    alt="Generated sticker"
-                    width={1024}
-                    height={1024}
-                    className="h-auto w-full object-contain"
-                    unoptimized
-                  />
-                </div>
-                <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 rounded-lg p-3 text-xs text-[#808080]">
-                  <p className="font-semibold mb-1 text-[#2DE2FF]">💡 Tip:</p>
-                  <p>Right-click the image and select "Save image as..." to download your sticker!</p>
-                </div>
-              </div>
+              </ToolPanel>
             )}
           </div>
         </section>
-        </div>
-      </div>
+      </ToolWorkspace>
     </div>
   )
 }

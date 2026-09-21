@@ -1,5 +1,8 @@
 'use client'
 
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
@@ -57,75 +60,65 @@ export default function RevSharePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#050510] via-[#0f0f1e] to-[#15152a]">
-      <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="30% RevShare"
+        subtitle={`Split among ${TOTAL_SUPPLY} collection holders`}
+      />
+      <div className="container mx-auto px-4 sm:px-6 py-6">
         <div className="max-w-4xl mx-auto">
-          
-          {/* Hero - Compact */}
-          <div className="text-center mb-10">
-            <Link href="/" className="text-white/70 hover:text-white text-sm mb-4 inline-block">← Back</Link>
-            <h1 className="text-5xl md:text-7xl font-black mb-3">
-              <span className="bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">30%</span> <span className="bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">RevShare</span>
-            </h1>
-            <p className="text-xl text-[#b4b4c8]">
-              Split among <span className="font-bold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">{TOTAL_SUPPLY}</span> collection holders
-            </p>
-      </div>
 
-          {/* The Formula - Big & Simple */}
-          <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 backdrop-blur-sm rounded-2xl p-6 mb-8 text-center border border-[#00E5FF]/30">
+          <div className="hg-rise rounded-2xl p-6 mb-6 text-center border border-white/[0.1] bg-[#131318]">
             <p className="text-white text-lg">
-              <span className="text-3xl font-black bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">Your Share</span>
-              <span className="mx-3">=</span>
-              <span className="text-2xl">(Pieces ÷ {TOTAL_SUPPLY})</span>
-              <span className="mx-3">×</span>
-              <span className="text-2xl">30% of revenue</span>
+              <span className="text-2xl font-semibold text-[#2DE2FF]">Your share</span>
+              <span className="mx-3 text-zinc-500">=</span>
+              <span className="text-lg text-zinc-200">(Pieces ÷ {TOTAL_SUPPLY})</span>
+              <span className="mx-3 text-zinc-500">×</span>
+              <span className="text-lg text-zinc-200">30% of revenue</span>
             </p>
-            </div>
+          </div>
 
-          {/* 4 Revenue Sources - Compact Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl p-4 text-center border border-[#2DE2FF]/30">
-              <div className="text-3xl mb-2">🎨</div>
-              <div className="text-xs text-white/70 uppercase font-bold">Mints</div>
-              <div className="text-lg font-black text-[#DC1FFF]">30%</div>
-              <div className="text-xs text-[#a8a8b8]/80">of mint fees</div>
-              </div>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl p-4 text-center border border-[#2DE2FF]/30">
-              <div className="text-3xl mb-2">💳</div>
-              <div className="text-xs text-white/70 uppercase font-bold">Credits</div>
-              <div className="text-lg font-black text-[#2DE2FF]">30%</div>
-              <div className="text-xs text-[#a8a8b8]/80">of net profit*</div>
+            <div className="bg-[#131318] rounded-2xl p-4 text-center border border-white/[0.08]">
+              <div className="text-xs text-zinc-500 font-semibold mb-1">Mints</div>
+              <div className="text-lg font-semibold text-[#2DE2FF]">30%</div>
+              <div className="text-xs text-zinc-600">of mint fees</div>
             </div>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl p-4 text-center border border-[#2DE2FF]/30">
+            <div className="bg-[#131318] rounded-2xl p-4 text-center border border-white/[0.08]">
+              <div className="text-3xl mb-2">💳</div>
+              <div className="text-xs text-white/70 font-semibold">Credits</div>
+              <div className="text-lg font-semibold text-[#2DE2FF]">30%</div>
+              <div className="text-xs text-zinc-600">of net profit*</div>
+            </div>
+            <div className="bg-[#131318] rounded-2xl p-4 text-center border border-white/[0.08]">
               <div className="text-3xl mb-2">🏪</div>
-              <div className="text-xs text-white/70 uppercase font-bold">Market</div>
-              <div className="text-lg font-black text-[#2DE2FF]">30%</div>
-              <div className="text-xs text-[#a8a8b8]/80">of 3% fee</div>
+              <div className="text-xs text-white/70 font-semibold">Market</div>
+              <div className="text-lg font-semibold text-[#2DE2FF]">30%</div>
+              <div className="text-xs text-zinc-600">of 3% fee</div>
               </div>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl p-4 text-center border border-[#2DE2FF]/30">
+            <div className="bg-[#131318] rounded-2xl p-4 text-center border border-white/[0.08]">
               <div className="text-3xl mb-2">📜</div>
-              <div className="text-xs text-white/70 uppercase font-bold">Inscribe</div>
-              <div className="text-lg font-black text-[#2DE2FF]">30%</div>
-              <div className="text-xs text-[#a8a8b8]/80">of service fee</div>
+              <div className="text-xs text-white/70 font-semibold">Inscribe</div>
+              <div className="text-lg font-semibold text-[#2DE2FF]">30%</div>
+              <div className="text-xs text-zinc-600">of service fee</div>
             </div>
           </div>
 
           {/* Monthly Example - The Main Event */}
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-2xl overflow-hidden mb-8 border border-[#2DE2FF]/30">
-            <div className="bg-gradient-to-r from-[#050510] to-[#0f0f1e] px-6 py-4 border-b border-[#00E5FF]/30">
-              <h2 className="text-xl font-bold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent text-center">
+          <div className="bg-[#131318] rounded-2xl overflow-hidden mb-8 border border-white/[0.08]">
+            <div className="bg-gradient-to-r from-[#050510] to-[#0f0f1e] px-6 py-4 border-b border-white/[0.08]">
+              <h2 className="text-xl font-bold bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] bg-clip-text text-transparent text-center">
                 📊 Example Monthly Earnings
                 </h2>
               {btcPrice && (
-                <p className="text-center text-[#b4b4c8] text-xs mt-1">
+                <p className="text-center text-zinc-400 text-xs mt-1">
                   BTC @ ${btcPrice.toLocaleString()}
                 </p>
               )}
                         </div>
             
             {/* Activity Summary */}
-            <div className="grid grid-cols-4 gap-1 p-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md text-center text-xs">
+            <div className="grid grid-cols-4 gap-1 p-4 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md text-center text-xs">
               <div>
                 <div className="font-bold text-white">30K</div>
                 <div className="text-white/70">mints</div>
@@ -145,16 +138,18 @@ export default function RevSharePage() {
             </div>
 
             {/* Rev Share Pool */}
-            <div className="p-6 text-center border-b border-[#2DE2FF]/30">
+            <div className="p-6 text-center border-b border-white/[0.08]">
               <div className="text-sm text-white/70 mb-1">Total Monthly Rev Share Pool</div>
               {priceLoading ? (
-                <div className="text-2xl text-white/50">Loading...</div>
+                <div className="text-2xl text-white/50">
+                  <BrandLoader variant="inline" label="Loading" />
+                </div>
               ) : (
                 <>
-                  <div className="text-4xl font-black text-[#2DE2FF]">
+                  <div className="text-4xl font-semibold text-[#2DE2FF]">
                     {formatSats(totalRevShareSats)} sats
               </div>
-                  <div className="text-sm text-[#a8a8b8]/80 mt-1">
+                  <div className="text-sm text-zinc-600 mt-1">
                     (~{(totalRevShareSats / 100000000).toFixed(3)} BTC)
                         </div>
                 </>
@@ -168,23 +163,23 @@ export default function RevSharePage() {
                 <div className="text-center text-white/50">Calculating...</div>
               ) : (
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl p-4 text-center border border-[#2DE2FF]/30">
+                  <div className="bg-[#131318] rounded-2xl p-4 text-center border border-white/[0.08]">
                     <div className="text-xs text-white/70 mb-2">1 piece</div>
-                    <div className="text-2xl font-black text-[#DC1FFF]">
+                    <div className="text-2xl font-semibold text-[#FF2BD6]">
                       {formatSats(Math.floor(totalRevShareSats / TOTAL_SUPPLY))}
                         </div>
                     <div className="text-sm text-white/70">sats/month</div>
                       </div>
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl p-4 text-center border-2 border-[#2DE2FF]/50">
+                  <div className="bg-[#131318] rounded-2xl p-4 text-center border border-white/[0.08]/50">
                     <div className="text-xs text-white/70 mb-2">10 pieces</div>
-                    <div className="text-2xl font-black text-[#2DE2FF]">
+                    <div className="text-2xl font-semibold text-[#2DE2FF]">
                       {formatSats(Math.floor(totalRevShareSats * 10 / TOTAL_SUPPLY))}
                     </div>
                     <div className="text-sm text-white/70">sats/month</div>
                         </div>
-                  <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl p-4 text-center border border-[#DC1FFF]/30">
-                    <div className="text-xs text-white/70 mb-2">22 pieces <span className="text-[#DC1FFF]">(10%)</span></div>
-                    <div className="text-2xl font-black text-[#DC1FFF]">
+                  <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-xl p-4 text-center border border-[#FF2BD6]/30">
+                    <div className="text-xs text-white/70 mb-2">22 pieces <span className="text-[#FF2BD6]">(10%)</span></div>
+                    <div className="text-2xl font-semibold text-[#FF2BD6]">
                       {formatSats(Math.floor(totalRevShareSats * 22 / TOTAL_SUPPLY))}
                         </div>
                     <div className="text-sm text-white/70">sats/month</div>
@@ -195,13 +190,13 @@ export default function RevSharePage() {
             </div>
 
           {/* Breakdown - Collapsible or minimal */}
-          <details className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-xl overflow-hidden mb-8 border border-[#2DE2FF]/30">
+          <details className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-xl overflow-hidden mb-8 border border-white/[0.08]">
             <summary className="px-6 py-4 cursor-pointer text-white font-bold flex items-center justify-between">
               <span>📋 Detailed Breakdown by Source</span>
               <span className="text-white/50 text-sm">click to expand</span>
             </summary>
             <div className="px-6 pb-6 grid md:grid-cols-2 gap-4">
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#2DE2FF]/30">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg p-4 border border-white/[0.08]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🎨</span>
                   <span className="font-bold text-white">Mint Fees</span>
@@ -211,13 +206,13 @@ export default function RevSharePage() {
                     <span>30K mints × 4K sats:</span>
                     <span className="font-semibold">1.2 BTC</span>
                         </div>
-                  <div className="flex justify-between text-[#DC1FFF]">
+                  <div className="flex justify-between text-[#FF2BD6]">
                     <span>Rev Share (30%):</span>
                     <span className="font-bold">{formatSats(mintRevShare)} sats</span>
                         </div>
                       </div>
                     </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#2DE2FF]/30">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg p-4 border border-white/[0.08]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">💳</span>
                   <span className="font-bold text-white">Credits</span>
@@ -233,7 +228,7 @@ export default function RevSharePage() {
                 </div>
               </div>
             </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#2DE2FF]/30">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg p-4 border border-white/[0.08]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">🏪</span>
                   <span className="font-bold text-white">Marketplace</span>
@@ -249,7 +244,7 @@ export default function RevSharePage() {
                         </div>
                       </div>
                     </div>
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#2DE2FF]/30">
+              <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-lg p-4 border border-white/[0.08]">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-xl">📜</span>
                   <span className="font-bold text-white">Inscribing</span>
@@ -269,7 +264,7 @@ export default function RevSharePage() {
           </details>
 
           {/* Fine Print */}
-          <div className="text-center text-[#a8a8b8]/80 text-xs space-y-1">
+          <div className="text-center text-zinc-600 text-xs space-y-1">
             <p>* Credits: 30% of net profit after 50% platform costs (converted to sats at current BTC price)</p>
             <p>Payouts processed monthly • Must hold ordinal in wallet to qualify</p>
           </div>

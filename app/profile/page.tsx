@@ -12,51 +12,47 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<'collections' | 'collabs'>('collections')
 
   return (
-    <div className="min-h-screen bg-[#0a0c0d]">
+    <div className="min-h-screen bg-[#0a0a0c]">
       <PageHeader
         title="Profile"
         subtitle="Manage your profile, collections, and collaborations"
       />
 
-      <main className="w-full py-6 lg:py-12 px-6 lg:px-12">
-        <div className="space-y-6 lg:space-y-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+      <main className="w-full py-6 lg:py-8 px-4 sm:px-5 lg:px-8">
+        <div className="max-w-[1400px] mx-auto space-y-5 lg:space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <ProfileManager />
             <CreditTransfer />
             <CollaborationInvitations />
           </div>
 
-          <div className="bg-[#15181a] border-2 border-[#2DE2FF] overflow-hidden">
-            <div className="flex border-b border-[#404040]">
+          <div className="hg-rise rounded-2xl border border-white/[0.1] bg-[#131318] overflow-hidden">
+            <div className="flex p-1.5 gap-1 bg-[#0c0c10]/80 border-b border-white/[0.08]">
               <button
+                type="button"
                 onClick={() => setActiveTab('collections')}
-                className={`flex-1 px-6 py-4 text-center font-semibold tracking-wide uppercase transition-all duration-300 relative ${
+                className={`flex-1 px-4 py-2.5 text-center text-sm font-semibold rounded-full transition-colors ${
                   activeTab === 'collections'
-                    ? 'text-white bg-[#0a0c0d]'
-                    : 'text-[#808080] hover:text-white hover:bg-[#0a0c0d]'
+                    ? 'bg-white text-[#0a0a0c]'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
               >
-                {activeTab === 'collections' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2DE2FF]" />
-                )}
-                <span className="relative z-10">My Collections</span>
+                My collections
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('collabs')}
-                className={`flex-1 px-6 py-4 text-center font-semibold tracking-wide uppercase transition-all duration-300 relative ${
+                className={`flex-1 px-4 py-2.5 text-center text-sm font-semibold rounded-full transition-colors ${
                   activeTab === 'collabs'
-                    ? 'text-white bg-[#0a0c0d]'
-                    : 'text-[#808080] hover:text-white hover:bg-[#0a0c0d]'
+                    ? 'bg-white text-[#0a0a0c]'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
               >
-                {activeTab === 'collabs' && (
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#2DE2FF]" />
-                )}
-                <span className="relative z-10">My Collabs</span>
+                My collabs
               </button>
             </div>
 
-            <div className="p-8">
+            <div className="p-5 sm:p-6">
               {activeTab === 'collections' ? <ProfileCollections /> : <ProfileCollabs />}
             </div>
           </div>

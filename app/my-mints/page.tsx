@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from 'react'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { getSolscanUrl } from '@/lib/solscan'
 import Link from 'next/link'
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
 
 interface MintTransaction {
   id: string
@@ -91,7 +93,7 @@ export default function MyMintsPage() {
     const statusColors: Record<string, string> = {
       confirmed: 'bg-green-500/20 text-green-400 border border-green-500/30',
       minting: 'bg-yellow-500/20 text-[#FBBF24] border border-yellow-500/30',
-      uploading: 'bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/30',
+      uploading: 'bg-[#00E5FF]/20 text-[#00E5FF] border border-white/[0.1]',
       failed: 'bg-red-500/20 text-[#EF4444] border border-red-500/30',
       pending: 'bg-white/10 text-white/70 border border-white/20',
       expired: 'bg-white/10 text-white/50 border border-white/10',
@@ -101,10 +103,11 @@ export default function MyMintsPage() {
 
   if (!activeWalletConnected) {
     return (
-      <div className="min-h-screen p-8 bg-gradient-to-br from-[#050510] via-[#0f0f1e] to-[#15152a]">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 rounded-lg shadow p-6 text-center border border-[#00E5FF]/30">
-            <p className="text-[#b4b4c8]">Please connect your wallet</p>
+      <div className="min-h-screen bg-[#0a0a0c]">
+        <PageHeader title="My mints" subtitle="View your NFT mint history" />
+        <div className="px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-xl mx-auto rounded-2xl border border-white/[0.08] bg-[#131318] p-8 text-center">
+            <p className="text-zinc-400 text-sm">Connect your wallet to view mints.</p>
           </div>
         </div>
       </div>
@@ -112,27 +115,27 @@ export default function MyMintsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-[#050510] via-[#0f0f1e] to-[#15152a]">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="My mints"
+        subtitle="View your NFT mint history"
+        action={
+          <button onClick={loadTransactions} className="h-9 px-4 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold hover:bg-[#7aefff]">
+            Refresh
+          </button>
+        }
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">My Mints</h1>
-              <p className="text-[#b4b4c8] mt-1">View your NFT mint history</p>
-            </div>
-          </div>
-
-          {/* Filters */}
           <div className="flex items-center gap-4 mb-4">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-[#b4b4c8] mb-1">Filter by Collection</label>
+              <label className="block text-sm font-medium text-zinc-500 mb-1.5">Filter by collection</label>
               <select
                 value={collectionFilter}
                 onChange={(e) => setCollectionFilter(e.target.value)}
-                className="w-full px-3 py-2 border border-[#00E5FF]/30 bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 text-white rounded-lg"
+                className="w-full px-3 py-2.5 border border-white/[0.08] bg-[#131318] text-white rounded-xl text-sm outline-none focus:border-[#2DE2FF]/40"
               >
-                <option value="">All Collections</option>
+                <option value="">All collections</option>
                 {collections.map((col) => (
                   <option key={col.id} value={col.id}>
                     {col.name}
@@ -140,48 +143,39 @@ export default function MyMintsPage() {
                 ))}
               </select>
             </div>
-            <div className="flex items-end">
-              <button
-                onClick={loadTransactions}
-                className="px-4 py-2 bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] text-white rounded-lg font-medium"
-              >
-                Refresh
-              </button>
-            </div>
           </div>
         </div>
 
         {error && (
-          <div className="mb-4 p-4 bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 border border-red-500/50 rounded-lg">
+          <div className="mb-4 p-4 bg-[#131318] border border-red-500/50 rounded-lg">
             <p className="text-[#EF4444]">{error}</p>
           </div>
         )}
 
         {loading ? (
-          <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 rounded-lg shadow p-12 text-center border border-[#00E5FF]/30">
-            <div className="w-16 h-16 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-[#b4b4c8]">Loading mint transactions...</p>
+          <div className="rounded-2xl border border-white/[0.1] bg-[#131318]">
+            <BrandLoader variant="card" label="Loading mint history" />
           </div>
         ) : transactions.length === 0 ? (
-          <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 rounded-lg shadow p-12 text-center border border-[#00E5FF]/30">
+          <div className="bg-[#131318] rounded-lg shadow p-12 text-center border border-white/[0.1]">
             <p className="text-white text-lg">No mint transactions found</p>
-            <p className="text-[#b4b4c8] text-sm mt-2">Your mint history will appear here.</p>
+            <p className="text-zinc-500 text-sm mt-2">Your mint history will appear here.</p>
           </div>
         ) : (
-          <div className="bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 rounded-lg shadow overflow-hidden border border-[#00E5FF]/30">
+          <div className="bg-[#131318] rounded-lg shadow overflow-hidden border border-white/[0.1]">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-[#00E5FF]/30">
-                <thead className="bg-gradient-to-br from-[#050510] via-[#0f0f1e] to-[#15152a]">
+              <table className="min-w-full divide-y divide-white/[0.08]">
+                <thead className="bg-[#0c0c10]">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Collection</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">NFT #</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Transaction</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Mint Address</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 uppercase tracking-wider">Date</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">Collection</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">NFT #</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">Transaction</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">Mint Address</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-white/70 r">Date</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#00E5FF]/30">
+                <tbody className="divide-y divide-white/[0.08]">
                   {transactions.map((transaction) => (
                     <tr key={transaction.id} className="hover:bg-[#00E5FF]/10">
                       <td className="px-6 py-4 whitespace-nowrap">

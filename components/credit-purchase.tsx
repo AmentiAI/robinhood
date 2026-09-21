@@ -168,56 +168,126 @@ export function CreditPurchase({ onPurchaseComplete }: CreditPurchaseProps) {
 
   if (!isConnected) {
     return (
-      <div className="text-center py-8 text-white/60">Connect your wallet to buy credits</div>
+      <div className="rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center text-zinc-500">
+        Connect your wallet to buy credits
+      </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {holderStatus?.isHolder && (
-        <p className="text-sm text-[#2DE2FF]">Holder discount active ({holderStatus.discountPercent}%)</p>
+        <div className="hg-rise rounded-2xl border border-[#2DE2FF]/25 bg-gradient-to-r from-[#2DE2FF]/10 to-[#FF2BD6]/10 px-4 py-3">
+          <p className="text-sm font-semibold text-[#2DE2FF]">
+            Holder discount active ({holderStatus.discountPercent}% off)
+          </p>
+        </div>
       )}
-      {checkingHolder && <p className="text-xs text-white/40">Checking holder status...</p>}
+      {checkingHolder && (
+        <p className="text-xs text-zinc-500">Checking holder status…</p>
+      )}
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {discountedTiers.map((tier, index) => (
-          <button
-            key={tier.credits}
-            type="button"
-            onClick={() => handlePurchase(index)}
-            className="border border-[#2DE2FF]/40 p-4 text-left hover:border-[#2DE2FF] transition-colors bg-[#111]"
-          >
-            <div className="text-white font-bold text-lg">{tier.credits} credits</div>
-            <div className="text-[#2DE2FF] mt-1">${tier.discountedPrice.toFixed(2)}</div>
-            <div className="text-xs text-white/50 mt-1">Pay with ETH on Robinhood Chain</div>
-            {creditCosts && (
-              <div className="text-xs text-white/40 mt-2">
-                AI generation costs apply per credit
+      <div className="grid gap-4 sm:grid-cols-2">
+        {discountedTiers.map((tier, index) => {
+          const isSelected = selectedTier === index
+          const hasDiscount =
+            holderStatus?.isHolder && tier.discountedPrice < tier.totalPrice
+
+          return (
+            <button
+              key={tier.credits}
+              type="button"
+              onClick={() => handlePurchase(index)}
+              disabled={checkingPayment}
+              className={`hg-card hg-rise group relative overflow-hidden rounded-2xl border p-5 text-left transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
+                isSelected
+                  ? 'border-[#2DE2FF]/50 bg-[#131318] shadow-[0_0_28px_rgba(45,226,255,0.15)]'
+                  : 'border-white/[0.1] bg-[#131318] hover:border-[#2DE2FF]/35'
+              }`}
+              style={{ animationDelay: `${index * 0.06}s` }}
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full blur-2xl opacity-40 group-hover:opacity-70 transition-opacity"
+                style={{
+                  background:
+                    index % 2 === 0
+                      ? 'radial-gradient(circle, rgba(45,226,255,0.35), transparent 70%)'
+                      : 'radial-gradient(circle, rgba(255,43,214,0.3), transparent 70%)',
+                }}
+              />
+              <div className="relative">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-500 font-semibold mb-1">
+                      Tier {index + 1}
+                    </div>
+                    <div className="text-xl font-bold text-white tabular-nums">
+                      {tier.credits.toLocaleString()}{' '}
+                      <span className="text-sm font-semibold text-zinc-400">credits</span>
+                    </div>
+                  </div>
+                  {hasDiscount && (
+                    <span className="shrink-0 rounded-full bg-[#FF2BD6]/15 border border-[#FF2BD6]/30 px-2.5 py-1 text-[10px] font-bold text-[#FF2BD6] uppercase tracking-wide">
+                      −{holderStatus?.discountPercent}%
+                    </span>
+                  )}
+                </div>
+
+                <div className="mb-4">
+                  {hasDiscount && (
+                    <div className="text-xs text-zinc-500 line-through mb-0.5">
+                      ${tier.totalPrice.toFixed(2)}
+                    </div>
+                  )}
+                  <div className="text-2xl font-bold text-[#2DE2FF] tabular-nums">
+                    ${tier.discountedPrice.toFixed(2)}
+                  </div>
+                  <div className="text-xs text-zinc-500 mt-1">
+                    ${tier.discountedPricePerCredit.toFixed(4)} / credit · ETH on Robinhood Chain
+                  </div>
+                </div>
+
+                {creditCosts && (
+                  <div className="text-[11px] text-zinc-600 mb-4">
+                    AI generation costs apply per credit
+                  </div>
+                )}
+
+                <div className="hg-btn-glow inline-flex h-10 w-full items-center justify-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold group-hover:bg-gradient-to-r group-hover:from-[#2DE2FF] group-hover:via-[#A855F7] group-hover:to-[#FF2BD6]">
+                  {checkingPayment && isSelected ? 'Confirming…' : 'Buy with ETH'}
+                </div>
               </div>
-            )}
-          </button>
-        ))}
+            </button>
+          )
+        })}
       </div>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
-      {checkingPayment && <p className="text-[#2DE2FF] text-sm">Confirming payment...</p>}
+      {error && (
+        <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          {error}
+        </div>
+      )}
+      {checkingPayment && (
+        <p className="text-sm text-[#2DE2FF]">Confirming payment…</p>
+      )}
       {txHash && (
         <a
           href={getExplorerTxUrl(txHash)}
           target="_blank"
           rel="noreferrer"
-          className="text-sm text-[#2DE2FF] underline"
+          className="inline-flex text-sm font-semibold text-[#2DE2FF] hover:text-[#7aefff] underline underline-offset-2"
         >
           View transaction
         </a>
       )}
       {paymentStatus?.success && (
-        <p className="text-green-400 text-sm">
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
           Credits added{paymentStatus.credits ? `: ${paymentStatus.credits}` : ''}
-        </p>
+        </div>
       )}
       {paymentInfo && !paymentStatus?.success && (
-        <p className="text-white/50 text-xs">
+        <p className="text-xs text-zinc-500">
           Payment {currentPaymentId} — {paymentInfo.ethAmount} ETH
         </p>
       )}

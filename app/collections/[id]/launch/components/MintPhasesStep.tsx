@@ -3,29 +3,6 @@
 import React from 'react'
 import { Phase } from '../types'
 
-// Helper function to convert UTC datetime string to local datetime-local format
-function utcToLocalDatetime(utcString: string): string {
-  if (!utcString) return ''
-  const date = new Date(utcString)
-  // Get local time components
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  return `${year}-${month}-${day}T${hours}:${minutes}`
-}
-
-// Helper function to convert local datetime-local format to UTC ISO string
-function localToUtcIso(localDatetime: string): string {
-  if (!localDatetime) return ''
-  // Create a date object from the local datetime string
-  // This will be interpreted as local time
-  const localDate = new Date(localDatetime)
-  // Return as ISO string (UTC)
-  return localDate.toISOString()
-}
-
 interface MintPhasesStepProps {
   phases: Phase[]
   whitelists: Array<{ id: string; name: string; entries_count: number }>
@@ -57,6 +34,12 @@ interface MintPhasesStepProps {
   saving: boolean
 }
 
+const inputCls =
+  'w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20'
+
+const ghostBtnCls =
+  'inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:text-white transition-colors'
+
 export function MintPhasesStep({
   phases,
   whitelists,
@@ -87,79 +70,84 @@ export function MintPhasesStep({
   onContinue,
   saving,
 }: MintPhasesStepProps) {
+  const endDateTooFar =
+    newPhaseEndTime &&
+    newPhaseStartTime &&
+    (new Date(newPhaseEndTime).getTime() - new Date(newPhaseStartTime).getTime()) / (1000 * 60 * 60 * 24) > 10
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-6">Step 2: Mint Phases</h2>
-      
+    <div className="space-y-8">
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2DE2FF]/70 mb-1">
+          Step 2
+        </p>
+        <h2 className="text-xl font-bold text-white">Mint phases</h2>
+      </div>
+
       {!showNewPhaseForm && (
         <button
           onClick={() => {
-            setNewPhaseMaxPerWallet(1) // Reset to default value of 1
+            setNewPhaseMaxPerWallet(1)
             setShowNewPhaseForm(true)
           }}
-          className="w-full py-3 border-2 border-dashed border-[#4561ad]/30 rounded-xl text-[#4561ad] hover:border-[#4561ad] hover:bg-[#4561ad]/5 transition-colors"
+          className="w-full py-4 border border-dashed border-[#FF2BD6]/30 rounded-2xl text-[#FF2BD6] hover:border-[#FF2BD6]/60 hover:bg-[#FF2BD6]/5 transition-colors text-sm font-semibold"
         >
-          + Add Mint Phase
+          + Add mint phase
         </button>
       )}
 
       {showNewPhaseForm && (
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-xl p-6">
-          <h3 className="text-lg font-bold text-white mb-4">{editingPhaseId ? 'Edit Mint Phase' : 'New Mint Phase'}</h3>
-          <div className="grid gap-4">
+        <div className="rounded-2xl border border-white/[0.1] bg-[#0c0c10] p-6 space-y-5">
+          <h3 className="text-base font-semibold text-white">
+            {editingPhaseId ? 'Edit mint phase' : 'New mint phase'}
+          </h3>
+          <div className="grid gap-5">
             <div>
-              <label className="block text-sm font-medium text-white/70 mb-1">Phase Name *</label>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">Phase name *</label>
               <input
                 type="text"
                 value={newPhaseName}
                 onChange={(e) => setNewPhaseName(e.target.value)}
                 placeholder="e.g. OG Mint, Whitelist, Public Sale"
-                className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] text-white placeholder:text-white/50"
+                className={inputCls}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-1">Phase Start Time *</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Phase start time *</label>
                 <input
                   type="datetime-local"
                   value={newPhaseStartTime}
                   onChange={(e) => setNewPhaseStartTime(e.target.value)}
-                  className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] text-white"
+                  className={inputCls}
                 />
-                <p className="text-xs text-[#a8a8b8]/80 mt-1">Your local time ({Intl.DateTimeFormat().resolvedOptions().timeZone})</p>
+                <p className="text-xs text-zinc-500 mt-2">
+                  Your local time ({Intl.DateTimeFormat().resolvedOptions().timeZone})
+                </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-1">Phase End Time</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Phase end time</label>
                 <input
                   type="datetime-local"
                   value={newPhaseEndTime}
                   onChange={(e) => setNewPhaseEndTime(e.target.value)}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] ${
-                    newPhaseEndTime && newPhaseStartTime && 
-                    (new Date(newPhaseEndTime).getTime() - new Date(newPhaseStartTime).getTime()) / (1000 * 60 * 60 * 24) > 10
-                      ? 'border-[#DC1FFF] bg-[#DC1FFF]/20 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md' 
-                      : 'border-[#00d4ff]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md'
-                  } text-white`}
+                  className={`${inputCls} ${endDateTooFar ? 'border-[#FF2BD6]/50 ring-2 ring-[#FF2BD6]/20' : ''}`}
                 />
-                <p className="text-xs text-[#a8a8b8]/80 mt-1">Your local time ({Intl.DateTimeFormat().resolvedOptions().timeZone})</p>
-                {newPhaseEndTime && newPhaseStartTime && (() => {
-                  const daysDifference = (new Date(newPhaseEndTime).getTime() - new Date(newPhaseStartTime).getTime()) / (1000 * 60 * 60 * 24)
-                  if (daysDifference > 10) {
-                    return (
-                      <p className="text-xs text-red-600 mt-1 font-medium">
-                        ⚠️ End date cannot be more than 10 days from start date. Please fix the end date.
-                      </p>
-                    )
-                  }
-                  return null
-                })()}
+                <p className="text-xs text-zinc-500 mt-2">
+                  Your local time ({Intl.DateTimeFormat().resolvedOptions().timeZone})
+                </p>
+                {endDateTooFar && (
+                  <p className="text-xs text-[#FF2BD6] mt-2 font-medium">
+                    End date cannot be more than 10 days from start date.
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-1">Mint Price (lamports)</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Mint price (lamports)</label>
                 <input
                   type="number"
                   value={newPhasePrice}
@@ -167,17 +155,17 @@ export function MintPhasesStep({
                   min={0}
                   step={1000000}
                   placeholder="0"
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] border-[#00d4ff]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder:text-white/50"
+                  className={inputCls}
                 />
                 {newPhasePrice === 0 && (
-                  <p className="text-xs text-[#a8a8b8]/80 mt-1">Free mint (0 ◎)</p>
+                  <p className="text-xs text-zinc-500 mt-2">Free mint (0 ◎)</p>
                 )}
                 {newPhasePrice > 0 && (
-                  <p className="text-xs text-[#a8a8b8]/80 mt-1">{(newPhasePrice / 1000000000).toFixed(4)} SOL</p>
+                  <p className="text-xs text-zinc-500 mt-2">{(newPhasePrice / 1000000000).toFixed(4)} SOL</p>
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-1">Max Per Wallet</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Max per wallet</label>
                 <input
                   type="number"
                   value={newPhaseMaxPerWallet || ''}
@@ -187,33 +175,31 @@ export function MintPhasesStep({
                       setNewPhaseMaxPerWallet(null)
                     } else {
                       const numValue = Number(value)
-                      // Cap at 10 maximum
-                      const cappedValue = Math.min(Math.max(1, numValue), 10)
-                      setNewPhaseMaxPerWallet(cappedValue)
+                      setNewPhaseMaxPerWallet(Math.min(Math.max(1, numValue), 10))
                     }
                   }}
                   min={1}
                   max={10}
                   placeholder="Unlimited"
-                  className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] text-white placeholder:text-white/50"
+                  className={inputCls}
                 />
-                <p className="text-xs text-[#a8a8b8]/80 mt-1">Maximum: 10 per wallet</p>
+                <p className="text-xs text-zinc-500 mt-2">Maximum: 10 per wallet</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-white/70 mb-1">Phase Allocation</label>
+                <label className="block text-sm font-medium text-zinc-400 mb-2">Phase allocation</label>
                 <input
                   type="number"
                   value={newPhaseAllocation || ''}
                   onChange={(e) => setNewPhaseAllocation(e.target.value ? Number(e.target.value) : null)}
                   min={1}
                   placeholder="All remaining"
-                  className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] text-white placeholder:text-white/50"
+                  className={inputCls}
                 />
-                <p className="text-xs text-[#a8a8b8]/80 mt-1">Max total mints during phase (blank for all)</p>
+                <p className="text-xs text-zinc-500 mt-2">Max total mints during phase (blank for all)</p>
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4 rounded-xl border border-white/[0.08] bg-[#131318] p-4">
               <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
@@ -225,56 +211,54 @@ export function MintPhasesStep({
                       setNewPhaseWhitelistId(null)
                     }
                   }}
-                  className="w-4 h-4 text-[#4561ad] rounded"
+                  className="w-4 h-4 text-[#2DE2FF] bg-[#0c0c10] border-white/[0.1] rounded focus:ring-[#2DE2FF]"
                 />
-                <label htmlFor="whitelistOnly" className="text-sm font-medium text-white/70">
-                  Whitelist Only
+                <label htmlFor="whitelistOnly" className="text-sm font-medium text-zinc-300">
+                  Whitelist only
                 </label>
               </div>
-              
+
               {newPhaseWhitelistOnly && whitelists.length > 0 && (
                 <div>
-                  <label className="block text-sm font-medium text-white/70 mb-1">
-                    Assign Whitelist
-                  </label>
+                  <label className="block text-sm font-medium text-zinc-400 mb-2">Assign whitelist</label>
                   <select
                     value={newPhaseWhitelistId || ''}
                     onChange={(e) => setNewPhaseWhitelistId(e.target.value || null)}
-                    className="w-full px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg focus:ring-2 focus:ring-[#00d4ff] focus:border-[#00d4ff] text-white"
+                    className={inputCls}
                   >
-                    <option value="" className="bg-[#0f172a]">-- No Whitelist Selected --</option>
+                    <option value="" className="bg-[#0c0c10]">— No whitelist selected —</option>
                     {whitelists.map((wl) => (
-                      <option key={wl.id} value={wl.id} className="bg-[#0f172a]">
+                      <option key={wl.id} value={wl.id} className="bg-[#0c0c10]">
                         {wl.name} ({wl.entries_count} addresses)
                       </option>
                     ))}
                   </select>
-                  <p className="text-xs text-[#a8a8b8]/80 mt-1">
+                  <p className="text-xs text-zinc-500 mt-2">
                     Select a whitelist to restrict this phase to specific addresses
                   </p>
                 </div>
               )}
             </div>
 
-            <div className="flex gap-3 pt-4 border-t border-[#00d4ff]/30">
+            <div className="flex gap-3 pt-2 border-t border-white/[0.06]">
               <button
                 onClick={onCreatePhase}
                 disabled={
-                  saving || 
-                  (newPhaseEndTime && newPhaseStartTime && (new Date(newPhaseEndTime).getTime() - new Date(newPhaseStartTime).getTime()) / (1000 * 60 * 60 * 24) > 10) ||
+                  saving ||
+                  !!endDateTooFar ||
                   (newPhasePrice > 0 && newPhasePrice <= 545)
                 }
-                className="px-6 py-2 bg-[#00d4ff] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? (editingPhaseId ? 'Updating...' : 'Creating...') : (editingPhaseId ? 'Update Phase' : 'Create Phase')}
+                {saving ? (editingPhaseId ? 'Updating...' : 'Creating...') : (editingPhaseId ? 'Update phase' : 'Create phase')}
               </button>
               <button
                 onClick={() => {
-                  setNewPhaseMaxPerWallet(1) // Reset to default value of 1
+                  setNewPhaseMaxPerWallet(1)
                   setShowNewPhaseForm(false)
                   setEditingPhaseId(null)
                 }}
-                className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-[#00d4ff]/30"
+                className={ghostBtnCls}
               >
                 Cancel
               </button>
@@ -284,56 +268,64 @@ export function MintPhasesStep({
       )}
 
       {phases.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {phases.map((phase) => (
-            <div key={phase.id} className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-xl p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <h3 className="font-bold text-white">{phase.phase_name}</h3>
-                  <p className="text-sm text-white/70">
-                    {new Date(phase.start_time).toLocaleString(undefined, { 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric', 
-                      hour: 'numeric', 
+            <div key={phase.id} className="rounded-xl border border-white/[0.1] bg-[#0c0c10] p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0 space-y-1">
+                  <h3 className="font-semibold text-white">{phase.phase_name}</h3>
+                  <p className="text-sm text-zinc-400">
+                    {new Date(phase.start_time).toLocaleString(undefined, {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: 'numeric',
                       minute: '2-digit',
                       hour12: true,
-                      timeZoneName: 'short'
-                    })} - {phase.end_time ? new Date(phase.end_time).toLocaleString(undefined, { 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric', 
-                      hour: 'numeric', 
-                      minute: '2-digit',
-                      hour12: true,
-                      timeZoneName: 'short'
-                    }) : 'No end'}
+                      timeZoneName: 'short',
+                    })}{' '}
+                    –{' '}
+                    {phase.end_time
+                      ? new Date(phase.end_time).toLocaleString(undefined, {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          hour12: true,
+                          timeZoneName: 'short',
+                        })
+                      : 'No end'}
                   </p>
-                  <p className="text-sm text-white/70">{phase.mint_price_sats ? `${(phase.mint_price_sats / 1000000000).toFixed(4)} SOL` : 'Free'}</p>
+                  <p className="text-sm text-zinc-400">
+                    {phase.mint_price_sats ? `${(phase.mint_price_sats / 1000000000).toFixed(4)} SOL` : 'Free'}
+                  </p>
                   {phase.whitelist_only && (
-                    <p className="text-xs text-[#00d4ff] mt-1">
-                      Whitelist Only
+                    <p className="text-xs text-[#2DE2FF]">
+                      Whitelist only
                       {phase.whitelist_name && (
-                        <span className="ml-2">• {phase.whitelist_name} ({phase.whitelist_entries || 0} addresses)</span>
+                        <span className="ml-2 text-zinc-500">
+                          · {phase.whitelist_name} ({phase.whitelist_entries || 0} addresses)
+                        </span>
                       )}
                     </p>
                   )}
                   {!phase.whitelist_only && phase.whitelist_id && (
-                    <p className="text-xs text-[#a8a8b8]/80 mt-1">
+                    <p className="text-xs text-zinc-500">
                       Whitelist: {phase.whitelist_name || 'Unknown'} ({phase.whitelist_entries || 0} addresses)
                     </p>
                   )}
                 </div>
-                <div className="flex gap-2 ml-4">
+                <div className="flex gap-2 shrink-0">
                   <button
                     onClick={() => onEditPhase(phase.id)}
-                    className="px-3 py-1.5 text-sm bg-blue-500 hover:bg-[#9945FF] text-white rounded-lg transition-colors"
+                    className="inline-flex h-9 px-4 items-center rounded-full text-sm font-semibold border border-[#2DE2FF]/30 text-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-colors"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => onDeletePhase(phase.id)}
-                    className="px-3 py-1.5 text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                    className="inline-flex h-9 px-4 items-center rounded-full text-sm font-semibold border border-[#FF2BD6]/30 text-[#FF2BD6] hover:bg-[#FF2BD6]/10 transition-colors"
                   >
                     Delete
                   </button>
@@ -344,16 +336,13 @@ export function MintPhasesStep({
         </div>
       )}
 
-      <div className="flex justify-between pt-4 border-t border-[#00d4ff]/30">
-        <button
-          onClick={onBack}
-          className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-[#00d4ff]/30"
-        >
+      <div className="flex justify-between pt-6 border-t border-white/[0.06]">
+        <button onClick={onBack} className={ghostBtnCls}>
           ← Back
         </button>
         <button
           onClick={onContinue}
-          className="px-6 py-2 bg-[#00d4ff] hover:bg-[#14F195] text-white rounded-lg font-semibold transition-colors"
+          className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
         >
           Continue →
         </button>
@@ -361,4 +350,3 @@ export function MintPhasesStep({
     </div>
   )
 }
-

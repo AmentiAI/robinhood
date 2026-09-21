@@ -79,7 +79,7 @@ export function ProfileCollabs() {
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
+        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-white/[0.08] backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
           {error}
         </div>
       )}
@@ -96,10 +96,10 @@ export function ProfileCollabs() {
           {collections.map((collection) => (
             <div
               key={collection.id}
-              className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 rounded-lg p-4 ${
+              className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 rounded-lg p-4 ${
                 collection.is_active 
                   ? 'border-[#DC1FFF]/50' 
-                  : 'border-[#2DE2FF]/30'
+                  : 'border-white/[0.08]'
               }`}
             >
               <div className="flex justify-between items-start">
@@ -107,7 +107,7 @@ export function ProfileCollabs() {
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-semibold text-lg text-white">{collection.name}</h4>
                     {collection.is_active && (
-                      <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] text-xs rounded font-semibold border border-[#2DE2FF]/30">
+                      <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] text-xs rounded font-semibold border border-white/[0.08]">
                         Active
                       </span>
                     )}
@@ -116,7 +116,7 @@ export function ProfileCollabs() {
                         {collection.collaborator_role}
                       </span>
                     )}
-                    <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] text-xs rounded border border-[#2DE2FF]/30">
+                    <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] text-xs rounded border border-white/[0.08]">
                       Collaborator
                     </span>
                     {collection.generation_mode && (

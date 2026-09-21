@@ -89,9 +89,9 @@ export function SidebarNav() {
       <button
         type="button"
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-[4.75rem] left-4 z-50 p-3 bg-[#050507] border border-[#2DE2FF]/30 text-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-colors"
+        className="lg:hidden fixed top-[4.25rem] left-4 z-50 p-2.5 rounded-lg bg-[#121214] border border-white/10 text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors"
       >
-        {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        {isMobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </button>
 
       {isMobileOpen && (
@@ -103,23 +103,23 @@ export function SidebarNav() {
 
       <aside
         className={`
-          fixed top-16 sm:top-[4.25rem] left-0 bottom-0 w-72 z-40
-          flex flex-col bg-[#050507] border-r border-white/[0.08] overflow-hidden
+          fixed top-14 sm:top-16 left-0 bottom-0 w-64 z-40
+          flex flex-col bg-[#0e0e10] border-r border-white/[0.08] overflow-hidden
           transition-transform duration-300 ease-in-out
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="p-4 space-y-3 border-b border-white/[0.08]">
+        <div className="p-3.5 space-y-2.5 border-b border-white/[0.08]">
           {ethPrice !== null && (
-            <div className="border border-[#2DE2FF]/20 bg-[#2DE2FF]/[0.04] px-4 py-3.5">
-              <p className="text-[11px] text-white/40 mb-1 tracking-wide uppercase">ETH</p>
+            <div className="rounded-lg border border-white/[0.08] bg-[#121214] px-3.5 py-3">
+              <p className="text-[11px] text-zinc-500 mb-0.5 tracking-wide">ETH</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-semibold text-white tabular-nums">
+                <span className="text-lg font-semibold text-zinc-100 tabular-nums">
                   ${ethPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                 </span>
                 <span
-                  className={`text-sm tabular-nums ${
-                    priceChange >= 0 ? 'text-[#2DE2FF]' : 'text-red-400'
+                  className={`text-xs tabular-nums ${
+                    priceChange >= 0 ? 'text-emerald-400' : 'text-red-400'
                   }`}
                 >
                   {priceChange >= 0 ? '+' : ''}
@@ -134,14 +134,14 @@ export function SidebarNav() {
           </div>
 
           {isConnected && currentAddress && (
-            <p className="text-[11px] text-white/35 truncate px-1 font-mono">
+            <p className="text-[11px] text-zinc-600 truncate px-1 font-mono">
               {currentAddress}
             </p>
           )}
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-5 space-y-7">
-          <div className="space-y-1.5">
+        <nav className="flex-1 overflow-y-auto px-2.5 py-4 space-y-6">
+          <div className="space-y-0.5">
             {navigation.map((item) => {
               const active = isActive(item)
               const Icon = item.icon
@@ -151,15 +151,15 @@ export function SidebarNav() {
                   href={item.href}
                   onClick={() => setIsMobileOpen(false)}
                   className={`
-                    flex items-center gap-3.5 px-4 py-3.5 text-[15px] transition-colors
+                    flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors
                     ${
                       active
-                        ? 'bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-black font-semibold'
-                        : 'text-white/55 hover:text-white hover:bg-white/[0.05]'
+                        ? 'bg-[#2DE2FF]/10 text-[#2DE2FF] font-medium'
+                        : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'
                     }
                   `}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4 w-4 shrink-0" />
                   {item.name}
                 </Link>
               )
@@ -167,12 +167,12 @@ export function SidebarNav() {
           </div>
 
           <div>
-            <div className="px-4 mb-2.5">
-              <span className="text-[11px] text-[#FF2BD6]/70 font-semibold uppercase tracking-[0.18em]">
+            <div className="px-3 mb-2">
+              <span className="text-[11px] text-zinc-600 font-medium tracking-wide">
                 Tools
               </span>
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-0.5">
               {tools.map((item) => {
                 const active = pathname === item.href
                 const Icon = item.icon
@@ -182,15 +182,15 @@ export function SidebarNav() {
                     href={item.href}
                     onClick={() => setIsMobileOpen(false)}
                     className={`
-                      flex items-center gap-3.5 px-4 py-3.5 text-[15px] transition-colors
+                      flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors
                       ${
                         active
-                          ? 'bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-black font-semibold'
-                          : 'text-white/55 hover:text-white hover:bg-white/[0.05]'
+                          ? 'bg-[#2DE2FF]/10 text-[#2DE2FF] font-medium'
+                          : 'text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.04]'
                       }
                     `}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4 shrink-0" />
                     {item.name}
                   </Link>
                 )
@@ -199,8 +199,8 @@ export function SidebarNav() {
           </div>
         </nav>
 
-        <div className="p-4 border-t border-white/[0.08]">
-          <p className="text-[12px] text-white/35 px-1">
+        <div className="p-3.5 border-t border-white/[0.08]">
+          <p className="text-[11px] text-zinc-600 px-1">
             Hood<span className="text-[#FF2BD6]">GFX</span> · Robinhood Chain
           </p>
         </div>

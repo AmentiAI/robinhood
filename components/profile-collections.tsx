@@ -76,14 +76,14 @@ export function ProfileCollections() {
         <h3 className="text-xl font-bold text-white">My Collections</h3>
         <Link
           href="/collections/create"
-          className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#2DE2FF] text-white rounded-lg font-semibold transition-colors text-sm shadow-lg shadow-[#2DE2FF]/20"
+          className="px-4 py-2 bg-[#2DE2FF] hover:bg-[#2DE2FF] text-white rounded-lg font-semibold transition-colors text-sm "
         >
           Create Collection
         </Link>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
+        <div className="mb-4 p-3 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-white/[0.08] backdrop-blur-md border border-[#EF4444]/50 text-[#EF4444] rounded-lg">
           {error}
         </div>
       )}
@@ -103,10 +103,10 @@ export function ProfileCollections() {
           {collections.map((collection) => (
             <div
               key={collection.id}
-              className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 rounded-lg p-4 ${
+              className={`bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 rounded-lg p-4 ${
                 collection.is_active 
                   ? 'border-[#2DE2FF]/50' 
-                  : 'border-[#2DE2FF]/30'
+                  : 'border-white/[0.08]'
               }`}
             >
               <div className="flex justify-between items-start">
@@ -114,7 +114,7 @@ export function ProfileCollections() {
                   <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-semibold text-lg text-white">{collection.name}</h4>
                     {collection.is_active && (
-                      <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] text-xs rounded font-semibold border border-[#2DE2FF]/30">
+                      <span className="px-2 py-1 bg-[#2DE2FF]/20 text-[#2DE2FF] text-xs rounded font-semibold border border-white/[0.08]">
                         Active
                       </span>
                     )}

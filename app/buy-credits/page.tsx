@@ -12,12 +12,10 @@ export default function BuyCreditsPage() {
   const { credits, loading: loadingCredits, loadCredits, addCreditsLocally } = useCredits()
   const [showCreditPurchase, setShowCreditPurchase] = useState(true)
 
-  // Determine active wallet (Bitcoin only)
   const activeWalletAddress = currentAddress && isConnected ? currentAddress : null
   const activeWalletConnected = isConnected
 
   useEffect(() => {
-    // Check if credit purchase should be shown
     const checkSetting = async () => {
       try {
         const response = await fetch('/api/admin/site-settings?key=show_credit_purchase')
@@ -27,7 +25,6 @@ export default function BuyCreditsPage() {
         }
       } catch (error) {
         console.error('Error checking site settings:', error)
-        // Default to showing if we can't check
         setShowCreditPurchase(true)
       }
     }
@@ -42,36 +39,39 @@ export default function BuyCreditsPage() {
 
   const handlePurchaseComplete = (creditsAwarded?: number) => {
     if (creditsAwarded && creditsAwarded > 0) {
-      // Instant local update — balance shows new total immediately
       addCreditsLocally(creditsAwarded)
     }
-    // Also fetch from server to confirm exact amount
     if (activeWalletAddress) {
       loadCredits(activeWalletAddress, true)
     }
   }
 
+  const balanceLabel =
+    credits === null
+      ? null
+      : typeof credits === 'number'
+        ? credits.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
+        : parseFloat(String(credits)).toLocaleString('en-US', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2,
+          })
+
   if (!activeWalletConnected) {
     return (
-      <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center">
-        <div className="max-w-2xl mx-auto text-center px-6">
-          <div className="w-32 h-32 mx-auto mb-8 bg-[#0a0c0d] border-2 border-[#2DE2FF] flex items-center justify-center">
-            <span className="text-6xl">🔌</span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#2DE2FF] uppercase tracking-wide">
-            Buy Credits
-          </h1>
-          <p className="text-xl text-[#808080] mb-10 font-medium leading-relaxed">
-            Please connect your wallet to purchase credits and start creating amazing NFTs.
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center hg-rise shadow-[0_0_40px_rgba(45,226,255,0.08)]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#2DE2FF] mb-3">
+            Credits
+          </p>
+          <h1 className="text-2xl font-bold text-white mb-2">Connect to buy credits</h1>
+          <p className="text-sm text-zinc-500 mb-6 leading-relaxed">
+            Connect your wallet to purchase credits and start creating.
           </p>
           <Link
-            href="/"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#0a0c0d] border-2 border-[#2DE2FF] hover:bg-[#15181a] text-[#2DE2FF] text-lg font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"
+            href="/launchpad"
+            className="hg-btn-glow inline-flex h-11 px-6 items-center rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0a0a0c] text-sm font-bold"
           >
-            <span>Go to Homepage</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
+            Go to launchpad
           </Link>
         </div>
       </div>
@@ -80,25 +80,17 @@ export default function BuyCreditsPage() {
 
   if (!showCreditPurchase) {
     return (
-      <div className="min-h-screen bg-[#0a0c0d] flex items-center justify-center">
-        <div className="max-w-2xl mx-auto text-center px-6">
-          <div className="w-32 h-32 mx-auto mb-8 bg-[#0a0c0d] border-2 border-[#2DE2FF] flex items-center justify-center">
-            <span className="text-6xl">⚠️</span>
-          </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#2DE2FF] uppercase tracking-wide">
-            Buy Credits
-          </h1>
-          <p className="text-xl text-[#808080] mb-10 font-medium leading-relaxed">
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center hg-rise">
+          <h1 className="text-2xl font-bold text-white mb-2">Buy credits</h1>
+          <p className="text-sm text-zinc-500 mb-6 leading-relaxed">
             Credit purchase is currently unavailable. Please check back later.
           </p>
           <Link
-            href="/"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-[#0a0c0d] border-2 border-[#2DE2FF] hover:bg-[#15181a] text-[#2DE2FF] text-lg font-semibold uppercase tracking-wide transition-all duration-300 hover:scale-105 active:scale-95"
+            href="/launchpad"
+            className="inline-flex h-11 px-6 items-center rounded-full border border-white/15 text-zinc-200 text-sm font-semibold hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-all"
           >
-            <span>Go to Homepage</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
+            Go to launchpad
           </Link>
         </div>
       </div>
@@ -106,20 +98,19 @@ export default function BuyCreditsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0c0d]">
+    <div className="min-h-screen bg-[#0a0a0c]">
       <PageHeader
-        title="Buy Credits"
-        subtitle="Purchase credits to generate collections, traits, and more"
+        title="Buy credits"
+        subtitle="Power generation, traits, stickers, and launches"
         action={
-          !loadingCredits && credits !== null ? (
-            <div className="flex items-center gap-3 bg-[#15181a] border-2 border-[#2DE2FF] px-5 py-3">
-              <span className="text-2xl">💰</span>
+          !loadingCredits && balanceLabel !== null ? (
+            <div className="flex items-center gap-3 rounded-2xl border border-[#2DE2FF]/25 bg-gradient-to-r from-[#2DE2FF]/10 to-[#FF2BD6]/10 px-5 py-3 shadow-[0_0_24px_rgba(45,226,255,0.12)]">
               <div>
-                <div className="text-xs text-[#808080] font-medium uppercase tracking-wide">Balance</div>
-                <div className="text-xl font-bold text-[#2DE2FF]">
-                  {typeof credits === 'number'
-                    ? credits.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })
-                    : parseFloat(String(credits)).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                <div className="text-[10px] uppercase tracking-[0.16em] text-zinc-500 font-semibold">
+                  Balance
+                </div>
+                <div className="text-xl font-bold text-[#2DE2FF] tabular-nums leading-tight">
+                  {balanceLabel}
                 </div>
               </div>
             </div>
@@ -127,58 +118,45 @@ export default function BuyCreditsPage() {
         }
       />
 
-      <div className="w-full py-12 bg-[#0a0c0d] mt-12">
-        <div className="max-w-5xl mx-auto space-y-8 px-6 lg:px-12">
-
-          {/* Credit Purchase Component */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
+        <div className="hg-rise">
           <CreditPurchase onPurchaseComplete={handlePurchaseComplete} />
+        </div>
 
-          {/* Info Section */}
-          <div className="bg-[#15181a] border border-[#404040] p-8">
-            <h2 className="text-3xl font-bold text-[#2DE2FF] mb-6 uppercase tracking-wide">What are Credits?</h2>
-            <p className="text-[#808080] mb-6 text-lg leading-relaxed">
-              Credits are used to power various features on HoodGFX:
+        <div className="hg-card hg-rise hg-rise-delay-1 rounded-2xl border border-white/[0.1] bg-[#131318] p-6 sm:p-7">
+          <h2 className="text-lg font-semibold text-white mb-2">What are credits?</h2>
+          <p className="text-zinc-500 mb-5 text-sm leading-relaxed">
+            Credits power everything you create on HoodGFX.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+            {[
+              { title: 'Generate collections', body: 'Create NFT collections and images', color: '#2DE2FF' },
+              { title: 'Create traits', body: 'Design and analyze trait combinations', color: '#A855F7' },
+              { title: 'Promotional materials', body: 'Generate marketing content', color: '#FF2BD6' },
+              { title: 'Advanced tools', body: 'Access premium studio features', color: '#2DE2FF' },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="relative overflow-hidden flex items-start gap-3 p-4 rounded-xl bg-[#0c0c10] border border-white/[0.08] hover:border-white/16 transition-colors"
+              >
+                <div
+                  className="absolute left-0 top-3 bottom-3 w-[3px] rounded-full"
+                  style={{ background: item.color }}
+                />
+                <div className="pl-2">
+                  <div className="font-semibold text-white text-sm mb-0.5">{item.title}</div>
+                  <div className="text-xs text-zinc-500">{item.body}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-xl border border-[#2DE2FF]/20 bg-[#2DE2FF]/[0.06] px-4 py-3.5">
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Credits never expire. Purchase securely with ETH on Robinhood Chain.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="flex items-start gap-3 p-4 bg-[#0a0c0d] border border-[#404040]">
-                <span className="text-2xl">🎨</span>
-                <div>
-                  <div className="font-semibold text-white mb-1 uppercase tracking-wide">Generate Collections</div>
-                  <div className="text-sm text-[#808080]">Create ordinal collections and images</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-[#0a0c0d] border border-[#404040]">
-                <span className="text-2xl">✨</span>
-                <div>
-                  <div className="font-semibold text-white mb-1 uppercase tracking-wide">Create Traits</div>
-                  <div className="text-sm text-[#808080]">Design and analyze trait combinations</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-[#0a0c0d] border border-[#404040]">
-                <span className="text-2xl">📢</span>
-                <div>
-                  <div className="font-semibold text-white mb-1 uppercase tracking-wide">Promotional Materials</div>
-                  <div className="text-sm text-[#808080]">Generate marketing content</div>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 p-4 bg-[#0a0c0d] border border-[#404040]">
-                <span className="text-2xl">🛠️</span>
-                <div>
-                  <div className="font-semibold text-white mb-1 uppercase tracking-wide">Advanced Tools</div>
-                  <div className="text-sm text-[#808080]">Access premium features</div>
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-4 bg-[#0a0c0d] border-2 border-[#2DE2FF]">
-              <span className="text-2xl">💎</span>
-              <p className="text-[#808080] text-sm">
-                Credits never expire and can be used at any time. Purchase credits securely using ETH on Robinhood Chain.
-              </p>
-            </div>
           </div>
         </div>
       </div>
     </div>
   )
 }
-

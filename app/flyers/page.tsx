@@ -1,5 +1,8 @@
 'use client'
 
+import { PageHeader } from '@/components/page-header'
+import { ToolWorkspace, ToolPanel, ToolTip } from '@/components/tool-workspace'
+
 import { useState } from 'react'
 import { Download, Sparkles, Rocket, ShoppingBag, Palette, Wand2, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
@@ -109,133 +112,119 @@ export default function FlyersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0c0d] py-12 px-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-black text-white mb-4 uppercase tracking-wide">
-            Marketing <span className="text-[#2DE2FF]">Flyers</span>
-          </h1>
-          <p className="text-xl text-[#808080] font-semibold mb-6">
-            AI-Generated promotional materials for HoodGFX
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Marketing flyers"
+        subtitle="AI-generated promotional materials for HoodGFX"
+      />
+      <ToolWorkspace className="space-y-8">
+        <ToolTip tone="cyan">
+          Generate a professional flyer with AI · High-quality 1024×1536 images
+        </ToolTip>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 mb-4">
+            Flyer templates
           </p>
-          <div className="inline-block px-6 py-3 bg-[#15181a] border-2 border-[#2DE2FF]/40">
-            <p className="text-sm text-white/80">
-              Click &quot;Generate&quot; to create a professional flyer using AI • High-quality 1024x1536px images
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {flyers.map((flyer, idx) => {
+              const Icon = flyer.icon
+              const generatedFlyer = generatedFlyers.find(f => f.flyerType === flyer.id)
+              const isGenerating = generating === flyer.id
+
+              return (
+                <div
+                  key={flyer.id}
+                  className="hg-card hg-rise rounded-2xl border border-white/[0.1] bg-[#131318] p-5"
+                  style={{ animationDelay: `${idx * 0.05}s` }}
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="p-3 rounded-xl bg-[#0c0c10] border border-white/[0.08]">
+                      <Icon className="w-6 h-6 text-[#2DE2FF]" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-base font-bold text-white mb-1">
+                        {flyer.title}
+                      </h3>
+                      <p className="text-sm text-zinc-500">
+                        {flyer.description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleGenerateFlyer(flyer.id)}
+                    disabled={isGenerating}
+                    className={`hg-btn-glow w-full px-5 py-2.5 rounded-full font-bold text-sm transition-all ${
+                      isGenerating
+                        ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
+                        : 'bg-[#2DE2FF] text-[#0a0a0c]'
+                    }`}
+                  >
+                    {isGenerating ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Generating…
+                      </span>
+                    ) : generatedFlyer ? (
+                      'Regenerate'
+                    ) : (
+                      'Generate flyer'
+                    )}
+                  </button>
+                </div>
+              )
+            })}
           </div>
         </div>
 
-        {/* Flyer Generation Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {flyers.map((flyer) => {
-            const Icon = flyer.icon
-            const generatedFlyer = generatedFlyers.find(f => f.flyerType === flyer.id)
-            const isGenerating = generating === flyer.id
-
-            return (
-              <div
-                key={flyer.id}
-                className="bg-[#15181a] border-2 border-[#404040] hover:border-[#2DE2FF] transition-all p-6"
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="p-3 bg-[#0a0c0d] border border-[#2DE2FF]/40">
-                    <Icon className="w-8 h-8 text-[#2DE2FF]" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-white uppercase tracking-wide mb-1">
-                      {flyer.title}
-                    </h3>
-                    <p className="text-sm text-[#808080]">
-                      {flyer.description}
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => handleGenerateFlyer(flyer.id)}
-                  disabled={isGenerating}
-                  className={`w-full px-6 py-3 font-bold uppercase tracking-wide transition-all ${
-                    isGenerating
-                      ? 'bg-[#404040] text-white/50 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-[#2DE2FF] to-[#FFD700] text-black hover:opacity-90'
-                  }`}
-                >
-                  {isGenerating ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <RefreshCw className="w-4 h-4 animate-spin" />
-                      Generating...
-                    </span>
-                  ) : generatedFlyer ? (
-                    'Regenerate'
-                  ) : (
-                    'Generate Flyer'
-                  )}
-                </button>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Generated Flyers Display */}
         {generatedFlyers.length > 0 && (
-          <div className="space-y-8">
-            <div className="border-t-2 border-[#404040] pt-8">
-              <h2 className="text-3xl font-black text-white mb-6 uppercase tracking-wide">
-                Generated <span className="text-[#2DE2FF]">Flyers</span>
-              </h2>
-            </div>
+          <div className="space-y-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500">
+              Generated flyers
+            </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
               {generatedFlyers.map((flyer) => (
-                <div
+                <ToolPanel
                   key={flyer.flyerType}
-                  className="bg-[#15181a] border-2 border-[#2DE2FF]/40 p-6"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-white uppercase tracking-wide">
-                      {flyer.title}
-                    </h3>
+                  title={flyer.title}
+                  action={
                     <button
+                      type="button"
                       onClick={() => handleDownload(flyer.imageUrl, flyer.flyerType)}
-                      className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#2DE2FF] to-[#FFD700] text-black font-bold text-sm uppercase tracking-wide hover:opacity-90 transition-opacity"
+                      className="hg-btn-glow flex items-center gap-2 px-4 py-2 rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-bold text-sm"
                     >
                       <Download className="w-4 h-4" />
                       Download
                     </button>
-                  </div>
-
-                  <div className="border-2 border-[#404040] overflow-hidden">
+                  }
+                >
+                  <div className="rounded-xl border border-white/[0.08] overflow-hidden bg-[#0c0c10]">
                     <img
                       src={flyer.imageUrl}
                       alt={flyer.title}
                       className="w-full h-auto"
                     />
                   </div>
-
-                  <div className="mt-4 text-center">
-                    <p className="text-sm text-[#808080]">
-                      High-quality AI-generated marketing flyer • 1024x1536px
-                    </p>
-                  </div>
-                </div>
+                  <p className="mt-3 text-center text-xs text-zinc-500">
+                    High-quality AI-generated marketing flyer · 1024×1536px
+                  </p>
+                </ToolPanel>
               ))}
             </div>
           </div>
         )}
 
         {generatedFlyers.length === 0 && (
-          <div className="text-center py-24">
-            <div className="text-6xl mb-6">✨</div>
-            <h2 className="text-2xl font-bold text-white mb-4 uppercase">
-              Generate Your First Flyer
-            </h2>
-            <p className="text-xl text-[#808080] font-semibold">
-              Click &quot;Generate Flyer&quot; on any card above to create AI-powered marketing materials
+          <ToolPanel title="Generate your first flyer" subtitle='Click "Generate flyer" on any template above'>
+            <p className="text-sm text-zinc-500">
+              Results will appear here once a flyer finishes generating.
             </p>
-          </div>
+          </ToolPanel>
         )}
-      </div>
+      </ToolWorkspace>
     </div>
   )
 }

@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     const { wallet_address, email, twitter, action, admin_wallet } = body
 
     if (!wallet_address || !String(wallet_address).startsWith('0x')) {
-      return NextResponse.json({ error: 'Valid 0x wallet_address required' }, { status: 400 })
+      return NextResponse.json({ error: 'Valid 0x wallet address required' }, { status: 400 })
     }
 
     if (action === 'approve' || action === 'reject') {
@@ -178,58 +178,44 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, status })
     }
 
+    const normalizedWallet = String(wallet_address).trim()
+    if (!/^0x[a-fA-F0-9]{40}$/.test(normalizedWallet)) {
+      return NextResponse.json({ error: 'Valid 0x wallet address required' }, { status: 400 })
+    }
+
     const existing = (await sql`
       SELECT status FROM site_whitelist
-      WHERE LOWER(wallet_address) = LOWER(${wallet_address})
+      WHERE LOWER(wallet_address) = LOWER(${normalizedWallet})
       LIMIT 1
     `) as any[]
 
-    if (existing[0]?.status === 'approved') {
-      return NextResponse.json({
-        success: true,
-        status: 'approved',
-        message: "You're on the whitelist — free mint coming soon",
-      })
-    }
-    if (existing[0]?.status === 'pending') {
-      // Allow updating contact info
-      await sql`
-        UPDATE site_whitelist SET
-          email = COALESCE(${email || null}, email),
-          twitter = COALESCE(${twitter || null}, twitter),
-          updated_at = NOW()
-        WHERE LOWER(wallet_address) = LOWER(${wallet_address})
-      `
-      return NextResponse.json({
-        success: true,
-        status: 'pending',
-        message: "You're on the whitelist — free mint coming soon",
-      })
-    }
-
-    // Everyone joins as pending — connecting never unlocks the app while locked
-    const status = 'pending'
-
+    // One application per wallet — no resubmits or contact updates
     if (existing.length) {
-      await sql`
-        UPDATE site_whitelist SET
-          email = COALESCE(${email || null}, email),
-          twitter = COALESCE(${twitter || null}, twitter),
-          status = ${status},
-          updated_at = NOW()
-        WHERE LOWER(wallet_address) = LOWER(${wallet_address})
-      `
-    } else {
-      await sql`
-        INSERT INTO site_whitelist (wallet_address, email, twitter, status)
-        VALUES (
-          ${wallet_address},
-          ${email || null},
-          ${twitter || null},
-          ${status}
-        )
-      `
+      const existingStatus = existing[0]?.status || 'pending'
+      return NextResponse.json(
+        {
+          error: 'This wallet has already applied. Only one submission is allowed.',
+          status: existingStatus,
+          already_applied: true,
+        },
+        { status: 409 }
+      )
     }
+
+    if (!twitter || !String(twitter).trim()) {
+      return NextResponse.json({ error: 'X (Twitter) handle required' }, { status: 400 })
+    }
+
+    const status = 'pending'
+    await sql`
+      INSERT INTO site_whitelist (wallet_address, email, twitter, status)
+      VALUES (
+        ${normalizedWallet},
+        ${email || null},
+        ${twitter || null},
+        ${status}
+      )
+    `
 
     return NextResponse.json({
       success: true,

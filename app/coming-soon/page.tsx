@@ -15,7 +15,7 @@ export default function ComingSoonPage() {
         <div className="flex items-center justify-between">
           <div className="relative">
             <Image
-              src="/hoodgfx-hero.png"
+              src="/hoodgfx-logo.png"
               alt="HoodGFX"
               width={500}
               height={500}
@@ -63,13 +63,13 @@ export default function ComingSoonPage() {
               {/* Welcome badge with neon glow */}
               <div className="inline-flex items-center gap-3 px-6 py-2.5 bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 border-2 border-[#00E5FF]/30 rounded-full mb-8 shadow-sm">
                 <div className="w-3 h-3 bg-[#00E5FF] rounded-full animate-pulse"></div>
-                <span className="text-base font-bold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent uppercase tracking-widest">
+                <span className="text-base font-bold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent st">
                   The Future is now
                 </span>
               </div>
 
               {/* Main headline */}
-              <h2 className="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight">
+              <h2 className="text-6xl md:text-7xl lg:text-8xl font-semibold mb-6 leading-tight">
                 <span className="block mb-2 bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">
                   CREATOR PASS MINT
                 </span>
@@ -83,7 +83,7 @@ export default function ComingSoonPage() {
                 {/* Discount badge */}
                 <div className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-br from-[#0f0f1e]/90 to-[#15152a]/90 border-2 border-[#00E5FF]/30 rounded-full shadow-sm">
                   <span className="text-3xl">⚡</span>
-                  <span className="text-2xl md:text-3xl font-black bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">
+                  <span className="text-2xl md:text-3xl font-semibold bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent">
                     50% OFF ALL CREDITS
                   </span>
                 </div>
@@ -91,7 +91,7 @@ export default function ComingSoonPage() {
                 {/* Rev Share badge */}
                 <div className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] border-2 border-[#00E5FF]/30 rounded-full shadow-lg">
                   <span className="text-2xl">💰</span>
-                  <span className="text-xl md:text-2xl font-black text-white">
+                  <span className="text-xl md:text-2xl font-semibold text-white">
                     20% Rev Share
                   </span>
                 </div>
@@ -103,7 +103,7 @@ export default function ComingSoonPage() {
               {/* Guide Link */}
               <Link 
                 href="/guide"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] text-white rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] text-white rounded-full font-bold text-lg transition-all duration-300  shadow-lg"
               >
                 📖 View Guide
               </Link>

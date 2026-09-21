@@ -37,45 +37,54 @@ export function NftCard({
   onShowCompression,
   collectionArtStyle,
 }: NftCardProps) {
-  const hasCompressed = nft.compressed_image_url && 
-    nft.compressed_image_url !== null && 
+  const hasCompressed =
+    nft.compressed_image_url &&
+    nft.compressed_image_url !== null &&
     nft.compressed_image_url.trim() !== '' &&
     nft.compressed_image_url !== nft.image_url
   const compressedImageUrl = hasCompressed ? nft.compressed_image_url! : nft.image_url
-  
-  // Use NFT's art_style if available, otherwise fall back to collection's art_style
   const artStyle = nft.art_style || collectionArtStyle
+  const slider = imageSliders[nft.id] ?? 50
 
   return (
-    <div className="border border-gray-200 bg-[#FDFCFA] rounded-lg overflow-hidden">
-      {artStyle && (
-        <div className="px-3 py-2 bg-gradient-to-r from-orange-50 to-blue-50 border-b border-gray-200">
-          <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-0.5">Art Style</div>
-          <div className="text-sm text-gray-900 font-medium truncate" title={artStyle}>
+    <div className="group relative overflow-hidden rounded-2xl border border-white/[0.1] bg-[#131318] hg-card shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+      {artStyle ? (
+        <div className="px-3 py-2 border-b border-white/[0.06] bg-gradient-to-r from-[#2DE2FF]/10 via-transparent to-[#FF2BD6]/10">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#2DE2FF] mb-0.5">
+            Art style
+          </p>
+          <p className="text-xs text-zinc-200 truncate" title={artStyle}>
             {artStyle}
-          </div>
+          </p>
         </div>
-      )}
-      <div className="relative aspect-square bg-gray-100 overflow-hidden">
+      ) : null}
+
+      <div className="relative aspect-square bg-[#0a0a0c] overflow-hidden">
         <div className="relative w-full h-full">
           <div className="absolute inset-0">
             <Image src={compressedImageUrl} alt={`Compressed #${displayNumber}`} fill className="object-cover" />
-            <div className={`absolute top-1 left-1 ${hasCompressed ? 'bg-green-600/90' : 'bg-[#FF2BD6]/90'} text-white text-[8px] px-1 py-0.5 rounded font-semibold`}>
-              {hasCompressed ? 'Compressed' : 'Original Only'}
+            <div
+              className={`absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full font-semibold ${
+                hasCompressed
+                  ? 'bg-emerald-500/90 text-white'
+                  : 'bg-[#FF2BD6]/90 text-white'
+              }`}
+            >
+              {hasCompressed ? 'Compressed' : 'Original only'}
             </div>
           </div>
-          <div 
+          <div
             className="absolute inset-0"
-            style={{ clipPath: `inset(0 ${100 - (imageSliders[nft.id] ?? 50)}% 0 0)` }}
+            style={{ clipPath: `inset(0 ${100 - slider}% 0 0)` }}
           >
             <Image src={nft.image_url} alt={`Original #${displayNumber}`} fill className="object-cover" />
-            <div className="absolute top-1 right-1 bg-[#9945FF]/90 text-white text-[8px] px-1 py-0.5 rounded font-semibold">
+            <div className="absolute top-2 right-2 bg-[#2DE2FF]/90 text-[#0a0a0c] text-[9px] px-2 py-0.5 rounded-full font-bold">
               Original
             </div>
           </div>
           <div
-            className="absolute top-0 bottom-0 w-1 bg-[#FDFCFA] border-l-2 border-r-2 border-blue-500 cursor-ew-resize z-10 shadow-lg"
-            style={{ left: `${imageSliders[nft.id] ?? 50}%`, transform: 'translateX(-50%)' }}
+            className="absolute top-0 bottom-0 w-0.5 bg-white cursor-ew-resize z-10"
+            style={{ left: `${slider}%`, transform: 'translateX(-50%)' }}
             onMouseDown={(e) => {
               e.preventDefault()
               const container = e.currentTarget.parentElement
@@ -84,7 +93,7 @@ export function NftCard({
                 const rect = container.getBoundingClientRect()
                 const newX = moveEvent.clientX - rect.left
                 const percentage = Math.max(0, Math.min(100, (newX / rect.width) * 100))
-                setImageSliders(prev => ({ ...prev, [nft.id]: percentage }))
+                setImageSliders((prev) => ({ ...prev, [nft.id]: percentage }))
               }
               const handleUp = () => {
                 document.removeEventListener('mousemove', handleMove)
@@ -94,84 +103,125 @@ export function NftCard({
               document.addEventListener('mouseup', handleUp)
             }}
           >
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#2DE2FF] border-2 border-[#0a0a0c] flex items-center justify-center">
               <div className="flex gap-0.5">
-                <div className="w-0.5 h-2 bg-[#FDFCFA]"></div>
-                <div className="w-0.5 h-2 bg-[#FDFCFA]"></div>
+                <div className="w-0.5 h-2 bg-[#0a0a0c]" />
+                <div className="w-0.5 h-2 bg-[#0a0a0c]" />
               </div>
             </div>
           </div>
         </div>
-        {/* KB File Size Display */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-2 py-1 bg-black/60 text-white text-[8px] sm:text-[10px] font-semibold">
-          <div className="flex items-center gap-1">
-            <span className="text-blue-300">Original:</span>
-            <span>{nft.original_size_kb != null ? `${Number(nft.original_size_kb).toFixed(1)} KB` : '—'}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-green-300">Compressed:</span>
-            <span>{nft.compressed_size_kb != null ? `${Number(nft.compressed_size_kb).toFixed(1)} KB` : '—'}</span>
-          </div>
+
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-2.5 py-1.5 bg-black/70 text-[9px] sm:text-[10px] font-semibold text-zinc-300">
+          <span>
+            <span className="text-[#2DE2FF]">Orig </span>
+            {nft.original_size_kb != null ? `${Number(nft.original_size_kb).toFixed(1)} KB` : '—'}
+          </span>
+          <span>
+            <span className="text-emerald-400">Comp </span>
+            {nft.compressed_size_kb != null ? `${Number(nft.compressed_size_kb).toFixed(1)} KB` : '—'}
+          </span>
         </div>
       </div>
-      <div className="p-1.5 sm:p-2">
-        <div className="flex justify-between items-start mb-1">
-          <h3 className="font-semibold text-[10px] sm:text-xs text-gray-900 truncate flex-1 mr-1">
-            #{displayNumber}
-          </h3>
-          <div className="flex gap-0.5 sm:gap-1 flex-shrink-0">
-            <button onClick={() => onDownload(nft)} className="text-green-700 hover:text-green-800 text-[10px] sm:text-xs p-0.5" title="Download">
-              ⬇
+
+      <div className="p-3 space-y-2">
+        <div className="flex justify-between items-center gap-2">
+          <h3 className="font-semibold text-sm text-white truncate">#{displayNumber}</h3>
+          <div className="flex gap-1 shrink-0">
+            <button
+              onClick={() => onDownload(nft)}
+              className="h-7 w-7 rounded-full border border-white/[0.1] text-zinc-400 hover:text-[#2DE2FF] hover:border-[#2DE2FF]/40 text-xs transition-colors"
+              title="Download"
+            >
+              ↓
             </button>
-            <button onClick={() => onDelete(nft.id)} className="text-red-700 hover:text-red-800 text-[10px] sm:text-xs p-0.5" title="Delete">
+            <button
+              onClick={() => onDelete(nft.id)}
+              className="h-7 w-7 rounded-full border border-red-500/25 text-red-400 hover:border-red-500/50 text-[10px] font-semibold transition-colors"
+              title="Delete"
+            >
               Del
             </button>
           </div>
         </div>
-        <button onClick={() => onShowCompression(nft)} className="w-full mb-1.5 px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-[10px] sm:text-xs rounded transition-colors text-center">
-          🖼️ {hasCompressed ? 'Compare Compression' : 'View Image'}
+
+        <button
+          onClick={() => onShowCompression(nft)}
+          className="hg-btn-glow w-full h-8 rounded-full bg-gradient-to-r from-[#2DE2FF] to-[#7aefff] text-[#0a0a0c] text-xs font-bold"
+        >
+          {hasCompressed ? 'Compare compression' : 'View image'}
         </button>
-        <button onClick={() => onFlip(nft.id)} disabled={flippingNft === nft.id} className="w-full mb-1.5 px-2 py-1 bg-purple-600 hover:bg-purple-700 text-white text-[10px] sm:text-xs rounded transition-colors text-center disabled:opacity-50 disabled:cursor-not-allowed">
-          {flippingNft === nft.id ? '⏳ Flipping...' : '🔄 Flip Horizontal'}
+        <button
+          onClick={() => onFlip(nft.id)}
+          disabled={flippingNft === nft.id}
+          className="w-full h-8 rounded-full border border-[#FF2BD6]/35 text-[#FF2BD6] text-xs font-semibold hover:bg-[#FF2BD6]/10 hover:border-[#FF2BD6]/55 transition-all duration-200 disabled:opacity-50"
+        >
+          {flippingNft === nft.id ? 'Flipping…' : 'Flip horizontal'}
         </button>
-        <button onClick={() => setShowPromptId(showPromptId === nft.id ? null : nft.id)} className="w-full mb-1.5 px-2 py-1 bg-[#9945FF] hover:bg-[#7C3AED] text-white text-[10px] sm:text-xs rounded transition-colors text-center">
-          {showPromptId === nft.id ? 'Hide Prompt' : 'View Prompt'}
+        <button
+          onClick={() => setShowPromptId(showPromptId === nft.id ? null : nft.id)}
+          className="w-full h-8 rounded-full border border-white/[0.08] text-zinc-400 text-xs font-medium hover:text-white hover:border-white/16 transition-colors"
+        >
+          {showPromptId === nft.id ? 'Hide prompt' : 'View prompt'}
         </button>
+
         {showPromptId === nft.id && (
-          <div className="mb-2 p-2 bg-[#FDFCFA] border border-gray-300 rounded max-h-60 overflow-y-auto">
+          <div className="p-2.5 rounded-xl bg-[#0c0c10] border border-white/[0.08] max-h-48 overflow-y-auto">
             <div className="flex justify-between items-center mb-2">
-              <h4 className="text-xs font-semibold text-gray-900">AI Prompt Used:</h4>
-              <button onClick={() => { navigator.clipboard.writeText(nft.prompt || ''); toast.success('Copied!') }} className="text-xs text-green-700 hover:text-green-800 px-2 py-1 bg-green-50 rounded">
+              <h4 className="text-[11px] font-semibold text-zinc-300">AI prompt</h4>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(nft.prompt || '')
+                  toast.success('Copied!')
+                }}
+                className="text-[10px] font-semibold text-[#2DE2FF] hover:text-[#7aefff]"
+              >
                 Copy
               </button>
             </div>
-            <pre className="text-[10px] sm:text-xs text-gray-900 whitespace-pre-wrap font-mono leading-relaxed">{nft.prompt || 'No prompt available'}</pre>
-            <div className="mt-1 text-[8px] text-[#a8a8b8]/80">NFT ID: {nft.id}</div>
+            <pre className="text-[10px] text-zinc-400 whitespace-pre-wrap font-mono leading-relaxed">
+              {nft.prompt || 'No prompt available'}
+            </pre>
           </div>
         )}
+
         {nft.traits && Object.keys(nft.traits).length > 0 && (
-          <div className="border border-gray-300 rounded-md overflow-hidden">
-            <button onClick={() => setExpandedTraits(prev => ({ ...prev, [nft.id]: !prev[nft.id] }))} className="w-full flex items-center justify-between px-2 py-1.5 bg-gray-50 hover:bg-gray-100 transition-colors text-left">
-              <span className="text-[11px] font-semibold text-gray-900">Traits</span>
-              <svg className={`w-4 h-4 text-gray-600 transition-transform ${expandedTraits[nft.id] ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="rounded-xl border border-white/[0.08] overflow-hidden">
+            <button
+              onClick={() =>
+                setExpandedTraits((prev) => ({ ...prev, [nft.id]: !prev[nft.id] }))
+              }
+              className="w-full flex items-center justify-between px-2.5 py-2 bg-[#0c0c10] hover:bg-white/[0.03] transition-colors text-left"
+            >
+              <span className="text-[11px] font-semibold text-zinc-300">Traits</span>
+              <svg
+                className={`w-3.5 h-3.5 text-zinc-500 transition-transform ${
+                  expandedTraits[nft.id] ? 'rotate-180' : ''
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
             {expandedTraits[nft.id] && (
-              <div className="px-2 py-1.5 space-y-0.5 bg-[#FDFCFA]">
+              <div className="px-2.5 py-2 space-y-1 bg-[#131318]">
                 {Object.entries(nft.traits).map(([layerName, trait]) => (
                   <div key={layerName} className="text-[10px]">
-                    <span className="text-gray-900 font-semibold">{layerName}:</span>{' '}
-                    <span className="text-gray-600">{trait?.name || String(trait)}</span>
+                    <span className="text-zinc-400 font-medium">{layerName}: </span>
+                    <span className="text-zinc-200">{trait?.name || String(trait)}</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
         )}
-        <p className="text-[10px] text-gray-900 mt-1">{new Date(nft.created_at).toLocaleDateString()}</p>
+
+        <p className="text-[10px] text-zinc-600">
+          {new Date(nft.created_at).toLocaleDateString()}
+        </p>
       </div>
     </div>
   )
 }
-

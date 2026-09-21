@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/page-header'
+import { ToolWorkspace } from '@/components/tool-workspace'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { useCredits } from '@/lib/credits-context'
 import { toast } from 'sonner'
@@ -94,7 +95,7 @@ function FetchVideoButton({ errorMessage, jobId, onSuccess }: { errorMessage: st
       <button
         onClick={handleFetch}
         disabled={fetching}
-        className="w-full px-4 py-2 rounded-lg bg-[#2DE2FF] hover:from-[#00B8D4] hover:to-[#12D87A] text-white text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="hg-btn-glow w-full px-4 py-2 rounded-full bg-[#2DE2FF] hover:opacity-90 text-[#0a0a0c] text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         {fetching ? (
           <>
@@ -164,7 +165,7 @@ function RetryVideoButton({ item, onSuccess }: { item: PromotionHistoryItem; onS
     <button
       onClick={handleRetry}
       disabled={fetching}
-      className="flex-1 px-3 py-2 rounded-lg bg-[#2DE2FF] hover:from-[#00B8D4] hover:to-[#12D87A] text-white text-sm font-semibold transition-colors text-center disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1"
+      className="hg-btn-glow flex-1 px-3 py-2 rounded-full bg-[#2DE2FF] hover:opacity-90 text-[#0a0a0c] text-sm font-bold transition-colors text-center disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1"
     >
       {fetching ? (
         <>
@@ -704,13 +705,13 @@ export default function PromotionPage() {
   }
   
   const getButtonText = () => {
-    if (isGenerating) return '⏳ Queuing Job...'
+    if (isGenerating) return 'Queuing job…'
     
     if (contentType === 'flyer') {
       if (selectedCount !== subjectCount) {
         return `Select ${subjectCount - selectedCount} more image${subjectCount - selectedCount > 1 ? 's' : ''}`
       }
-      return '🚀 Generate Flyer (1 credit)'
+      return 'Generate flyer (1 credit)'
     } else {
       // Video
       if (videoSourceType === 'collection') {
@@ -727,64 +728,58 @@ export default function PromotionPage() {
           return 'Upload an image'
         }
       }
-      return '🎬 Generate Video (4 credits)'
+      return 'Generate video (4 credits)'
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0c0d]">
+    <div className="min-h-screen bg-[#0a0a0c]">
       <PageHeader
         title="Promotion"
         subtitle="Create promotional flyers and videos from your collection"
         action={
-          <div className="flex gap-2">
-            <div className="px-4 py-2 bg-[#15181a] border-2 border-[#2DE2FF] text-sm font-bold">
+          <div className="flex flex-wrap gap-2">
+            <div className="px-3.5 py-2 rounded-full bg-[#131318] border border-white/[0.08] text-xs sm:text-sm font-semibold">
               <span className="text-[#2DE2FF]">1 credit / flyer</span>
             </div>
-            <div className="px-4 py-2 bg-[#15181a] border-2 border-[#2DE2FF] text-sm font-bold">
-              <span className="text-[#2DE2FF]">4 credits / video</span>
+            <div className="px-3.5 py-2 rounded-full bg-[#131318] border border-white/[0.08] text-xs sm:text-sm font-semibold">
+              <span className="text-[#FF2BD6]">4 credits / video</span>
             </div>
           </div>
         }
       />
 
-      <div className="w-full py-8 px-6 lg:px-12">
-        <div className="w-full">
+      <ToolWorkspace>
           
           {/* Wallet Warning */}
           {!activeWalletConnected && (
-            <div className="mb-6 p-4 rounded-2xl bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#2DE2FF]/50">
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">🔗</span>
-                <div>
-                  <div className="font-bold text-[#2DE2FF]">Connect your wallet</div>
-                  <div className="text-sm text-[#808080]">Connect to select a collection and generate flyers</div>
-                </div>
-              </div>
+            <div className="mb-6 p-4 rounded-2xl bg-[#131318] border border-white/[0.1]">
+              <div className="font-bold text-[#2DE2FF]">Connect your wallet</div>
+              <div className="text-sm text-zinc-500 mt-1">Connect to select a collection and generate flyers</div>
             </div>
           )}
 
           {/* Tab Buttons */}
-          <div className="flex gap-2 mb-6">
+          <div className="flex flex-wrap gap-1 p-1 mb-6 rounded-full bg-[#131318] border border-white/[0.08] w-fit">
             <button
               onClick={() => setViewMode('generate')}
-              className={`px-6 py-3 rounded-xl font-bold transition-all ${
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
                 viewMode === 'generate'
-                  ? 'bg-[#2DE2FF] text-white shadow-lg shadow-[#00E5FF]/20'
-                  : 'bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#2DE2FF]/30 text-white/70 hover:border-[#2DE2FF]/50 hover:text-white'
+                  ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
-              ✨ Create Content
+              Create
             </button>
             <button
               onClick={() => setViewMode('history')}
-              className={`px-6 py-3 rounded-xl font-bold transition-all ${
+              className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
                 viewMode === 'history'
-                  ? 'bg-[#2DE2FF] text-white shadow-lg shadow-[#00E5FF]/20'
-                  : 'bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#2DE2FF]/30 text-white/70 hover:border-[#2DE2FF]/50 hover:text-white'
+                  ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                  : 'text-zinc-400 hover:text-white'
               }`}
             >
-              📁 History {history.length > 0 && <span className="ml-1 px-2 py-0.5 rounded-full bg-white/20 text-xs">{history.length}</span>}
+              History{history.length > 0 ? ` (${history.length})` : ''}
             </button>
           </div>
 
@@ -792,47 +787,45 @@ export default function PromotionPage() {
             <div className="space-y-6">
               
               {/* Content Type Selector */}
-              <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-6">
+              <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#2DE2FF]/20">0</div>
-                  <h2 className="text-lg font-black text-white">Content Type</h2>
+                  <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-sm ">0</div>
+                  <h2 className="text-lg font-semibold text-white">Content Type</h2>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <button
                     onClick={() => setContentType('flyer')}
                     disabled={!activeWalletConnected}
-                    className={`p-4 rounded-xl border-2 transition-all ${
+                    className={`p-4 rounded-xl border-2 transition-all text-left ${
                       contentType === 'flyer'
-                        ? 'border-[#2DE2FF] bg-[#DC1FFF]/10'
-                        : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50'
+                        ? 'border-[#2DE2FF] bg-[#2DE2FF]/10'
+                        : 'border-white/[0.08] hover:border-white/20'
                     } disabled:opacity-50`}
                   >
-                    <div className="text-2xl mb-2">🖼️</div>
                     <div className="font-bold text-white">Flyer</div>
-                    <div className="text-sm text-white/70 mt-1">1 credit</div>
+                    <div className="text-sm text-zinc-400 mt-1">1 credit</div>
                   </button>
                   <button
                     onClick={() => setContentType('video')}
                     disabled={!activeWalletConnected}
-                    className={`p-4 rounded-xl border-2 transition-all ${
+                    className={`p-4 rounded-xl border-2 transition-all text-left ${
                       contentType === 'video'
-                        ? 'border-[#2DE2FF] bg-[#2DE2FF]/10'
-                        : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50'
+                        ? 'border-[#FF2BD6] bg-[#FF2BD6]/10'
+                        : 'border-white/[0.08] hover:border-white/20'
                     } disabled:opacity-50`}
                   >
-                    <div className="text-2xl mb-2">🎬</div>
                     <div className="font-bold text-white">Video</div>
-                    <div className="text-sm text-white/70 mt-1">4 credits</div>
+                    <div className="text-sm text-zinc-400 mt-1">4 credits</div>
                   </button>
                 </div>
               </div>
 
               {/* Step 1: Collection & Count (for flyers) or Video Source (for videos) */}
               {contentType === 'flyer' ? (
-                <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-6">
+                <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#2DE2FF]/20">1</div>
-                    <h2 className="text-lg font-black text-white">Choose Collection & Count</h2>
+                    <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-sm ">1</div>
+                    <h2 className="text-lg font-semibold text-white">Choose Collection & Count</h2>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -842,7 +835,7 @@ export default function PromotionPage() {
                         value={selectedCollectionId}
                         onChange={(e) => setSelectedCollectionId(e.target.value)}
                         disabled={!activeWalletConnected || loadingCollections}
-                        className="w-full h-12 rounded-xl border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl px-4 text-base font-medium text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
+                        className="w-full h-12 rounded-xl border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl px-4 text-base font-medium text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
                       >
                         {collections.length === 0 && (
                           <option value="" className="bg-[#0a0e27]">{loadingCollections ? 'Loading...' : 'No collections found'}</option>
@@ -863,8 +856,8 @@ export default function PromotionPage() {
                             disabled={!activeWalletConnected}
                             className={`flex-1 h-12 rounded-xl font-bold text-lg transition-all ${
                               subjectCount === n
-                                ? 'bg-[#DC1FFF] text-white shadow-lg shadow-[#DC1FFF]/20'
-                                : 'bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 text-white/70 hover:border-[#2DE2FF]/50 hover:text-white'
+                                ? 'bg-[#FF2BD6] text-white shadow-lg shadow-[#FF2BD6]/20'
+                                : 'bg-[#131318] border border-white/[0.08] rounded-xl text-white/70 hover:border-white/16/50 hover:text-white'
                             } disabled:opacity-50`}
                           >
                             {n}
@@ -875,9 +868,9 @@ export default function PromotionPage() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-4">
+                <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-4">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-7 h-7 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-xs shadow-lg shadow-[#2DE2FF]/20">1</div>
+                    <div className="w-7 h-7 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-xs ">1</div>
                     <h2 className="text-base font-bold text-white">Choose Video Source</h2>
                   </div>
 
@@ -885,37 +878,34 @@ export default function PromotionPage() {
                     <button
                       onClick={() => setVideoSourceType('collection')}
                       disabled={!activeWalletConnected}
-                      className={`p-3 rounded-lg border-2 transition-all ${
+                      className={`p-3 rounded-xl border-2 transition-all ${
                         videoSourceType === 'collection'
                           ? 'border-[#2DE2FF] bg-[#2DE2FF]/10'
-                          : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50'
+                          : 'border-white/[0.08] hover:border-white/20'
                       } disabled:opacity-50`}
                     >
-                      <div className="text-xl mb-1">🖼️</div>
                       <div className="font-bold text-white text-xs">Collection</div>
                     </button>
                     <button
                       onClick={() => setVideoSourceType('flyer')}
                       disabled={!activeWalletConnected}
-                      className={`p-3 rounded-lg border-2 transition-all ${
+                      className={`p-3 rounded-xl border-2 transition-all ${
                         videoSourceType === 'flyer'
-                          ? 'border-[#2DE2FF] bg-[#2DE2FF]/10'
-                          : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50'
+                          ? 'border-[#FF2BD6] bg-[#FF2BD6]/10'
+                          : 'border-white/[0.08] hover:border-white/20'
                       } disabled:opacity-50`}
                     >
-                      <div className="text-xl mb-1">📄</div>
                       <div className="font-bold text-white text-xs">Flyer</div>
                     </button>
                     <button
                       onClick={() => setVideoSourceType('upload')}
                       disabled={!activeWalletConnected}
-                      className={`p-3 rounded-lg border-2 transition-all ${
+                      className={`p-3 rounded-xl border-2 transition-all ${
                         videoSourceType === 'upload'
                           ? 'border-[#2DE2FF] bg-[#2DE2FF]/10'
-                          : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50'
+                          : 'border-white/[0.08] hover:border-white/20'
                       } disabled:opacity-50`}
                     >
-                      <div className="text-xl mb-1">📤</div>
                       <div className="font-bold text-white text-xs">Upload</div>
                     </button>
                   </div>
@@ -929,7 +919,7 @@ export default function PromotionPage() {
                         value={selectedCollectionId}
                         onChange={(e) => setSelectedCollectionId(e.target.value)}
                         disabled={!activeWalletConnected || loadingCollections}
-                        className="w-full h-9 rounded-lg border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl px-3 text-sm font-medium text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
+                        className="w-full h-9 rounded-lg border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl px-3 text-sm font-medium text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
                       >
                         {collections.length === 0 && (
                           <option value="" className="bg-[#0a0e27]">{loadingCollections ? 'Loading...' : 'No collections found'}</option>
@@ -950,15 +940,15 @@ export default function PromotionPage() {
                               disabled={!activeWalletConnected}
                               className={`flex-1 h-9 rounded-lg font-bold text-base transition-all ${
                                 videoImageCount === n
-                                  ? 'bg-[#2DE2FF] text-white shadow-lg shadow-[#2DE2FF]/20'
-                                  : 'bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 text-white/70 hover:border-[#2DE2FF]/50 hover:text-white'
+                                  ? 'bg-[#2DE2FF] text-[#0a0a0c] '
+                                  : 'bg-[#131318] border border-white/[0.08] rounded-xl text-white/70 hover:border-white/16/50 hover:text-white'
                               } disabled:opacity-50`}
                             >
                               {n}
                             </button>
                           ))}
                         </div>
-                        <div className="mt-2 text-xs text-[#808080]/80">
+                        <div className="mt-2 text-xs text-zinc-500/80">
                           💡 Select up to 3 images from your collection to animate
                         </div>
                       </div>
@@ -983,7 +973,7 @@ export default function PromotionPage() {
                               className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${
                                 selectedFlyerId === String(item.id)
                                   ? 'border-[#2DE2FF] ring-2 ring-[#2DE2FF]/30'
-                                  : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50'
+                                  : 'border-white/[0.08] hover:border-white/16/50'
                               }`}
                             >
                               <img
@@ -993,7 +983,7 @@ export default function PromotionPage() {
                               />
                               {selectedFlyerId === String(item.id) && (
                                 <div className="absolute inset-0 bg-[#2DE2FF]/20 flex items-center justify-center">
-                                  <div className="w-6 h-6 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-xs">
+                                  <div className="w-6 h-6 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-xs">
                                     ✓
                                   </div>
                                 </div>
@@ -1047,11 +1037,11 @@ export default function PromotionPage() {
                         <button
                           onClick={() => fileInputRef.current?.click()}
                           disabled={!activeWalletConnected || uploadingImage}
-                          className="w-full h-32 rounded-xl border-2 border-dashed border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl flex flex-col items-center justify-center text-white/70 hover:border-[#2DE2FF]/50 hover:text-white transition-colors disabled:opacity-50 overflow-hidden relative"
+                          className="w-full h-32 rounded-xl border-2 border-dashed border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl flex flex-col items-center justify-center text-white/70 hover:border-white/16/50 hover:text-white transition-colors disabled:opacity-50 overflow-hidden relative"
                         >
                           {uploadingImage ? (
                             <>
-                              <div className="w-8 h-8 border-2 border-[#2DE2FF] border-t-transparent rounded-full animate-spin mb-2" />
+                              <div className="w-8 h-8 border border-white/[0.08] border-t-transparent rounded-full animate-spin mb-2" />
                               <span className="text-sm">Uploading...</span>
                             </>
                           ) : uploadedImageUrl ? (
@@ -1083,16 +1073,16 @@ export default function PromotionPage() {
 
               {/* Step 2: Image Selection (only for flyers or collection videos) */}
               {contentType === 'flyer' || (contentType === 'video' && videoSourceType === 'collection') ? (
-              <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-6">
+              <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#2DE2FF]/20">2</div>
-                    <h2 className="text-lg font-black text-white">Select Images</h2>
+                    <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-sm ">2</div>
+                    <h2 className="text-lg font-semibold text-white">Select Images</h2>
                   </div>
                   <div className={`px-3 py-1.5 rounded-full text-sm font-bold ${
                     selectedCount === (contentType === 'video' ? videoImageCount : subjectCount) 
-                      ? 'bg-[#2DE2FF]/20 text-[#2DE2FF] border border-[#2DE2FF]/30' 
-                      : 'bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 text-[#808080]/80'
+                      ? 'bg-[#2DE2FF]/20 text-[#2DE2FF] border border-white/[0.08]' 
+                      : 'bg-[#131318] border border-white/[0.08] rounded-xl text-zinc-500/80'
                   }`}>
                     {selectedCount} / {contentType === 'video' ? videoImageCount : subjectCount} selected
                   </div>
@@ -1127,10 +1117,10 @@ export default function PromotionPage() {
                           disabled={false} // Always allow interaction to change selections
                           className={`relative flex-shrink-0 w-32 h-32 rounded-xl overflow-hidden border-3 transition-all ${
                             isSelected 
-                              ? 'border-[#e27d0f] ring-2 ring-[#e27d0f]/30 scale-105' 
+                              ? 'border-[#2DE2FF] ring-2 ring-[#2DE2FF]/30 scale-105' 
                               : canInteract 
-                                ? 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 hover:scale-102 cursor-pointer' 
-                                : 'border-[#2DE2FF]/20 hover:border-[#2DE2FF]/30 cursor-pointer' // Still clickable to replace
+                                ? 'border-white/[0.08] hover:border-white/16/50 hover:scale-102 cursor-pointer' 
+                                : 'border-white/[0.08] hover:border-white/[0.08] cursor-pointer' // Still clickable to replace
                           }`}
                         >
                           <img
@@ -1139,8 +1129,8 @@ export default function PromotionPage() {
                             className="w-full h-full object-cover"
                           />
                           {isSelected && (
-                            <div className="absolute inset-0 bg-[#e27d0f]/20 flex items-center justify-center">
-                              <div className="w-8 h-8 rounded-full bg-[#e27d0f] text-white flex items-center justify-center font-bold shadow-lg">
+                            <div className="absolute inset-0 bg-[#2DE2FF]/20 flex items-center justify-center">
+                              <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold shadow-lg">
                                 ✓
                               </div>
                             </div>
@@ -1154,7 +1144,7 @@ export default function PromotionPage() {
                       <button
                         onClick={loadMore}
                         disabled={loadingOrdinals}
-                        className="flex-shrink-0 w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-[#808080]/80 hover:border-gray-400 hover:text-gray-600 transition-colors"
+                        className="flex-shrink-0 w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-zinc-500/80 hover:border-gray-400 hover:text-gray-600 transition-colors"
                       >
                         {loadingOrdinals ? (
                           <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
@@ -1173,10 +1163,10 @@ export default function PromotionPage() {
 
               {/* Step 3: Scene/Action Prompt (only for flyers) */}
               {contentType === 'flyer' && (
-                <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-6">
+                <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#2DE2FF]/20">3</div>
-                    <h2 className="text-lg font-black text-white">Describe the Scene</h2>
+                    <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-sm ">3</div>
+                    <h2 className="text-lg font-semibold text-white">Describe the Scene</h2>
                   </div>
                   
                   <textarea
@@ -1185,9 +1175,9 @@ export default function PromotionPage() {
                     placeholder="Describe the scene, action, or composition... e.g., 'Standing together in a neon-lit alley, looking tough' or 'Flying through space with laser beams'"
                     disabled={!activeWalletConnected}
                     rows={3}
-                    className="w-full rounded-xl border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl px-4 py-3 text-base text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
+                    className="w-full rounded-xl border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl px-4 py-3 text-base text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
                   />
-                  <div className="mt-2 text-xs text-[#808080]/80">
+                  <div className="mt-2 text-xs text-zinc-500/80">
                     💡 This describes what all selected images are doing together in the flyer
                   </div>
                 </div>
@@ -1197,11 +1187,11 @@ export default function PromotionPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Flyer Text (only for flyers) */}
                 {contentType === 'flyer' && (
-                  <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-6">
+                  <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#2DE2FF]/20">4</div>
-                        <h2 className="text-lg font-black text-white">Flyer Text</h2>
+                        <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-sm ">4</div>
+                        <h2 className="text-lg font-semibold text-white">Flyer Text</h2>
                       </div>
                       <label className="flex items-center gap-2 text-sm text-white/70 cursor-pointer">
                         <input
@@ -1209,7 +1199,7 @@ export default function PromotionPage() {
                           checked={noText}
                           onChange={(e) => setNoText(e.target.checked)}
                           disabled={!activeWalletConnected}
-                          className="w-4 h-4 rounded border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl text-[#2DE2FF] focus:ring-[#2DE2FF]"
+                          className="w-4 h-4 rounded border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl text-[#2DE2FF] focus:ring-[#2DE2FF]"
                         />
                         No text
                       </label>
@@ -1221,23 +1211,23 @@ export default function PromotionPage() {
                       placeholder="MINT LIVE NOW — BTC Bitches — 1 sat — hoodgfx"
                       disabled={noText || !activeWalletConnected}
                       rows={3}
-                      className="w-full rounded-xl border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl px-4 py-3 text-base text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
+                      className="w-full rounded-xl border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl px-4 py-3 text-base text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
                     />
                   </div>
                 )}
 
                 {/* Video Settings (only for videos) */}
                 {contentType === 'video' && (
-                  <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-4">
+                  <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-4">
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-7 h-7 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-xs shadow-lg shadow-[#2DE2FF]/20">3</div>
+                      <div className="w-7 h-7 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-xs ">3</div>
                       <h2 className="text-base font-bold text-white">Video Description</h2>
                     </div>
 
                     <div className="space-y-3">
                       <div>
                         <label className="block text-xs font-semibold text-white mb-1.5">
-                          Scene <span className="text-[#808080]/80 text-xs font-normal">(what's happening)</span>
+                          Scene <span className="text-zinc-500/80 text-xs font-normal">(what's happening)</span>
                         </label>
                         <textarea
                           value={videoScene}
@@ -1245,14 +1235,14 @@ export default function PromotionPage() {
                           placeholder="e.g., driving down the road in rainy weather on the tractor"
                           disabled={!activeWalletConnected}
                           rows={2}
-                          className="w-full rounded-lg border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
+                          className="w-full rounded-lg border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
                         />
-                        <div className="mt-1 text-xs text-[#808080]/80">Describe the scene and environment</div>
+                        <div className="mt-1 text-xs text-zinc-500/80">Describe the scene and environment</div>
                       </div>
 
                       <div>
                         <label className="block text-xs font-semibold text-white mb-1.5">
-                          Actions <span className="text-[#808080]/80 text-xs font-normal">(what the character is doing)</span>
+                          Actions <span className="text-zinc-500/80 text-xs font-normal">(what the character is doing)</span>
                         </label>
                         <textarea
                           value={videoActions}
@@ -1260,14 +1250,14 @@ export default function PromotionPage() {
                           placeholder="e.g., singing, dancing, waving, etc."
                           disabled={!activeWalletConnected}
                           rows={2}
-                          className="w-full rounded-lg border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
+                          className="w-full rounded-lg border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
                         />
-                        <div className="mt-1 text-xs text-[#808080]/80">Describe the actions or movements</div>
+                        <div className="mt-1 text-xs text-zinc-500/80">Describe the actions or movements</div>
                       </div>
 
                       <div>
                         <label className="block text-xs font-semibold text-white mb-1.5">
-                          Speech/Text <span className="text-[#808080]/80 text-xs font-normal">(optional - what is being said)</span>
+                          Speech/Text <span className="text-zinc-500/80 text-xs font-normal">(optional - what is being said)</span>
                         </label>
                         <textarea
                           value={videoSpeech}
@@ -1275,9 +1265,9 @@ export default function PromotionPage() {
                           placeholder='e.g., "sweet home alabama" song'
                           disabled={!activeWalletConnected}
                           rows={2}
-                          className="w-full rounded-lg border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
+                          className="w-full rounded-lg border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/50 focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 transition-colors disabled:opacity-50"
                         />
-                        <div className="mt-1 text-xs text-[#808080]/80">Optional: What the character is saying or singing</div>
+                        <div className="mt-1 text-xs text-zinc-500/80">Optional: What the character is saying or singing</div>
                       </div>
                     </div>
                   </div>
@@ -1285,10 +1275,10 @@ export default function PromotionPage() {
 
                 {/* Aspect Ratio - only for flyers */}
                 {contentType === 'flyer' && (
-                  <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-6">
+                  <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#2DE2FF]/20">5</div>
-                      <h2 className="text-lg font-black text-white">Format</h2>
+                      <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-sm ">5</div>
+                      <h2 className="text-lg font-semibold text-white">Format</h2>
                     </div>
                     
                     <div className="grid grid-cols-3 gap-3">
@@ -1304,7 +1294,7 @@ export default function PromotionPage() {
                           className={`p-3 rounded-xl border-2 text-left transition-all ${
                             aspectRatio === format.id
                               ? 'border-[#2DE2FF] bg-[#2DE2FF]/10'
-                              : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl'
+                              : 'border-white/[0.08] hover:border-white/16/50 bg-[#131318] border border-white/[0.08] rounded-xl'
                           } disabled:opacity-50`}
                         >
                           <div className="flex items-center gap-2">
@@ -1313,7 +1303,7 @@ export default function PromotionPage() {
                               {format.label}
                             </span>
                           </div>
-                          <div className="text-xs text-[#808080]/80 mt-1">{format.size}</div>
+                          <div className="text-xs text-zinc-500/80 mt-1">{format.size}</div>
                         </button>
                       ))}
                     </div>
@@ -1322,13 +1312,13 @@ export default function PromotionPage() {
 
                 {/* Video Preview - only for videos (fills the space where Format card would be) */}
                 {contentType === 'video' && (
-                  <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-6">
+                  <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-white flex items-center justify-center font-bold text-sm shadow-lg shadow-[#2DE2FF]/20">4</div>
-                      <h2 className="text-lg font-black text-white">Preview</h2>
+                      <div className="w-8 h-8 rounded-full bg-[#2DE2FF] text-[#0a0a0c] flex items-center justify-center font-bold text-sm ">4</div>
+                      <h2 className="text-lg font-semibold text-white">Preview</h2>
                     </div>
                     
-                    <div className="aspect-video rounded-xl border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl overflow-hidden">
+                    <div className="aspect-video rounded-xl border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl overflow-hidden">
                       {resultUrl ? (
                         <video src={resultUrl} controls className="w-full h-full object-cover" />
                       ) : (
@@ -1356,16 +1346,16 @@ export default function PromotionPage() {
 
               {/* Error Message */}
               {error && (
-                <div className="p-4 rounded-xl bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#EF4444]/50 text-[#EF4444] font-medium">
+                <div className="p-4 rounded-xl bg-[#131318] border border-white/[0.08] rounded-xl border-2 border-[#EF4444]/50 text-[#EF4444] font-medium">
                   ⚠️ {error}
                 </div>
               )}
 
               {/* Job Status Banner (non-blocking) */}
               {activeJobId && jobStatus && jobStatus !== 'completed' && jobStatus !== 'failed' && (
-                <div className="p-4 rounded-xl bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#2DE2FF]/50">
+                <div className="p-4 rounded-xl bg-[#131318] border border-white/[0.08] rounded-xl/50">
                   <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 border-2 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-6 h-6 border border-white/[0.08] border-t-transparent rounded-full animate-spin" />
                     <div className="flex-1">
                       <div className="font-bold text-[#2DE2FF]">
                         {jobStatus === 'processing' 
@@ -1374,7 +1364,7 @@ export default function PromotionPage() {
                             : '🔄 Generating Flyer...'
                           : '⏳ Job Queued'}
                       </div>
-                      <div className="text-sm text-[#808080]">
+                      <div className="text-sm text-zinc-500">
                         {jobStatus === 'processing' 
                           ? contentType === 'video'
                             ? `Your video is being generated. This may take 2-5 minutes. The page will keep checking automatically - you can continue working or close the page. Completed videos will appear in your history.${taskId ? ` The TaskId is: ${taskId}` : ''}`
@@ -1394,7 +1384,7 @@ export default function PromotionPage() {
                   <button
                     onClick={handleGenerateClick}
                     disabled={!canGenerate()}
-                    className="w-full h-16 rounded-2xl bg-gradient-to-r from-[#DC1FFF] to-[#2DE2FF] text-white font-black text-xl shadow-lg shadow-[#DC1FFF]/30 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full h-16 rounded-2xl bg-gradient-to-r from-[#FF2BD6] to-[#2DE2FF] text-white font-semibold text-xl shadow-lg shadow-[#FF2BD6]/30 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {getButtonText()}
                   </button>
@@ -1402,7 +1392,7 @@ export default function PromotionPage() {
                 
                 {/* Mini Preview - only for flyers (videos have preview in the grid above) */}
                 {contentType === 'flyer' && (
-                  <div className={`rounded-2xl border-2 border-[#2DE2FF]/30 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl overflow-hidden ${
+                  <div className={`rounded-2xl border-white/[0.08] bg-[#131318] border border-white/[0.08] rounded-xl overflow-hidden ${
                     aspectRatio === 'square' ? 'aspect-square' :
                     aspectRatio === 'portrait' ? 'aspect-[2/3]' :
                     'aspect-[3/2]'
@@ -1432,7 +1422,7 @@ export default function PromotionPage() {
 
               {/* Result Actions */}
               {resultUrl && (
-                <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/50 p-6">
+                <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border border-white/[0.08]/50 p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <span className="text-3xl">✨</span>
@@ -1440,7 +1430,7 @@ export default function PromotionPage() {
                         <div className="font-bold text-[#2DE2FF]">
                           {contentType === 'video' ? 'Video Generated!' : 'Flyer Generated!'}
                         </div>
-                        <div className="text-sm text-[#808080]">
+                        <div className="text-sm text-zinc-500">
                           {contentType === 'video' 
                             ? 'Download or share your promotional video' 
                             : 'Download or share your promotional image'}
@@ -1451,7 +1441,7 @@ export default function PromotionPage() {
                       <a
                         href={resultUrl}
                         download
-                        className="px-4 py-2 rounded-xl bg-[#2DE2FF] text-white font-bold hover:bg-[#2DE2FF] transition-colors shadow-lg shadow-[#2DE2FF]/20"
+                        className="px-4 py-2 rounded-xl bg-[#2DE2FF] text-[#0a0a0c] font-bold hover:bg-[#2DE2FF] transition-colors "
                       >
                         Download
                       </a>
@@ -1459,7 +1449,7 @@ export default function PromotionPage() {
                         href={resultUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-4 py-2 rounded-xl border-2 border-[#2DE2FF]/30 text-white/70 font-bold hover:border-[#2DE2FF]/50 hover:text-white transition-colors bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl"
+                        className="px-4 py-2 rounded-xl border-white/[0.08] text-white/70 font-bold hover:border-white/16/50 hover:text-white transition-colors bg-[#131318] border border-white/[0.08] rounded-xl"
                       >
                         Open
                       </a>
@@ -1474,19 +1464,18 @@ export default function PromotionPage() {
             <div>
               {loadingHistory ? (
                 <div className="flex flex-col items-center justify-center py-20">
-                  <div className="w-12 h-12 rounded-full border-4 border-[#4561ad] border-t-transparent animate-spin mb-4" />
-                  <div className="text-gray-600 font-medium">Loading history...</div>
+                  <div className="w-12 h-12 rounded-full border-4 border-[#FF2BD6] border-t-transparent animate-spin mb-4" />
+                  <div className="text-zinc-500 font-medium">Loading history...</div>
                 </div>
               ) : history.length === 0 ? (
-                <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 border-[#2DE2FF]/30 p-12 text-center">
-                  <span className="text-5xl mb-4 block">📭</span>
-                  <h3 className="text-xl font-black text-white mb-2">No flyers yet</h3>
-                  <p className="text-white/70 mb-6">Generate your first promotional flyer to see it here</p>
+                <div className="bg-[#131318] border border-white/[0.1] rounded-2xl p-12 text-center">
+                  <h3 className="text-xl font-semibold text-white mb-2">No flyers yet</h3>
+                  <p className="text-zinc-400 mb-6">Generate your first promotional flyer to see it here</p>
                   <button
                     onClick={() => setViewMode('generate')}
-                    className="px-6 py-3 rounded-xl bg-[#DC1FFF] text-white font-bold hover:bg-[#2DE2FF] transition-colors shadow-lg shadow-[#DC1FFF]/20"
+                    className="hg-btn-glow px-6 py-3 rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-bold hover:opacity-90 transition-colors"
                   >
-                    Create Your First Flyer
+                    Create your first flyer
                   </button>
                 </div>
               ) : (
@@ -1502,12 +1491,12 @@ export default function PromotionPage() {
                     return (
                       <div
                         key={item.id}
-                        className={`bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl border-2 overflow-hidden hover:shadow-lg transition-all group ${
+                        className={`bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-2 overflow-hidden hover:shadow-lg transition-all group ${
                           isFailed 
                             ? 'border-red-500/50 hover:border-red-500/70' 
                             : isPending
                             ? 'border-yellow-500/50 hover:border-yellow-500/70'
-                            : 'border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50'
+                            : 'border-white/[0.08] hover:border-white/16/50'
                         }`}
                       >
                         <div 
@@ -1606,7 +1595,7 @@ export default function PromotionPage() {
                         </div>
                         <div className="p-4">
                           <div className="font-bold text-white truncate">{item.collection_name}</div>
-                          <div className="text-xs text-[#808080]/80 mt-1">
+                          <div className="text-xs text-zinc-500/80 mt-1">
                             {new Date(item.created_at).toLocaleDateString()} • {item.character_count} {isVideo ? 'video' : 'image'}{item.character_count !== 1 ? 's' : ''}
                             {item.is_video_job && item.job_status && (
                               <span className="ml-2">• {item.job_status}</span>
@@ -1627,7 +1616,7 @@ export default function PromotionPage() {
                           <div className="flex gap-2 mt-3">
                             <button
                               onClick={() => setSelectedHistoryItem(item)}
-                              className="flex-1 px-3 py-2 rounded-lg bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 text-white/70 text-sm font-semibold hover:border-[#2DE2FF]/50 hover:text-white transition-colors"
+                              className="flex-1 px-3 py-2 rounded-lg bg-[#131318] border border-white/[0.08] rounded-xl text-white/70 text-sm font-semibold hover:border-white/16/50 hover:text-white transition-colors"
                             >
                               View
                             </button>
@@ -1635,7 +1624,7 @@ export default function PromotionPage() {
                               <a
                                 href={item.image_url!}
                                 download
-                                className="flex-1 px-3 py-2 rounded-lg bg-[#2DE2FF] text-white text-sm font-semibold hover:bg-[#2DE2FF] transition-colors text-center shadow-lg shadow-[#2DE2FF]/20"
+                                className="flex-1 px-3 py-2 rounded-lg bg-[#2DE2FF] text-[#0a0a0c] text-sm font-semibold hover:bg-[#2DE2FF] transition-colors text-center "
                               >
                                 Download
                               </a>
@@ -1685,8 +1674,7 @@ export default function PromotionPage() {
               )}
             </div>
           )}
-        </div>
-      </div>
+      </ToolWorkspace>
 
       {/* History Item Modal */}
       {selectedHistoryItem && (
@@ -1695,19 +1683,19 @@ export default function PromotionPage() {
           onClick={() => setSelectedHistoryItem(null)}
         >
           <div
-            className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#2DE2FF]/30"
+            className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/[0.08]"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-[#2DE2FF]/30 flex items-start justify-between gap-4">
+            <div className="p-6 border-b border-white/[0.08] flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-xl font-black text-white">{selectedHistoryItem.collection_name}</h3>
-                <div className="text-sm text-[#808080]/80 mt-1">
+                <h3 className="text-xl font-semibold text-white">{selectedHistoryItem.collection_name}</h3>
+                <div className="text-sm text-zinc-500/80 mt-1">
                   {new Date(selectedHistoryItem.created_at).toLocaleDateString()} at {new Date(selectedHistoryItem.created_at).toLocaleTimeString()}
                 </div>
               </div>
               <button
                 onClick={() => setSelectedHistoryItem(null)}
-                className="w-10 h-10 rounded-xl bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 flex items-center justify-center text-white/70 hover:border-[#2DE2FF]/50 hover:text-white transition-colors"
+                className="w-10 h-10 rounded-xl bg-[#131318] border border-white/[0.08] rounded-xl flex items-center justify-center text-white/70 hover:border-white/16/50 hover:text-white transition-colors"
               >
                 ✕
               </button>
@@ -1716,7 +1704,7 @@ export default function PromotionPage() {
             <div className="p-6 space-y-6">
               {/* Show status info for video jobs */}
               {selectedHistoryItem.is_video_job && (
-                <div className="p-4 rounded-xl bg-[#0a0e27]/60 border border-[#2DE2FF]/30">
+                <div className="p-4 rounded-xl bg-[#0a0e27]/60 border border-white/[0.08]">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-semibold text-white">Job Status:</span>
                     <span className={`px-3 py-1 rounded-lg text-xs font-bold ${
@@ -1732,12 +1720,12 @@ export default function PromotionPage() {
                     </span>
                   </div>
                   {selectedHistoryItem.started_at && (
-                    <div className="text-xs text-[#808080]/80 mt-1">
+                    <div className="text-xs text-zinc-500/80 mt-1">
                       Started: {new Date(selectedHistoryItem.started_at).toLocaleString()}
                     </div>
                   )}
                   {selectedHistoryItem.completed_at && (
-                    <div className="text-xs text-[#808080]/80 mt-1">
+                    <div className="text-xs text-zinc-500/80 mt-1">
                       Completed: {new Date(selectedHistoryItem.completed_at).toLocaleString()}
                     </div>
                   )}
@@ -1748,7 +1736,7 @@ export default function PromotionPage() {
                         <div className="break-words">{selectedHistoryItem.error_message}</div>
                       </div>
                       {selectedHistoryItem.error_message.includes('KIE_AI_TASK_ID:') && (
-                        <div className="mt-2 p-2 rounded bg-[#0a0e27]/60 border border-[#2DE2FF]/30">
+                        <div className="mt-2 p-2 rounded bg-[#0a0e27]/60 border border-white/[0.08]">
                           <div className="text-[#2DE2FF] font-semibold mb-1">Task ID:</div>
                           <div className="text-white font-mono text-xs break-all">
                             {selectedHistoryItem.error_message.match(/KIE_AI_TASK_ID:\s*([^\s.]+)/)?.[1]?.trim() || 'N/A'}
@@ -1788,7 +1776,7 @@ export default function PromotionPage() {
               {selectedHistoryItem.image_url && (selectedHistoryItem.image_url.endsWith('.mp4') || selectedHistoryItem.image_url.includes('.mp4')) ? (
                 <video
                   src={selectedHistoryItem.image_url}
-                  className="w-full rounded-xl border border-[#2DE2FF]/30"
+                  className="w-full rounded-xl border border-white/[0.08]"
                   controls
                   autoPlay
                   loop
@@ -1798,10 +1786,10 @@ export default function PromotionPage() {
                 <img
                   src={selectedHistoryItem.image_url}
                   alt={`Flyer for ${selectedHistoryItem.collection_name}`}
-                  className="w-full rounded-xl border border-[#2DE2FF]/30"
+                  className="w-full rounded-xl border border-white/[0.08]"
                 />
               ) : (
-                <div className="w-full aspect-video bg-gradient-to-br from-[#0a0e27] to-[#1a1f3a] flex flex-col items-center justify-center text-white/50 rounded-xl border border-[#2DE2FF]/30">
+                <div className="w-full aspect-video bg-gradient-to-br from-[#0a0e27] to-[#1a1f3a] flex flex-col items-center justify-center text-white/50 rounded-xl border border-white/[0.08]">
                   {selectedHistoryItem.job_status === 'processing' || selectedHistoryItem.job_status === 'pending' ? (
                     <>
                       <div className="w-16 h-16 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin mb-4" />
@@ -1839,7 +1827,7 @@ export default function PromotionPage() {
                   <a
                     href={selectedHistoryItem.image_url}
                     download
-                    className="flex-1 h-12 rounded-xl bg-[#2DE2FF] text-white font-bold flex items-center justify-center hover:bg-[#2DE2FF] transition-colors shadow-lg shadow-[#2DE2FF]/20"
+                    className="flex-1 h-12 rounded-xl bg-[#2DE2FF] text-[#0a0a0c] font-bold flex items-center justify-center hover:bg-[#2DE2FF] transition-colors "
                   >
                     Download
                   </a>
@@ -1847,7 +1835,7 @@ export default function PromotionPage() {
                     href={selectedHistoryItem.image_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 h-12 rounded-xl border-2 border-[#2DE2FF]/30 text-white/70 font-bold flex items-center justify-center hover:border-[#2DE2FF]/50 hover:text-white transition-colors bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl"
+                    className="flex-1 h-12 rounded-xl border-white/[0.08] text-white/70 font-bold flex items-center justify-center hover:border-white/16/50 hover:text-white transition-colors bg-[#131318] border border-white/[0.08] rounded-xl"
                   >
                     Open in Tab
                   </a>
@@ -1861,7 +1849,7 @@ export default function PromotionPage() {
       {/* Credits Confirmation Modal */}
       {showCreditsConfirm && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={handleCreditsConfirmCancel}>
-          <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden border-2 border-[#2DE2FF]/50" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden border border-white/[0.08]/50" onClick={(e) => e.stopPropagation()}>
             <div className="bg-gradient-to-r from-[#2DE2FF] to-[#8b5cf6] p-6">
               <h2 className="text-2xl font-bold text-white">Confirm Generation</h2>
               <p className="text-white/90 mt-1">Review your credits before generating</p>
@@ -1871,31 +1859,31 @@ export default function PromotionPage() {
               {loadingCredits ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2DE2FF] mx-auto"></div>
-                  <p className="mt-4 text-[#808080]">Loading credits...</p>
+                  <p className="mt-4 text-zinc-500">Loading credits...</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 rounded-lg p-4 space-y-3">
+                  <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-lg p-4 space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-[#808080] font-medium">Current Credits:</span>
+                      <span className="text-zinc-500 font-medium">Current Credits:</span>
                       <span className="text-2xl font-bold text-white">{credits ?? 0}</span>
                     </div>
                     
-                    <div className="border-t border-[#2DE2FF]/30 pt-3">
+                    <div className="border-t border-white/[0.08] pt-3">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-[#808080]">
+                        <span className="text-zinc-500">
                           {contentType === 'video' ? 'Generating video:' : 'Generating flyer:'}
                         </span>
                         <span className="text-lg font-semibold text-[#2DE2FF]">
                           -{contentType === 'video' ? 4 : 1}
                         </span>
                       </div>
-                      <div className="text-xs text-[#808080]/80">
+                      <div className="text-xs text-zinc-500/80">
                         ({contentType === 'video' ? '4 credits per video' : '1 credit per flyer'})
                       </div>
                     </div>
                     
-                    <div className="border-t border-[#2DE2FF]/30 pt-3 mt-3">
+                    <div className="border-t border-white/[0.08] pt-3 mt-3">
                       <div className="flex justify-between items-center">
                         <span className="text-white font-semibold">Total After:</span>
                         <span className={`text-2xl font-bold ${
@@ -1910,7 +1898,7 @@ export default function PromotionPage() {
                   </div>
                   
                   {(credits ?? 0) - (contentType === 'video' ? 4 : 1) < 0 && (
-                    <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#EF4444]/50 rounded-lg p-3">
+                    <div className="bg-[#131318] border border-white/[0.08] rounded-xl border border-[#EF4444]/50 rounded-lg p-3">
                       <p className="text-sm text-[#EF4444]">
                         ⚠️ Insufficient credits! You need {(contentType === 'video' ? 4 : 1) - (credits ?? 0)} more credit{(contentType === 'video' ? 4 : 1) - (credits ?? 0) > 1 ? 's' : ''} to generate a {contentType}.
                       </p>
@@ -1920,17 +1908,17 @@ export default function PromotionPage() {
               )}
             </div>
             
-            <div className="bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border-t border-[#2DE2FF]/30 px-6 py-4 flex gap-3 justify-end">
+            <div className="bg-[#131318] border border-white/[0.08] rounded-xl border-t border-white/[0.08] px-6 py-4 flex gap-3 justify-end">
               <button
                 onClick={handleCreditsConfirmCancel}
-                className="px-6 py-2 bg-[#15181a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-[#808080] hover:text-white rounded-lg font-semibold transition-colors"
+                className="px-6 py-2 bg-[#131318] border border-white/[0.08] rounded-xl hover:border-white/16/50 text-zinc-500 hover:text-white rounded-lg font-semibold transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreditsConfirmAccept}
                 disabled={loadingCredits || (credits ?? 0) - (contentType === 'video' ? 4 : 1) < 0}
-                className="px-6 py-2 bg-[#2DE2FF] hover:bg-[#2DE2FF] text-white rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#2DE2FF]/20 drop-shadow-lg"
+                className="px-6 py-2 bg-[#2DE2FF] hover:bg-[#2DE2FF] text-[#0a0a0c] rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed  "
               >
                 Accept & Generate
               </button>

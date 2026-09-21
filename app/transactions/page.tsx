@@ -5,6 +5,8 @@ import { useWallet } from '@/lib/wallet/compatibility'
 import { WalletConnect } from '@/components/wallet-connect'
 import { getSolscanUrl } from '@/lib/solscan'
 import Link from 'next/link'
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
 
 interface Transaction {
   id: string
@@ -122,11 +124,11 @@ export default function TransactionsPage() {
     const baseClasses = "px-2 py-1 rounded-full text-xs font-semibold border"
     switch (type) {
       case 'purchase':
-        return `${baseClasses} bg-[#2DE2FF]/20 text-[#2DE2FF] border-[#2DE2FF]/30`
+        return `${baseClasses} bg-[#2DE2FF]/20 text-[#2DE2FF] border-white/[0.08]`
       case 'usage':
         return `${baseClasses} bg-red-500/20 text-[#EF4444] border-red-500/30`
       case 'refund':
-        return `${baseClasses} bg-[#2DE2FF]/20 text-[#2DE2FF] border-[#2DE2FF]/30`
+        return `${baseClasses} bg-[#2DE2FF]/20 text-[#2DE2FF] border-white/[0.08]`
       default:
         return `${baseClasses} bg-white/10 text-white/70 border-white/20`
     }
@@ -138,35 +140,13 @@ export default function TransactionsPage() {
 
   if (!activeWalletConnected) {
     return (
-      <div className="min-h-screen">
-        {/* Hero Header */}
-        <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#2DE2FF]/30">
-          <div className="container mx-auto px-6 py-8">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-              <div>
-                <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">Credit Usage</h1>
-                <p className="text-[#a5b4fc] mt-2 text-lg">
-                  View all your credit transactions (purchases, usage, and refunds)
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full max-w-[1200px] mx-auto px-6 py-12">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-[#2DE2FF]/30 rounded-xl p-8 text-center shadow-xl">
-            <div className="text-6xl mb-4">🔐</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Connect Your Wallet</h2>
-            <p className="text-white/70 mb-6">Please connect your wallet to view transactions.</p>
-            <div className="flex justify-center gap-4 mb-4">
-              <WalletConnect />
-            </div>
-            <Link
-              href="/"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] text-white rounded-lg font-semibold transition-colors"
-            >
-              Go Home
-            </Link>
+      <div className="min-h-screen bg-[#0a0a0c]">
+        <PageHeader title="Credit usage" subtitle="View purchases, usage, and refunds" />
+        <div className="px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-xl mx-auto rounded-2xl border border-white/[0.08] bg-[#131318] p-8 text-center space-y-4">
+            <h2 className="text-xl font-semibold text-white">Connect your wallet</h2>
+            <p className="text-zinc-500 text-sm">Connect to view credit transactions.</p>
+            <div className="flex justify-center"><WalletConnect /></div>
           </div>
         </div>
       </div>
@@ -174,29 +154,22 @@ export default function TransactionsPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Header */}
-      <div className="bg-gradient-to-r from-[#0a0e27]/90 via-[#1a1f3a]/90 to-[#0f172a]/90 text-white border-b border-[#2DE2FF]/30">
-        <div className="container mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">Credit Usage</h1>
-              <p className="text-[#a5b4fc] mt-2 text-lg">
-                View all your credit transactions (purchases, usage, and refunds)
-              </p>
-            </div>
-            <button
-              onClick={() => fetchTransactions(currentPage, filterType)}
-              disabled={loading}
-              className="px-4 py-2 btn-cosmic rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-50"
-            >
-              {loading ? 'Refreshing...' : 'Refresh'}
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Credit usage"
+        subtitle="View purchases, usage, and refunds"
+        action={
+          <button
+            onClick={() => fetchTransactions(currentPage, filterType)}
+            disabled={loading}
+            className="h-9 px-4 rounded-full bg-white/[0.06] border border-white/10 text-sm font-semibold text-zinc-200 hover:bg-white/[0.1] disabled:opacity-50"
+          >
+            {loading ? 'Refreshing…' : 'Refresh'}
+          </button>
+        }
+      />
 
-      <div className="w-full max-w-[1200px] mx-auto px-6 py-12">
+      <div className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="mb-8">
           {/* Filter and Pagination Info */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
@@ -205,7 +178,7 @@ export default function TransactionsPage() {
               <select
                 value={filterType}
                 onChange={(e) => handleTypeFilterChange(e.target.value)}
-                className="px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-[#2DE2FF]/30 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 focus:border-[#2DE2FF]"
+                className="px-3 py-2 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-white/[0.08] rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20 focus:border-[#2DE2FF]"
               >
                 <option value="all">All Types</option>
                 <option value="purchase">Purchase</option>
@@ -222,45 +195,43 @@ export default function TransactionsPage() {
         </div>
 
         {loading ? (
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-[#2DE2FF]/30 rounded-xl p-8 text-center shadow-lg">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-2 border-[#2DE2FF] border-t-transparent"></div>
-            <p className="text-white/70 mt-4">Loading transactions...</p>
+          <div className="rounded-2xl border border-white/[0.1] bg-[#131318]">
+            <BrandLoader variant="card" label="Loading transactions" />
           </div>
         ) : error ? (
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-red-500/50 rounded-xl p-4 text-[#EF4444]">
+          <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-2 border-red-500/50 rounded-xl p-4 text-[#EF4444]">
             {error}
           </div>
         ) : transactions.length === 0 ? (
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-[#2DE2FF]/30 rounded-xl p-8 text-center shadow-lg">
-            <div className="text-6xl mb-4">📋</div>
+          <div className="rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center">
             <p className="text-white mb-4">No transactions found.</p>
             <Link
-              href="/"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] text-white rounded-lg font-semibold transition-colors"
+              href="/buy-credits"
+              className="hg-btn-glow inline-block px-6 py-2.5 bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0a0a0c] rounded-full font-bold transition-colors"
             >
-              Purchase Credits
+              Purchase credits
             </Link>
           </div>
         ) : (
           <>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-2 border-[#2DE2FF]/30 rounded-xl overflow-hidden shadow-lg">
+            <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-white/[0.08] rounded-xl overflow-hidden shadow-lg">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border-b-2 border-[#2DE2FF]/30">
+                  <thead className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border-b-2 border-white/[0.08]">
                     <tr>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 r">
                         Date
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 r">
                         Type
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 r">
                         Amount
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 r">
                         Description
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-semibold text-white/70 r">
                         Payment TXID
                       </th>
                     </tr>
@@ -269,7 +240,7 @@ export default function TransactionsPage() {
                     {transactions.map((tx) => {
                       const isPending = tx.status === 'pending' || tx.status === 'confirming'
                       return (
-                        <tr key={tx.id} className={`hover:bg-[#1a1f3a] ${isPending ? 'bg-[#DC1FFF]/10' : ''}`}>
+                        <tr key={tx.id} className={`hover:bg-[#1a1f3a] ${isPending ? 'bg-[#FF2BD6]/10' : ''}`}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                             {formatDate(tx.createdAt)}
                           </td>
@@ -279,7 +250,7 @@ export default function TransactionsPage() {
                                 {tx.transactionType}
                               </span>
                               {isPending && (
-                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-[#DC1FFF]/20 text-[#DC1FFF] border border-[#DC1FFF]/30">
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-[#FF2BD6]/20 text-[#FF2BD6] border border-[#FF2BD6]/30">
                                   <span className="animate-pulse">●</span>
                                   {tx.status === 'confirming' ? `Confirming (${tx.confirmations || 0}/1)` : 'Pending Payment'}
                                 </span>
@@ -287,7 +258,7 @@ export default function TransactionsPage() {
                             </div>
                           </td>
                           <td className={`px-6 py-4 whitespace-nowrap text-sm font-semibold ${
-                            isPending ? 'text-[#DC1FFF]' : tx.amount > 0 ? 'text-[#2DE2FF]' : 'text-[#EF4444]'
+                            isPending ? 'text-[#FF2BD6]' : tx.amount > 0 ? 'text-[#2DE2FF]' : 'text-[#EF4444]'
                           }`}>
                             {isPending ? '⏳ ' : tx.amount > 0 ? '+' : ''}{tx.amount} credits
                           </td>
@@ -315,7 +286,7 @@ export default function TransactionsPage() {
                                 {tx.paymentTxId.substring(0, 16)}...
                               </a>
                             ) : isPending ? (
-                              <span className="text-[#DC1FFF] italic">Awaiting payment...</span>
+                              <span className="text-[#FF2BD6] italic">Awaiting payment...</span>
                             ) : (
                               <span className="text-white/40">-</span>
                             )}
@@ -334,7 +305,7 @@ export default function TransactionsPage() {
                 <button
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md hover:bg-[#1a1f3a] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-[#2DE2FF]/30"
+                  className="px-4 py-2 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md hover:bg-[#1a1f3a] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-white/[0.08]"
                 >
                   Previous
                 </button>
@@ -358,8 +329,8 @@ export default function TransactionsPage() {
                         onClick={() => handlePageChange(pageNum)}
                         className={`px-3 py-2 rounded-lg font-semibold transition-colors ${
                           currentPage === pageNum
-                            ? 'bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] text-white'
-                            : 'bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md hover:bg-[#0f0f1e] text-white border border-[#00E5FF]/30'
+                            ? 'bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-white'
+                            : 'bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md hover:bg-[#0f0f1e] text-white border border-[#00E5FF]/30'
                         }`}
                       >
                         {pageNum}
@@ -371,7 +342,7 @@ export default function TransactionsPage() {
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md hover:bg-[#1a1f3a] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-[#2DE2FF]/30"
+                  className="px-4 py-2 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md hover:bg-[#1a1f3a] text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-white/[0.08]"
                 >
                   Next
                 </button>

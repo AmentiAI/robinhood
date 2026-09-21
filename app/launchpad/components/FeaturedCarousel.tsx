@@ -82,9 +82,9 @@ export function FeaturedCarousel({
                     <button
                       type="button"
                       onClick={() => router.push(`/launchpad/${collection.id}`)}
-                      className="px-6 py-2.5 bg-[#2DE2FF] hover:bg-[#FF2BD6] text-black text-sm font-black uppercase tracking-wider transition-colors shadow-[0_0_24px_rgba(45, 226, 255,0.35)]"
+                      className="hg-btn-glow px-6 py-2.5 rounded-full bg-[#2DE2FF] hover:opacity-90 text-[#0a0a0c] text-sm font-bold transition-colors"
                     >
-                      Mint Now
+                      Mint now
                     </button>
                   </div>
                 </div>

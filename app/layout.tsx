@@ -1,14 +1,23 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Outfit, JetBrains_Mono } from 'next/font/google'
 import { Providers } from '@/components/providers'
 import { LayoutWrapper } from '@/components/layout-wrapper'
 import { AuthRedirect } from '@/components/auth-redirect'
 import { SonnerToaster } from '@/components/sonner-toaster'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodgfx.com'),
@@ -51,7 +60,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className={`font-sans antialiased min-h-screen`} suppressHydrationWarning>
+      <body
+        className={`${outfit.variable} ${jetbrainsMono.variable} font-sans antialiased min-h-screen`}
+        suppressHydrationWarning
+      >
         <noscript>
           <div style={{ padding: '20px', textAlign: 'center', color: 'white', background: 'red' }}>
             JavaScript is required for this application to work. Please enable JavaScript.

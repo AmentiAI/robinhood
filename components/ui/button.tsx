@@ -5,28 +5,29 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-bold transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-4 focus-visible:ring-[var(--solana-purple)]/30 focus-visible:border-[var(--solana-purple)] relative overflow-hidden group",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-semibold transition-all duration-200 ease-out disabled:pointer-events-none disabled:opacity-45 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-[#2DE2FF]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c]",
   {
     variants: {
       variant: {
-        default: 'bg-gradient-to-r from-[#2DE2FF] via-[#DC1FFF] to-[#2DE2FF] text-white shadow-lg shadow-[#2DE2FF]/50 hover:shadow-2xl hover:shadow-[#2DE2FF]/70 hover:scale-105 active:scale-95 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/30 before:to-transparent before:translate-x-[-200%] hover:before:translate-x-[200%] before:transition-transform before:duration-700',
+        default:
+          'rounded-full bg-[#2DE2FF] text-[#0a0a0c] hover:bg-[#7aefff] hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(45,226,255,0.45)] active:translate-y-0 active:scale-[0.98]',
         secondary:
-          'bg-gradient-to-r from-[#2DE2FF] via-[#10B981] to-[#2DE2FF] text-black font-extrabold shadow-lg shadow-[#2DE2FF]/50 hover:shadow-2xl hover:shadow-[#2DE2FF]/70 hover:scale-105 active:scale-95',
+          'rounded-full bg-[#1c1c24] text-zinc-100 border border-white/[0.12] hover:bg-[#252530] hover:border-[#FF2BD6]/35 hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(255,43,214,0.15)]',
         outline:
-          'border-2 border-[#2DE2FF]/60 hover:border-[#2DE2FF] hover:bg-gradient-to-r hover:from-[#2DE2FF]/20 hover:to-[#DC1FFF]/20 text-white font-bold hover:scale-105 hover:shadow-xl hover:shadow-[#2DE2FF]/40 active:scale-95 backdrop-blur-sm',
+          'rounded-full border border-[#2DE2FF]/35 bg-transparent text-[#2DE2FF] hover:bg-[#2DE2FF]/10 hover:border-[#2DE2FF]/60 hover:-translate-y-0.5',
         ghost:
-          'hover:bg-gradient-to-r hover:from-[#2DE2FF]/15 hover:to-[#DC1FFF]/15 text-[#B4B4C8] hover:text-white font-semibold hover:scale-105 active:scale-95',
+          'rounded-full bg-transparent text-zinc-400 hover:text-white hover:bg-white/[0.06]',
         destructive:
-          'bg-gradient-to-r from-[#EF4444] via-[#DC2626] to-[#EF4444] text-white shadow-lg shadow-red-500/50 hover:shadow-2xl hover:shadow-red-500/70 hover:scale-105 active:scale-95',
-        link: 'text-[#2DE2FF] underline-offset-4 hover:underline hover:text-[#A855F7] hover:drop-shadow-[0_0_10px_rgba(153,69,255,0.8)]',
+          'rounded-full bg-red-500/90 text-white hover:bg-red-500 hover:-translate-y-0.5',
+        link: 'rounded-none text-[#2DE2FF] underline-offset-4 hover:underline',
       },
       size: {
-        default: 'h-12 px-7 py-3.5 text-[15px]',
-        sm: 'h-10 rounded-lg px-5 text-sm',
-        lg: 'h-14 rounded-xl px-9 text-base',
-        icon: 'size-12',
-        'icon-sm': 'size-10',
-        'icon-lg': 'size-14',
+        default: 'h-10 px-5 text-sm',
+        sm: 'h-8 px-3.5 text-xs',
+        lg: 'h-12 px-7 text-[15px]',
+        icon: 'size-10 rounded-full',
+        'icon-sm': 'size-8 rounded-full',
+        'icon-lg': 'size-12 rounded-full',
       },
     },
     defaultVariants: {

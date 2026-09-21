@@ -1313,7 +1313,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
             <div className="absolute inset-2 border-4 border-[#D4AF37]/30 rounded-full" />
             <div className="absolute inset-2 border-4 border-[#D4AF37] border-b-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
           </div>
-          <p className="text-[#808080] text-lg font-medium">Loading collection...</p>
+          <p className="text-zinc-500 text-lg font-medium">Loading collection...</p>
         </div>
       </div>
     )
@@ -1325,10 +1325,10 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
         <div className="text-center px-6">
           <div className="text-6xl mb-6 opacity-50">📦</div>
           <h2 className="text-3xl font-bold text-white mb-4">Collection Not Found</h2>
-          <p className="text-[#808080] mb-8 text-lg">The collection you're looking for doesn't exist or has been removed.</p>
+          <p className="text-zinc-500 mb-8 text-lg">The collection you're looking for doesn't exist or has been removed.</p>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-black font-semibold border border-[#D4AF37] hover:border-white transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4AF37] hover:bg-[#D4AF37]/90 text-black font-semibold border border-[#D4AF37] hover:border-white transition-all duration-300 "
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -1407,7 +1407,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
               return (
                 <>
                   <div className="mb-8">
-                    <div className="w-full aspect-[16/8] overflow-hidden bg-[#1a1a1a] border border-[#404040] shadow-lg">
+                    <div className="w-full aspect-[16/8] overflow-hidden bg-[#1a1a1a] border border-white/[0.08] shadow-lg">
                       {collection.banner_video_url ? (
                         <video
                           className="w-full h-full object-fill"
@@ -1431,7 +1431,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
                       )}
                     </div>
                     {(collection.twitter_url || collection.discord_url || collection.telegram_url || collection.website_url) && (
-                      <div className="mt-4 bg-[#1a1a1a] border border-[#404040] backdrop-blur-md p-5">
+                      <div className="mt-4 bg-[#1a1a1a] border border-white/[0.08] backdrop-blur-md p-5">
                         <div className="font-bold text-white mb-3">Links</div>
                         <div className="flex flex-wrap gap-3">
                           {collection.twitter_url && (
@@ -1577,7 +1577,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div className="lg:col-span-5">
                   <div className="lg:sticky lg:top-28">
-                    <div className="overflow-hidden bg-[#1a1a1a] border-2 border-[#404040] shadow-lg aspect-square hover:border-[#D4AF37] transition-all duration-300">
+                    <div className="overflow-hidden bg-[#1a1a1a] border-2 border-white/[0.08] shadow-lg aspect-square hover:border-[#D4AF37] transition-all duration-300">
                       {collection.banner_video_url ? (
                         <video
                           className="w-full h-full object-fill"
@@ -1601,7 +1601,7 @@ export default function CollectionMintPage({ params }: { params: Promise<{ colle
                       )}
                     </div>
                     {(collection.twitter_url || collection.discord_url || collection.telegram_url || collection.website_url) && (
-                      <div className="mt-4 bg-[#1a1a1a] border border-[#404040] backdrop-blur-md p-5">
+                      <div className="mt-4 bg-[#1a1a1a] border border-white/[0.08] backdrop-blur-md p-5">
                         <div className="font-bold text-white mb-3">Links</div>
                         <div className="flex flex-wrap gap-3">
                           {collection.twitter_url && (

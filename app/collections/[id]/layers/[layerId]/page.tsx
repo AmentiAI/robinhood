@@ -7,6 +7,9 @@ import { useWallet } from '@/lib/wallet/compatibility'
 import { useCreditCosts, calculateTraitCredits, formatCreditCost } from '@/lib/credits/use-credit-costs'
 import { toast } from 'sonner'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace, ToolPanel } from '@/components/tool-workspace'
 
 interface Layer {
   id: string
@@ -25,6 +28,8 @@ interface Trait {
   rarity_weight: number
   created_at: string
   updated_at: string
+  trait_prompt?: string | null
+  is_ignored?: boolean
 }
 
 export default function LayerDetailsPage() {
@@ -325,7 +330,7 @@ export default function LayerDetailsPage() {
           ? newTraitNames.slice(0, 5).join(', ') + (newTraitNames.length > 5 ? ` and ${newTraitNames.length - 5} more` : '')
           : `${data.count} trait${data.count > 1 ? 's' : ''}`
         
-        setSuccessMessage(`✅ Generated ${data.count} trait${data.count > 1 ? 's' : ''}: ${traitList}`)
+        setSuccessMessage(`Generated ${data.count} trait${data.count > 1 ? 's' : ''}: ${traitList}`)
         setShowSuccessNotification(true)
         
         // Set newly generated IDs for highlighting
@@ -368,128 +373,108 @@ export default function LayerDetailsPage() {
   }
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center py-8">
-            <div className="text-white">Loading layer...</div>
-          </div>
-        </div>
-      </div>
-    )
+    return <BrandLoader label="Loading layer" />
   }
 
   if (!layer) {
     return (
-      <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center py-8">
-          <div className="text-white">Layer not found</div>
-          <Link href={`/collections/${params.id}`} className="text-[#9945FF] hover:text-[#14F195] mt-4 inline-block">
-            ← Back to Collection
-          </Link>
-        </div>
+      <div className="min-h-screen bg-[#0a0a0c]">
+        <ToolWorkspace>
+          <ToolPanel title="Layer not found">
+            <Link
+              href={`/collections/${params.id}`}
+              className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+            >
+              Back to collection
+            </Link>
+          </ToolPanel>
+        </ToolWorkspace>
       </div>
-    </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a]">
-      <div className="w-full px-8 py-8">
-        <div className="w-full max-w-[1800px] mx-auto">
-          <div className="mb-6">
-            <Link 
-              href={`/collections/${params.id}`} 
-              className="text-[#9945FF] hover:text-[#14F195] mb-4 inline-block"
-            >
-              ← Back to Collection
-            </Link>
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-3xl font-bold text-white">{layer.name}</h1>
-               
-                <div className="flex items-center gap-4 mt-4 text-sm text-[#a8a8b8]/80">
-                  <span>Created: {new Date(layer.created_at).toLocaleDateString()}</span>
-                  <span>Order: {layer.display_order}</span>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Link
-                  href={`/collections/${params.id}/layers/${params.layerId}/edit`}
-                  className="btn-cosmic text-white px-4 py-2 rounded-lg transition-colors"
-                >
-                  Edit Layer
-                </Link>
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title={layer.name}
+        subtitle={`${layer.collection_name || 'Collection'} · order ${layer.display_order}`}
+        action={
+          <Link
+            href={`/collections/${params.id}/layers/${params.layerId}/edit`}
+            className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-colors"
+          >
+            Edit layer
+          </Link>
+        }
+      />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-4">
-            <h3 className="font-semibold text-white mb-2">Traits</h3>
-            <p className="text-2xl font-bold text-[#9945FF]">{traits.length}</p>
-           
+      <ToolWorkspace className="space-y-6">
+        <Link
+          href={`/collections/${params.id}`}
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 hover:text-[#2DE2FF] transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to collection
+        </Link>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-4">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-1">Traits</h3>
+            <p className="text-2xl font-bold text-[#2DE2FF]">{traits.length}</p>
           </div>
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-4">
-            <h3 className="font-semibold text-white mb-2">AI Generated</h3>
-            <p className="text-2xl font-bold text-green-400">
-              {traits.filter(t => t.trait_prompt).length}
+          <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-4">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-1">AI generated</h3>
+            <p className="text-2xl font-bold text-emerald-400">
+              {traits.filter((t) => t.trait_prompt).length}
             </p>
-           
           </div>
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-4">
-            <h3 className="font-semibold text-white mb-2">Average Rarity</h3>
-            <p className="text-2xl font-bold text-purple-400">
-              {traits.length > 0 ? Math.round(traits.reduce((sum, t) => sum + t.rarity_weight, 0) / traits.length) : 0}
+          <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-4">
+            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-1">Average rarity</h3>
+            <p className="text-2xl font-bold text-[#A855F7]">
+              {traits.length > 0
+                ? Math.round(traits.reduce((sum, t) => sum + t.rarity_weight, 0) / traits.length)
+                : 0}
             </p>
-            
           </div>
         </div>
 
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex gap-2">
-              <Link
-                href={`/collections/${params.id}/layers/${params.layerId}/traits/create`}
-                className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors whitespace-nowrap font-medium text-sm"
-              >
-                + Add Manually
-              </Link>
-              <button
-                onClick={() => setShowUploadModal(true)}
-                className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors whitespace-nowrap font-medium text-sm flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                Upload Existing
-              </button>
-            </div>
-          </div>
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-xl shadow-sm overflow-hidden">
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href={`/collections/${params.id}/layers/${params.layerId}/traits/create`}
+            className="hg-btn-glow inline-flex h-9 px-4 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+          >
+            Add manually
+          </Link>
+          <button
+            type="button"
+            onClick={() => setShowUploadModal(true)}
+            className="inline-flex h-9 px-4 items-center gap-2 rounded-full border border-[#FF2BD6]/35 text-[#FF2BD6] text-sm font-semibold hover:bg-[#FF2BD6]/10 transition-colors"
+          >
+            Upload existing
+          </button>
+        </div>
+
+        <ToolPanel title="Generate traits" subtitle={`AI ideas for ${layer.name}`}>
             <form onSubmit={handleGenerateTraits}>
-              {/* Main input area */}
-              <div className="p-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-                  {/* Theme input - takes most space */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
                   <div className="lg:col-span-6">
-                    <label className="block text-sm font-semibold text-white/70 mb-1.5">
-                      Basic idea for {layer.name} traits
+                    <label className="block text-sm font-semibold text-zinc-400 mb-1.5">
+                      Theme / idea
                     </label>
                     <input
                       type="text"
                       value={theme}
                       onChange={(e) => setTheme(e.target.value)}
-                      className="w-full border border-[#9945FF]/30 rounded-lg px-4 py-2.5 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white placeholder-white/50 focus:border-[#9945FF] focus:ring-2 focus:ring-[#9945FF]/20 focus:outline-none transition-all"
+                      className="w-full rounded-xl border border-white/[0.1] bg-[#0c0c10] px-4 py-2.5 text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none transition-colors"
                       placeholder="e.g., halloween, cyberpunk, medieval"
                       disabled={generating}
                     />
                   </div>
                   
-                  {/* Quantity */}
                   <div className="lg:col-span-2">
-                    <label className="block text-sm font-semibold text-white/70 mb-1.5">
+                    <label className="block text-sm font-semibold text-zinc-400 mb-1.5">
                       Quantity
                     </label>
                     <input
@@ -522,69 +507,61 @@ export default function LayerDetailsPage() {
                           }
                         }
                       }}
-                      className="w-full border border-[#9945FF]/30 rounded-lg px-4 py-2.5 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white focus:border-[#9945FF] focus:ring-2 focus:ring-[#9945FF]/20 focus:outline-none transition-all"
+                      className="w-full rounded-xl border border-white/[0.1] bg-[#0c0c10] px-4 py-2.5 text-white focus:border-[#2DE2FF] focus:outline-none transition-colors"
                       disabled={generating}
                     />
-                    <p className="text-xs text-[#e27d0f] mt-1.5 font-medium">
+                    <p className="text-xs text-[#2DE2FF] mt-1.5 font-medium">
                       Cost: {calculateTraitCredits(quantity, creditCosts.trait_generation)} credit{calculateTraitCredits(quantity, creditCosts.trait_generation) > 1 ? 's' : ''}
                     </p>
                   </div>
                   
-                  {/* Rarity */}
                   <div className="lg:col-span-2">
-                    <label className="block text-sm font-semibold text-white/70 mb-1.5">
+                    <label className="block text-sm font-semibold text-zinc-400 mb-1.5">
                       Rarity
                     </label>
                     <select
                       value={rarityOptions.findIndex(r => r.weight === rarity.weight)}
                       onChange={(e) => setRarity(rarityOptions[parseInt(e.target.value)])}
-                      className="w-full border border-[#9945FF]/30 rounded-lg px-3 py-2.5 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white focus:border-[#9945FF] focus:ring-2 focus:ring-[#9945FF]/20 focus:outline-none transition-all"
+                      className="w-full rounded-xl border border-white/[0.1] bg-[#0c0c10] px-3 py-2.5 text-white focus:border-[#2DE2FF] focus:outline-none transition-colors"
                       disabled={generating}
                     >
                       {rarityOptions.map((r, idx) => (
-                        <option key={idx} value={idx} className="bg-[#0f172a]">
+                        <option key={idx} value={idx} className="bg-[#0a0a0c]">
                           {r.label}
                         </option>
                       ))}
                     </select>
-                    <p className="text-xs text-[#a8a8b8]/80 mt-1.5">
+                    <p className="text-xs text-zinc-500 mt-1.5">
                       Weight: {rarity.weight}
                     </p>
                   </div>
                   
-                  {/* Generate button */}
                   <div className="lg:col-span-2">
-                    <label className="block text-sm font-semibold text-white/70 mb-1.5 opacity-0 select-none pointer-events-none lg:block hidden">
+                    <label className="hidden lg:block text-sm font-semibold text-zinc-400 mb-1.5 opacity-0 select-none">
                       Action
                     </label>
                     <button
                       type="submit"
                       disabled={generating || !theme.trim()}
-                      className="w-full bg-[#e27d0f] hover:bg-[#d66f0d] text-white px-6 py-2.5 rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+                      className="hg-btn-glow w-full h-[42px] rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {generating ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Generating...
+                        <span className="flex items-center justify-center">
+                          <BrandLoader variant="inline" label="Generating" />
                         </span>
                       ) : 'Generate'}
                     </button>
                   </div>
                 </div>
-              </div>
               
-              {/* Bottom bar with checkbox and help */}
-              <div className="bg-white/10 border-t border-[#9945FF]/30 px-6 py-3 flex items-center justify-between">
+              <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between">
                 <label className="flex items-center gap-2 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     id="useItemWord"
                     checked={useItemWord}
                     onChange={(e) => setUseItemWord(e.target.checked)}
-                    className="w-4 h-4 text-[#9945FF] bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-[#9945FF]/30 rounded focus:ring-[#9945FF] cursor-pointer"
+                    className="w-4 h-4 text-[#2DE2FF] bg-[#131318] rounded-2xl  border-white/[0.08] rounded focus:ring-[#2DE2FF] cursor-pointer"
                     disabled={generating}
                   />
                   <span className="text-sm text-white/70">
@@ -597,7 +574,7 @@ export default function LayerDetailsPage() {
                   <button
                     type="button"
                     onClick={() => setShowGenerateInstructions(!showGenerateInstructions)}
-                    className="flex items-center gap-1.5 text-sm text-[#a8a8b8]/80 hover:text-white transition-colors"
+                    className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-white transition-colors"
                     aria-label="Show trait generation instructions"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -607,10 +584,10 @@ export default function LayerDetailsPage() {
                   </button>
                   
                   {/* Tooltip Content */}
-                  <div className={`absolute right-0 bottom-full mb-2 w-80 bg-[#14141e] text-white rounded-lg shadow-xl p-4 z-50 transition-all duration-200 ${
+                  <div className={`absolute right-0 bottom-full mb-2 w-80 bg-[#0c0c10] text-white rounded-lg shadow-xl p-4 z-50 transition-all duration-200 ${
                     showGenerateInstructions ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'
                   }`}>
-                    <div className="absolute -bottom-1.5 right-4 w-3 h-3 bg-[#14141e] transform rotate-45"></div>
+                    <div className="absolute -bottom-1.5 right-4 w-3 h-3 bg-[#0c0c10] transform rotate-45"></div>
                     <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
                       💡 How to Generate Traits
                     </h3>
@@ -624,13 +601,12 @@ export default function LayerDetailsPage() {
                 </div>
               </div>
             </form>
-          </div>
-        </div>
+        </ToolPanel>
 
         {/* Success Notification */}
         {showSuccessNotification && (
           <div 
-            className="fixed top-4 right-4 z-50 bg-[#e27d0f] text-white px-6 py-4 rounded-lg shadow-lg max-w-md"
+            className="fixed top-4 right-4 z-50 bg-[#2DE2FF] text-[#0a0a0c] px-6 py-4 rounded-2xl shadow-lg max-w-md"
             style={{
               animation: 'slideInRight 0.3s ease-out',
             }}
@@ -639,7 +615,7 @@ export default function LayerDetailsPage() {
               <p className="text-sm font-medium">{successMessage}</p>
               <button
                 onClick={() => setShowSuccessNotification(false)}
-                className="ml-4 text-white hover:text-gray-200"
+                className="ml-4 text-[#0a0a0c]/70 hover:text-[#0a0a0c]"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -649,67 +625,53 @@ export default function LayerDetailsPage() {
           </div>
         )}
 
-        <h2 className="text-2xl font-bold text-white mb-4">
-          All Traits 
-          <span className="text-lg font-normal text-[#a8a8b8]/80 ml-2">
-            ({filteredAndSortedTraits.length} {filteredAndSortedTraits.length === 1 ? 'trait' : 'traits'})
-          </span>
-        </h2>
-
-       
-
-        {/* Instructions for Viewing/Managing Traits - Hover Tooltip */}
-        <div className="relative inline-block mb-6 group">
-          <button
-            type="button"
-            onClick={() => setShowManageInstructions(!showManageInstructions)}
-            onMouseEnter={() => setShowManageInstructions(true)}
-            onMouseLeave={() => setShowManageInstructions(false)}
-            className="flex items-center gap-2 text-sm text-white/70 hover:text-white transition-colors"
-            aria-label="Show trait management instructions"
-          >
-            <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="font-medium">Managing Your Traits</span>
-          </button>
-          
-          {/* Tooltip Content */}
-          <div className={`absolute left-0 top-full mt-2 w-96 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg shadow-xl p-4 z-50 transition-all duration-200 ${
-            showManageInstructions ? 'opacity-100 visible pointer-events-auto' : 'opacity-0 invisible pointer-events-none'
-          }`}>
-            <div className="absolute -top-2 left-6 w-4 h-4 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-l border-t border-[#9945FF]/30 transform rotate-45"></div>
-            <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-              <span className="text-lg">💡</span> Managing Your Traits
-            </h3>
-            <ul className="text-sm text-white/70 space-y-2 ml-6 list-disc max-h-96 overflow-y-auto">
-              <li><strong>View Traits:</strong> All traits for the "{layer.name}" layer are shown below. Each trait includes a name, description, and rarity weight.</li>
-              <li><strong>Edit Traits:</strong> Click "Edit" on any trait to modify its name, description, or rarity weight. Changes will affect future generations.</li>
-              <li><strong>Delete Traits:</strong> Click "Delete" to remove traits you no longer want. Be careful - this cannot be undone!</li>
-              <li><strong>Rarity Weight:</strong> Higher numbers = more common. Lower numbers = more rare. The system uses these weights to determine trait rarity in generated images.</li>
-              <li><strong>AI Generated vs Manual:</strong> AI-generated traits have a green "AI Generated" tag showing the theme used. Manual traits don't have this tag.</li>
-              <li><strong>Need More Traits?</strong> Use the generator above to create more, or click "Add Trait Manually" to create custom traits with full control.</li>
-            </ul>
+        <ToolPanel
+          title={`All traits (${filteredAndSortedTraits.length})`}
+          subtitle="Search, sort, and manage traits for this layer"
+        >
+          <div className="flex flex-col sm:flex-row gap-3 mb-5">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search traits..."
+              className="flex-1 rounded-xl border border-white/[0.1] bg-[#0c0c10] px-4 py-2.5 text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none transition-colors"
+            />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as 'name' | 'created' | 'rarity')}
+              className="rounded-xl border border-white/[0.1] bg-[#0c0c10] px-3 py-2.5 text-white focus:border-[#2DE2FF] focus:outline-none"
+            >
+              <option value="created" className="bg-[#0a0a0c]">Newest</option>
+              <option value="name" className="bg-[#0a0a0c]">Name</option>
+              <option value="rarity" className="bg-[#0a0a0c]">Rarity</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
+              className="inline-flex h-[42px] px-4 items-center justify-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-colors"
+            >
+              {sortOrder === 'asc' ? 'Asc' : 'Desc'}
+            </button>
           </div>
-        </div>
 
-        <div className="grid gap-4">
+          <div className="space-y-3">
           {paginatedTraits.map((trait) => {
             // Determine rarity label based on weight
             let rarityLabel = 'Custom';
             let rarityColor = 'text-white/70';
             if (trait.rarity_weight >= 35) {
               rarityLabel = 'Common';
-              rarityColor = 'text-green-400';
+              rarityColor = 'text-emerald-400';
             } else if (trait.rarity_weight >= 20 && trait.rarity_weight < 35) {
               rarityLabel = 'Rare';
-              rarityColor = 'text-[#9945FF]';
+              rarityColor = 'text-[#2DE2FF]';
             } else if (trait.rarity_weight >= 10 && trait.rarity_weight < 20) {
               rarityLabel = 'Epic';
-              rarityColor = 'text-purple-400';
+              rarityColor = 'text-[#A855F7]';
             } else if (trait.rarity_weight < 10) {
               rarityLabel = 'Legendary';
-              rarityColor = 'text-orange-400';
+              rarityColor = 'text-[#FF2BD6]';
             }
             
             const isNewlyGenerated = newlyGeneratedIds.has(trait.id)
@@ -718,12 +680,12 @@ export default function LayerDetailsPage() {
               <div
                 id={`trait-${trait.id}`}
                 key={trait.id}
-                className={`border rounded-lg p-3 transition-all duration-500 ${
+                className={`rounded-2xl border p-4 transition-all duration-500 ${
                   isNewlyGenerated
-                    ? 'border-green-500 bg-green-500/20 shadow-lg shadow-green-500/30 ring-2 ring-green-500/50 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md'
+                    ? 'border-emerald-500/60 bg-emerald-500/10 ring-1 ring-emerald-500/40'
                     : trait.is_ignored
-                    ? 'border-orange-500/50 bg-orange-500/10 opacity-75 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md'
-                    : 'border-[#9945FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md hover:border-[#9945FF] hover:shadow-sm'
+                    ? 'border-orange-500/40 bg-orange-500/5 opacity-75'
+                    : 'border-white/[0.08] bg-[#0c0c10] hover:border-white/[0.14]'
                 }`}
               >
                 <div className="flex justify-between items-start gap-3">
@@ -731,16 +693,16 @@ export default function LayerDetailsPage() {
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-base text-white truncate">{trait.name}</h3>
                       {isNewlyGenerated && (
-                        <span className="px-2 py-0.5 text-xs font-semibold bg-green-500 text-white rounded-full animate-pulse">
-                          NEW
+                        <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-emerald-500 text-[#0a0a0c] rounded-full animate-pulse">
+                          New
                         </span>
                       )}
                     </div>
               
-                    <div className="flex items-center gap-3 mt-2 text-xs text-[#a8a8b8]/80">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-zinc-500">
                       <span>{new Date(trait.created_at).toLocaleDateString()}</span>
-                      <span className={`font-medium ${rarityColor}`}>{rarityLabel}</span>
-                      <span>Weight: {trait.rarity_weight}</span>
+                      <span className={`font-semibold ${rarityColor}`}>{rarityLabel}</span>
+                      <span>Weight {trait.rarity_weight}</span>
                     </div>
                   </div>
                   <div className="flex gap-2 flex-shrink-0 items-center">
@@ -749,21 +711,22 @@ export default function LayerDetailsPage() {
                         type="checkbox"
                         checked={!trait.is_ignored}
                         onChange={() => handleToggleIgnore(trait.id)}
-                        className="w-4 h-4 text-[#9945FF] border-[#9945FF]/30 rounded focus:ring-[#9945FF] bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md"
+                        className="w-4 h-4 text-[#2DE2FF] border-white/[0.1] rounded focus:ring-[#2DE2FF] bg-[#131318]"
                       />
-                      <span className="text-xs text-white/70 whitespace-nowrap">
+                      <span className="text-xs text-zinc-400 whitespace-nowrap">
                         {trait.is_ignored ? 'Ignored' : 'Active'}
                       </span>
                     </label>
                     <Link
                       href={`/collections/${params.id}/layers/${params.layerId}/traits/${trait.id}/edit`}
-                      className="px-2.5 py-1.5 text-xs bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors whitespace-nowrap"
+                      className="inline-flex h-8 px-3 items-center rounded-full border border-white/[0.1] text-xs font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-colors"
                     >
                       Edit
                     </Link>
                     <button
+                      type="button"
                       onClick={() => handleDeleteTrait(trait.id)}
-                      className="px-2.5 py-1.5 text-xs bg-red-600 text-white rounded hover:bg-red-700 whitespace-nowrap"
+                      className="inline-flex h-8 px-3 items-center rounded-full border border-red-500/30 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-colors"
                     >
                       Delete
                     </button>
@@ -772,94 +735,95 @@ export default function LayerDetailsPage() {
               </div>
             );
           })}
-        </div>
-
-        {filteredAndSortedTraits.length === 0 && traits.length > 0 && (
-          <div className="text-center py-8 text-white/70 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg">
-            <p className="text-lg font-semibold mb-2 text-white">No traits match your search</p>
-            <p className="text-sm text-[#a8a8b8]/80">Try adjusting your search query or filters</p>
-            <button
-              onClick={() => setSearchQuery('')}
-              className="mt-4 text-[#9945FF] hover:text-[#14F195] underline"
-            >
-              Clear search
-            </button>
           </div>
-        )}
 
-        {traits.length === 0 && (
-          <div className="text-center py-8 text-white/70 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg">
-            No traits created yet. Add your first trait to get started!
-          </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-6 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-4">
-            <div className="text-sm text-white/70">
-              Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedTraits.length)} of {filteredAndSortedTraits.length} traits
-            </div>
-            <div className="flex gap-2">
+          {filteredAndSortedTraits.length === 0 && traits.length > 0 && (
+            <div className="text-center py-8 text-white/70 bg-[#0c0c10] rounded-xl border border-white/[0.08]">
+              <p className="text-lg font-semibold mb-2 text-white">No traits match your search</p>
+              <p className="text-sm text-zinc-500">Try adjusting your search query or filters</p>
               <button
-                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                disabled={currentPage === 1}
-                className="px-4 py-2 border border-[#9945FF]/30 rounded bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md hover:bg-white/10 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => setSearchQuery('')}
+                className="mt-4 text-[#2DE2FF] hover:text-[#2DE2FF] underline"
               >
-                Previous
+                Clear search
               </button>
-              <div className="flex items-center gap-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum
-                  if (totalPages <= 5) {
-                    pageNum = i + 1
-                  } else if (currentPage <= 3) {
-                    pageNum = i + 1
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i
-                  } else {
-                    pageNum = currentPage - 2 + i
-                  }
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={`px-3 py-1 rounded ${
-                        currentPage === pageNum
-                          ? 'bg-[#e27d0f] text-white'
-                          : 'border border-[#9945FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md hover:bg-white/10 text-white'
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  )
-                })}
+            </div>
+          )}
+
+          {traits.length === 0 && (
+            <div className="text-center py-8 text-white/70 bg-[#0c0c10] rounded-xl border border-white/[0.08]">
+              No traits created yet. Add your first trait to get started!
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-6 bg-[#0c0c10] rounded-xl border border-white/[0.08] p-4">
+              <div className="text-sm text-white/70">
+                Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedTraits.length)} of {filteredAndSortedTraits.length} traits
               </div>
-              <button
-                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 border border-[#9945FF]/30 rounded bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md hover:bg-white/10 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 border border-white/[0.08] rounded-xl bg-[#131318] hover:bg-white/10 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum
+                    if (totalPages <= 5) {
+                      pageNum = i + 1
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i
+                    } else {
+                      pageNum = currentPage - 2 + i
+                    }
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-1 rounded-lg ${
+                          currentPage === pageNum
+                            ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                            : 'border border-white/[0.08] bg-[#131318] hover:bg-white/10 text-white'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    )
+                  })}
+                </div>
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 border border-white/[0.08] rounded-xl bg-[#131318] hover:bg-white/10 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </ToolPanel>
+        </ToolWorkspace>
 
         {/* Upload Trait Modal */}
         {showUploadModal && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6 border-b border-[#9945FF]/30">
+            <div className="bg-[#131318] rounded-2xl  border border-white/[0.08] rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-white/[0.08]">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#9945FF]/20 flex items-center justify-center border border-[#9945FF]/30">
-                      <svg className="w-5 h-5 text-[#9945FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-10 h-10 rounded-xl bg-[#2DE2FF]/20 flex items-center justify-center border border-white/[0.08]">
+                      <svg className="w-5 h-5 text-[#2DE2FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </div>
                     <div>
                       <h3 className="text-lg font-bold text-white">Upload Existing Trait</h3>
-                      <p className="text-sm text-[#a8a8b8]/80">AI will analyze and describe it</p>
+                      <p className="text-sm text-zinc-500">AI will analyze and describe it</p>
                     </div>
                   </div>
                   <button
@@ -869,7 +833,7 @@ export default function LayerDetailsPage() {
                       setUploadPreview(null)
                       setUploadName('')
                     }}
-                    className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+                    className="w-8 h-8 rounded-lg bg-[#0c0c10] flex items-center justify-center text-zinc-400 hover:bg-white/10 transition-colors"
                   >
                     ✕
                   </button>
@@ -879,7 +843,7 @@ export default function LayerDetailsPage() {
               <div className="p-6 space-y-5">
                 {/* Image Upload Area */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
                     Trait Image
                   </label>
                   {uploadPreview ? (
@@ -887,7 +851,7 @@ export default function LayerDetailsPage() {
                       <img
                         src={uploadPreview}
                         alt="Preview"
-                        className="w-full h-48 object-contain bg-gray-50 rounded-xl border-2 border-gray-200"
+                        className="w-full h-48 object-contain bg-[#0c0c10] rounded-xl border-2 border-white/[0.08]"
                       />
                       <button
                         onClick={() => {
@@ -901,12 +865,12 @@ export default function LayerDetailsPage() {
                     </div>
                   ) : (
                     <label className="block cursor-pointer">
-                      <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-purple-400 hover:bg-purple-50/50 transition-all">
-                        <svg className="w-12 h-12 mx-auto text-[#a8a8b8] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="border-2 border-dashed border-white/[0.08] rounded-xl p-8 text-center hover:border-[#2DE2FF]/40 hover:bg-[#2DE2FF]/[0.06] transition-all">
+                        <svg className="w-12 h-12 mx-auto text-zinc-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
-                        <p className="text-sm font-medium text-gray-700">Click to upload or drag & drop</p>
-                        <p className="text-xs text-[#a8a8b8]/80 mt-1">PNG, JPG, WEBP up to 10MB</p>
+                        <p className="text-sm font-medium text-zinc-300">Click to upload or drag & drop</p>
+                        <p className="text-xs text-zinc-500 mt-1">PNG, JPG, WEBP up to 10MB</p>
                       </div>
                       <input
                         type="file"
@@ -920,7 +884,7 @@ export default function LayerDetailsPage() {
 
                 {/* Name Input */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
                     Trait Name
                   </label>
                   <input
@@ -928,19 +892,19 @@ export default function LayerDetailsPage() {
                     value={uploadName}
                     onChange={(e) => setUploadName(e.target.value)}
                     placeholder="e.g., Golden Crown, Red Cape, Laser Eyes"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 bg-white text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all"
+                    className="w-full border border-white/[0.08] rounded-lg px-4 py-2.5 bg-[#0c0c10] text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
                   />
                 </div>
 
                 {/* Rarity Select */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
                     Rarity
                   </label>
                   <select
                     value={rarityOptions.findIndex(r => r.weight === uploadRarity.weight)}
                     onChange={(e) => setUploadRarity(rarityOptions[parseInt(e.target.value)])}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2.5 bg-white text-gray-900 focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 focus:outline-none transition-all"
+                    className="w-full border border-white/[0.08] rounded-lg px-4 py-2.5 bg-[#0c0c10] text-white focus:border-[#2DE2FF] focus:outline-none"
                   >
                     {rarityOptions.map((r, idx) => (
                       <option key={idx} value={idx}>
@@ -951,12 +915,12 @@ export default function LayerDetailsPage() {
                 </div>
 
                 {/* Info Box */}
-                <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                <div className="bg-[#2DE2FF]/[0.06] border border-[#2DE2FF]/25 rounded-xl p-4">
                   <div className="flex gap-3">
                     <span className="text-xl">🤖</span>
-                    <div className="text-sm text-purple-800">
+                    <div className="text-sm text-zinc-300">
                       <p className="font-semibold mb-1">AI Analysis</p>
-                      <p className="text-purple-700">
+                      <p className="text-zinc-400">
                         AI will analyze your image to detect the art style and create a detailed description 
                         that can be used to generate matching traits.
                       </p>
@@ -965,14 +929,14 @@ export default function LayerDetailsPage() {
                 </div>
 
                 {/* Cost Info */}
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <span className="text-sm text-gray-600">Analysis Cost</span>
-                  <span className="font-bold text-purple-600">0.5 credits</span>
+                <div className="flex items-center justify-between p-3 bg-[#0c0c10] rounded-xl">
+                  <span className="text-sm text-zinc-400">Analysis Cost</span>
+                  <span className="font-bold text-[#A855F7]">0.5 credits</span>
                 </div>
               </div>
 
               {/* Footer */}
-              <div className="p-6 border-t border-gray-200 flex gap-3">
+              <div className="p-6 border-t border-white/[0.08] flex gap-3">
                 <button
                   onClick={() => {
                     setShowUploadModal(false)
@@ -980,14 +944,14 @@ export default function LayerDetailsPage() {
                     setUploadPreview(null)
                     setUploadName('')
                   }}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-white/[0.08] rounded-lg text-zinc-300 font-medium hover:bg-[#0c0c10] transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleUploadTrait}
                   disabled={uploading || !uploadFile || !uploadName.trim()}
-                  className="flex-1 px-4 py-2.5 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2.5 bg-[#FF2BD6] text-white rounded-lg font-medium hover:bg-[#d91fb8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {uploading ? (
                     <>
@@ -1010,17 +974,16 @@ export default function LayerDetailsPage() {
             </div>
           </div>
         )}
-      </div>
 
       {/* Delete Trait Confirmation Dialog */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#FDFCFA] border border-gray-200 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+          <div className="bg-[#131318] border border-white/[0.08] rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-gray-900">Delete Trait</h2>
+              <h2 className="text-xl font-bold text-white">Delete Trait</h2>
               <button
                 onClick={() => setShowDeleteConfirm(null)}
-                className="text-[#a8a8b8] hover:text-gray-600 transition-colors"
+                className="text-zinc-500 hover:text-zinc-400 transition-colors"
                 disabled={deletingTrait}
               >
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1029,20 +992,20 @@ export default function LayerDetailsPage() {
               </button>
             </div>
 
-            <p className="text-gray-700 mb-4">
+            <p className="text-zinc-300 mb-4">
               <strong>"{showDeleteConfirm.traitName}"</strong> will be permanently removed from future ordinal generations.
             </p>
 
             {showDeleteConfirm.ordinalCount > 0 ? (
               <>
-                <p className="text-gray-700 mb-4">
+                <p className="text-zinc-300 mb-4">
                   <strong>{showDeleteConfirm.ordinalCount} ordinal(s)</strong> currently have this trait.
                 </p>
                 <div className="space-y-3">
                   <button
                     onClick={() => executeDeleteTrait(false)}
                     disabled={deletingTrait}
-                    className="w-full px-4 py-2 bg-gray-600 hover:bg-[#1a1a24]/80 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full px-4 py-2 bg-white/10 hover:bg-[#131318]/80 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {deletingTrait ? 'Deleting...' : 'Delete Trait Only (Preserve Ordinals)'}
                   </button>
@@ -1057,12 +1020,12 @@ export default function LayerDetailsPage() {
               </>
             ) : (
               <>
-                <p className="text-gray-700 mb-6">No ordinals currently have this trait.</p>
+                <p className="text-zinc-300 mb-6">No ordinals currently have this trait.</p>
                 <div className="flex gap-3 justify-end">
                   <button
                     onClick={() => setShowDeleteConfirm(null)}
                     disabled={deletingTrait}
-                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 bg-[#0c0c10] hover:bg-white/10 text-zinc-200 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </button>
@@ -1076,11 +1039,11 @@ export default function LayerDetailsPage() {
                 </div>
               </>
             )}
+            </div>
           </div>
-        </div>
-      )}
-      </div>
+        )}
     </div>
   )
 }
+
 

@@ -15,6 +15,9 @@ import { LaunchStep } from './components/LaunchStep'
 import { StepNavigation } from './components/StepNavigation'
 import { Phase, Whitelist, Collection, Step } from './types'
 import PromoModal from './components/PromoModal'
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace } from '@/components/tool-workspace'
 
 // Helper function to convert UTC datetime string to local datetime-local format
 function utcToLocalDatetime(utcString: string): string {
@@ -789,30 +792,21 @@ export default function CollectionLaunchPage() {
 
   // Show loading spinner during SSR and initial hydration (must be FIRST to prevent hydration mismatch)
   if (!mounted || loading) {
-    return (
-      <div className="container mx-auto px-6 py-12">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="w-12 h-12 border-4 border-[#4561ad] border-t-transparent rounded-full animate-spin" />
-        </div>
-      </div>
-    )
+    return <BrandLoader label="Loading launch" />
   }
 
   // Not connected - show connect prompt (only after mount)
   if (!isConnected || !currentAddress) {
     return (
-      <div className="container mx-auto px-6 py-12">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#e27d0f]/50 rounded-xl p-8 max-w-2xl mx-auto">
-            <div className="text-6xl mb-4">🔐</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Wallet Connection Required</h2>
-            <p className="text-white/70 mb-6">
-              Please connect your wallet to access collection launch settings.
-            </p>
-            <Link href="/collections" className="px-6 py-3 bg-[#4561ad] hover:bg-[#3a5294] text-white rounded-lg font-semibold transition-colors inline-block">
-              Go to Collections
-            </Link>
-          </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center">
+          <h2 className="text-xl font-semibold text-white mb-2">Wallet required</h2>
+          <p className="text-zinc-500 mb-6 text-sm">
+            Connect your wallet to access collection launch settings.
+          </p>
+          <Link href="/collections" className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold">
+            Go to collections
+          </Link>
         </div>
       </div>
     )
@@ -935,13 +929,12 @@ export default function CollectionLaunchPage() {
     return (
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#e27d0f]/50 rounded-xl p-8 max-w-2xl mx-auto">
-            <div className="text-6xl mb-4">🚀</div>
+          <div className="bg-[#131318] rounded-2xl  border-2 border-[#2DE2FF]/50 rounded-xl p-8 max-w-2xl mx-auto">
             <h2 className="text-2xl font-bold text-white mb-4">Change Collection Status to Launchpad?</h2>
             <p className="text-white/70 mb-6">
               This collection is currently in <strong>draft</strong> status. To access the launchpad editor, you need to change the status to <strong>launchpad</strong>.
             </p>
-            <p className="text-[#a8a8b8]/80 text-sm mb-6">
+            <p className="text-zinc-500 text-sm mb-6">
               This will make your collection available for launchpad configuration. You can still edit all settings after this change.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -950,7 +943,7 @@ export default function CollectionLaunchPage() {
                   setShowStatusChangeConfirm(false)
                   router.push(`/collections/${collectionId}`)
                 }}
-                className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-[#9945FF]/30"
+                className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-white/[0.08]"
                 disabled={saving}
               >
                 Cancel
@@ -958,7 +951,7 @@ export default function CollectionLaunchPage() {
               <button
                 onClick={handleStatusChangeConfirm}
                 disabled={saving}
-                className="px-6 py-3 bg-[#e27d0f] hover:bg-[#c96a0a] text-white rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 bg-[#2DE2FF] hover:opacity-90 text-white rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {saving ? 'Updating...' : 'Yes, Change to Launchpad'}
               </button>
@@ -984,17 +977,17 @@ export default function CollectionLaunchPage() {
     return (
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#DC1FFF]/50 rounded-xl p-8 max-w-2xl mx-auto">
+          <div className="bg-[#131318] rounded-2xl  border-2 border-[#FF2BD6]/50 rounded-xl p-8 max-w-2xl mx-auto">
             <div className="text-6xl mb-4">🚫</div>
             <h2 className="text-2xl font-bold text-white mb-4">Access Denied</h2>
             <p className="text-white/70 mb-6">
               You don&#39;t have permission to edit this collection. Only the collection owner or authorized collaborators can access launch settings.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/collections" className="px-6 py-3 bg-[#4561ad] hover:bg-[#3a5294] text-white rounded-lg font-semibold transition-colors">
+              <Link href="/collections" className="px-6 py-3 bg-[#FF2BD6] hover:bg-[#d91fb8] text-white rounded-lg font-semibold transition-colors">
                 Go to Collections
               </Link>
-              <Link href={`/launchpad/${collectionId}`} className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-[#9945FF]/30">
+              <Link href={`/launchpad/${collectionId}`} className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-white/[0.08]">
                 View on Launchpad
               </Link>
             </div>
@@ -1008,23 +1001,28 @@ export default function CollectionLaunchPage() {
   const isLaunchpadButNotLive = collection?.collection_status === 'launchpad'
 
   return (
-    <div className="container mx-auto px-6 py-12">
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Launch collection"
+        subtitle="Configure mint phases, whitelists, and go live"
+      />
+      <ToolWorkspace>
       <div className="max-w-7xl mx-auto">
         {/* Revert to Draft Button - Show if collection is launchpad but not launched */}
         {isLaunchpadButNotLive && (
-          <div className="mb-6 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-amber-500/30 rounded-xl p-4 bg-amber-500/10">
-            <div className="flex items-center justify-between">
+          <div className="mb-6 rounded-2xl border border-amber-500/30 bg-amber-500/[0.08] p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-bold text-white mb-1">Collection Status: Launchpad (Not Launched)</h3>
-                <p className="text-white/70 text-sm">
-                  This collection is set to launchpad status but hasn't been launched yet. You can revert it back to draft if needed.
+                <h3 className="text-base font-bold text-white mb-1">Launchpad (not launched)</h3>
+                <p className="text-zinc-500 text-sm">
+                  This collection is set to launchpad status but hasn&apos;t been launched yet. You can revert it back to draft if needed.
                 </p>
               </div>
               <button
                 onClick={() => setShowRevertToDraftConfirm(true)}
-                className="px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-semibold transition-colors whitespace-nowrap"
+                className="inline-flex h-10 px-5 items-center rounded-full border border-amber-500/40 text-amber-300 text-sm font-semibold hover:bg-amber-500/10 transition-colors whitespace-nowrap"
               >
-                Revert to Draft
+                Revert to draft
               </button>
             </div>
           </div>
@@ -1045,7 +1043,7 @@ export default function CollectionLaunchPage() {
         />
 
         {/* Step Content */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-xl p-8">
+            <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-5 sm:p-8 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
           {/* Step 1: Collection Settings */}
           {currentStep === 1 && (
             <CollectionSettingsStep
@@ -1187,7 +1185,7 @@ export default function CollectionLaunchPage() {
         message="Are you sure you want to launch this collection? Once launched, it will be live on the launchpad."
           confirmText="Launch"
           cancelText="Cancel"
-        confirmButtonClass="bg-[#e27d0f] hover:bg-[#c96a0a]"
+        confirmButtonClass="bg-[#2DE2FF] hover:opacity-90"
           loading={saving}
         />
           <ConfirmDialog
@@ -1233,6 +1231,7 @@ export default function CollectionLaunchPage() {
           onSelect={handleSelectPromo}
           mode={promoModalMode}
         />
+      </ToolWorkspace>
     </div>
   )
 }

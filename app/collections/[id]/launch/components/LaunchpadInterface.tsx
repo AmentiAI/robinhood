@@ -32,13 +32,13 @@ export default function LaunchpadInterface({
   return (
     <>
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 border-b border-gray-200">
+      <div className="flex gap-2 mb-6 border-b border-white/[0.08]">
         <button
           onClick={() => setActiveTab('settings')}
           className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
             activeTab === 'settings'
-              ? 'border-[#4561ad] text-[#4561ad]'
-              : 'border-transparent text-[#a8a8b8]/80 hover:text-gray-700'
+              ? 'border-[#FF2BD6] text-[#FF2BD6]'
+              : 'border-transparent text-zinc-500 hover:text-zinc-300'
           }`}
         >
           ⚙️ Settings
@@ -47,8 +47,8 @@ export default function LaunchpadInterface({
           onClick={() => setActiveTab('phases')}
           className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
             activeTab === 'phases'
-              ? 'border-[#4561ad] text-[#4561ad]'
-              : 'border-transparent text-[#a8a8b8]/80 hover:text-gray-700'
+              ? 'border-[#FF2BD6] text-[#FF2BD6]'
+              : 'border-transparent text-zinc-500 hover:text-zinc-300'
           }`}
         >
           📅 Mint Phases ({phases.length})
@@ -57,8 +57,8 @@ export default function LaunchpadInterface({
           onClick={() => setActiveTab('whitelists')}
           className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
             activeTab === 'whitelists'
-              ? 'border-[#4561ad] text-[#4561ad]'
-              : 'border-transparent text-[#a8a8b8]/80 hover:text-gray-700'
+              ? 'border-[#FF2BD6] text-[#FF2BD6]'
+              : 'border-transparent text-zinc-500 hover:text-zinc-300'
           }`}
         >
           📋 Whitelists ({whitelists.length})

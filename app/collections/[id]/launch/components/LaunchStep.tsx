@@ -501,54 +501,59 @@ export function LaunchStep({
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-6">Step 5: Launch</h2>
+    <div className="space-y-8">
+      <div>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#2DE2FF]/70 mb-1">
+          Step 5
+        </p>
+        <h2 className="text-xl font-bold text-white">Launch</h2>
+      </div>
       
       {/* Mint Statistics */}
-      <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg p-6">
+      <div className="rounded-2xl border border-white/[0.1] bg-[#131318] p-6">
         <h3 className="font-bold text-white mb-4 flex items-center gap-2">
           📊 Mint Statistics
         </h3>
         
         {loadingStats ? (
-          <div className="flex items-center gap-2 text-[#a8a8b8]/80">
-            <div className="w-5 h-5 border-2 border-[#00d4ff] border-t-transparent rounded-full animate-spin" />
+          <div className="flex items-center gap-2 text-zinc-500">
+            <div className="w-5 h-5 border-2 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
             Loading stats...
           </div>
         ) : mintStats ? (
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#00d4ff]/30">
-              <div className="text-3xl font-black text-[#00d4ff]">{mintStats.total_mints}</div>
+            <div className="rounded-xl p-4 border border-white/[0.08] bg-[#0c0c10]">
+              <div className="text-3xl font-black text-[#2DE2FF]">{mintStats.total_mints}</div>
               <div className="text-sm text-white/70">Total Mints</div>
             </div>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#00d4ff]/30">
-              <div className="text-3xl font-black text-[#00d4ff]">{mintStats.completed}</div>
+            <div className="rounded-xl p-4 border border-white/[0.08] bg-[#0c0c10]">
+              <div className="text-3xl font-black text-[#2DE2FF]">{mintStats.completed}</div>
               <div className="text-sm text-white/70">Completed</div>
             </div>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#00d4ff]/30">
-              <div className="text-3xl font-black text-[#e27d0f]">{mintStats.pending_reveal}</div>
+            <div className="rounded-xl p-4 border border-white/[0.08] bg-[#0c0c10]">
+              <div className="text-3xl font-black text-[#2DE2FF]">{mintStats.pending_reveal}</div>
               <div className="text-sm text-white/70">Pending Reveal</div>
             </div>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#00d4ff]/30">
-              <div className="text-3xl font-black text-[#DC1FFF]">{mintStats.failed}</div>
+            <div className="rounded-xl p-4 border border-white/[0.08] bg-[#0c0c10]">
+              <div className="text-3xl font-black text-[#FF2BD6]">{mintStats.failed}</div>
               <div className="text-sm text-white/70">Failed</div>
             </div>
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md rounded-lg p-4 border border-[#00d4ff]/30">
-              <div className="text-3xl font-black text-[#00d4ff]">{mintStats.unique_minters}</div>
+            <div className="rounded-xl p-4 border border-white/[0.08] bg-[#0c0c10]">
+              <div className="text-3xl font-black text-[#2DE2FF]">{mintStats.unique_minters}</div>
               <div className="text-sm text-white/70">Unique Minters</div>
             </div>
           </div>
         ) : (
-          <p className="text-[#a8a8b8]/80">No mint data available</p>
+          <p className="text-zinc-500">No mint data available</p>
         )}
 
         {/* Export Buttons */}
         {mintStats && mintStats.total_mints > 0 && (
-          <div className="mt-4 pt-4 border-t border-[#00d4ff]/30">
+          <div className="mt-5 pt-5 border-t border-white/[0.06]">
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm text-white/70">Export mint data and metadata:</p>
               {metadataRecordCount > 0 && (
-                <p className="text-sm font-semibold text-[#00d4ff]">
+                <p className="text-sm font-semibold text-[#2DE2FF]">
                   Metadata will contain <span className="text-lg">{metadataRecordCount.toLocaleString()}</span> record{metadataRecordCount !== 1 ? 's' : ''}
                 </p>
               )}
@@ -557,7 +562,7 @@ export function LaunchStep({
               <button
                 onClick={handleExportJSON}
                 disabled={exporting}
-                className="px-4 py-2 bg-[#00d4ff] hover:bg-[#14F195] text-white rounded-lg font-semibold text-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold transition-colors disabled:opacity-50 gap-2"
               >
                 {exporting ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -569,7 +574,7 @@ export function LaunchStep({
               <button
                 onClick={handleExportCSV}
                 disabled={exporting}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold text-sm transition-colors disabled:opacity-50 flex items-center gap-2 border border-[#00d4ff]/30"
+                className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:text-white transition-colors disabled:opacity-50 gap-2"
               >
                 {exporting ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -581,7 +586,7 @@ export function LaunchStep({
               <button
                 onClick={handleExportRawFiles}
                 disabled={exporting}
-                className="px-4 py-2 bg-[#e27d0f] hover:bg-[#c96a0a] text-white rounded-lg font-semibold text-sm transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="inline-flex h-10 px-5 items-center rounded-full bg-[#FF2BD6] text-[#0a0a0c] text-sm font-bold hover:opacity-90 transition-colors disabled:opacity-50 gap-2"
               >
                 {exporting ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -596,13 +601,13 @@ export function LaunchStep({
       </div>
 
       {/* Compression Check Section */}
-      <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#e27d0f]/50 rounded-lg p-6">
-        <h3 className="font-bold text-white mb-4 flex items-center gap-2">
-          📦 Compression Check
+      <div className="rounded-2xl border border-white/[0.1] bg-[#131318] p-6">
+        <h3 className="font-bold text-white mb-5 flex items-center gap-2">
+          📦 Compression check
         </h3>
 
         {/* Compression Settings - At the top */}
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg p-4 mb-4">
+        <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] p-5 mb-5">
           <h4 className="font-semibold text-white mb-4">Compression Settings</h4>
           <div className="grid grid-cols-1 gap-4">
             <div>
@@ -612,7 +617,7 @@ export function LaunchStep({
               <select
                 value={compressionFormat}
                 onChange={(e) => setCompressionFormat(e.target.value as 'jpg' | 'png' | 'webp')}
-                className="w-full border border-[#00d4ff]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white focus:border-[#00d4ff] focus:outline-none"
+                className="w-full px-4 py-3 border border-white/[0.1] rounded-xl bg-[#131318] text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
               >
                 <option value="webp">WebP (Recommended - Best compression)</option>
                 <option value="jpg">JPEG (Good compression, widely supported)</option>
@@ -644,14 +649,14 @@ export function LaunchStep({
                 />
                 <button
                   onClick={() => setCompressionQuality(75)}
-                  className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-[#14F195] rounded border border-blue-300"
+                  className="px-3 py-1 text-xs rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] hover:bg-[#2DE2FF]/20 border border-[#2DE2FF]/20 font-semibold transition-colors"
                   title="Suggested: 75-90% quality"
                 >
                   75%
                 </button>
                 <button
                   onClick={() => setCompressionQuality(90)}
-                  className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-[#14F195] rounded border border-blue-300"
+                  className="px-3 py-1 text-xs rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] hover:bg-[#2DE2FF]/20 border border-[#2DE2FF]/20 font-semibold transition-colors"
                   title="Suggested: 75-90% quality"
                 >
                   90%
@@ -681,7 +686,7 @@ export function LaunchStep({
                       }
                     }
                   }}
-                  className="w-24 border border-[#00d4ff]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white focus:border-[#00d4ff] focus:outline-none placeholder:text-white/50"
+                  className="w-24 px-3 py-2 border border-white/[0.1] rounded-xl bg-[#131318] text-white focus:border-[#2DE2FF] focus:outline-none placeholder:text-zinc-600"
                   placeholder="Width"
                 />
                 <span className="text-white">×</span>
@@ -702,7 +707,7 @@ export function LaunchStep({
                       }
                     }
                   }}
-                  className="w-24 border border-[#00d4ff]/30 rounded px-3 py-2 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md text-white focus:border-[#00d4ff] focus:outline-none placeholder:text-white/50"
+                  className="w-24 px-3 py-2 border border-white/[0.1] rounded-xl bg-[#131318] text-white focus:border-[#2DE2FF] focus:outline-none placeholder:text-zinc-600"
                   placeholder="Height"
                 />
                 <span className="text-white text-sm">px</span>
@@ -710,14 +715,14 @@ export function LaunchStep({
               <div className="flex gap-2">
                 <button
                   onClick={() => setCompressionDimensions(500)}
-                  className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-[#14F195] rounded border border-blue-300"
+                  className="px-3 py-1 text-xs rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] hover:bg-[#2DE2FF]/20 border border-[#2DE2FF]/20 font-semibold transition-colors"
                   title="Suggested: 500-650 dimensions"
                 >
                   500×500
                 </button>
                 <button
                   onClick={() => setCompressionDimensions(650)}
-                  className="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-[#14F195] rounded border border-blue-300"
+                  className="px-3 py-1 text-xs rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] hover:bg-[#2DE2FF]/20 border border-[#2DE2FF]/20 font-semibold transition-colors"
                   title="Suggested: 500-650 dimensions"
                 >
                   650×650
@@ -727,7 +732,7 @@ export function LaunchStep({
 
             {/* Estimated File Size */}
             {compressionDimensions !== '' && compressionDimensions !== null && typeof compressionDimensions === 'number' && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="rounded-xl border border-[#2DE2FF]/25 bg-[#2DE2FF]/[0.06] p-4">
                 {(() => {
                   const pixels = compressionDimensions * compressionDimensions
                   const quality = compressionQuality !== '' && compressionQuality !== null ? compressionQuality : 100
@@ -761,14 +766,14 @@ export function LaunchStep({
                   
                   return (
                     <div>
-                      <p className="text-sm font-medium text-blue-900">
-                        Estimated File Size: <span className="font-bold">{lowerKB}-{upperKB} KB</span> ({formatName})
+                      <p className="text-sm font-medium text-[#2DE2FF]">
+                        Estimated file size: <span className="font-bold">{lowerKB}–{upperKB} KB</span> ({formatName})
                       </p>
-                      <p className="text-xs text-[#14F195] mt-1">
+                      <p className="text-xs text-[#2DE2FF] mt-1">
                         Range accounts for typical images (lower) to bright/colorful images (upper)
                       </p>
                       {compressionFormat === 'png' && (
-                        <p className="text-xs text-[#14F195] mt-1">
+                        <p className="text-xs text-[#2DE2FF] mt-1">
                           PNG is lossless but produces larger files than compressed formats.
                         </p>
                       )}
@@ -781,7 +786,7 @@ export function LaunchStep({
             <button
               onClick={handleRecompress}
               disabled={recompressing || (!compressionQuality && !compressionDimensions && !compressionTargetKB)}
-              className="w-full px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="hg-btn-glow w-full inline-flex h-11 px-6 items-center justify-center rounded-full bg-[#FF2BD6] text-[#0a0a0c] text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed gap-2"
             >
               {recompressing ? (
                 <>
@@ -799,9 +804,9 @@ export function LaunchStep({
                   <span>Progress</span>
                   <span>{recompressProgress.current} / {recompressProgress.total}</span>
                 </div>
-                <div className="w-full bg-white/10 rounded-full h-2.5">
+                <div className="w-full bg-white/10 rounded-full h-2">
                   <div
-                    className="bg-orange-600 h-2.5 rounded-full transition-all duration-300"
+                    className="bg-[#FF2BD6] h-2 rounded-full transition-all duration-300"
                     style={{ width: `${(recompressProgress.current / recompressProgress.total) * 100}%` }}
                   />
                 </div>
@@ -813,8 +818,8 @@ export function LaunchStep({
         {/* File Size Summary - Auto-loaded */}
         {checkingSizes ? (
           <div className="flex items-center justify-center py-8">
-            <div className="flex items-center gap-2 text-[#a8a8b8]/80">
-              <div className="w-5 h-5 border-2 border-[#00d4ff] border-t-transparent rounded-full animate-spin" />
+            <div className="flex items-center gap-2 text-zinc-500">
+              <div className="w-5 h-5 border-2 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
               Checking file sizes...
             </div>
           </div>
@@ -822,12 +827,12 @@ export function LaunchStep({
           <div className="space-y-4">
             {/* Preview Image with Comparison Slider */}
             {previewImageUrl && (
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg p-4">
+              <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] p-4">
                 <p className="text-sm font-semibold text-white mb-3">
-                  Image Comparison: {previewOriginalUrl ? 'Original vs Compressed' : 'Compressed Preview'}
+                  Image comparison: {previewOriginalUrl ? 'Original vs compressed' : 'Compressed preview'}
                 </p>
                 {previewOriginalUrl ? (
-                  <div className="relative border border-[#00d4ff]/30 rounded-lg overflow-hidden bg-white/5 mx-auto" style={{ aspectRatio: '1', maxWidth: '225px', maxHeight: '225px' }}>
+                  <div className="relative border border-white/[0.1] rounded-xl overflow-hidden bg-[#131318] mx-auto" style={{ aspectRatio: '1', maxWidth: '225px', maxHeight: '225px' }}>
                     {/* Compressed Image (Background) */}
                     <img
                       src={previewImageUrl}
@@ -847,14 +852,14 @@ export function LaunchStep({
                         alt="Original"
                         className="w-full h-full object-contain"
                       />
-                      <div className="absolute top-2 right-2 bg-[#9945FF]/90 text-white text-xs px-2 py-1 rounded font-semibold">
+                      <div className="absolute top-2 right-2 bg-[#2DE2FF]/90 text-white text-xs px-2 py-1 rounded font-semibold">
                         Original
                       </div>
                     </div>
                     
                     {/* Slider Handle */}
                     <div
-                      className="absolute top-0 bottom-0 w-1 bg-[#FDFCFA] border-l-2 border-r-2 border-blue-500 cursor-ew-resize z-10 shadow-lg"
+                      className="absolute top-0 bottom-0 w-1 bg-[#2DE2FF] cursor-ew-resize z-10 shadow-lg"
                       style={{ left: `${comparisonSlider}%`, transform: 'translateX(-50%)' }}
                       onMouseDown={(e) => {
                         e.preventDefault()
@@ -874,22 +879,22 @@ export function LaunchStep({
                         document.addEventListener('mouseup', handleUp)
                       }}
                     >
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-[#2DE2FF] rounded-full border-2 border-[#0a0a0c] shadow-lg flex items-center justify-center">
                         <div className="flex gap-0.5">
-                          <div className="w-0.5 h-2 bg-[#FDFCFA]"></div>
-                          <div className="w-0.5 h-2 bg-[#FDFCFA]"></div>
+                          <div className="w-0.5 h-2 bg-[#131318]"></div>
+                          <div className="w-0.5 h-2 bg-[#131318]"></div>
                         </div>
                       </div>
                     </div>
                     
                     {/* Labels */}
-                    <div className="absolute bottom-2 left-2 bg-green-600/90 text-white text-xs px-2 py-1 rounded font-semibold">
+                    <div className="absolute bottom-2 left-2 bg-[#2DE2FF]/90 text-[#0a0a0c] text-xs px-2 py-1 rounded-full font-semibold">
                       Compressed
                     </div>
                   </div>
                 ) : (
                   <div 
-                    className="cursor-pointer border border-[#00d4ff]/30 rounded-lg overflow-hidden bg-white/5 hover:border-[#00d4ff] transition-colors"
+                    className="cursor-pointer border border-white/[0.1] rounded-xl overflow-hidden bg-[#131318] hover:border-[#2DE2FF]/40 transition-colors"
                     onClick={() => setShowImageModal(true)}
                   >
                     <img
@@ -900,14 +905,14 @@ export function LaunchStep({
                     />
                   </div>
                 )}
-                <p className="text-xs text-[#a8a8b8]/80 mt-2 text-center">
+                <p className="text-xs text-zinc-500 mt-2 text-center">
                   {previewOriginalUrl ? 'Drag slider to compare • Click to view full size' : 'Click to view full size'}
                 </p>
               </div>
             )}
             {!sizeCheckResult.all_under_limit && (
-              <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border-2 border-[#DC1FFF]/50 rounded-lg p-4">
-                <p className="font-bold text-[#DC1FFF] flex items-center gap-2">
+              <div className="rounded-xl border border-[#FF2BD6]/30 bg-[#FF2BD6]/[0.06] p-4">
+                <p className="font-bold text-[#FF2BD6] flex items-center gap-2">
                   ⚠️ Warning: {sizeCheckResult.exceeds_limit} file(s) exceed 200KB limit
                 </p>
                 <p className="text-sm text-white/70 mt-1">
@@ -916,10 +921,10 @@ export function LaunchStep({
               </div>
             )}
 
-            <div className={`p-4 rounded-lg bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border ${sizeCheckResult.all_under_limit ? 'border-[#00d4ff]/50' : 'border-[#e27d0f]/50'}`}>
+            <div className={`p-4 rounded-xl bg-[#0c0c10] border ${sizeCheckResult.all_under_limit ? 'border-[#2DE2FF]/30' : 'border-[#FF2BD6]/30'}`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`font-bold ${sizeCheckResult.all_under_limit ? 'text-[#00d4ff]' : 'text-[#e27d0f]'}`}>
+                  <p className={`font-bold ${sizeCheckResult.all_under_limit ? 'text-[#2DE2FF]' : 'text-[#2DE2FF]'}`}>
                     {sizeCheckResult.all_under_limit ? '✅ All files under 200KB' : `⚠️ ${sizeCheckResult.exceeds_limit} file(s) exceed 200KB`}
                   </p>
                   <p className="text-sm text-white/70 mt-1">
@@ -932,12 +937,12 @@ export function LaunchStep({
             </div>
 
             {/* Size Summary Table with Pagination */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/30 rounded-lg p-4">
-              <p className="text-sm font-semibold text-white mb-3">File Size Summary:</p>
+            <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] p-4">
+              <p className="text-sm font-semibold text-white mb-3">File size summary</p>
               <div className="max-h-60 overflow-y-auto mb-3">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-[#00d4ff]/30">
+                    <tr className="border-b border-white/[0.08]">
                       <th className="text-left py-2 px-2 text-white/70 font-semibold">Filename</th>
                       <th className="text-center py-2 px-2 text-white/70 font-semibold">Dimensions</th>
                       <th className="text-right py-2 px-2 text-white/70 font-semibold">Size (KB)</th>
@@ -949,7 +954,7 @@ export function LaunchStep({
                       const dims = imageDimensions[ordinal.id]
                       const ratio = dims ? (dims.width / dims.height).toFixed(2) : null
                       return (
-                        <tr key={ordinal.id} className={`border-b border-[#00d4ff]/20 ${ordinal.exceeds_limit ? 'bg-[#DC1FFF]/10' : ''}`}>
+                        <tr key={ordinal.id} className={`border-b border-white/[0.06] ${ordinal.exceeds_limit ? 'bg-[#FF2BD6]/[0.06]' : ''}`}>
                           <td className="py-2 px-2 text-white/70 font-mono text-xs">
                             {ordinal.filename || 'N/A'}
                           </td>
@@ -963,14 +968,14 @@ export function LaunchStep({
                               <span className="text-white/50">Loading...</span>
                             )}
                           </td>
-                          <td className={`py-2 px-2 text-right font-medium ${ordinal.exceeds_limit ? 'text-[#DC1FFF]' : 'text-white'}`}>
+                          <td className={`py-2 px-2 text-right font-medium ${ordinal.exceeds_limit ? 'text-[#FF2BD6]' : 'text-white'}`}>
                             {ordinal.size_kb.toFixed(1)} KB
                           </td>
                           <td className="py-2 px-2 text-center">
                             {ordinal.exceeds_limit ? (
-                              <span className="text-[#DC1FFF] font-semibold">⚠️ Over Limit</span>
+                              <span className="text-[#FF2BD6] font-semibold">⚠️ Over Limit</span>
                             ) : (
-                              <span className="text-[#00d4ff]">✓ OK</span>
+                              <span className="text-[#2DE2FF]">✓ OK</span>
                             )}
                           </td>
                         </tr>
@@ -982,7 +987,7 @@ export function LaunchStep({
               
               {/* Pagination */}
               {sizeCheckResult.pagination && sizeCheckResult.pagination.total_pages > 1 && (
-                <div className="flex items-center justify-between border-t border-[#00d4ff]/30 pt-3">
+                <div className="flex items-center justify-between border-t border-white/[0.06] pt-3">
                   <p className="text-sm text-white/70">
                     Page {sizeCheckResult.pagination.page} of {sizeCheckResult.pagination.total_pages} 
                     ({sizeCheckResult.pagination.total_items} total)
@@ -991,14 +996,14 @@ export function LaunchStep({
                     <button
                       onClick={() => setSizeCheckPage(Math.max(1, sizeCheckPage - 1))}
                       disabled={sizeCheckPage === 1 || checkingSizes}
-                      className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed border border-[#00d4ff]/30"
+                      className="inline-flex h-9 px-4 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:text-white transition-colors disabled:opacity-50"
                     >
                       Previous
                     </button>
                     <button
                       onClick={() => setSizeCheckPage(Math.min(sizeCheckResult.pagination.total_pages, sizeCheckPage + 1))}
                       disabled={sizeCheckPage >= sizeCheckResult.pagination.total_pages || checkingSizes}
-                      className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-sm disabled:opacity-50 disabled:cursor-not-allowed border border-[#00d4ff]/30"
+                      className="inline-flex h-9 px-4 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:text-white transition-colors disabled:opacity-50"
                     >
                       Next
                     </button>
@@ -1013,16 +1018,16 @@ export function LaunchStep({
       {/* Robinhood Chain Deployment - Show if not deployed yet */}
       {!collection.contract_address && !collection.candy_machine_address && (
         <div className="mb-6">
-          <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#D4AF37]/30 backdrop-blur-md p-6 mb-4">
+          <div className="rounded-2xl border border-white/[0.1] bg-[#0c0c10] p-6 mb-4">
             <div className="flex items-start gap-4 mb-4">
               <div className="text-4xl">🚀</div>
               <div>
-                <h3 className="font-bold text-[#D4AF37] text-xl mb-2">Deploy to Robinhood Chain First</h3>
-                <p className="text-white/70 text-sm mb-3">
+                <h3 className="font-bold text-[#2DE2FF] text-xl mb-2">Deploy to Robinhood Chain first</h3>
+                <p className="text-zinc-400 text-sm mb-3">
                   Before launching, deploy your collection as an ERC-721 via the platform factory.
                   Gas is paid in ETH on Robinhood Chain (testnet ETH is free from the faucet).
                 </p>
-                <div className="bg-black/30 rounded-lg p-4 space-y-2 text-sm">
+                <div className="rounded-xl border border-white/[0.08] bg-[#131318] p-4 space-y-2 text-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-white/50">1.</span>
                     <span className="text-white/70">Connect an EVM wallet</span>
@@ -1052,17 +1057,17 @@ export function LaunchStep({
 
       {/* Deployment Success - Show if deployed */}
       {(collection.contract_address || collection.candy_machine_address) && (
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-green-500/50 backdrop-blur-md p-6 mb-6">
+        <div className="rounded-2xl border border-[#2DE2FF]/30 bg-[#2DE2FF]/[0.06] p-6 mb-6">
           <div className="flex items-start gap-4">
             <div className="text-4xl">✅</div>
             <div>
-              <h3 className="font-bold text-green-500 text-xl mb-2">Deployed to Robinhood Chain!</h3>
-              <p className="text-white/70 text-sm mb-3">
+              <h3 className="font-bold text-[#2DE2FF] text-xl mb-2">Deployed to Robinhood Chain</h3>
+              <p className="text-zinc-400 text-sm mb-3">
                 Your collection is deployed and ready to mint on Robinhood Chain.
               </p>
-              <div className="bg-black/30 rounded-lg p-3 font-mono text-sm break-all">
+              <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] p-3 font-mono text-sm break-all">
                 <span className="text-white/50">Contract:</span>{' '}
-                <span className="text-[#00d4ff]">{collection.contract_address || collection.candy_machine_address}</span>
+                <span className="text-[#2DE2FF]">{collection.contract_address || collection.candy_machine_address}</span>
               </div>
             </div>
           </div>
@@ -1071,35 +1076,35 @@ export function LaunchStep({
 
       {/* Launch Status */}
       {isLive ? (
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/50 rounded-lg p-6">
-          <h3 className="font-bold text-[#00d4ff] mb-2">🚀 Collection is Live!</h3>
-          <p className="text-white/70 text-sm mb-4">
+        <div className="rounded-2xl border border-[#FF2BD6]/30 bg-[#FF2BD6]/[0.06] p-6">
+          <h3 className="font-bold text-[#FF2BD6] mb-2">Collection is live</h3>
+          <p className="text-zinc-400 text-sm mb-5">
             Your collection is currently live on the launchpad and visible to collectors. 
             Click below to end the live mint and remove it from the public launchpad.
           </p>
           <button
             onClick={onEndLiveMint}
             disabled={saving}
-            className="px-6 py-3 bg-[#DC1FFF] hover:bg-[#ff5530] text-white rounded-lg font-bold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex h-11 px-6 items-center rounded-full bg-[#FF2BD6] text-[#0a0a0c] text-sm font-bold hover:opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {saving ? 'Ending...' : 'End Live Mint'}
+            {saving ? 'Ending...' : 'End live mint'}
           </button>
         </div>
       ) : (
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#00d4ff]/50 rounded-lg p-6">
-          <h3 className="font-bold text-[#00d4ff] mb-2">Ready to Launch!</h3>
-          <p className="text-white/70 text-sm mb-4">
+        <div className="rounded-2xl border border-white/[0.1] bg-[#0c0c10] p-6">
+          <h3 className="font-bold text-white mb-2">Ready to launch</h3>
+          <p className="text-zinc-400 text-sm mb-5">
             Once you launch, your collection will be live on the launchpad and collectors can start minting.
             {!collection.candy_machine_address && (
-              <span className="block mt-2 text-yellow-500 text-xs">
-                ⚠️ Note: You must deploy to Robinhood Chain first (see above)
+              <span className="block mt-2 text-[#FF2BD6] text-xs">
+                You must deploy to Robinhood Chain first (see above)
               </span>
             )}
           </p>
           <button
             onClick={onLaunch}
             disabled={saving || collection.launch_status === 'live' || !collection.candy_machine_address}
-            className="px-6 py-3 bg-[#e27d0f] hover:bg-[#c96a0a] text-white rounded-lg font-bold text-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="hg-btn-glow inline-flex h-11 px-6 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {!collection.candy_machine_address 
               ? 'Deploy to Robinhood Chain First ↑' 
@@ -1110,10 +1115,10 @@ export function LaunchStep({
         </div>
       )}
 
-      <div className="flex justify-between pt-4 border-t border-[#00d4ff]/30">
+      <div className="flex justify-between pt-6 border-t border-white/[0.06]">
         <button
           onClick={onBack}
-          className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-semibold transition-colors border border-[#00d4ff]/30"
+          className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:text-white transition-colors"
         >
           ← Back
         </button>
@@ -1127,7 +1132,7 @@ export function LaunchStep({
         >
           <div className="relative max-w-full max-h-full">
             {previewOriginalUrl ? (
-              <div className="relative bg-[#14141e] rounded-lg overflow-hidden" style={{ maxWidth: '450px', maxHeight: '450px', aspectRatio: '1' }}>
+              <div className="relative bg-[#0c0c10] rounded-2xl overflow-hidden border border-white/[0.1]" style={{ maxWidth: '450px', maxHeight: '450px', aspectRatio: '1' }}>
                 {/* Compressed Image (Background) */}
                 <img
                   src={previewImageUrl}
@@ -1147,14 +1152,14 @@ export function LaunchStep({
                     alt="Original"
                     className="w-full h-full object-contain"
                   />
-                  <div className="absolute top-4 right-4 bg-[#9945FF]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
+                  <div className="absolute top-4 right-4 bg-[#2DE2FF]/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
                     Original
                   </div>
                 </div>
                 
                 {/* Slider Handle */}
                 <div
-                  className="absolute top-0 bottom-0 w-1 bg-[#FDFCFA] border-l-2 border-r-2 border-blue-500 cursor-ew-resize z-10 shadow-lg"
+                  className="absolute top-0 bottom-0 w-1 bg-[#2DE2FF] cursor-ew-resize z-10 shadow-lg"
                   style={{ left: `${comparisonSlider}%`, transform: 'translateX(-50%)' }}
                   onMouseDown={(e) => {
                     e.preventDefault()
@@ -1175,16 +1180,16 @@ export function LaunchStep({
                     document.addEventListener('mouseup', handleUp)
                   }}
                 >
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-blue-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-[#2DE2FF] rounded-full border-2 border-[#0a0a0c] shadow-lg flex items-center justify-center">
                     <div className="flex gap-1">
-                      <div className="w-0.5 h-3 bg-[#FDFCFA]"></div>
-                      <div className="w-0.5 h-3 bg-[#FDFCFA]"></div>
+                      <div className="w-0.5 h-3 bg-[#131318]"></div>
+                      <div className="w-0.5 h-3 bg-[#131318]"></div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Labels */}
-                <div className="absolute bottom-4 left-4 bg-green-600/90 text-white text-sm px-3 py-1.5 rounded font-semibold">
+                <div className="absolute bottom-4 left-4 bg-[#2DE2FF]/90 text-[#0a0a0c] text-sm px-3 py-1.5 rounded-full font-semibold">
                   Compressed
                 </div>
               </div>

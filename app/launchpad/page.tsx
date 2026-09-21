@@ -8,6 +8,7 @@ import { LaunchpadSearchBar } from './components/LaunchpadSearchBar'
 import { LaunchpadHero } from './components/LaunchpadHero'
 import { FeaturedCollectionsGrid } from './components/FeaturedCollectionsGrid'
 import { Rocket, Plus, X, Image as ImageIcon, ChevronRight } from 'lucide-react'
+import { BrandLoader } from '@/components/brand-loader'
 
 interface LaunchpadCollection {
   id: string
@@ -157,24 +158,12 @@ export default function LaunchpadPage() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="text-center">
-          <div className="relative w-16 h-16 mx-auto mb-5">
-            <div className="absolute inset-0 border-4 border-[#2DE2FF]/20 rounded-full" />
-            <div className="absolute inset-0 border-4 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
-          </div>
-          <p className="text-white text-sm font-bold uppercase tracking-wide">
-            Loading Launchpad...
-          </p>
-        </div>
-      </div>
-    )
+    return <BrandLoader label="Loading launchpad" />
   }
 
   return (
     <div className="relative bg-transparent min-h-full">
-      <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-6 space-y-6 max-w-[1400px] mx-auto">
+      <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-6 space-y-5 max-w-[1400px] mx-auto">
         <LaunchpadHero onExplore={scrollToGrid} />
 
         <LaunchpadSearchBar
@@ -186,33 +175,30 @@ export default function LaunchpadPage() {
 
         <div ref={gridRef}>
           {featuredCollections.length === 0 ? (
-            <div className="text-center py-20 rounded-2xl border border-[#2DE2FF]/20 bg-[#15181a] relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(45, 226, 255,0.12),transparent_55%)]" />
-              <div className="relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 mb-5 rounded-md bg-[#2DE2FF] text-black text-xs font-black uppercase tracking-wider">
-                  Robinhood Chain
-                </div>
-                <h2 className="text-2xl font-black text-white mb-2 tracking-tight">
-                  No live mints yet
-                </h2>
-                <p className="text-[#a8aab2] max-w-md mx-auto mb-7 text-sm">
-                  This launchpad is fresh. Deploy a collection and go live on Robinhood Chain.
-                </p>
-                {isConnected ? (
-                  <button
-                    type="button"
-                    onClick={handleOpenLaunchModal}
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#2DE2FF] hover:bg-[#FF2BD6] text-black font-black uppercase tracking-wide transition-colors"
-                  >
-                    <Rocket className="h-4 w-4" />
-                    Launch collection
-                  </button>
-                ) : (
-                  <p className="text-xs text-[#71717A] uppercase tracking-wider">
-                    Connect wallet to launch
-                  </p>
-                )}
+            <div className="text-center py-16 rounded-2xl border border-white/[0.08] bg-[#131318] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+              <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 rounded-full bg-[#2DE2FF]/10 text-[#2DE2FF] text-[11px] font-semibold">
+                Robinhood Chain
               </div>
+              <h2 className="text-xl font-semibold text-white mb-2 tracking-tight">
+                No live mints yet
+              </h2>
+              <p className="text-zinc-500 max-w-md mx-auto mb-6 text-sm leading-relaxed">
+                This launchpad is fresh. Deploy a collection and go live on Robinhood Chain.
+              </p>
+              {isConnected ? (
+                <button
+                  type="button"
+                  onClick={handleOpenLaunchModal}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#2DE2FF] hover:bg-[#7aefff] text-[#0a0a0c] font-bold text-sm transition-colors"
+                >
+                  <Rocket className="h-4 w-4" />
+                  Launch collection
+                </button>
+              ) : (
+                <p className="text-xs text-zinc-600">
+                  Connect wallet to launch
+                </p>
+              )}
             </div>
           ) : (
             <FeaturedCollectionsGrid collections={featuredCollections} />
@@ -226,51 +212,51 @@ export default function LaunchpadPage() {
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => setShowLaunchModal(false)}
           />
-          <div className="relative w-full max-w-lg bg-[#15181a] border border-[#2DE2FF]/40 rounded-2xl shadow-2xl max-h-[80vh] flex flex-col">
-            <div className="flex items-center justify-between p-6 border-b border-white/10">
+          <div className="relative w-full max-w-lg bg-[#121214] border border-white/[0.1] rounded-xl shadow-2xl max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between p-5 border-b border-white/[0.08]">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-[#0a0c0d] border border-[#2DE2FF]/40">
-                  <Rocket className="h-5 w-5 text-[#2DE2FF]" />
+                <div className="p-2 rounded-lg bg-[#18181b] border border-white/10">
+                  <Rocket className="h-4 w-4 text-[#2DE2FF]" />
                 </div>
-                <h2 className="text-xl font-bold text-white uppercase tracking-wide">
-                  Launch Collection
+                <h2 className="text-lg font-semibold text-zinc-100">
+                  Launch collection
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setShowLaunchModal(false)}
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors text-[#808080] hover:text-white"
+                className="p-2 rounded-lg hover:bg-white/[0.04] transition-colors text-zinc-500 hover:text-zinc-200"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="p-6 overflow-y-auto flex-1">
-              <p className="text-[#808080] text-sm mb-4">
+            <div className="p-5 overflow-y-auto flex-1">
+              <p className="text-zinc-500 text-sm mb-4 leading-relaxed">
                 Select a collection to set up its launchpad. You&apos;ll configure mint phases,
                 pricing, and whitelists.
               </p>
 
               {loadingUserCollections ? (
                 <div className="flex items-center justify-center py-12">
-                  <div className="w-10 h-10 border-3 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-8 h-8 border-2 border-[#2DE2FF] border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : userCollections.length === 0 ? (
-                <div className="text-center py-12">
-                  <p className="text-white font-semibold mb-2">No collections found</p>
-                  <p className="text-[#808080] text-sm mb-6">
+                <div className="text-center py-10">
+                  <p className="text-zinc-100 font-medium mb-1.5">No collections found</p>
+                  <p className="text-zinc-500 text-sm mb-5">
                     Create a collection first, then come back to launch it.
                   </p>
                   <Link
                     href="/collections/create"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0a0c0d] border border-[#2DE2FF] hover:bg-[#2DE2FF] hover:text-black text-white font-bold transition-all uppercase tracking-wide"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#2DE2FF] hover:bg-[#1BB8D4] text-[#0b0b0d] font-semibold text-sm transition-colors"
                   >
                     <Plus className="h-4 w-4" />
-                    Create Collection
+                    Create collection
                   </Link>
                 </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   {userCollections.map((col) => {
                     const isAlreadyLive = col.collection_status === 'launchpad_live'
                     const isLaunchpadReady = col.collection_status === 'launchpad'
@@ -283,7 +269,7 @@ export default function LaunchpadPage() {
                           : 'Draft'
                     const statusColor = isAlreadyLive || isLaunchpadReady
                       ? 'text-[#2DE2FF]'
-                      : 'text-[#808080]'
+                      : 'text-zinc-500'
 
                     return (
                       <button
@@ -293,9 +279,9 @@ export default function LaunchpadPage() {
                           setShowLaunchModal(false)
                           router.push(`/collections/${col.id}/launch`)
                         }}
-                        className="w-full flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[#2DE2FF] bg-[#0a0c0d] hover:bg-[#15181a] transition-all text-left group"
+                        className="w-full flex items-center gap-3.5 p-3 rounded-lg border border-white/[0.08] hover:border-white/16 bg-[#0e0e10] hover:bg-white/[0.03] transition-colors text-left group"
                       >
-                        <div className="w-14 h-14 overflow-hidden rounded-lg border border-white/10 bg-[#0a0c0d] flex-shrink-0">
+                        <div className="w-12 h-12 overflow-hidden rounded-lg border border-white/[0.08] bg-[#121214] flex-shrink-0">
                           {col.banner_image_url || col.mobile_image_url ? (
                             <img
                               src={col.banner_image_url || col.mobile_image_url}
@@ -304,17 +290,17 @@ export default function LaunchpadPage() {
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center">
-                              <ImageIcon className="h-6 w-6 text-[#808080]/50" />
+                              <ImageIcon className="h-5 w-5 text-zinc-600" />
                             </div>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-white font-semibold truncate">{col.name}</p>
+                          <p className="text-zinc-100 font-medium truncate text-sm">{col.name}</p>
                           <span className={`text-xs font-medium ${statusColor}`}>
                             {statusLabel}
                           </span>
                         </div>
-                        <ChevronRight className="h-5 w-5 text-[#808080] group-hover:text-[#2DE2FF] transition-colors flex-shrink-0" />
+                        <ChevronRight className="h-4 w-4 text-zinc-600 group-hover:text-zinc-300 transition-colors flex-shrink-0" />
                       </button>
                     )
                   })}

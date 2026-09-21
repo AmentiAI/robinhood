@@ -1,10 +1,9 @@
 'use client'
 
+import { PageHeader } from '@/components/page-header'
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useWallet } from '@/lib/wallet/compatibility'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 type Collection = {
   id: string
@@ -18,7 +17,8 @@ type Collection = {
 export default function MyLaunchesPage() {
   const { isConnected, currentAddress } = useWallet()
   const { activeWalletAddress, activeWalletConnected } = useMemo(() => {
-    if (currentAddress && isConnected) return { activeWalletAddress: currentAddress, activeWalletConnected: true }
+    if (currentAddress && isConnected)
+      return { activeWalletAddress: currentAddress, activeWalletConnected: true }
     return { activeWalletAddress: null, activeWalletConnected: false }
   }, [currentAddress, isConnected])
 
@@ -32,7 +32,9 @@ export default function MyLaunchesPage() {
       setLoading(true)
       setError(null)
       try {
-        const res = await fetch(`/api/collections?wallet_address=${encodeURIComponent(activeWalletAddress)}&is_locked=true`)
+        const res = await fetch(
+          `/api/collections?wallet_address=${encodeURIComponent(activeWalletAddress)}&is_locked=true`
+        )
         const data = await res.json().catch(() => ({}))
         if (!res.ok) throw new Error(data?.error || 'Failed to load collections')
         setCollections(Array.isArray(data?.collections) ? data.collections : [])
@@ -46,93 +48,99 @@ export default function MyLaunchesPage() {
   }, [activeWalletAddress])
 
   return (
-    <div className="bg-gradient-to-br from-[#050510] via-[#0f0f1e] to-[#15152a]">
-      <div className="container mx-auto px-4 md:px-6 py-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-start justify-between gap-4 mb-6">
-            <div>
-      
-              <h1 className="mt-1 text-3xl md:text-4xl font-black bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] bg-clip-text text-transparent tracking-tight">My Launches</h1>
-              <p className="text-[#b4b4c8] mt-1">
-                View the collections you own or collaborate on, and jump into mint settings.
-              </p>
-            </div>
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="My launches"
+        subtitle="Collections you own or collaborate on — jump into mint settings"
+      />
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {!activeWalletConnected && (
+          <div className="hg-rise max-w-md mx-auto rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center">
+            <h2 className="text-lg font-semibold text-white mb-2">Connect your wallet</h2>
+            <p className="text-sm text-zinc-500">
+              You need a connected wallet to see your launches.
+            </p>
           </div>
+        )}
 
-          {!activeWalletConnected && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Connect your wallet</CardTitle>
-                <CardDescription>You need a connected wallet to see your launches.</CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-
-          {activeWalletConnected && (
-            <>
-              {error && (
-                <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 font-semibold">
-                  {error}
-                </div>
-              )}
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {loading
-                  ? Array.from({ length: 6 }).map((_, i) => (
-                      <Card key={i} className="animate-pulse">
-                        <CardHeader>
-                          <div className="h-5 w-40 bg-gray-200 rounded" />
-                          <div className="h-4 w-64 bg-gray-100 rounded" />
-                        </CardHeader>
-                        <CardContent>
-                          <div className="h-9 w-full bg-gray-100 rounded" />
-                        </CardContent>
-                      </Card>
-                    ))
-                  : collections.map((c) => (
-                      <Card key={c.id} className="rounded-2xl">
-                        <CardHeader>
-                          <CardTitle className="truncate">{c.name}</CardTitle>
-                          <CardDescription className="line-clamp-2">{c.description || 'No description'}</CardDescription>
-                          <div className="mt-2 flex flex-wrap gap-2">
-                            <span className="px-2 py-1 rounded-lg text-xs font-bold bg-gray-100 text-gray-800 border border-gray-200">
-                              {c.is_owner ? 'Owner' : `Collaborator${c.collaborator_role ? `: ${c.collaborator_role}` : ''}`}
-                            </span>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="flex flex-col gap-2">
-                          <Button asChild className="bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] text-white">
-                            <Link href={`/collections/${c.id}/launch`}>Edit Mint Settings</Link>
-                          </Button>
-                          <Button asChild variant="outline" className="border-[#00E5FF]/30 text-white hover:border-[#00E5FF]/50">
-                            <Link href={`/${c.id}`}>View Mint Page</Link>
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
+        {activeWalletConnected && (
+          <>
+            {error && (
+              <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300 text-sm">
+                {error}
               </div>
+            )}
 
-              {!loading && collections.length === 0 && (
-                <Card className="mt-6">
-                  <CardHeader>
-                    <CardTitle>No collections found</CardTitle>
-                    <CardDescription>Create a collection, or accept a collaboration invite to see it here.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex gap-2">
-                    <Button asChild className="bg-gradient-to-r from-[#00E5FF] to-[#FFD60A] hover:from-[#00B8D4] hover:to-[#12D87A] text-white">
-                      <Link href="/collections/create">Create Collection</Link>
-                    </Button>
-                    <Button asChild variant="outline" className="border-[#00E5FF]/30 text-white hover:border-[#00E5FF]/50">
-                      <Link href="/profile">View Profile</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              )}
-            </>
-          )}
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {loading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="animate-pulse rounded-2xl border border-white/[0.1] bg-[#131318] p-5"
+                    >
+                      <div className="h-5 w-40 bg-white/10 rounded mb-3" />
+                      <div className="h-4 w-full bg-white/[0.06] rounded mb-4" />
+                      <div className="h-10 w-full bg-white/[0.06] rounded-full" />
+                    </div>
+                  ))
+                : collections.map((c, idx) => (
+                    <div
+                      key={c.id}
+                      className="hg-card hg-rise rounded-2xl border border-white/[0.1] bg-[#131318] p-5 flex flex-col"
+                      style={{ animationDelay: `${idx * 0.05}s` }}
+                    >
+                      <h3 className="text-base font-bold text-white truncate mb-1">{c.name}</h3>
+                      <p className="text-sm text-zinc-500 line-clamp-2 mb-3">
+                        {c.description || 'No description'}
+                      </p>
+                      <span className="mb-4 inline-flex self-start px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#0c0c10] text-zinc-300 border border-white/[0.08]">
+                        {c.is_owner
+                          ? 'Owner'
+                          : `Collaborator${c.collaborator_role ? `: ${c.collaborator_role}` : ''}`}
+                      </span>
+                      <div className="mt-auto flex flex-col gap-2">
+                        <Link
+                          href={`/collections/${c.id}/launch`}
+                          className="hg-btn-glow inline-flex h-10 items-center justify-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+                        >
+                          Edit mint settings
+                        </Link>
+                        <Link
+                          href={`/${c.id}`}
+                          className="inline-flex h-10 items-center justify-center rounded-full border border-white/15 text-sm font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-all"
+                        >
+                          View mint page
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+            </div>
+
+            {!loading && collections.length === 0 && (
+              <div className="mt-2 rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center">
+                <h2 className="text-lg font-semibold text-white mb-2">No collections found</h2>
+                <p className="text-sm text-zinc-500 mb-5">
+                  Create a collection, or accept a collaboration invite to see it here.
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <Link
+                    href="/collections/create"
+                    className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+                  >
+                    Create collection
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="inline-flex h-10 px-5 items-center rounded-full border border-white/15 text-sm font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-all"
+                  >
+                    View profile
+                  </Link>
+                </div>
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   )
 }
-

@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
+import { PageHeader } from '@/components/page-header'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace, ToolPanel, ToolTip } from '@/components/tool-workspace'
 
 interface Layer {
   id: string
@@ -125,229 +128,188 @@ export default function CreateTraitPage() {
   }
 
   if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center py-8">
-            <div className="text-white">Loading layer...</div>
-          </div>
-        </div>
-      </div>
-    )
+    return <BrandLoader label="Loading layer" />
   }
 
   if (!layer) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center py-8">
-            <div className="text-white">Layer not found</div>
-            <Link href={`/collections/${params.id}`} className="text-[#9945FF] hover:text-[#14F195] mt-4 inline-block">
-              ← Back to Collection
-            </Link>
-          </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.1] bg-[#131318] p-8 text-center">
+          <h2 className="text-xl font-semibold text-white mb-2">Layer not found</h2>
+          <Link href={`/collections/${params.id}`} className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold mt-4">
+            Back to collection
+          </Link>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <Link 
-            href={`/collections/${params.id}/layers/${params.layerId}`} 
-            className="text-[#9945FF] hover:text-[#14F195] mb-4 inline-block"
+    <div className="min-h-screen bg-[#0a0a0c]">
+      <PageHeader
+        title="Create trait"
+        subtitle={`Add a trait to "${layer.name}"`}
+        action={
+          <Link
+            href={`/collections/${params.id}/layers/${params.layerId}`}
+            className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-200 hover:border-[#2DE2FF]/40 hover:text-[#2DE2FF] transition-colors"
           >
-            ← Back to Layer
+            Back
           </Link>
-          <h1 className="text-3xl font-bold text-white">Create New Trait</h1>
-          <p className="text-white/70 mt-2">Add a trait to "{layer.name}" layer</p>
-        </div>
+        }
+      />
 
-        <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-lg p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Trait Source Tabs: Prompt vs Reference Image */}
-            <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md border border-[#9945FF]/30 rounded-xl overflow-hidden mb-4">
-              {/* Tab Headers */}
-              <div className="flex border-b border-[#9945FF]/30 bg-white/5">
-                <button
-                  type="button"
-                  onClick={() => setTraitSourceTab('prompt')}
-                  className={`flex-1 px-6 py-3 text-sm font-semibold transition-colors relative ${
-                    traitSourceTab === 'prompt'
-                      ? 'text-[#9945FF] bg-[#9945FF]/10'
-                      : 'text-white/70 hover:text-white hover:bg-[#9945FF]/5'
-                  }`}
-                >
-                  Prompt-Based
-                  {traitSourceTab === 'prompt' && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9945FF]"></div>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTraitSourceTab('reference')}
-                  className={`flex-1 px-6 py-3 text-sm font-semibold transition-colors relative ${
-                    traitSourceTab === 'reference'
-                      ? 'text-[#9945FF] bg-[#9945FF]/10'
-                      : 'text-white/70 hover:text-white hover:bg-[#9945FF]/5'
-                  }`}
-                >
-                  Reference Image
-                  {traitSourceTab === 'reference' && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#9945FF]"></div>
-                  )}
-                </button>
-              </div>
+      <ToolWorkspace>
+        <ToolPanel title="Trait details">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="inline-flex gap-1 p-1 rounded-full bg-[#0c0c10] border border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setTraitSourceTab('prompt')}
+                className={`px-3.5 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+                  traitSourceTab === 'prompt' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'
+                }`}
+              >
+                Prompt-based
+              </button>
+              <button
+                type="button"
+                onClick={() => setTraitSourceTab('reference')}
+                className={`px-3.5 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+                  traitSourceTab === 'reference' ? 'bg-white text-black' : 'text-zinc-500 hover:text-white'
+                }`}
+              >
+                Reference image
+              </button>
+            </div>
 
-              {/* Tab Content */}
-              <div className="p-6">
-                {traitSourceTab === 'prompt' && (
-                  <div>
-                    <p className="text-sm text-white/70">
-                      Enter a name and description for this trait manually. The description will be used to generate similar images.
-                    </p>
+            {traitSourceTab === 'prompt' ? (
+              <ToolTip>
+                Enter a name and description manually. The description is used when generating similar images.
+              </ToolTip>
+            ) : (
+              <div className="space-y-4">
+                <h3 className="text-base font-semibold text-white">Auto-fill from reference</h3>
+                <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-4 items-start">
+                  <div className="rounded-xl border border-white/[0.1] bg-[#0c0c10] overflow-hidden">
+                    {referenceImagePreview ? (
+                      <img src={referenceImagePreview} alt="Reference preview" className="w-full h-[160px] object-cover" />
+                    ) : (
+                      <div className="w-full h-[160px] flex items-center justify-center text-zinc-600 text-sm">
+                        Upload an image
+                      </div>
+                    )}
                   </div>
-                )}
-
-                {traitSourceTab === 'reference' && (
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-white mb-2">Auto-fill from Reference Image</h3>
-                    <p className="text-sm text-white/70 mb-4">
-                      Upload a reference image and AI will analyze it to generate a trait name and description.
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] gap-4 items-start">
-                      <div className="rounded-xl border border-[#9945FF]/30 bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#9945FF]/20 backdrop-blur-md overflow-hidden">
-                        {referenceImagePreview ? (
-                          <img src={referenceImagePreview} alt="Reference preview" className="w-full h-[160px] object-cover" />
-                        ) : (
-                          <div className="w-full h-[160px] flex items-center justify-center text-[#a8a8b8]">
-                            Upload an image
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-3">
-                          <input
-                            id="referenceImageUpload"
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => {
-                              const f = e.target.files?.[0] || null
-                              setReferenceImage(f)
-                              if (f) {
-                                const url = URL.createObjectURL(f)
-                                setReferenceImagePreview(url)
-                              } else {
-                                setReferenceImagePreview(null)
-                              }
-                              e.currentTarget.value = ''
-                            }}
-                          />
-                          <label
-                            htmlFor="referenceImageUpload"
-                            className="inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-sm bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer transition-colors"
-                          >
-                            Upload Reference
-                          </label>
-                          <button
-                            type="button"
-                            onClick={analyzeReferenceImage}
-                            disabled={!referenceImage || analyzing}
-                            className="inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold text-sm bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 disabled:text-gray-600 text-white transition-colors"
-                          >
-                            {analyzing ? 'Analyzing…' : 'Analyze & Auto-Fill'}
-                          </button>
-                        </div>
-                        <p className="text-xs text-gray-600">
-                          Tip: Upload a single image that represents this trait. AI will extract the name and description.
-                        </p>
-                      </div>
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <input
+                        id="referenceImageUpload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const f = e.target.files?.[0] || null
+                          setReferenceImage(f)
+                          if (f) {
+                            const url = URL.createObjectURL(f)
+                            setReferenceImagePreview(url)
+                          } else {
+                            setReferenceImagePreview(null)
+                          }
+                          e.currentTarget.value = ''
+                        }}
+                      />
+                      <label
+                        htmlFor="referenceImageUpload"
+                        className="hg-btn-glow inline-flex h-9 px-4 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold cursor-pointer"
+                      >
+                        Upload reference
+                      </label>
+                      <button
+                        type="button"
+                        onClick={analyzeReferenceImage}
+                        disabled={!referenceImage || analyzing}
+                        className="inline-flex h-9 px-4 items-center rounded-full border border-[#FF2BD6]/35 text-[#FF2BD6] text-sm font-semibold hover:bg-[#FF2BD6]/10 disabled:opacity-50 transition-colors"
+                      >
+                        {analyzing ? <BrandLoader variant="inline" label="Analyzing" /> : 'Analyze & auto-fill'}
+                      </button>
                     </div>
+                    <p className="text-xs text-zinc-500">
+                      Upload a single image that represents this trait.
+                    </p>
                   </div>
-                )}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Trait Name *
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 bg-[#FDFCFA] text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none"
-                placeholder="Enter trait name"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Description (Optional)
-              </label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 bg-[#FDFCFA] text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none"
-                placeholder="Enter trait description"
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Rarity Weight
-              </label>
-              <div className="flex gap-2 items-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Trait name *</label>
                 <input
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={rarityWeight}
-                  onChange={(e) => setRarityWeight(parseInt(e.target.value) || 1)}
-                  className="flex-1 border border-gray-300 rounded px-3 py-2 bg-[#FDFCFA] text-gray-900 focus:border-blue-500 focus:outline-none"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full rounded-xl bg-[#0c0c10] border border-white/[0.1] px-4 py-2.5 text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
+                  placeholder="Enter trait name"
+                  required
                 />
-                <select
-                  value={rarityWeight}
-                  onChange={(e) => setRarityWeight(parseInt(e.target.value))}
-                  className="w-40 border border-gray-300 rounded px-3 py-2 bg-[#FDFCFA] text-gray-900 focus:border-blue-500 focus:outline-none"
-                >
-                  <option value="40">Common (40)</option>
-                  <option value="25">Rare (25)</option>
-                  <option value="15">Epic (15)</option>
-                  <option value="2">Legendary (2)</option>
-                </select>
               </div>
-              <p className="text-xs text-[#a8a8b8]/80 mt-1">
-                <strong>Higher weight = More common</strong> (appears more often). Lower weight = Rarer (appears less often). 
-                The system uses weighted random selection, so Common traits (40) appear much more frequently than Legendary (2).
-              </p>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Description (optional)</label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full rounded-xl bg-[#0c0c10] border border-white/[0.1] px-4 py-2.5 text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
+                  placeholder="Enter trait description"
+                  rows={3}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Rarity weight</label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={rarityWeight}
+                    onChange={(e) => setRarityWeight(parseInt(e.target.value) || 1)}
+                    className="flex-1 rounded-xl bg-[#0c0c10] border border-white/[0.1] px-4 py-2.5 text-white focus:border-[#2DE2FF] focus:outline-none"
+                  />
+                  <select
+                    value={rarityWeight}
+                    onChange={(e) => setRarityWeight(parseInt(e.target.value))}
+                    className="w-40 rounded-xl bg-[#0c0c10] border border-white/[0.1] px-3 py-2.5 text-white focus:border-[#2DE2FF] focus:outline-none"
+                  >
+                    <option value="40">Common (40)</option>
+                    <option value="25">Rare (25)</option>
+                    <option value="15">Epic (15)</option>
+                    <option value="2">Legendary (2)</option>
+                  </select>
+                </div>
+                <p className="text-xs text-zinc-500 mt-1.5">
+                  Higher weight = more common. Lower weight = rarer.
+                </p>
+              </div>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex flex-wrap gap-3 pt-2 border-t border-white/[0.06]">
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-[#9945FF] text-white px-4 py-2 rounded hover:bg-[#7C3AED] disabled:opacity-50"
+                className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
               >
-                {saving ? 'Creating...' : 'Create Trait'}
+                {saving ? <BrandLoader variant="inline" label="Creating" /> : 'Create trait'}
               </button>
               <Link
                 href={`/collections/${params.id}/layers/${params.layerId}`}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded shadow-lg shadow-blue-500/20 transition-all duration-200"
+                className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-300 hover:text-white transition-colors"
               >
                 Cancel
               </Link>
             </div>
           </form>
-        </div>
-      </div>
+        </ToolPanel>
+      </ToolWorkspace>
     </div>
   )
 }

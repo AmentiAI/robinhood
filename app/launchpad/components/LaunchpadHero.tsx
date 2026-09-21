@@ -8,22 +8,16 @@ interface LaunchpadHeroProps {
 
 export function LaunchpadHero({ onExplore }: LaunchpadHeroProps) {
   return (
-    <section className="relative overflow-hidden border border-white/[0.08] bg-[#050507] shadow-[0_0_60px_rgba(45,226,255,0.08)]">
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px z-20"
-        style={{
-          background: 'linear-gradient(90deg, transparent, #2DE2FF, #FF2BD6, transparent)',
-        }}
-      />
+    <section className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#131318] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
       <button
         type="button"
         onClick={onExplore}
-        className="block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2DE2FF] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        className="block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2DE2FF]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0c]"
         aria-label="Explore collections"
       >
         <Image
           src="/launchpad-hero.png"
-          alt="HoodGFX Launchpad — Discover and mint NFT collections on Robinhood Chain"
+          alt="HoodGFX Launchpad — Create, compress, and launch full NFT collections"
           width={1536}
           height={864}
           priority

@@ -13,19 +13,16 @@ interface SettingsTabProps {
 
 export default function SettingsTab({
   collection,
-  collectionId,
-  currentAddress,
-  onSave,
-  saving,
-  onLoadData,
 }: SettingsTabProps) {
-  // This will be extracted from the main page
-  // For now, return a placeholder
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">Collection Settings</h2>
-      <p className="text-[#a8a8b8]/80">Settings tab - to be implemented</p>
+    <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-6 sm:p-8">
+      <h2 className="text-xl font-bold text-white mb-2">Collection settings</h2>
+      <p className="text-zinc-500 text-sm mb-6">
+        Configure launch settings for <span className="text-zinc-300">{collection.name}</span>.
+      </p>
+      <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] px-5 py-8 text-center">
+        <p className="text-sm text-zinc-500">Settings tab — to be implemented</p>
+      </div>
     </div>
   )
 }
-

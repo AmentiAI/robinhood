@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { WalletConnect } from '@/components/wallet-connect'
 import { calculateOptimalFeeRate } from '@/lib/mempool-fee-calculator'
+import { BrandLoader } from '@/components/brand-loader'
 
 // CSS-in-JS for horror animations
 const horrorStyles = `
@@ -724,11 +725,7 @@ export default function MintPage() {
   const costs = calculateCost()
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-950 via-black to-purple-950 flex items-center justify-center">
-        <div className="text-[#EF4444] text-xl">Loading...</div>
-      </div>
-    )
+    return <BrandLoader label="Loading mint" />
   }
 
   return (
@@ -741,7 +738,7 @@ export default function MintPage() {
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] flex items-center justify-center">
           <button
             onClick={handleReady}
-            className="bg-red-600 hover:bg-red-700 text-white px-16 py-8 rounded-2xl font-bold text-4xl shadow-2xl shadow-red-900/50 transition-all transform hover:scale-105 uppercase tracking-wider damned-title"
+            className="bg-red-600 hover:bg-red-700 text-white px-16 py-8 rounded-2xl font-bold text-4xl shadow-2xl shadow-red-900/50 transition-all transform  r damned-title"
           >
             Ready
           </button>
@@ -749,7 +746,7 @@ export default function MintPage() {
       )}
       
       <div className="overflow-hidden min-h-screen">
-      <div className={`min-h-screen bg-gradient-to-br from-red-950 via-black to-purple-950 ${isShaking ? 'shake-screen' : ''}`}>
+      <div className={`min-h-screen bg-[#0a0a0c] ${isShaking ? 'shake-screen' : ''}`}>
         {/* Blood drips */}
         {bloodDrops.map((drop) => (
           <div
@@ -846,7 +843,7 @@ export default function MintPage() {
                 <div className="space-y-6">
                   {/* Quantity Selector */}
                   <div>
-                    <label className="block text-[#a8a8b8] text-sm font-bold mb-4 uppercase tracking-wider">
+                    <label className="block text-[#a8a8b8] text-sm font-bold mb-4 r">
                       Quantity
                     </label>
                     <div className="flex items-center gap-4 mb-2">
@@ -890,7 +887,7 @@ export default function MintPage() {
 
                   {/* Network Fee Selector */}
                   <div>
-                    <label className="block text-[#a8a8b8] text-sm font-bold mb-4 uppercase tracking-wider">
+                    <label className="block text-[#a8a8b8] text-sm font-bold mb-4 r">
                       Network Fee (sat/vB)
                     </label>
                     {mempoolHealth && (
@@ -1044,7 +1041,7 @@ export default function MintPage() {
                       (activePhase?.whitelist_only && !whitelistStatus?.is_whitelisted) ||
                       (whitelistStatus?.remaining_allocation === 0)
                     }
-                    className="w-full bg-red-600 hover:bg-red-700 text-white px-6 py-5 rounded-lg font-bold text-xl shadow-lg shadow-red-900/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all uppercase tracking-wider"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white px-6 py-5 rounded-lg font-bold text-xl shadow-lg shadow-red-900/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all r"
                   >
                     {minting ? (
                       <span className="flex items-center justify-center gap-2">
@@ -1159,7 +1156,7 @@ export default function MintPage() {
                       key={ordinal.id}
                       onClick={() => toggleOrdinalSelection(ordinal.id)}
                       disabled={minting}
-                      className={`relative aspect-square rounded-lg overflow-hidden border-4 transition-all transform hover:scale-105 disabled:cursor-not-allowed ${
+                      className={`relative aspect-square rounded-lg overflow-hidden border-4 transition-all transform  disabled:cursor-not-allowed ${
                         selectedOrdinals.has(ordinal.id)
                           ? 'border-yellow-400 shadow-lg shadow-yellow-900/50'
                           : 'border-red-900/50 hover:border-[#EF4444]/20'

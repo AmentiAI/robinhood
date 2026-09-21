@@ -43,7 +43,7 @@ export function ConfirmDialog({
       onClick={handleBackdropClick}
       style={{ pointerEvents: 'auto' }}
     >
-      <div className="bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+      <div className="bg-[#131318] rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white">{title}</h2>
           <button
@@ -62,7 +62,7 @@ export function ConfirmDialog({
         <div className="flex gap-3 justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-[#a8a8b8] bg-gradient-to-br from-[#14141e]/90 to-[#1a1a24]/90 rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 rounded-lg transition-colors"
+            className="px-4 py-2 text-sm font-medium text-[#a8a8b8] bg-[#131318] rounded-2xl border border-[#2DE2FF]/20 backdrop-blur-md border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 rounded-lg transition-colors"
             disabled={loading}
           >
             {cancelText}

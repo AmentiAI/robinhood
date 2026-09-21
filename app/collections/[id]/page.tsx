@@ -9,6 +9,8 @@ import { DownloadProgressModal } from '@/components/download-progress-modal'
 import { CollectionCollaborators } from '@/components/collection-collaborators'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { CompressionModal } from '@/components/compression-modal'
+import { BrandLoader } from '@/components/brand-loader'
+import { ToolWorkspace } from '@/components/tool-workspace'
 import { CollectionHeader } from './components/CollectionHeader'
 import { CollectionStats } from './components/CollectionStats'
 import { LayersSection } from './components/LayersSection'
@@ -148,30 +150,27 @@ export default function CollectionDetailsPage() {
 
   // Show loading state during SSR and initial hydration
   if (!mounted || loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto text-center py-8">
-            <div className="text-white">Loading collection...</div>
-        </div>
-      </div>
-    )
+    return <BrandLoader label="Loading collection" />
   }
 
   // Not connected - show connect prompt (only after hydration)
   if (!isConnected || !currentAddress) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto text-center py-12">
-          <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#2DE2FF]/50 rounded-xl p-8 max-w-2xl mx-auto">
-            <div className="text-6xl mb-4">🔐</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Wallet Connection Required</h2>
-            <p className="text-[#808080] mb-6">
-              Please connect your wallet to access collection management.
-            </p>
-            <Link href="/collections" className="px-6 py-3 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 text-white rounded-lg font-bold transition-colors inline-block shadow-lg shadow-[#2DE2FF]/20 drop-shadow-lg">
-              Go to Collections
-            </Link>
-          </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.08] bg-[#131318] p-8 text-center shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#2DE2FF]/70 mb-3">
+            Access
+          </p>
+          <h2 className="text-xl font-semibold text-white mb-2">Connect your wallet</h2>
+          <p className="text-zinc-500 mb-6 text-sm leading-relaxed">
+            Connect a wallet to open collection management.
+          </p>
+          <Link
+            href="/collections"
+            className="inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-bold text-sm hover:bg-[#7aefff] transition-colors"
+          >
+            Back to collections
+          </Link>
         </div>
       </div>
     )
@@ -193,18 +192,18 @@ export default function CollectionDetailsPage() {
   // Check if user has access (from API response via userRole)
   if (!hasAccess) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto text-center py-12">
-          <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#EF4444]/50 rounded-xl p-8 max-w-2xl mx-auto">
-            <div className="text-6xl mb-4">🚫</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Access Denied</h2>
-            <p className="text-[#808080] mb-6">
-              You don't have permission to access this collection. Only the collection owner or authorized collaborators can view and edit collections.
-            </p>
-            <Link href="/collections" className="px-6 py-3 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 text-white rounded-lg font-bold transition-colors inline-block shadow-lg shadow-[#2DE2FF]/20 drop-shadow-lg">
-              Go to Collections
-            </Link>
-          </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-red-500/25 bg-[#131318] p-8 text-center shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+          <h2 className="text-xl font-semibold text-white mb-2">Access denied</h2>
+          <p className="text-zinc-500 mb-6 text-sm leading-relaxed">
+            Only the owner or authorized collaborators can view this collection.
+          </p>
+          <Link
+            href="/collections"
+            className="inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] font-bold text-sm hover:bg-[#7aefff] transition-colors"
+          >
+            Back to collections
+          </Link>
         </div>
       </div>
     )
@@ -215,34 +214,37 @@ export default function CollectionDetailsPage() {
   if (isBlocked) {
     const statusText = collection.collection_status === 'launchpad' ? 'launchpad' : 'marketplace'
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto text-center py-12">
-            <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border-2 border-[#2DE2FF]/50 rounded-xl p-8 max-w-2xl mx-auto">
-              <div className="text-6xl mb-4">🔒</div>
-            <h2 className="text-2xl font-bold text-white mb-4">Collection Access Restricted</h2>
-              <p className="text-[#808080] mb-6">
-                This collection is currently on <strong>{statusText}</strong> and cannot be accessed for editing or generation.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/collections" className="px-6 py-3 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 text-white rounded-lg font-bold transition-colors shadow-lg shadow-[#2DE2FF]/20 drop-shadow-lg">
-                  Go to Collections
-                </Link>
-                {collection.collection_status === 'launchpad' && (
-                <Link href={`/launchpad/${collection.id}`} className="px-6 py-3 bg-[#2DE2FF] hover:bg-[#2DE2FF] text-white rounded-lg font-semibold transition-colors shadow-lg shadow-[#2DE2FF]/20">
-                    View on Launchpad
-                  </Link>
-                )}
-              </div>
-            </div>
+      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-2xl border border-white/[0.08] bg-[#131318] p-8 text-center shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+          <h2 className="text-xl font-semibold text-white mb-2">Editing locked</h2>
+          <p className="text-zinc-500 mb-6 text-sm leading-relaxed">
+            This collection is on <span className="text-white font-medium">{statusText}</span> and can&apos;t be edited right now.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-2 justify-center">
+            <Link
+              href="/collections"
+              className="inline-flex h-10 px-5 items-center justify-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-200 hover:border-white/20 transition-colors"
+            >
+              Collections
+            </Link>
+            {collection.collection_status === 'launchpad' && (
+              <Link
+                href={`/launchpad/${collection.id}`}
+                className="inline-flex h-10 px-5 items-center justify-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold hover:bg-[#7aefff] transition-colors"
+              >
+                View launchpad
+              </Link>
+            )}
           </div>
         </div>
+      </div>
     )
   }
 
   return (
     <>
-  <div className="w-full px-8 py-8 pb-[500px]">
-      <div className="w-full max-w-[1800px] mx-auto">
+  <div className="min-h-screen w-full bg-[#0a0a0c] pb-[500px]">
+      <ToolWorkspace>
           <CollectionHeader
             collection={collection}
             collaboratorCount={collaboratorCount}
@@ -252,9 +254,9 @@ export default function CollectionDetailsPage() {
           />
           <CollectionStats layers={layers} totalOrdinals={totalOrdinals} isActive={collection.is_active} />
         {showCollaboratorsModal && collection && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl rounded-lg shadow-xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto border-2 border-[#2DE2FF]/50">
-              <div className="flex items-center justify-between p-4 border-b border-[#2DE2FF]/30">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="bg-[#131318] border border-white/[0.08] rounded-2xl shadow-xl w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex items-center justify-between p-4 border-b border-white/[0.08]">
                 <h2 className="text-lg font-semibold text-white">Manage Collaborators</h2>
                   <button onClick={() => { setShowCollaboratorsModal(false); loadAllData() }} className="text-white/70 hover:text-white transition-colors">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,34 +273,34 @@ export default function CollectionDetailsPage() {
           <LayersSection collectionId={collection.id} layers={layers} onLayerDeleted={loadAllData} />
           
           {/* Tabs */}
-          <div className="mt-8">
-            <nav className="flex space-x-4" aria-label="Tabs">
+          <div className="mt-8 mb-0">
+            <div className="inline-flex gap-1 p-1 rounded-xl bg-[#0c0c10] border border-white/[0.08]">
               <button
                 onClick={() => setActiveTab('generated')}
-                className={`px-6 py-3 rounded-t-lg font-semibold text-base transition-all duration-200 ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
                   activeTab === 'generated'
-                    ? 'bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-black shadow-lg shadow-[#2DE2FF]/25 border-2 border-b-0 border-[#2DE2FF]/40'
-                    : 'bg-[#1a1a1a] text-white/70 hover:text-white hover:bg-[#1a1a1a] border-2 border-b-0 border-transparent'
+                    ? 'bg-white text-black'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
               >
                 Generated NFTs
               </button>
               <button
                 onClick={() => setActiveTab('compression')}
-                className={`px-6 py-3 rounded-t-lg font-semibold text-base transition-all duration-200 ${
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
                   activeTab === 'compression'
-                    ? 'bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] text-black shadow-lg shadow-[#2DE2FF]/25 border-2 border-b-0 border-[#2DE2FF]/40'
-                    : 'bg-[#1a1a1a] text-white/70 hover:text-white hover:bg-[#1a1a1a] border-2 border-b-0 border-transparent'
+                    ? 'bg-white text-black'
+                    : 'text-zinc-500 hover:text-white'
                 }`}
               >
                 Compression
               </button>
-            </nav>
+            </div>
           </div>
 
           {/* Tab Content */}
           {activeTab === 'generated' && (
-            <div className="border border-t-0 border-[#2DE2FF]/30 rounded-b-lg rounded-tl-lg bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl p-6">
+            <div className="mt-4 rounded-2xl border border-white/[0.08] bg-[#131318] p-5 sm:p-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
               <GenerationSection
                 collection={collection}
                 layers={layers}
@@ -319,13 +321,13 @@ export default function CollectionDetailsPage() {
               <div className="mt-6 mb-6 flex flex-wrap gap-3">
                 <button
                   onClick={() => setShowOrphanedTraits(!showOrphanedTraits)}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
-                    showOrphanedTraits
-                      ? 'bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 text-white shadow-lg shadow-[#2DE2FF]/20'
-                      : 'bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-[#808080] hover:text-white'
-                  }`}
+                className={`px-4 py-2 rounded-full font-semibold text-sm transition-colors ${
+                  showOrphanedTraits
+                    ? 'bg-[#2DE2FF] text-[#0a0a0c]'
+                    : 'border border-white/[0.1] text-zinc-400 hover:text-white'
+                }`}
                 >
-                  {showOrphanedTraits ? '✓ Showing Orphaned Traits' : '👁️ Show Orphaned Traits'}
+                  {showOrphanedTraits ? '✓ Showing Orphaned Traits' : 'Show orphaned traits'}
                 </button>
               </div>
               <NftsGrid
@@ -346,15 +348,15 @@ export default function CollectionDetailsPage() {
                 collectionArtStyle={(collection as Collection)?.art_style}
               />
               {ordinals.length === 0 && (
-                <div className="text-center py-8 text-[#808080]">No NFTs generated yet. Click the button above to generate your first one!</div>
+                <div className="text-center py-8 text-zinc-500">No NFTs generated yet. Click the button above to generate your first one!</div>
               )}
               {totalPages > 1 && (
                 <div className="flex justify-center items-center gap-2 mt-6">
-                  <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="px-3 py-1 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white rounded shadow-lg shadow-[#2DE2FF]/20 transition-all duration-200 font-bold drop-shadow-lg">
+                  <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1} className="h-9 px-4 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold hover:bg-[#7aefff] disabled:opacity-40 transition-colors">
                     Previous
                   </button>
-                  <span className="text-white">Page {currentPage} of {totalPages}</span>
-                  <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="px-3 py-1 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 disabled:from-gray-600 disabled:to-gray-600 disabled:cursor-not-allowed text-white rounded shadow-lg shadow-[#2DE2FF]/20 transition-all duration-200 font-bold drop-shadow-lg">
+                  <span className="text-zinc-400 text-sm">Page {currentPage} of {totalPages}</span>
+                  <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="h-9 px-4 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold hover:bg-[#7aefff] disabled:opacity-40 transition-colors">
                     Next
                   </button>
                 </div>
@@ -363,14 +365,14 @@ export default function CollectionDetailsPage() {
           )}
 
           {activeTab === 'compression' && (
-            <div className="border border-t-0 border-[#2DE2FF]/30 rounded-b-lg rounded-tr-lg bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl p-6">
+            <div className="mt-4 rounded-2xl border border-white/[0.08] bg-[#131318] p-5 sm:p-6 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
               {/* Compression Settings Section */}
-              <div className="mb-6 border-b border-[#2DE2FF]/30 pb-6">
+              <div className="mb-6 border-b border-white/[0.08] pb-6">
                 <h3 className="text-lg font-semibold text-white mb-4">Image Compression Settings</h3>
                 
                 {/* Compression Settings Changed Warning */}
                 {compressionSettingsChanged && (
-                  <div className="mb-4 bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/50 rounded-lg p-4">
+                  <div className="mb-4 bg-[#131318] border border-white/[0.08] rounded-xl border border-[#2DE2FF]/50 rounded-lg p-4">
                     <div className="flex items-start gap-3">
                       <svg className="w-5 h-5 text-[#2DE2FF] flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -386,7 +388,7 @@ export default function CollectionDetailsPage() {
                           type="button"
                           onClick={handleWipeCompressions}
                           disabled={wipingCompressions}
-                          className="mt-3 px-3 py-1.5 bg-[#2DE2FF] hover:bg-[#2DE2FF] disabled:bg-[#2DE2FF]/50 text-white text-xs font-medium rounded transition-colors flex items-center gap-2 shadow-lg shadow-[#2DE2FF]/20"
+                          className="mt-3 px-3 py-1.5 bg-[#2DE2FF] hover:bg-[#2DE2FF] disabled:bg-[#2DE2FF]/50 text-white text-xs font-medium rounded transition-colors flex items-center gap-2 "
                         >
                           {wipingCompressions ? (
                             <>
@@ -418,7 +420,7 @@ export default function CollectionDetailsPage() {
                     <select
                       value={compressionFormat}
                       onChange={(e) => setCompressionFormat(e.target.value as 'jpg' | 'png' | 'webp')}
-                      className="w-full border border-[#2DE2FF]/30 rounded px-3 py-2 bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
+                      className="w-full border border-white/[0.08] rounded px-3 py-2 bg-[#131318] border border-white/[0.08] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                     >
                       <option value="webp" className="bg-[#0a0e27]">WebP (Recommended - Best compression)</option>
                       <option value="jpg" className="bg-[#0a0e27]">JPEG (Good compression, widely supported)</option>
@@ -462,7 +464,7 @@ export default function CollectionDetailsPage() {
                             }
                           }
                         }}
-                        className="w-24 border border-[#2DE2FF]/30 rounded px-3 py-2 bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
+                        className="w-24 border border-white/[0.08] rounded px-3 py-2 bg-[#131318] border border-white/[0.08] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                         placeholder="Width"
                       />
                       <span className="text-white">×</span>
@@ -483,7 +485,7 @@ export default function CollectionDetailsPage() {
                             }
                           }
                         }}
-                        className="w-24 border border-[#2DE2FF]/30 rounded px-3 py-2 bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
+                        className="w-24 border border-white/[0.08] rounded px-3 py-2 bg-[#131318] border border-white/[0.08] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/20"
                         placeholder="Height"
                       />
                       <span className="text-white/70 text-sm">px (square, max 1024×1024)</span>
@@ -526,7 +528,7 @@ export default function CollectionDetailsPage() {
                     const formatName = compressionFormat === 'jpg' ? 'JPEG' : compressionFormat.toUpperCase()
                     
                     return (
-                      <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 rounded-lg p-3">
+                      <div className="bg-[#131318] border border-white/[0.08] rounded-xl border border-white/[0.08] rounded-lg p-3">
                         <p className="text-sm font-medium text-[#2DE2FF]">
                           Estimated File Size: <span className="font-bold text-white">{lowerKB}-{upperKB} KB</span> ({formatName})
                         </p>
@@ -548,7 +550,7 @@ export default function CollectionDetailsPage() {
                     type="button"
                     onClick={handleSaveCompressionSettings}
                     disabled={savingCompression || dimensionsBlank}
-                    className="bg-[#2DE2FF] text-white px-4 py-2 rounded hover:bg-[#2DE2FF]/80 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#2DE2FF]/20 transition-all font-bold drop-shadow-lg"
+                    className="bg-[#2DE2FF] text-white px-4 py-2 rounded hover:bg-[#2DE2FF]/80 disabled:opacity-50 disabled:cursor-not-allowed  transition-all font-bold "
                   >
                     {savingCompression ? 'Saving...' : 'Save Changes'}
                   </button>
@@ -558,27 +560,27 @@ export default function CollectionDetailsPage() {
               <div className="mb-6">
                 <button
                   onClick={handleWipeCompressions}
-                  className="px-4 py-2 bg-[#EF4444] hover:bg-[#ff3838] text-white rounded-lg font-semibold text-sm transition-colors shadow-lg shadow-[#EF4444]/20"
+                  className="inline-flex h-9 px-4 items-center rounded-full border border-red-500/30 text-red-400 text-sm font-semibold hover:bg-red-500/10 transition-colors"
                 >
-                  🗑️ Wipe Compressions
+                  Wipe compressions
                 </button>
               </div>
               <CompressionTable ordinals={ordinals} totalOrdinals={totalOrdinals} currentPage={currentPage} />
             </div>
           )}
-        </div>
-              </div>
+      </ToolWorkspace>
+      </div>
       <CompressionModal isOpen={showCompressionModal} ordinal={compressionModalOrdinal} sliderValue={compressionModalSlider} onClose={() => setShowCompressionModal(false)} onSliderChange={setCompressionModalSlider} />
       <DownloadProgressModal isOpen={downloadProgress.isOpen} current={downloadProgress.current} total={downloadProgress.total} status={downloadProgress.status} message={downloadProgress.message} failedCount={downloadProgress.failedCount} />
       <ConfirmDialog isOpen={showDeleteConfirm} onClose={handleDeleteCancel} onConfirm={handleDeleteConfirm} title="Delete Collection" message={`Are you sure you want to delete "${collection?.name || 'this collection'}"?`} confirmText="Delete" cancelText="Cancel" confirmButtonClass="bg-red-600 hover:bg-red-700" loading={deleting} />
       {showDeleteOrdinalConfirm && <ConfirmDialog isOpen={!!showDeleteOrdinalConfirm} onClose={() => setShowDeleteOrdinalConfirm(null)} onConfirm={() => executeDeleteOrdinal(showDeleteOrdinalConfirm)} title="Delete NFT" message="Are you sure you want to delete this NFT?" confirmText="Delete" cancelText="Cancel" confirmButtonClass="bg-red-600 hover:bg-red-700" />}
       <ConfirmDialog isOpen={showWipeCompressionsConfirm} onClose={() => setShowWipeCompressionsConfirm(false)} onConfirm={executeWipeCompressions} title="Delete All Compressed Images" message="Are you sure you want to delete all compressed images?" confirmText="Delete All" cancelText="Cancel" confirmButtonClass="bg-red-600 hover:bg-red-700" />
-      {pendingGeneration && <ConfirmDialog isOpen={showFilterConfirm} onClose={() => { setShowFilterConfirm(false); setPendingGeneration(false) }} onConfirm={() => { setShowFilterConfirm(false); setShowCreditsConfirm(true) }} title="⚠️ FILTERED GENERATION" message={`You are about to generate NFTs with trait filters applied. These traits will be used in ALL ${generateQuantity} generated NFT${generateQuantity > 1 ? 's' : ''}.`} confirmText="Proceed" cancelText="Cancel" confirmButtonClass="bg-[#FF2BD6] hover:bg-[#FF2BD6]" />}
+      {pendingGeneration && <ConfirmDialog isOpen={showFilterConfirm} onClose={() => { setShowFilterConfirm(false); setPendingGeneration(false) }} onConfirm={() => { setShowFilterConfirm(false); setShowCreditsConfirm(true) }} title="Filtered generation" message={`You are about to generate NFTs with trait filters applied. These traits will be used in ALL ${generateQuantity} generated NFT${generateQuantity > 1 ? 's' : ''}.`} confirmText="Proceed" cancelText="Cancel" confirmButtonClass="bg-[#FF2BD6] hover:bg-[#FF2BD6]" />}
       
       {/* Credits Confirmation Modal */}
       {showCreditsConfirm && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={handleCreditsConfirmCancel}>
-          <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden border-2 border-[#2DE2FF]/50" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden border border-white/[0.08]/50" onClick={(e) => e.stopPropagation()}>
             <div className="bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] p-6">
               <h2 className="text-2xl font-bold text-black">Confirm Generation</h2>
               <p className="text-black/70 mt-1">Review your credits before generating</p>
@@ -586,29 +588,26 @@ export default function CollectionDetailsPage() {
             
             <div className="p-6">
               {loadingCredits ? (
-                <div className="text-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#2DE2FF] mx-auto"></div>
-                  <p className="mt-4 text-[#808080]">Loading credits...</p>
-                </div>
+                <BrandLoader variant="card" label="Loading credits" />
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 rounded-lg p-4 space-y-3">
+                  <div className="bg-[#131318] border border-white/[0.08] rounded-xl border border-white/[0.08] rounded-lg p-4 space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-[#808080] font-medium">Current Credits:</span>
+                      <span className="text-zinc-500 font-medium">Current Credits:</span>
                       <span className="text-2xl font-bold text-white">{credits ?? 0}</span>
                     </div>
                     
-                    <div className="border-t border-[#2DE2FF]/30 pt-3">
+                    <div className="border-t border-white/[0.08] pt-3">
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-[#808080]">Generating {generateQuantity} NFT{generateQuantity > 1 ? 's' : ''}:</span>
+                        <span className="text-zinc-500">Generating {generateQuantity} NFT{generateQuantity > 1 ? 's' : ''}:</span>
                         <span className="text-lg font-semibold text-[#2DE2FF]">-{generateQuantity}</span>
                       </div>
-                      <div className="text-xs text-[#808080]/80">
+                      <div className="text-xs text-zinc-500/80">
                         (1 credit per generation)
                       </div>
                     </div>
                     
-                    <div className="border-t border-[#2DE2FF]/30 pt-3 mt-3">
+                    <div className="border-t border-white/[0.08] pt-3 mt-3">
                       <div className="flex justify-between items-center">
                         <span className="text-white font-semibold">Total After:</span>
                         <span className={`text-2xl font-bold ${(credits ?? 0) - generateQuantity >= 0 ? 'text-[#2DE2FF]' : 'text-[#EF4444]'}`}>
@@ -619,7 +618,7 @@ export default function CollectionDetailsPage() {
                   </div>
                   
                   {(credits ?? 0) - generateQuantity < 0 && (
-                    <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border border-[#EF4444]/50 rounded-lg p-3">
+                    <div className="bg-[#131318] border border-white/[0.08] rounded-xl border border-[#EF4444]/50 rounded-lg p-3">
                       <p className="text-sm text-[#EF4444]">
                         ⚠️ Insufficient credits! You need {generateQuantity - (credits ?? 0)} more credit{generateQuantity - (credits ?? 0) > 1 ? 's' : ''} to generate {generateQuantity} NFT{generateQuantity > 1 ? 's' : ''}.
                       </p>
@@ -629,17 +628,17 @@ export default function CollectionDetailsPage() {
               )}
             </div>
             
-            <div className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border-t border-[#2DE2FF]/30 px-6 py-4 flex gap-3 justify-end">
+            <div className="bg-[#131318] border border-white/[0.08] rounded-xl border-t border-white/[0.08] px-6 py-4 flex gap-3 justify-end">
               <button
                 onClick={handleCreditsConfirmCancel}
-                className="px-6 py-2 bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border border-[#2DE2FF]/30 hover:border-[#2DE2FF]/50 text-[#808080] hover:text-white rounded-lg font-semibold transition-colors"
+                className="px-6 py-2 bg-[#131318] border border-white/[0.08] rounded-xl border border-white/[0.08] hover:border-white/16/50 text-zinc-500 hover:text-white rounded-lg font-semibold transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreditsConfirmAccept}
                 disabled={loadingCredits || (credits ?? 0) - generateQuantity < 0}
-                className="px-6 py-2 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 text-white rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#2DE2FF]/20 drop-shadow-lg"
+                className="px-6 py-2 bg-[#2DE2FF] hover:bg-[#2DE2FF]/80 text-white rounded-lg font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed  "
               >
                 Accept & Generate
               </button>
@@ -695,16 +694,16 @@ function CompressionTable({ ordinals, totalOrdinals, currentPage }: { ordinals: 
 
   if (compressedOrdinals.length === 0) {
     return (
-      <div className="text-center py-8 text-[#808080]">
+      <div className="text-center py-8 text-zinc-500">
         No compressed ordinals found. Compress some ordinals first to see them here.
       </div>
     )
   }
 
   return (
-    <div className="border border-[#2DE2FF]/30 rounded-lg overflow-hidden bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl">
+    <div className="border border-white/[0.08] rounded-lg overflow-hidden bg-[#131318] border border-white/[0.08] rounded-xl">
       <table className="w-full">
-        <thead className="bg-[#1a1a1a] border border-[#2DE2FF]/30 rounded-xl border-b border-[#2DE2FF]/30">
+        <thead className="bg-[#131318] border border-white/[0.08] rounded-xl border-b border-white/[0.08]">
           <tr>
             <th className="px-4 py-3 text-left text-xs font-semibold text-white">Ordinal #</th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-white">Width</th>
@@ -730,13 +729,13 @@ function CompressionTable({ ordinals, totalOrdinals, currentPage }: { ordinals: 
                 <td className="px-4 py-3 text-sm font-medium text-white">
                   #{displayNumber}
                 </td>
-                <td className="px-4 py-3 text-sm text-[#808080]">
+                <td className="px-4 py-3 text-sm text-zinc-500">
                   {dimensions ? `${dimensions.width}px` : 'Loading...'}
                 </td>
-                <td className="px-4 py-3 text-sm text-[#808080]">
+                <td className="px-4 py-3 text-sm text-zinc-500">
                   {dimensions ? `${dimensions.height}px` : 'Loading...'}
                 </td>
-                <td className="px-4 py-3 text-sm text-[#808080]">
+                <td className="px-4 py-3 text-sm text-zinc-500">
                   {compressedSizeKb}
                 </td>
               </tr>
