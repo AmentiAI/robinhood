@@ -19,6 +19,9 @@ yarn-error.log*
 # env files
 .env*
 
+# Generated wallet secrets (private keys)
+scripts/generated-whitelist-wallets.json
+
 # vercel
 .vercel
 
