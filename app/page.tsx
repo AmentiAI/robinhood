@@ -105,6 +105,7 @@ export default function HomePage() {
   const [twitter, setTwitter] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [showJoinModal, setShowJoinModal] = useState(false)
+  const [joinSuccess, setJoinSuccess] = useState(false)
   const [entered, setEntered] = useState(false)
   const [wlPanel, setWlPanel] = useState<'board' | 'spots' | 'how' | 'req'>('board')
   const [wlEntries, setWlEntries] = useState<
@@ -133,7 +134,17 @@ export default function HomePage() {
   const handleEnter = () => router.push('/launchpad')
 
   const openJoinModal = () => {
+    setJoinSuccess(false)
     setShowJoinModal(true)
+  }
+
+  const SITE_URL = 'https://hoodgfx.com'
+  const BRAND_X = '@Hood_GFX_'
+  const SHARE_TEXT = `Join HoodGFX whitelist ${BRAND_X} ${SITE_URL.replace('https://', '')}`
+
+  const handleShareToX = () => {
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}`
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   const handleJoin = async () => {
@@ -162,9 +173,7 @@ export default function HomePage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to join')
       toast.success(data.message || "You're on the whitelist")
-      setShowJoinModal(false)
-      setFormWallet('')
-      setTwitter('')
+      setJoinSuccess(true)
       await refresh()
       await loadWhitelist()
     } catch (e: any) {
@@ -398,10 +407,9 @@ export default function HomePage() {
               <div className="p-4 min-h-[220px]">
                 {wlPanel === 'board' && (
                   <>
-                    <div className="grid grid-cols-[36px_1fr_56px] gap-2 text-[10px] uppercase tracking-wider text-white/35 mb-2 px-1">
+                    <div className="grid grid-cols-[36px_1fr] gap-2 text-[10px] uppercase tracking-wider text-white/35 mb-2 px-1">
                       <span>#</span>
                       <span>Wallet</span>
-                      <span className="text-right">Status</span>
                     </div>
                     <div className="max-h-[160px] overflow-y-auto space-y-1.5 mb-4">
                       {wlLoading ? (
@@ -412,19 +420,13 @@ export default function HomePage() {
                         wlEntries.slice(0, 10).map((e, i) => (
                           <div
                             key={`${e.wallet_address}-${i}`}
-                            className="grid grid-cols-[36px_1fr_56px] gap-2 items-center px-2 py-2 rounded-lg bg-white/[0.03] border border-white/[0.05]"
+                            className="grid grid-cols-[36px_1fr] gap-2 items-center px-2 py-2 rounded-lg bg-white/[0.03] border border-white/[0.05]"
                           >
                             <span className="text-xs font-bold tabular-nums" style={{ color: CYAN }}>
                               {String(i + 1).padStart(2, '0')}
                             </span>
                             <span className="font-mono text-[12px] text-white/75 truncate">
                               {shortAddr(e.wallet_address)}
-                            </span>
-                            <span
-                              className="text-[10px] font-bold uppercase text-right"
-                              style={{ color: e.status === 'approved' ? CYAN : MAGENTA }}
-                            >
-                              {e.status === 'approved' ? 'ok' : 'wait'}
                             </span>
                           </div>
                         ))
@@ -548,7 +550,11 @@ export default function HomePage() {
       {showJoinModal && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75"
-          onClick={() => !submitting && setShowJoinModal(false)}
+          onClick={() => {
+            if (submitting) return
+            setShowJoinModal(false)
+            setJoinSuccess(false)
+          }}
         >
           <div
             className="relative w-full max-w-md rounded-2xl border bg-[#0a0a0c] p-6 sm:p-7 shadow-2xl"
@@ -571,15 +577,20 @@ export default function HomePage() {
                   className="text-xl sm:text-2xl font-bold text-white"
                   style={{ fontFamily: 'var(--f-display)' }}
                 >
-                  Join the whitelist
+                  {joinSuccess ? "You're on the list" : 'Join the whitelist'}
                 </h2>
                 <p className="text-sm text-white/45 mt-1.5">
-                  Paste your wallet address and X handle.
+                  {joinSuccess
+                    ? 'Share HoodGFX with your network on X.'
+                    : 'Paste your wallet address and X handle.'}
                 </p>
               </div>
               <button
                 type="button"
-                onClick={() => setShowJoinModal(false)}
+                onClick={() => {
+                  setShowJoinModal(false)
+                  setJoinSuccess(false)
+                }}
                 disabled={submitting}
                 className="text-white/40 hover:text-white text-sm font-medium"
               >
@@ -587,39 +598,85 @@ export default function HomePage() {
               </button>
             </div>
 
-            <div className="space-y-3.5">
-              <div>
-                <label className="block text-[12px] text-white/50 mb-1.5">Wallet address</label>
-                <input
-                  type="text"
-                  value={formWallet}
-                  onChange={(e) => setFormWallet(e.target.value)}
-                  placeholder="0x…"
-                  autoComplete="off"
-                  className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white font-mono placeholder:text-white/25 outline-none focus:border-[#2DE2FF]/55"
-                />
+            {joinSuccess ? (
+              <div className="space-y-5">
+                <div className="flex flex-col items-center text-center gap-3 rounded-xl border border-white/10 bg-black/50 p-5">
+                  <Image
+                    src="/hoodgfx-hero.png"
+                    alt="HoodGFX"
+                    width={120}
+                    height={120}
+                    className="w-24 h-24 object-contain"
+                  />
+                  <p className="text-sm text-white/80 leading-relaxed max-w-[18rem]">
+                    Join HoodGFX whitelist {BRAND_X}{' '}
+                    <span style={{ color: CYAN }}>hoodgfx.com</span>
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center gap-2 text-[12px] text-white/45">
+                    <span className="font-mono" style={{ color: CYAN }}>
+                      hoodgfx.com
+                    </span>
+                    <span>·</span>
+                    <span style={{ color: MAGENTA }}>{BRAND_X}</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleShareToX}
+                  className="w-full h-14 rounded-xl text-black text-[15px] font-bold inline-flex items-center justify-center gap-2"
+                  style={{ background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})` }}
+                >
+                  Share to X
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowJoinModal(false)
+                    setJoinSuccess(false)
+                    setFormWallet('')
+                    setTwitter('')
+                  }}
+                  className="w-full text-sm text-white/40 hover:text-white transition-colors"
+                >
+                  Done
+                </button>
               </div>
-              <div>
-                <label className="block text-[12px] text-white/50 mb-1.5">X handle</label>
-                <input
-                  type="text"
-                  value={twitter}
-                  onChange={(e) => setTwitter(e.target.value)}
-                  placeholder="@yourhandle"
-                  autoComplete="off"
-                  className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#FF2BD6]/55"
-                />
+            ) : (
+              <div className="space-y-3.5">
+                <div>
+                  <label className="block text-[12px] text-white/50 mb-1.5">Wallet address</label>
+                  <input
+                    type="text"
+                    value={formWallet}
+                    onChange={(e) => setFormWallet(e.target.value)}
+                    placeholder="0x…"
+                    autoComplete="off"
+                    className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white font-mono placeholder:text-white/25 outline-none focus:border-[#2DE2FF]/55"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[12px] text-white/50 mb-1.5">X handle</label>
+                  <input
+                    type="text"
+                    value={twitter}
+                    onChange={(e) => setTwitter(e.target.value)}
+                    placeholder="@yourhandle"
+                    autoComplete="off"
+                    className="w-full h-12 rounded-xl px-4 bg-black border border-white/15 text-[14px] text-white placeholder:text-white/25 outline-none focus:border-[#FF2BD6]/55"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleJoin}
+                  disabled={submitting}
+                  className="w-full h-14 rounded-xl text-black text-[15px] font-bold disabled:opacity-50 transition-opacity"
+                  style={{ background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})` }}
+                >
+                  {submitting ? 'Submitting…' : 'Submit'}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={handleJoin}
-                disabled={submitting}
-                className="w-full h-13 h-14 rounded-xl text-black text-[15px] font-bold disabled:opacity-50 transition-opacity"
-                style={{ background: `linear-gradient(90deg, ${PURPLE}, ${CYAN})` }}
-              >
-                {submitting ? 'Submitting…' : 'Submit'}
-              </button>
-            </div>
+            )}
           </div>
         </div>
       )}

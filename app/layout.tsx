@@ -11,11 +11,35 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://hoodgfx.com'),
   title: 'HoodGFX - AI-Powered NFT Creator on Robinhood Chain',
-  description: 'HoodGFX - Create and mint unique NFT collections on Robinhood Chain using AI-powered generation.',
+  description:
+    'Join the HoodGFX whitelist. Create and mint unique NFT collections on Robinhood Chain.',
   icons: {
     icon: '/hoodgfx-hero.png',
     apple: '/hoodgfx-hero.png',
+  },
+  openGraph: {
+    title: 'HoodGFX',
+    description: 'Join the HoodGFX whitelist — the ultimate NFT creation platform on Robinhood Chain.',
+    url: 'https://hoodgfx.com',
+    siteName: 'HoodGFX',
+    images: [
+      {
+        url: '/hoodgfx-hero.png',
+        width: 1200,
+        height: 1200,
+        alt: 'HoodGFX',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'HoodGFX',
+    description: 'Join the HoodGFX whitelist — the ultimate NFT creation platform on Robinhood Chain.',
+    images: ['/hoodgfx-hero.png'],
+    creator: '@Hood_GFX_',
   },
 }
 
