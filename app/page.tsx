@@ -220,7 +220,7 @@ export default function HomePage() {
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
         {/* Header */}
         <header
-          className="flex items-center mb-6 sm:mb-8 py-2"
+          className="flex items-center justify-between gap-4 mb-6 sm:mb-8 py-2"
           style={anim('0s')}
         >
           <a href="#" className="flex items-center gap-2 shrink-0 group">
@@ -232,6 +232,24 @@ export default function HomePage() {
               HoodGFX
             </span>
           </a>
+
+          <div className="flex flex-col items-end gap-1.5 sm:gap-2">
+            <a
+              href="https://x.com/Hood_GFX_"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-5 rounded-xl border border-[#2DE2FF]/45 bg-black/40 text-sm font-bold text-white hover:border-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-all"
+              aria-label="Follow HoodGFX on X"
+            >
+              <svg className="w-4 h-4 text-[#2DE2FF]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              <span className="hidden xs:inline sm:inline">@Hood_GFX_</span>
+            </a>
+            <p className="text-[11px] sm:text-[12px] text-white/45 text-right max-w-[14rem] sm:max-w-none leading-snug">
+              Discord launching after whitelist is full
+            </p>
+          </div>
         </header>
 
         {/* Hero grid */}
