@@ -299,10 +299,11 @@ export default function StickerMakerPage() {
           </ToolTip>
         )}
 
-        <section className="grid gap-5 lg:grid-cols-2">
+        <section className="grid items-start gap-5 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)]">
           <ToolPanel
-            title="Create"
-            subtitle={`Reference image${selectedFiles.length > 1 ? 's' : ''}${selectedFiles.length > 0 ? ` (${selectedFiles.length})` : ''}`}
+            title="Setup"
+            subtitle="Image, look, and background"
+            className="lg:sticky lg:top-28"
           >
             <div className="space-y-5">
               <div className="relative flex flex-col items-center justify-center gap-4 rounded-xl border border-dashed border-white/[0.12] bg-[#0c0c10] p-6 text-center">
@@ -451,6 +452,46 @@ export default function StickerMakerPage() {
           </ToolPanel>
 
           <div className="space-y-5">
+            <ToolPanel title="Sticker">
+              {result?.chromaticImageUrl ? (
+                <div className="space-y-4">
+                  <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0c10]">
+                    <Image
+                      src={result.chromaticImageUrl}
+                      alt="Generated sticker"
+                      width={1024}
+                      height={1024}
+                      className="h-auto w-full object-contain"
+                      unoptimized
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={result.chromaticImageUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hg-btn-glow inline-flex h-10 px-5 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+                    >
+                      Open full size
+                    </a>
+                  </div>
+                  <ToolTip tone="cyan">
+                    Right-click the image and select &quot;Save image as…&quot; to download your sticker.
+                  </ToolTip>
+                </div>
+              ) : (
+                <div className="flex min-h-[420px] flex-col items-center justify-center rounded-xl border border-dashed border-white/[0.12] bg-[#0c0c10] px-6 text-center">
+                  <p className="text-lg font-semibold text-white">Your sticker shows up here</p>
+                  <p className="mt-2 max-w-sm text-sm text-zinc-500">
+                    Add an image on the left, pick a background, then create. Analysis and the prompt stay under the result.
+                  </p>
+                </div>
+              )}
+            </ToolPanel>
+
+            <details className="rounded-2xl border border-white/[0.1] bg-[#131318] px-5 py-4">
+              <summary className="cursor-pointer text-sm font-semibold text-zinc-300">Analysis and prompt</summary>
+              <div className="mt-4 space-y-4">
             <ToolPanel
               title="Analysis"
               action={
@@ -492,38 +533,8 @@ export default function StickerMakerPage() {
                 className="h-48 w-full resize-none rounded-xl border border-white/[0.1] bg-[#0c0c10] p-4 font-mono text-sm leading-relaxed text-white placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#2DE2FF]/50"
               />
             </ToolPanel>
-
-            {result?.chromaticImageUrl && (
-              <ToolPanel
-                title="Result"
-                action={
-                  <a
-                    href={result.chromaticImageUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs font-semibold text-[#2DE2FF] hover:opacity-80 transition-opacity"
-                  >
-                    Open full size
-                  </a>
-                }
-              >
-                <div className="space-y-4">
-                  <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0c10]">
-                    <Image
-                      src={result.chromaticImageUrl}
-                      alt="Generated sticker"
-                      width={1024}
-                      height={1024}
-                      className="h-auto w-full object-contain"
-                      unoptimized
-                    />
-                  </div>
-                  <ToolTip tone="cyan">
-                    Right-click the image and select &quot;Save image as…&quot; to download your sticker.
-                  </ToolTip>
-                </div>
-              </ToolPanel>
-            )}
+              </div>
+            </details>
           </div>
         </section>
       </ToolWorkspace>

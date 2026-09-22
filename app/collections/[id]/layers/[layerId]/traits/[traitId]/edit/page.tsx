@@ -28,6 +28,7 @@ export default function EditTraitPage() {
   const [trait, setTrait] = useState<Trait | null>(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [traitPrompt, setTraitPrompt] = useState('')
   const [rarityWeight, setRarityWeight] = useState(1)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -46,6 +47,7 @@ export default function EditTraitPage() {
         setTrait(data.trait)
         setName(data.trait.name)
         setDescription(data.trait.description || '')
+        setTraitPrompt(data.trait.trait_prompt || '')
         setRarityWeight(data.trait.rarity_weight)
       }
     } catch (error) {
@@ -74,6 +76,7 @@ export default function EditTraitPage() {
         body: JSON.stringify({
           name: name.trim(),
           description: description.trim() || null,
+          trait_prompt: traitPrompt.trim() || null,
           rarity_weight: rarityWeight,
         }),
       })
@@ -124,7 +127,7 @@ export default function EditTraitPage() {
         }
       />
 
-      <ToolWorkspace>
+      <ToolWorkspace className="!max-w-3xl">
         <ToolPanel title="Trait settings">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -151,6 +154,19 @@ export default function EditTraitPage() {
                 />
                 <p className="text-xs text-zinc-500 mt-1.5">
                   Visual description used in AI image generation.
+                </p>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Generation prompt</label>
+                <textarea
+                  value={traitPrompt}
+                  onChange={(e) => setTraitPrompt(e.target.value)}
+                  className="w-full rounded-xl bg-[#0c0c10] border border-white/[0.1] px-4 py-2.5 text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
+                  placeholder="Exact prompt text sent to the image model for this trait"
+                  rows={4}
+                />
+                <p className="text-xs text-zinc-500 mt-1.5">
+                  Optional. Overrides the description in the generation prompt when set.
                 </p>
               </div>
               <div>

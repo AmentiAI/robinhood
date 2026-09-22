@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
         (SELECT COUNT(*) FROM mint_phases WHERE collection_id = c.id) as phase_count,
         (SELECT COUNT(*) FROM mint_phases WHERE collection_id = c.id AND is_active = true) as active_phase_count
       FROM collections c
+      WHERE COALESCE(c.collection_status, 'draft') <> 'deleted'
       ORDER BY 
         CASE 
           WHEN c.launch_status = 'active' THEN 1

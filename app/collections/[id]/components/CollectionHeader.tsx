@@ -63,6 +63,12 @@ export function CollectionHeader({
 
           <div className="flex flex-wrap gap-2 shrink-0">
             <Link
+              href={`/collections/${collection.id}/export`}
+              className="hg-btn-glow inline-flex h-10 px-4 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
+            >
+              Export to OpenSea
+            </Link>
+            <Link
               href={`/collections/${collection.id}/edit`}
               className="hg-btn-glow inline-flex h-10 px-4 items-center rounded-full border border-white/[0.12] bg-white/[0.04] text-sm font-semibold text-zinc-100 hover:border-[#2DE2FF]/50 hover:text-[#2DE2FF] transition-all"
             >

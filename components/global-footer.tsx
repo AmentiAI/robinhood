@@ -7,7 +7,7 @@ export function GlobalFooter() {
 
   return (
     <footer className="mt-auto border-t border-white/[0.06] bg-transparent">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         <div className="rounded-2xl border border-white/[0.08] bg-[#131318]/70 px-6 sm:px-8 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div>

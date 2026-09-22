@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
-import { compressImage } from '@/lib/image-compression';
+import { compressImage, normalizeCompressionFormat, compressionExtension } from '@/lib/image-compression';
 import { sql } from '@/lib/database';
 
 // POST /api/collections/[id]/ordinals/recompress - Recompress all ordinals with new settings
@@ -85,18 +85,20 @@ export async function POST(
         const originalSizeKB = parseFloat((imageBlob.size / 1024).toFixed(2));
 
         // Compress the image
+        const outputFormat = normalizeCompressionFormat(compression_format);
         const compressedBlob = await compressImage(
           imageBlob,
           compression_quality ?? 100,
           compression_dimensions ?? 1024,
-          compression_target_kb || undefined
+          compression_target_kb || undefined,
+          outputFormat
         );
 
         const compressedSizeKB = parseFloat((compressedBlob.size / 1024).toFixed(2));
 
         // Upload compressed image
         const timestamp = Date.now();
-        const fileExtension = compression_format === 'jpg' ? 'jpg' : compression_format === 'png' ? 'png' : 'webp';
+        const fileExtension = compressionExtension(outputFormat);
         const compressedFilename = `compressed-${collectionId}-${ordinalNumber || ordinalId}-${timestamp}.${fileExtension}`;
         
         const compressedBlobResult = await put(compressedFilename, compressedBlob, {

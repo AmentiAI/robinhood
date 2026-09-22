@@ -31,7 +31,7 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
   const [sequenceName, setSequenceName] = useState('');
 
   // Clip generation state
-  const [showGeneratePanel, setShowGeneratePanel] = useState(false);
+  const [showGeneratePanel, setShowGeneratePanel] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [videoScene, setVideoScene] = useState('');
   const [videoActions, setVideoActions] = useState('');
@@ -540,9 +540,9 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Video Library & Generation */}
-          <div className="lg:col-span-1 space-y-4">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          {/* Controls sit on the right so the timeline is the main stage */}
+          <div className="order-2 space-y-4 lg:sticky lg:top-28">
             {/* Generate New Clip Panel */}
             <div className="bg-[#131318] rounded-lg border border-[#2DE2FF] p-4">
               <div className="flex items-center justify-between mb-4">
@@ -832,8 +832,8 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
             </div>
           </div>
 
-          {/* Right: Timeline & Controls */}
-          <div className="lg:col-span-2">
+          {/* Timeline is the main stage */}
+          <div className="order-1 min-w-0">
             {/* Timeline */}
             <div className="bg-[#131318] rounded-lg border border-white/[0.08] p-4 mb-6">
               <h2 className="text-lg font-semibold text-white mb-4">🎬 Timeline ({clips.length} clips)</h2>
@@ -842,40 +842,36 @@ export default function SequenceEditorPage({ params }: { params: Promise<{ seque
                   Add videos from the library to start building your sequence
                 </p>
               ) : (
-                <div className="space-y-3">
+                <div className="flex gap-3 overflow-x-auto pb-2">
                   {clips.map((clip, index) => (
-                    <div key={clip.id} className="border border-white/[0.08] rounded-lg p-3">
-                      <div className="flex items-center gap-3">
-                        <div className="text-zinc-500 font-mono text-sm w-8">
-                          #{index + 1}
-                        </div>
-                        <video src={clip.video_url} className="w-24 h-16 object-cover rounded" muted />
-                        <div className="flex-1">
-                          <div className="text-sm text-white">Clip {index + 1}</div>
-                          {index < clips.length - 1 && (
-                            <select
-                              value={clip.transition_type}
-                              onChange={(e) => updateClipTransition(clip.id, e.target.value as TransitionType)}
-                              disabled={sequence.status !== 'draft'}
-                              className="mt-1 text-xs bg-[var(--background)] border border-white/[0.08] rounded px-2 py-1 text-white"
-                            >
-                              <option value="none">No Transition</option>
-                              <option value="cut">Cut</option>
-                              <option value="fade">Fade</option>
-                              <option value="dissolve">Dissolve</option>
-                              <option value="ai_transition">AI Transition (+4 credits)</option>
-                            </select>
-                          )}
-                        </div>
+                    <div key={clip.id} className="w-52 shrink-0 rounded-xl border border-white/[0.08] bg-[#0c0c10] p-3">
+                      <div className="mb-2 flex items-center justify-between">
+                        <span className="font-mono text-xs text-zinc-500">#{index + 1}</span>
                         {sequence.status === 'draft' && (
                           <button
                             onClick={() => removeClip(clip.id)}
-                            className="px-3 py-1 bg-red-500/20 text-red-400 rounded text-sm hover:bg-red-500/30"
+                            className="text-xs font-semibold text-[#FF2BD6] hover:opacity-80"
                           >
                             Remove
                           </button>
                         )}
                       </div>
+                      <video src={clip.video_url} className="mb-2 h-28 w-full rounded-lg object-cover" muted />
+                      <div className="text-sm font-medium text-white">Clip {index + 1}</div>
+                      {index < clips.length - 1 && (
+                        <select
+                          value={clip.transition_type}
+                          onChange={(e) => updateClipTransition(clip.id, e.target.value as TransitionType)}
+                          disabled={sequence.status !== 'draft'}
+                          className="mt-2 w-full rounded-lg border border-white/[0.08] bg-[#131318] px-2 py-1.5 text-xs text-white"
+                        >
+                          <option value="none">No Transition</option>
+                          <option value="cut">Cut</option>
+                          <option value="fade">Fade</option>
+                          <option value="dissolve">Dissolve</option>
+                          <option value="ai_transition">AI Transition (+4 credits)</option>
+                        </select>
+                      )}
                     </div>
                   ))}
                 </div>

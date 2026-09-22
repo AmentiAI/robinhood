@@ -1028,22 +1028,18 @@ export default function CollectionLaunchPage() {
           </div>
         )}
 
+        <div className="grid items-start gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
         <StepNavigation 
           currentStep={currentStep} 
           collectionName={collection?.name ?? ''} 
           collectionId={collectionId}
           onStepClick={(step) => {
-            // Allow free navigation to steps 1-4, but step 5 (Launch) might need validation
-            if (step === 5) {
-              // For launch step, you might want to add validation here
-              // For now, allow navigation
-            }
             setCurrentStep(step)
           }}
         />
 
         {/* Step Content */}
-            <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-5 sm:p-8 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
+            <div className="hg-card min-w-0 rounded-2xl border border-white/[0.1] bg-[#131318] p-5 sm:p-8 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
           {/* Step 1: Collection Settings */}
           {currentStep === 1 && (
             <CollectionSettingsStep
@@ -1174,6 +1170,7 @@ export default function CollectionLaunchPage() {
             />
                 )}
               </div>
+        </div>
               </div>
 
         {/* Confirmation Dialogs */}

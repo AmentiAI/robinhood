@@ -111,21 +111,20 @@ export function LayersSection({ collectionId, layers, onLayerDeleted }: LayersSe
             </p>
           </div>
           <div className="flex flex-wrap gap-2 shrink-0">
-            {layers.length === 0 && (
-              <button
-                type="button"
-                onClick={handleLazyMode}
-                disabled={generatingLazy || !currentAddress}
-                className="hg-btn-glow inline-flex h-10 px-5 items-center gap-2 rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
-                style={{ backgroundSize: '200% 100%', animation: generatingLazy ? undefined : 'hg-shimmer 5s linear infinite' }}
-              >
-                {generatingLazy ? (
-                  <BrandLoader variant="inline" label="Lazy Mode" />
-                ) : (
-                  'Lazy Mode'
-                )}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={handleLazyMode}
+              disabled={generatingLazy || !currentAddress || layers.length > 0}
+              title={layers.length > 0 ? 'Lazy Mode is available before any layers exist' : 'Auto-create starter layers and traits'}
+              className="hg-btn-glow inline-flex h-10 px-5 items-center gap-2 rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
+              style={{ backgroundSize: '200% 100%', animation: generatingLazy || layers.length > 0 ? undefined : 'hg-shimmer 5s linear infinite' }}
+            >
+              {generatingLazy ? (
+                <BrandLoader variant="inline" label="Lazy Mode" />
+              ) : (
+                'Lazy Mode'
+              )}
+            </button>
             <Link
               href={`/collections/${collectionId}/layers/create`}
               className="hg-btn-glow inline-flex h-10 px-5 items-center justify-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold"
@@ -162,48 +161,38 @@ export function LayersSection({ collectionId, layers, onLayerDeleted }: LayersSe
             )}
           </div>
         ) : (
-          <div className="rounded-xl border border-white/[0.08] bg-[#0c0c10] overflow-hidden">
-            <div className="divide-y divide-white/[0.06]">
-              {layers.map((layer, i) => (
-                <div
-                  key={layer.id}
-                  className="flex flex-col sm:flex-row sm:items-center gap-3 px-4 py-3.5 hover:bg-white/[0.03] transition-colors hg-rise"
-                  style={{ animationDelay: `${Math.min(i, 6) * 40}ms` }}
-                >
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs font-bold text-[#2DE2FF] tabular-nums">
-                      {layer.display_order}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white truncate">{layer.name}</p>
-                      <p className="text-xs text-zinc-500">{layer.trait_count} traits</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 sm:justify-end pl-11 sm:pl-0">
-                    <Link
-                      href={`/collections/${collectionId}/layers/${layer.id}`}
-                      className="hg-btn-glow inline-flex h-9 px-4 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-xs font-bold"
-                    >
-                      Traits
-                    </Link>
-                    <Link
-                      href={`/collections/${collectionId}/layers/${layer.id}/edit`}
-                      className="inline-flex h-9 px-4 items-center rounded-full border border-white/[0.1] text-xs font-semibold text-zinc-300 hover:border-[#FF2BD6]/40 hover:text-[#FF2BD6] transition-all"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteClick(layer.id, layer.name)}
-                      className="inline-flex h-9 px-3 items-center rounded-full border border-red-500/25 text-xs font-semibold text-red-400 hover:bg-red-500/10 transition-all"
-                      title="Delete layer"
-                    >
-                      Delete
-                    </button>
-                  </div>
+          <div className="flex gap-3 overflow-x-auto pb-1">
+            {layers.map((layer) => (
+              <div
+                key={layer.id}
+                className="shrink-0 w-52 rounded-2xl border border-white/[0.1] bg-[#0c0c10] p-4"
+              >
+                <p className="text-[11px] font-bold tabular-nums text-[#2DE2FF]">{String(layer.display_order).padStart(2, '0')}</p>
+                <p className="mt-1 text-sm font-semibold text-white truncate">{layer.name}</p>
+                <p className="text-xs text-zinc-500 mb-4">{layer.trait_count} traits</p>
+                <div className="flex flex-wrap gap-1.5">
+                  <Link
+                    href={`/collections/${collectionId}/layers/${layer.id}`}
+                    className="inline-flex h-8 px-3 items-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-xs font-bold"
+                  >
+                    Traits
+                  </Link>
+                  <Link
+                    href={`/collections/${collectionId}/layers/${layer.id}/edit`}
+                    className="inline-flex h-8 px-3 items-center rounded-full border border-white/[0.1] text-xs font-semibold text-zinc-300 hover:text-white"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteClick(layer.id, layer.name)}
+                    className="inline-flex h-8 px-3 items-center rounded-full text-xs font-semibold text-red-400 hover:bg-red-500/10"
+                  >
+                    Delete
+                  </button>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         )}
       </section>

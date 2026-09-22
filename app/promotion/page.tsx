@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { PageHeader } from '@/components/page-header'
-import { ToolWorkspace } from '@/components/tool-workspace'
+import { ToolWorkspace, ToolPanel } from '@/components/tool-workspace'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { useCredits } from '@/lib/credits-context'
 import { toast } from 'sonner'
@@ -321,8 +321,9 @@ export default function PromotionPage() {
   const handleScroll = useCallback(() => {
     const container = scrollContainerRef.current
     if (!container) return
-    const { scrollLeft, scrollWidth, clientWidth } = container
-    if (scrollWidth - scrollLeft - clientWidth < 200) {
+    const nearHorizontal = container.scrollWidth - container.scrollLeft - container.clientWidth < 200
+    const nearVertical = container.scrollHeight - container.scrollTop - container.clientHeight < 240
+    if (nearHorizontal || nearVertical) {
       loadMore()
     }
   }, [loadMore])
@@ -784,8 +785,8 @@ export default function PromotionPage() {
           </div>
 
           {viewMode === 'generate' && (
-            <div className="space-y-6">
-              
+            <div className="grid items-start gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
+              <div className="space-y-4 lg:sticky lg:top-28">
               {/* Content Type Selector */}
               <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
                 <div className="flex items-center gap-3 mb-4">
@@ -1070,7 +1071,9 @@ export default function PromotionPage() {
                   )}
                 </div>
               )}
+              </div>
 
+              <div className="space-y-4 min-w-0">
               {/* Step 2: Image Selection (only for flyers or collection videos) */}
               {contentType === 'flyer' || (contentType === 'video' && videoSourceType === 'collection') ? (
               <div className="bg-[#131318] border border-white/[0.08] rounded-xl rounded-2xl border-white/[0.08] p-6">
@@ -1098,7 +1101,7 @@ export default function PromotionPage() {
                   <div 
                     ref={scrollContainerRef}
                     onScroll={handleScroll}
-                    className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+                    className="grid grid-cols-3 sm:grid-cols-4 xl:grid-cols-5 gap-3 max-h-[520px] overflow-y-auto pr-1"
                     style={{ scrollbarWidth: 'thin' }}
                   >
                     {ordinals.map((ordinal) => {
@@ -1115,7 +1118,7 @@ export default function PromotionPage() {
                           key={ordinal.id}
                           onClick={() => toggleOrdinalSelection(ordinal.id)}
                           disabled={false} // Always allow interaction to change selections
-                          className={`relative flex-shrink-0 w-32 h-32 rounded-xl overflow-hidden border-3 transition-all ${
+                          className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${
                             isSelected 
                               ? 'border-[#2DE2FF] ring-2 ring-[#2DE2FF]/30 scale-105' 
                               : canInteract 
@@ -1457,6 +1460,7 @@ export default function PromotionPage() {
                   </div>
                 </div>
               )}
+              </div>
             </div>
           )}
 

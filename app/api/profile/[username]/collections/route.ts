@@ -44,6 +44,7 @@ export async function GET(
       FROM collections 
       WHERE wallet_address IS NOT NULL 
         AND LOWER(TRIM(wallet_address)) = LOWER(${walletAddress.trim()})
+        AND COALESCE(collection_status, 'draft') <> 'deleted'
       ORDER BY created_at DESC
     ` as any[];
 
@@ -77,6 +78,7 @@ export async function GET(
           INNER JOIN collection_collaborators cc ON c.id::text = cc.collection_id::text
           WHERE LOWER(TRIM(cc.wallet_address)) = LOWER(${walletAddress.trim()})
             AND cc.status = 'accepted'
+            AND COALESCE(c.collection_status, 'draft') <> 'deleted'
           ORDER BY cc.created_at DESC
         ` as any[];
       }

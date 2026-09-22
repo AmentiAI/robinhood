@@ -116,7 +116,7 @@ export async function GET(
         }
       : null;
 
-    if (!collection) {
+    if (!collection || collection.collection_status === 'deleted') {
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
 

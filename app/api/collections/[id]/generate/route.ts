@@ -44,10 +44,11 @@ export async function POST(
 
     // Verify collection exists and get its name
     const collectionResult = await sql`
-      SELECT id, name FROM collections WHERE id = ${collectionId}
+      SELECT id, name, COALESCE(collection_status, 'draft') as collection_status
+      FROM collections WHERE id = ${collectionId}
     `;
 
-    if (!Array.isArray(collectionResult) || collectionResult.length === 0) {
+    if (!Array.isArray(collectionResult) || collectionResult.length === 0 || (collectionResult[0] as any)?.collection_status === 'deleted') {
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
 

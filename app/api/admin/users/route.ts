@@ -75,6 +75,7 @@ export async function GET(request: NextRequest) {
         SELECT wallet_address, COUNT(*) as collection_count
         FROM collections
         WHERE wallet_address IS NOT NULL
+          AND COALESCE(collection_status, 'draft') <> 'deleted'
         GROUP BY wallet_address
       ` as Promise<any[]>,
 

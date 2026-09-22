@@ -1,22 +1,58 @@
 import sharp from 'sharp';
 
+export type CompressionFormat = 'webp' | 'jpg' | 'png'
+
+export function normalizeCompressionFormat(value: unknown): CompressionFormat {
+  const v = String(value || 'webp').trim().toLowerCase()
+  if (v === 'jpg' || v === 'jpeg') return 'jpg'
+  if (v === 'png') return 'png'
+  return 'webp'
+}
+
+export function compressionExtension(format: CompressionFormat): string {
+  return format === 'jpg' ? 'jpg' : format === 'png' ? 'png' : 'webp'
+}
+
+function outputMime(format: CompressionFormat): string {
+  if (format === 'jpg') return 'image/jpeg'
+  if (format === 'png') return 'image/png'
+  return 'image/webp'
+}
+
+function encode(
+  instance: sharp.Sharp,
+  format: CompressionFormat,
+  quality: number
+): sharp.Sharp {
+  if (format === 'jpg') {
+    return instance.jpeg({ quality, mozjpeg: true })
+  }
+  if (format === 'png') {
+    const level = quality >= 90 ? 6 : quality >= 60 ? 8 : 9
+    return instance.png({ compressionLevel: level, adaptiveFiltering: true })
+  }
+  return instance.webp({ quality, effort: 6 })
+}
+
 /**
  * Compress an image using Sharp based on collection settings
  * @param imageBlob - The original image blob
  * @param quality - Compression quality (0-100, where 100 = lossless, lower = more compression)
  * @param dimensions - Target dimensions (width and height, must be square and <= 1024)
  * @param targetKB - Target file size in KB (optional, overrides quality/dimensions if specified)
+ * @param format - Output format. Defaults to webp, matching launch recompress.
  * @returns Compressed image blob
  */
 export async function compressImage(
   imageBlob: Blob,
   quality: number = 100,
   dimensions: number = 1024,
-  targetKB?: number
+  targetKB?: number,
+  format: CompressionFormat = 'webp'
 ): Promise<Blob> {
   // If target KB is specified, use iterative compression to reach target size
   if (targetKB !== undefined && targetKB > 0) {
-    return compressToTargetSize(imageBlob, targetKB);
+    return compressToTargetSize(imageBlob, targetKB, format);
   }
   // Ensure dimensions are valid (square, <= 1024, >= 1)
   const validDimensions = Math.max(1, Math.min(1024, Math.round(dimensions)));
@@ -45,15 +81,10 @@ export async function compressImage(
   // - 70 = good quality with significant size reduction
   // - 50-60 = acceptable quality, very small files
   // - 0-40 = lower quality, smallest files
-  const compressedBuffer = await sharpInstance
-    .webp({
-      quality: validQuality, // Use quality directly (0-100)
-      effort: 6, // Compression effort (0-6, 6 = best compression but slower)
-    })
-    .toBuffer();
+  const compressedBuffer = await encode(sharpInstance, format, validQuality).toBuffer();
 
   // Convert back to blob
-  return new Blob([compressedBuffer], { type: 'image/webp' });
+  return new Blob([compressedBuffer], { type: outputMime(format) });
 }
 
 /**
@@ -62,7 +93,11 @@ export async function compressImage(
  * @param targetKB - Target file size in KB
  * @returns Compressed image blob
  */
-async function compressToTargetSize(imageBlob: Blob, targetKB: number): Promise<Blob> {
+async function compressToTargetSize(
+  imageBlob: Blob,
+  targetKB: number,
+  format: CompressionFormat = 'webp'
+): Promise<Blob> {
   const targetBytes = targetKB * 1024;
   const arrayBuffer = await imageBlob.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
@@ -92,16 +127,14 @@ async function compressToTargetSize(imageBlob: Blob, targetKB: number): Promise<
     
     for (const quality of qualitySteps) {
       try {
-        const testBuffer = await sharp(buffer)
-          .resize(dim, dim, {
+        const testBuffer = await encode(
+          sharp(buffer).resize(dim, dim, {
             fit: 'cover',
             withoutEnlargement: true,
-          })
-          .webp({
-            quality: quality,
-            effort: 6, // Best compression
-          })
-          .toBuffer();
+          }),
+          format,
+          quality
+        ).toBuffer();
         
         const testSize = testBuffer.length;
         const sizeDiff = Math.abs(testSize - targetBytes);
@@ -109,13 +142,13 @@ async function compressToTargetSize(imageBlob: Blob, targetKB: number): Promise<
         // If we're very close to target (within 2%), use this immediately
         if (sizeDiff <= targetBytes * 0.02) {
           console.log(`[Compression] Found perfect match: ${(testSize / 1024).toFixed(2)} KB (target: ${targetKB} KB) at ${dim}x${dim}, quality ${quality}`);
-          return new Blob([testBuffer], { type: 'image/webp' });
+          return new Blob([testBuffer], { type: outputMime(format) });
         }
         
         // Track the best result (closest to target)
         if (sizeDiff < bestSizeDiff) {
           bestSizeDiff = sizeDiff;
-          bestResult = new Blob([testBuffer], { type: 'image/webp' });
+          bestResult = new Blob([testBuffer], { type: outputMime(format) });
           console.log(`[Compression] New best: ${(testSize / 1024).toFixed(2)} KB (diff: ${(sizeDiff / 1024).toFixed(2)} KB) at ${dim}x${dim}, quality ${quality}`);
         }
         
@@ -140,20 +173,18 @@ async function compressToTargetSize(imageBlob: Blob, targetKB: number): Promise<
   
   // Fallback: use maximum compression
   console.log(`[Compression] Using fallback: maximum compression`);
-  const fallbackBuffer = await sharp(buffer)
-    .resize(256, 256, {
+  const fallbackBuffer = await encode(
+    sharp(buffer).resize(256, 256, {
       fit: 'cover',
       withoutEnlargement: true,
-    })
-    .webp({
-      quality: 20, // Low quality for maximum compression
-      effort: 6,
-    })
-    .toBuffer();
+    }),
+    format,
+    20
+  ).toBuffer();
   
   const fallbackSize = fallbackBuffer.length;
   console.log(`[Compression] Fallback result: ${(fallbackSize / 1024).toFixed(2)} KB`);
-  return new Blob([fallbackBuffer], { type: 'image/webp' });
+  return new Blob([fallbackBuffer], { type: outputMime(format) });
 }
 
 /**

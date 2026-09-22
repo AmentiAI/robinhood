@@ -44,7 +44,7 @@ export default function CollectionsPage() {
   const [collabCollections, setCollabCollections] = useState<Collection[]>([])
   const [activeTab, setActiveTab] = useState<'collections' | 'collabs'>('collections')
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'launchpad' | 'self_inscribe' | 'marketplace' | 'deleted'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'launchpad' | 'self_inscribe' | 'marketplace'>('all')
   const [loading, setLoading] = useState(true)
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; collectionId: string | null; collectionName: string }>({
     isOpen: false,
@@ -185,7 +185,8 @@ export default function CollectionsPage() {
 
   // Filter collections
   const filteredCollections = useMemo(() => {
-    let filtered = activeTab === 'collections' ? ownedCollections : collabCollections
+    let filtered = (activeTab === 'collections' ? ownedCollections : collabCollections)
+      .filter(c => c.status !== 'deleted')
     
     // Status filter
     if (activeTab === 'collections' && statusFilter !== 'all') {
@@ -194,8 +195,6 @@ export default function CollectionsPage() {
       } else {
         filtered = filtered.filter(c => c.status === statusFilter)
       }
-    } else if (activeTab === 'collections' && statusFilter === 'all') {
-      filtered = filtered.filter(c => c.status !== 'deleted')
     }
     
     // Search filter
@@ -287,7 +286,7 @@ export default function CollectionsPage() {
                     : 'text-zinc-500 hover:text-white'
                 }`}
               >
-                Mine ({ownedCollections.length})
+                Mine ({ownedCollections.filter(c => c.status !== 'deleted').length})
               </button>
               <button
                 onClick={() => setActiveTab('collabs')}
@@ -297,7 +296,7 @@ export default function CollectionsPage() {
                     : 'text-zinc-500 hover:text-white'
                 }`}
               >
-                Collabs ({collabCollections.length})
+                Collabs ({collabCollections.filter(c => c.status !== 'deleted').length})
               </button>
             </div>
           </div>
@@ -309,7 +308,6 @@ export default function CollectionsPage() {
                 { value: 'draft', label: 'Draft' },
                 { value: 'launchpad', label: 'Launchpad' },
                 { value: 'self_inscribe', label: 'Inscribe' },
-                { value: 'deleted', label: 'Deleted' },
               ].map((filter) => (
                 <button
                   key={filter.value}
@@ -451,6 +449,12 @@ export default function CollectionsPage() {
                               className="inline-flex h-9 px-4 items-center rounded-full border border-white/[0.08] text-sm font-medium text-zinc-400 hover:text-white hover:border-[#2DE2FF]/35 transition-all duration-200"
                             >
                               Edit
+                            </Link>
+                            <Link
+                              href={`/collections/${collection.id}/export`}
+                              className="inline-flex h-9 px-4 items-center rounded-full border border-[#2DE2FF]/35 text-sm font-semibold text-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-all duration-200"
+                            >
+                              Export
                             </Link>
                             <button
                               onClick={() => handleDeleteClick(collection.id, collection.name)}

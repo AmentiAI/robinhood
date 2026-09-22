@@ -158,6 +158,60 @@ export default function MovieModePage() {
       />
 
       <ToolWorkspace>
+        <div className="grid items-start gap-5 lg:grid-cols-[320px_minmax(0,1fr)]">
+        <ToolPanel title="New sequence" subtitle="Name it, pick a mode, then create" className="lg:sticky lg:top-28">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">Sequence name</label>
+              <input
+                type="text"
+                value={newSequenceName}
+                onChange={(e) => setNewSequenceName(e.target.value)}
+                placeholder="Epic Adventure Trailer"
+                className="w-full px-4 py-2.5 bg-[#0c0c10] border border-white/[0.1] rounded-xl text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">Composition</label>
+              <select
+                value={newSequenceMode}
+                onChange={(e) => setNewSequenceMode(e.target.value as 'simple' | 'transitions')}
+                className="w-full px-4 py-2.5 bg-[#0c0c10] border border-white/[0.1] rounded-xl text-white focus:border-[#2DE2FF] focus:outline-none"
+              >
+                <option value="simple">Simple (fast)</option>
+                <option value="transitions">Transitions (AI)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-zinc-400 mb-2">Aspect ratio</label>
+              <div className="grid grid-cols-3 gap-2">
+                {(['16:9', '9:16', '1:1'] as const).map((ratio) => (
+                  <button
+                    key={ratio}
+                    type="button"
+                    onClick={() => setNewSequenceAspectRatio(ratio)}
+                    className={`rounded-xl border px-2 py-2 text-sm font-semibold ${
+                      newSequenceAspectRatio === ratio
+                        ? 'border-[#2DE2FF] bg-[#2DE2FF]/15 text-[#2DE2FF]'
+                        : 'border-white/[0.1] text-zinc-400'
+                    }`}
+                  >
+                    {ratio}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={createSequence}
+              disabled={creating || !newSequenceName.trim()}
+              className="hg-btn-glow w-full h-11 rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
+            >
+              {creating ? 'Creating…' : 'Create sequence'}
+            </button>
+          </div>
+        </ToolPanel>
+        <div className="min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
           <div className="flex flex-wrap gap-1 p-1 rounded-full bg-[#131318] border border-white/[0.08]">
             {FILTERS.map((status) => (
@@ -263,6 +317,8 @@ export default function MovieModePage() {
             ))}
           </div>
         )}
+        </div>
+        </div>
       </ToolWorkspace>
 
       {showCreateModal && (

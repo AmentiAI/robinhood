@@ -419,27 +419,20 @@ export default function LayerDetailsPage() {
           Back to collection
         </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-4">
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-1">Traits</h3>
-            <p className="text-2xl font-bold text-[#2DE2FF]">{traits.length}</p>
-          </div>
-          <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-4">
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-1">AI generated</h3>
-            <p className="text-2xl font-bold text-emerald-400">
-              {traits.filter((t) => t.trait_prompt).length}
-            </p>
-          </div>
-          <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] p-4">
-            <h3 className="text-[11px] font-medium uppercase tracking-[0.12em] text-zinc-500 mb-1">Average rarity</h3>
-            <p className="text-2xl font-bold text-[#A855F7]">
+        <div className="space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-zinc-400">
+            <span className="text-white font-semibold">{traits.length}</span> traits
+            <span className="mx-2 text-zinc-600">·</span>
+            <span className="text-white font-semibold">{traits.filter((t) => t.trait_prompt).length}</span> from AI
+            <span className="mx-2 text-zinc-600">·</span>
+            avg rarity{' '}
+            <span className="text-white font-semibold">
               {traits.length > 0
                 ? Math.round(traits.reduce((sum, t) => sum + t.rarity_weight, 0) / traits.length)
                 : 0}
-            </p>
-          </div>
-        </div>
-
+            </span>
+          </p>
         <div className="flex flex-wrap gap-2">
           <Link
             href={`/collections/${params.id}/layers/${params.layerId}/traits/create`}
@@ -454,6 +447,7 @@ export default function LayerDetailsPage() {
           >
             Upload existing
           </button>
+        </div>
         </div>
 
         <ToolPanel title="Generate traits" subtitle={`AI ideas for ${layer.name}`}>
@@ -807,6 +801,7 @@ export default function LayerDetailsPage() {
             </div>
           )}
         </ToolPanel>
+        </div>
         </ToolWorkspace>
 
         {/* Upload Trait Modal */}

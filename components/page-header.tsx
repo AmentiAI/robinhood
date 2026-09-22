@@ -48,7 +48,7 @@ export function PageHeader({ title, subtitle, action }: PageHeaderProps) {
               <p className="text-zinc-400 text-sm max-w-xl leading-relaxed">{subtitle}</p>
             </div>
             {action ? (
-              <div className="flex items-center gap-3 shrink-0 [&_a]:hg-btn-glow [&_button]:hg-btn-glow">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0 [&_a]:hg-btn-glow [&_button]:hg-btn-glow">
                 {action}
               </div>
             ) : null}

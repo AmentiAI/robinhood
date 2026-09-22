@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { put } from '@vercel/blob';
-import { compressImage, needsCompression } from '@/lib/image-compression';
+import { compressImage, needsCompression, normalizeCompressionFormat, compressionExtension } from '@/lib/image-compression';
 import { sql } from '@/lib/database';
 
 
@@ -22,7 +22,7 @@ export async function POST(
 
     // Get collection compression settings
     const collectionResult = await sql`
-      SELECT compression_quality, compression_dimensions, compression_target_kb
+      SELECT compression_quality, compression_dimensions, compression_target_kb, compression_format
       FROM collections
       WHERE id = ${collectionId}
     `;
@@ -35,6 +35,7 @@ export async function POST(
     const compressionQuality = (collection as any).compression_quality ?? 100;
     const compressionDimensions = (collection as any).compression_dimensions ?? 1024;
     const compressionTargetKB = (collection as any).compression_target_kb ?? null;
+    const compressionFormat = normalizeCompressionFormat((collection as any).compression_format);
 
     console.log(`[Compression] Collection settings: Quality=${compressionQuality}%, Dimensions=${compressionDimensions}px, TargetKB=${compressionTargetKB || 'not set'}`);
 
@@ -111,7 +112,8 @@ export async function POST(
           imageBlob,
           compressionQuality,
           compressionDimensions,
-          compressionTargetKB || undefined
+          compressionTargetKB || undefined,
+          compressionFormat
         );
         
         const compressedSizeKB = parseFloat((compressedBlob.size / 1024).toFixed(2));
@@ -125,7 +127,7 @@ export async function POST(
 
         // Upload compressed image with timestamp to prevent caching issues
         const timestamp = Date.now();
-        const compressedFilename = `compressed-${collectionId}-${ordinalNumber || ordinalId}-${timestamp}.webp`;
+        const compressedFilename = `compressed-${collectionId}-${ordinalNumber || ordinalId}-${timestamp}.${compressionExtension(compressionFormat)}`;
         const compressedBlobResult = await put(compressedFilename, compressedBlob, {
           access: 'public',
           addRandomSuffix: false,

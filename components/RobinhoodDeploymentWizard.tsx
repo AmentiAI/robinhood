@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useConfig, useSwitchChain, useWalletClient } from 'wagmi'
+import { getWalletClient } from 'wagmi/actions'
 import { encodeFunctionData } from 'viem'
 import { collectionFactoryAbi } from '@/lib/robinhood/abis'
+import { getRobinhoodChain } from '@/lib/robinhood/config'
 
 interface Props {
   collectionId: string
@@ -20,8 +22,11 @@ export function RobinhoodDeploymentWizard({
   supply: supplyProp,
   onComplete,
 }: Props) {
-  const { address, isConnected } = useAccount()
+  const { address, isConnected, chainId } = useAccount()
   const { data: walletClient } = useWalletClient()
+  const { switchChainAsync } = useSwitchChain()
+  const config = useConfig()
+  const targetChain = getRobinhoodChain()
   const [status, setStatus] = useState('')
   const [error, setError] = useState('')
   const [contractAddress, setContractAddress] = useState('')
@@ -56,13 +61,41 @@ export function RobinhoodDeploymentWizard({
   }, [collectionId, nameProp, symbolProp, supplyProp])
 
   const deploy = async () => {
-    if (!isConnected || !address || !walletClient) {
+    if (!isConnected || !address) {
       setError('Connect an EVM wallet first')
       return
     }
     setBusy(true)
     setError('')
     try {
+      let client = walletClient
+      if (!client || chainId !== targetChain.id) {
+        setStatus(`Switch your wallet to ${targetChain.name}…`)
+        try {
+          await switchChainAsync({ chainId: targetChain.id })
+        } catch (switchErr: any) {
+          const ethereum = (window as any).ethereum
+          if (!ethereum?.request) throw switchErr
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: `0x${targetChain.id.toString(16)}`,
+                chainName: targetChain.name,
+                nativeCurrency: targetChain.nativeCurrency,
+                rpcUrls: [...targetChain.rpcUrls.default.http],
+                blockExplorerUrls: [targetChain.blockExplorers.default.url],
+              },
+            ],
+          })
+          await switchChainAsync({ chainId: targetChain.id })
+        }
+        client = await getWalletClient(config, { chainId: targetChain.id })
+      }
+      if (!client) {
+        throw new Error(`Approve the switch to ${targetChain.name} in your wallet, then try again.`)
+      }
+
       setStatus('Preparing factory transaction...')
       const prep = await fetch(`/api/collections/${collectionId}/deploy/create-rh-collection`, {
         method: 'POST',
@@ -90,7 +123,7 @@ export function RobinhoodDeploymentWizard({
           args: [meta.name, meta.symbol, '', BigInt(meta.supply)],
         })
 
-      const txHash = await walletClient.sendTransaction({
+      const txHash = await client.sendTransaction({
         to: factory,
         data,
         chain: undefined,
@@ -136,7 +169,13 @@ export function RobinhoodDeploymentWizard({
         onClick={deploy}
         className="px-4 py-2 bg-[#2DE2FF] text-black font-bold uppercase text-sm disabled:opacity-50"
       >
-        {contractAddress ? 'Already Deployed' : busy ? 'Deploying...' : 'Deploy Collection'}
+        {contractAddress
+          ? 'Already Deployed'
+          : busy
+            ? 'Deploying...'
+            : isConnected && chainId !== targetChain.id
+              ? `Switch to ${targetChain.name}`
+              : 'Deploy Collection'}
       </button>
     </div>
   )

@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
           LEFT JOIN collection_marketplace_listings ml ON ml.collection_id = c.id AND ml.status = 'active'
           WHERE c.wallet_address = ${trimmedWalletAddress}
             AND c.is_locked = true
+            AND COALESCE(c.collection_status, 'draft') <> 'deleted'
           ORDER BY c.created_at DESC
         `
       : sql`
@@ -62,6 +63,7 @@ export async function GET(request: NextRequest) {
           FROM collections c
           LEFT JOIN collection_marketplace_listings ml ON ml.collection_id = c.id AND ml.status = 'active'
           WHERE c.wallet_address = ${trimmedWalletAddress}
+            AND COALESCE(c.collection_status, 'draft') <> 'deleted'
           ORDER BY c.created_at DESC
         `;
     const ownedCollections = await ownedCollectionsQuery as any[];
@@ -89,6 +91,7 @@ export async function GET(request: NextRequest) {
             WHERE cc.wallet_address = ${trimmedWalletAddress}
               AND cc.status = 'accepted'
               AND c.is_locked = true
+              AND COALESCE(c.collection_status, 'draft') <> 'deleted'
             ORDER BY cc.created_at DESC
           `
         : sql`
@@ -109,6 +112,7 @@ export async function GET(request: NextRequest) {
             LEFT JOIN collection_marketplace_listings ml ON ml.collection_id = c.id AND ml.status = 'active'
             WHERE cc.wallet_address = ${trimmedWalletAddress}
               AND cc.status = 'accepted'
+              AND COALESCE(c.collection_status, 'draft') <> 'deleted'
             ORDER BY cc.created_at DESC
           `;
       collaboratorCollections = await collaboratorCollectionsQuery as any[];

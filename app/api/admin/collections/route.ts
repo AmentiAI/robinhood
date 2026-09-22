@@ -47,6 +47,7 @@ export async function GET(request: NextRequest) {
         hidden_from_homepage,
         force_show_on_homepage_ticker
       FROM collections
+      WHERE COALESCE(collection_status, 'draft') <> 'deleted'
       ORDER BY name ASC
     ` as any[];
 

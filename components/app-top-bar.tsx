@@ -125,7 +125,7 @@ export function AppTopBar() {
     <>
       <header className="fixed top-0 inset-x-0 z-[100]">
         <div className="mx-auto max-w-[1600px] px-3 sm:px-5 pt-3 sm:pt-4">
-          <div className="relative h-[4.75rem] sm:h-[5.5rem] rounded-[1.35rem] border border-white/[0.12] bg-[#121216]/95 backdrop-blur-xl shadow-[0_10px_48px_rgba(0,0,0,0.5),0_0_48px_rgba(45,226,255,0.07)] flex items-center gap-3 sm:gap-5 px-3.5 sm:px-5">
+          <div className="relative h-16 sm:h-[5.5rem] rounded-2xl sm:rounded-[1.35rem] border border-white/[0.12] bg-[#121216]/95 backdrop-blur-xl shadow-[0_10px_48px_rgba(0,0,0,0.5),0_0_48px_rgba(45,226,255,0.07)] flex items-center gap-2.5 sm:gap-5 px-3 sm:px-5">
             <div
               aria-hidden
               className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-[1.35rem]"
@@ -147,10 +147,10 @@ export function AppTopBar() {
                 alt="HoodGFX"
                 width={56}
                 height={56}
-                className="w-12 h-12 sm:w-14 sm:h-14 object-contain transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
+                className="w-10 h-10 sm:w-14 sm:h-14 object-contain transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
                 priority
               />
-              <span className="hidden sm:block text-[1.35rem] font-semibold tracking-[-0.03em] text-white leading-none">
+              <span className="text-base sm:text-[1.35rem] font-semibold tracking-[-0.03em] text-white leading-none">
                 Hood<span className="text-[#FF2BD6]">GFX</span>
               </span>
             </Link>
@@ -245,7 +245,7 @@ export function AppTopBar() {
                       setWalletOpen((v) => !v)
                       setToolsOpen(false)
                     }}
-                    className="inline-flex items-center gap-2.5 h-12 sm:h-[3.25rem] pl-1.5 pr-3.5 rounded-full bg-[#1a1a20] border border-white/[0.12] hover:border-[#2DE2FF]/35 transition-colors duration-300"
+                    className="inline-flex items-center gap-2 h-10 sm:h-[3.25rem] pl-1 pr-2.5 sm:pr-3.5 rounded-full bg-[#1a1a20] border border-white/[0.12] hover:border-[#2DE2FF]/35 transition-colors duration-300"
                   >
                     <span className="w-9 h-9 rounded-full bg-gradient-to-br from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] flex items-center justify-center text-xs font-bold text-black">
                       {address.slice(2, 4).toUpperCase()}
@@ -311,7 +311,7 @@ export function AppTopBar() {
                   type="button"
                   onClick={handleConnect}
                   disabled={connecting}
-                  className="hg-btn-glow h-12 sm:h-[3.25rem] px-6 rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0b0b0d] text-[15px] font-semibold tracking-[-0.01em] disabled:opacity-60"
+                  className="hg-btn-glow h-10 sm:h-[3.25rem] px-4 sm:px-6 rounded-full bg-gradient-to-r from-[#2DE2FF] via-[#A855F7] to-[#FF2BD6] text-[#0b0b0d] text-sm sm:text-[15px] font-semibold tracking-[-0.01em] disabled:opacity-60"
                   style={{
                     backgroundSize: '200% 100%',
                     animation: connecting ? undefined : 'hg-shimmer 5s linear infinite',
@@ -323,7 +323,7 @@ export function AppTopBar() {
 
               <button
                 type="button"
-                className="lg:hidden w-12 h-12 rounded-xl border border-white/10 flex items-center justify-center text-zinc-300 hover:bg-white/[0.06] transition-colors duration-200"
+                className="lg:hidden w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-zinc-300 hover:bg-white/[0.06] transition-colors duration-200"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open menu"
               >
@@ -341,7 +341,7 @@ export function AppTopBar() {
             className="absolute inset-0 bg-black/70 backdrop-blur-sm hg-nav-overlay"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="hg-nav-dropdown absolute top-3 right-3 left-3 rounded-2xl border border-white/[0.12] bg-[#121216] shadow-2xl overflow-hidden">
+          <div className="hg-nav-dropdown absolute top-3 right-3 left-3 max-h-[calc(100dvh-1.5rem)] overflow-y-auto rounded-2xl border border-white/[0.12] bg-[#121216] shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.08]">
               <span className="text-base font-semibold tracking-tight text-white">Menu</span>
               <button
@@ -393,6 +393,7 @@ export function AppTopBar() {
           </div>
         </div>
       )}
+
     </>
   )
 }

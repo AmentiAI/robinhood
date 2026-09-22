@@ -184,7 +184,7 @@ export default function GenerateTraitPage() {
         }
       />
 
-      <ToolWorkspace>
+      <ToolWorkspace className="!max-w-3xl">
         {generatedTraits.length === 0 ? (
           <ToolPanel title="Generation settings" subtitle="Theme and quantity">
             <form onSubmit={handleGenerate} className="space-y-5">

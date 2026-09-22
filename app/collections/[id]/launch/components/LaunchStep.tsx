@@ -1025,7 +1025,7 @@ export function LaunchStep({
                 <h3 className="font-bold text-[#2DE2FF] text-xl mb-2">Deploy to Robinhood Chain first</h3>
                 <p className="text-zinc-400 text-sm mb-3">
                   Before launching, deploy your collection as an ERC-721 via the platform factory.
-                  Gas is paid in ETH on Robinhood Chain (testnet ETH is free from the faucet).
+                  Gas is paid in ETH on Robinhood Chain.
                 </p>
                 <div className="rounded-xl border border-white/[0.08] bg-[#131318] p-4 space-y-2 text-sm">
                   <div className="flex items-center gap-2">

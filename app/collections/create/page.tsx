@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { PageHeader } from '@/components/page-header'
-import { ToolWorkspace, ToolPanel, ToolTip } from '@/components/tool-workspace'
+import { ToolWorkspace, ToolTip } from '@/components/tool-workspace'
 import { useWallet } from '@/lib/wallet/compatibility'
 import { generateApiAuth } from '@/lib/wallet/api-auth'
 import { CollectionCreationProgressModal } from '@/components/collection-creation-progress-modal'
@@ -60,7 +60,6 @@ export default function CreateCollectionPage() {
   const [referenceType, setReferenceType] = useState<'pfp' | 'artwork' | null>(null)
   const [generateCharacterPrompt, setGenerateCharacterPrompt] = useState(false)
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false)
-  const [showInstructions, setShowInstructions] = useState(false)
   const [generatingAI, setGeneratingAI] = useState<string | null>(null) // Track which field is generating
   const [showColorMoodModal, setShowColorMoodModal] = useState(false)
   const [colorMoodSuggestions, setColorMoodSuggestions] = useState<string[]>([])
@@ -955,55 +954,20 @@ export default function CreateCollectionPage() {
       
       <div className="min-h-screen w-full bg-[#0a0a0c]">
         <PageHeader
-          title="Create Collection"
-          subtitle="Build your NFT collection by adding layers and traits to generate unique ordinals"
-        />
-        <ToolWorkspace className="space-y-6">
+          title="Create collection"
+          subtitle={
+            ['Name it, then set the look.', 'Choose how the art should look.', 'Color, light, and rules.', 'Size the files, then create.'][formStep - 1]
+          }
+          action={
             <Link
               href="/collections"
-              className="text-[#2DE2FF] hover:text-[#7aefff] inline-flex items-center gap-2 text-sm font-medium transition-colors"
+              className="inline-flex h-10 px-5 items-center rounded-full border border-white/[0.1] text-sm font-semibold text-zinc-200 hover:text-white"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Collections
+              Back
             </Link>
-
-        {/* Instructions - Collapsible */}
-        <ToolPanel title="Creating your collection" delayClass="hg-rise" action={
-          <button
-            type="button"
-            onClick={() => setShowInstructions(!showInstructions)}
-            className="text-sm text-zinc-500 hover:text-white transition-colors"
-          >
-            {showInstructions ? 'Hide' : 'Show'}
-          </button>
-        }>
-          {showInstructions ? (
-              <div className="space-y-3 text-sm text-zinc-500">
-                <p className="flex items-start gap-2">
-                  <span className="text-[#2DE2FF] mt-0.5 font-semibold">1.</span>
-                  <span><strong className="text-zinc-300">Name your collection</strong> — Choose something memorable that represents your project</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-[#2DE2FF] mt-0.5 font-semibold">2.</span>
-                  <span><strong className="text-zinc-300">Add layers and traits</strong> — Once created, add layers and traits to start generating ordinals</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-[#2DE2FF] mt-0.5 font-semibold">3.</span>
-                  <span><strong className="text-zinc-300">Invite collaborators</strong> — Invite team members by username or wallet address</span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <span className="text-[#2DE2FF] mt-0.5 font-semibold">4.</span>
-                  <span><strong className="text-zinc-300">Configure compression</strong> — Edit collection to set image compression settings</span>
-                </p>
-              </div>
-          ) : (
-            <p className="text-sm text-zinc-500">Expand for a quick overview of the create flow.</p>
-          )}
-        </ToolPanel>
-
-        <ToolPanel title="Collection setup" delayClass="hg-rise hg-rise-delay-1">
+          }
+        />
+        <ToolWorkspace className="!max-w-4xl">
           {!activeWalletConnected && (
             <div className="mb-6">
               <ToolTip tone="amber">
@@ -1012,47 +976,33 @@ export default function CreateCollectionPage() {
             </div>
           )}
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Step Indicator */}
-            <div className="mb-10">
-              <div className="flex gap-1 p-1 rounded-2xl bg-[#0c0c10] border border-white/[0.1]">
-                {[1, 2, 3, 4].map((step) => {
+            <div className="border-b border-white/[0.08]">
+              <div className="grid grid-cols-4">
+                {([
+                  [1, 'Basic'],
+                  [2, 'Style'],
+                  [3, 'Advanced'],
+                  [4, 'Compress'],
+                ] as const).map(([step, label]) => {
                   const isActive = formStep === step
-                  const isCompleted = formStep > step
-                  const stepLabels = ['Basic', 'Style', 'Advanced', 'Compress']
                   return (
                     <button
                       key={step}
                       type="button"
-                      onClick={() => setFormStep(step as 1 | 2 | 3 | 4)}
-                      className={`flex-1 flex items-center justify-center gap-2 px-2 sm:px-3 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-semibold transition-colors ${
+                      onClick={() => setFormStep(step)}
+                      className={`pb-3 text-sm font-semibold border-b-2 -mb-px ${
                         isActive
-                          ? 'bg-white text-black'
-                          : isCompleted
-                            ? 'text-[#2DE2FF] hover:bg-white/[0.04]'
-                            : 'text-zinc-500 hover:text-zinc-300'
+                          ? 'border-[#2DE2FF] text-white'
+                          : formStep > step
+                            ? 'border-transparent text-[#2DE2FF]'
+                            : 'border-transparent text-zinc-500 hover:text-zinc-300'
                       }`}
                     >
-                      <span
-                        className={`hidden sm:inline-flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
-                          isActive
-                            ? 'bg-black text-white'
-                            : isCompleted
-                              ? 'bg-[#2DE2FF]/20 text-[#2DE2FF]'
-                              : 'bg-white/[0.06] text-zinc-500'
-                        }`}
-                      >
-                        {isCompleted ? '✓' : step}
-                      </span>
-                      <span>{stepLabels[step - 1]}</span>
+                      <span className="block text-[10px] tracking-[0.16em] uppercase mb-1 opacity-70">{step}</span>
+                      {label}
                     </button>
                   )
                 })}
-              </div>
-              <div className="mt-3 h-1 rounded-full bg-white/[0.06] overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-[#2DE2FF] to-[#FF2BD6] transition-all duration-500"
-                  style={{ width: `${((formStep - 1) / 3) * 100}%` }}
-                />
               </div>
             </div>
 
@@ -1948,68 +1898,35 @@ export default function CreateCollectionPage() {
               </div>
             </div>
 
-            {/* Action Cards - 3 Column Grid */}
-            <div className={`grid gap-4 sm:gap-6 pt-6 border-t border-white/[0.06] ${isPfpCollection ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-1 sm:grid-cols-2'}`}>
-              {/* Create Collection Card */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-6 border-t border-white/[0.06]">
               <button
                 type="submit"
                 disabled={loading || lazyLoading || !activeWalletConnected || !activeWalletAddress}
-                className="hg-btn-glow relative rounded-2xl bg-[#FF2BD6] text-[#0a0a0c] p-6 sm:p-8 font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px]"
+                className="hg-btn-glow inline-flex h-12 px-6 items-center justify-center rounded-full bg-[#FF2BD6] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
               >
-                <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Create Collection</h3>
-                <p className="text-zinc-500 text-xs sm:text-sm text-center">
-                  {loading ? 'Creating...' : 'Create with your custom settings'}
-                </p>
+                {loading ? 'Creating…' : 'Create collection'}
               </button>
-
-              {/* Lazy w/Auto Traits Card - Only show for PFP collections */}
-              {isPfpCollection && (
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={handleLazyCreate}
-                    disabled={lazyLoading || loading || !activeWalletConnected || !activeWalletAddress || !name.trim()}
-                    className="hg-btn-glow relative rounded-2xl bg-[#2DE2FF] text-[#0a0a0c] p-6 sm:p-8 font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] w-full"
-                  >
-                    {lazyLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-white mb-3 sm:mb-4"></div>
-                        <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Creating...</h3>
-                      </>
-                    ) : (
-                      <>
-                        <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Lazy Mode</h3>
-                        <p className="text-zinc-700 text-xs sm:text-sm text-center px-2 font-medium">
-                          Auto-creates 6 layers + 48 traits — ready to generate
-                        </p>
-                      </>
-                    )}
-                  </button>
-                  {!lazyLoading && !loading && (lazyLoading || loading || !activeWalletConnected || !activeWalletAddress || !name.trim()) && (
-                    <div className="absolute -bottom-6 left-0 right-0 text-center">
-                      <p className="text-xs text-[#EF4444] font-medium">
-                        {!activeWalletConnected || !activeWalletAddress ? '⚠️ Connect wallet first' : !name.trim() ? '⚠️ Enter collection name first' : ''}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Cancel Card */}
+              <button
+                type="button"
+                onClick={handleLazyCreate}
+                disabled={lazyLoading || loading || !activeWalletConnected || !activeWalletAddress || !name.trim()}
+                className="hg-btn-glow inline-flex h-12 px-6 items-center justify-center rounded-full bg-[#2DE2FF] text-[#0a0a0c] text-sm font-bold disabled:opacity-50"
+              >
+                {lazyLoading ? 'Creating layers…' : 'Create with Lazy Mode'}
+              </button>
               <Link
                 href="/collections"
-                className="hg-card relative rounded-2xl border border-white/[0.1] bg-[#0c0c10] text-zinc-300 hover:text-white hover:border-white/20 p-6 sm:p-8 transition-all flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px]"
+                className="inline-flex h-12 px-5 items-center justify-center text-sm font-semibold text-zinc-400 hover:text-white"
               >
-                <h3 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Cancel</h3>
-                <p className="text-zinc-200 text-xs sm:text-sm text-center">
-                  Go back to collections
-                </p>
+                Cancel
               </Link>
             </div>
+            <p className="text-xs text-zinc-500">
+              Lazy Mode builds 6 starter layers and 48 traits after the collection is created.
+            </p>
             </div>
             )}
           </form>
-        </ToolPanel>
         </ToolWorkspace>
       </div>
     </>

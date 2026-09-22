@@ -34,6 +34,7 @@ export async function GET() {
         (SELECT COUNT(*)::int FROM solana_nft_mints WHERE collection_id = c.id AND mint_status = 'confirmed') as minted_count,
         (SELECT COUNT(*)::int FROM nft_metadata_uris WHERE collection_id = c.id) as metadata_count
       FROM collections c
+      WHERE COALESCE(c.collection_status, 'draft') <> 'deleted'
       ORDER BY c.created_at DESC
       LIMIT 100
     ` as any[]

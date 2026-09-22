@@ -11,7 +11,7 @@ import { useWallet } from '@/lib/wallet/compatibility'
 import { generateApiAuth } from '@/lib/wallet/api-auth'
 import { PageHeader } from '@/components/page-header'
 import { BrandLoader } from '@/components/brand-loader'
-import { ToolWorkspace, ToolPanel } from '@/components/tool-workspace'
+import { ToolWorkspace } from '@/components/tool-workspace'
 
 interface Collection {
   id: string
@@ -59,7 +59,6 @@ export default function EditCollectionPage() {
   const [wireframeConfig, setWireframeConfig] = useState<WireframeConfig | null>(null)
   const [hoveredArtStyle, setHoveredArtStyle] = useState<string | null>(null)
   const [artStyleDropdownOpen, setArtStyleDropdownOpen] = useState(false)
-  const [showInstructions, setShowInstructions] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [activeTab, setActiveTab] = useState<'general' | 'settings' | 'color' | 'lighting' | 'pfp'>('general')
@@ -401,61 +400,31 @@ export default function EditCollectionPage() {
           </Link>
         }
       />
-      <ToolWorkspace className="space-y-6">
-        {/* Instructions - Collapsible */}
-        <ToolPanel
-          title="How to edit"
-          action={
-            <button
-              type="button"
-              onClick={() => setShowInstructions(!showInstructions)}
-              className="text-sm text-zinc-500 hover:text-white transition-colors"
-            >
-              {showInstructions ? 'Hide' : 'Show'}
-            </button>
-          }
-        >
-          {showInstructions ? (
-              <ul className="text-sm text-zinc-500 space-y-1.5 ml-4 list-disc">
-                <li><strong className="text-zinc-300">Collection Name & Description:</strong> Basic info about your collection. Name is required, description is optional.</li>
-                <li><strong className="text-zinc-300">Art Style:</strong> Describe the visual style you want. Use Auto to have AI generate suggestions.</li>
-                <li><strong className="text-zinc-300">Optional Fields:</strong> Empty fields won't be included in the generation prompt.</li>
-                <li><strong className="text-zinc-300">Custom Rules:</strong> Add requirements applied to all generations.</li>
-                <li><strong className="text-zinc-300">PFP Collections:</strong> Enables pose/facing and body visibility settings.</li>
-                <li><strong className="text-zinc-300">Compression:</strong> Configure from the Compression tab on the collection detail page.</li>
-              </ul>
-          ) : (
-            <p className="text-sm text-zinc-500">Expand for editing tips.</p>
-          )}
-        </ToolPanel>
-
-        <div className="hg-card rounded-2xl border border-white/[0.1] bg-[#131318] overflow-hidden shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]">
-        <div className="p-6 sm:p-8">
-          {/* Tabs */}
-          <div className="inline-flex flex-wrap gap-1 p-1 mb-8 rounded-full bg-[#0c0c10] border border-white/[0.08]">
+      <ToolWorkspace className="!max-w-4xl">
+          <nav className="flex gap-6 overflow-x-auto border-b border-white/[0.08] mb-8">
             {([
-              ['general', 'General'],
-              ['settings', 'Settings'],
+              ['general', 'Identity'],
+              ['settings', 'Style'],
               ['color', 'Color'],
               ['lighting', 'Lighting'],
-              ['pfp', 'PFP'],
+              ['pfp', 'Pose'],
             ] as const).map(([id, label]) => (
               <button
                 key={id}
                 type="button"
                 onClick={() => setActiveTab(id)}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                className={`shrink-0 pb-3 text-sm font-semibold border-b-2 -mb-px ${
                   activeTab === id
-                    ? 'bg-[#2DE2FF] text-[#0a0a0c]'
-                    : 'text-zinc-500 hover:text-white'
+                    ? 'border-[#2DE2FF] text-white'
+                    : 'border-transparent text-zinc-500 hover:text-zinc-300'
                 }`}
               >
                 {label}
               </button>
             ))}
-          </div>
+          </nav>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 min-w-0">
             {/* General Tab */}
             {activeTab === 'general' && (
               <>
@@ -987,8 +956,6 @@ export default function EditCollectionPage() {
               </Link>
             </div>
           </form>
-        </div>
-        </div>
       </ToolWorkspace>
     </div>
   )

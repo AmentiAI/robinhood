@@ -56,8 +56,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
 
       <AppTopBar />
 
-      <div className="relative z-10 pt-[6.75rem] sm:pt-[7.75rem] min-h-screen flex flex-col">
-        <main className="flex-1 overflow-x-hidden w-full hg-fade">{children}</main>
+      <div className="relative z-10 pt-[5.25rem] sm:pt-[7.75rem] min-h-screen flex flex-col">
+        <main className="flex-1 overflow-x-hidden w-full min-w-0 hg-fade">{children}</main>
         <GlobalFooter />
       </div>
     </div>

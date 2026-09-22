@@ -20,16 +20,16 @@ export async function GET(request: Request) {
         cr.credits,
         cr.created_at,
         cr.updated_at,
-        (SELECT COUNT(*)::int FROM collections WHERE wallet_address = cr.wallet_address) as collections_count,
+        (SELECT COUNT(*)::int FROM collections WHERE wallet_address = cr.wallet_address AND COALESCE(collection_status, 'draft') <> 'deleted') as collections_count,
         (SELECT COUNT(*)::int FROM solana_nft_mints WHERE minter_wallet = cr.wallet_address) as mints_count,
         (SELECT COUNT(*)::int FROM generated_ordinals WHERE collection_id IN (
-          SELECT id FROM collections WHERE wallet_address = cr.wallet_address
+          SELECT id FROM collections WHERE wallet_address = cr.wallet_address AND COALESCE(collection_status, 'draft') <> 'deleted'
         )) as ordinals_count,
         (SELECT SUM(amount)::int FROM credit_transactions WHERE wallet_address = cr.wallet_address AND amount > 0) as credits_purchased,
         (SELECT SUM(ABS(amount))::int FROM credit_transactions WHERE wallet_address = cr.wallet_address AND amount < 0) as credits_spent
       FROM credits cr
       WHERE cr.credits > 0 OR 
-            EXISTS (SELECT 1 FROM collections WHERE wallet_address = cr.wallet_address) OR
+            EXISTS (SELECT 1 FROM collections WHERE wallet_address = cr.wallet_address AND COALESCE(collection_status, 'draft') <> 'deleted') OR
             EXISTS (SELECT 1 FROM solana_nft_mints WHERE minter_wallet = cr.wallet_address)
       ORDER BY cr.credits DESC, cr.updated_at DESC
       LIMIT ${limit}

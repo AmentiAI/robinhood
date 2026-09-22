@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
          LIMIT 1) as sample_image
       FROM collections c
       WHERE c.wallet_address = ${walletAddress}
+        AND COALESCE(c.collection_status, 'draft') <> 'deleted'
       ORDER BY c.created_at DESC
     ` as any[]
 

@@ -72,7 +72,7 @@ export async function GET(
     `
     const collection = Array.isArray(collectionResult) ? collectionResult[0] : null
 
-    if (!collection) {
+    if (!collection || (collection as any).collection_status === 'deleted') {
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 })
     }
 

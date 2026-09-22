@@ -39,7 +39,7 @@ export async function GET(
 
     const collection = Array.isArray(result) && result.length > 0 ? result[0] : null;
 
-    if (!collection) {
+    if (!collection || collection.collection_status === 'deleted') {
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
 
@@ -317,6 +317,15 @@ export async function DELETE(
       WHERE id::text = ${id}
       RETURNING id, name, collection_status
     ` as any[];
+
+    await sql`
+      UPDATE generation_jobs
+      SET status = 'failed',
+          completed_at = CURRENT_TIMESTAMP,
+          error_message = 'Collection deleted'
+      WHERE collection_id::text = ${id}
+        AND status IN ('pending', 'processing')
+    `
 
     const collection = result[0] || null;
 

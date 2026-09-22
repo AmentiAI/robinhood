@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
-import { compressImage, needsCompression } from '@/lib/image-compression';
+import { compressImage, needsCompression, normalizeCompressionFormat, compressionExtension } from '@/lib/image-compression';
 import crypto from 'crypto';
 import { createThumbnail, getFileSizeKB, createContentViolationImage } from '@/lib/image-optimizer';
 import { sql } from '@/lib/database';
@@ -376,6 +376,17 @@ async function processJobs() {
     // STEP 2: Get collections with pending jobs
     // ============================================
     // Get collections with pending jobs, ordered by oldest job first (fair distribution)
+    await sql`
+      UPDATE generation_jobs
+      SET status = 'failed',
+          completed_at = CURRENT_TIMESTAMP,
+          error_message = 'Collection deleted'
+      WHERE status IN ('pending', 'processing')
+        AND collection_id::text IN (
+          SELECT id::text FROM collections WHERE collection_status = 'deleted'
+        )
+    `;
+
     const collectionsWithJobs = await sql`
       SELECT collection_id, MIN(created_at) as oldest_job
       FROM generation_jobs
@@ -1360,6 +1371,7 @@ async function processJob(
              COALESCE(compression_quality::integer, 100) as compression_quality,
              COALESCE(compression_dimensions::integer, 1024) as compression_dimensions,
              compression_target_kb,
+             COALESCE(compression_format, 'webp') as compression_format,
              COALESCE(is_pfp_collection, false) as is_pfp_collection,
              facing_direction,
              COALESCE(body_style, 'full') as body_style,
@@ -1678,6 +1690,7 @@ async function processJob(
     const compressionQuality = collectionAny.compression_quality ?? 100;
     const compressionDimensions = collectionAny.compression_dimensions ?? 1024;
     const compressionTargetKB = collectionAny.compression_target_kb ?? null;
+    const compressionFormat = normalizeCompressionFormat(collectionAny.compression_format);
     
     let finalImageBlob = imageBlob;
     let compressedImageUrl: string | null = null;
@@ -1689,7 +1702,7 @@ async function processJob(
         } else {
           console.log(`[Compression] Compressing image: quality=${compressionQuality}%, dimensions=${compressionDimensions}×${compressionDimensions}`);
         }
-        finalImageBlob = await compressImage(imageBlob, compressionQuality, compressionDimensions, compressionTargetKB || undefined);
+        finalImageBlob = await compressImage(imageBlob, compressionQuality, compressionDimensions, compressionTargetKB || undefined, compressionFormat);
         const originalSize = (await imageBlob.arrayBuffer()).byteLength;
         const compressedSize = (await finalImageBlob.arrayBuffer()).byteLength;
         console.log(`[Compression] Original: ${(originalSize / 1024).toFixed(2)} KB → Compressed: ${(compressedSize / 1024).toFixed(2)} KB`);
@@ -1728,7 +1741,7 @@ async function processJob(
 
     // Upload compressed image if compression was applied
     if ((compressionTargetKB || needsCompression(compressionQuality, compressionDimensions, compressionTargetKB)) && finalImageBlob !== imageBlob) {
-      const compressedFilename = `compressed-${collectionId}-${ordinalNumber || Date.now()}.webp`;
+      const compressedFilename = `compressed-${collectionId}-${ordinalNumber || Date.now()}.${compressionExtension(compressionFormat)}`;
       try {
         const compressedBlob = await put(compressedFilename, finalImageBlob, {
           access: 'public',

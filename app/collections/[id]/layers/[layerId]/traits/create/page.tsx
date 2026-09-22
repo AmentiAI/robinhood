@@ -24,6 +24,7 @@ export default function CreateTraitPage() {
   const [layer, setLayer] = useState<Layer | null>(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [traitPrompt, setTraitPrompt] = useState('')
   const [rarityWeight, setRarityWeight] = useState(40)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -109,6 +110,7 @@ export default function CreateTraitPage() {
         body: JSON.stringify({
           name: name.trim(),
           description: description.trim() || null,
+          trait_prompt: traitPrompt.trim() || null,
           rarity_weight: rarityWeight,
         }),
       })
@@ -159,7 +161,7 @@ export default function CreateTraitPage() {
         }
       />
 
-      <ToolWorkspace>
+      <ToolWorkspace className="!max-w-3xl">
         <ToolPanel title="Trait details">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="inline-flex gap-1 p-1 rounded-full bg-[#0c0c10] border border-white/[0.08]">
@@ -261,6 +263,16 @@ export default function CreateTraitPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   className="w-full rounded-xl bg-[#0c0c10] border border-white/[0.1] px-4 py-2.5 text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
                   placeholder="Enter trait description"
+                  rows={3}
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Generation prompt (optional)</label>
+                <textarea
+                  value={traitPrompt}
+                  onChange={(e) => setTraitPrompt(e.target.value)}
+                  className="w-full rounded-xl bg-[#0c0c10] border border-white/[0.1] px-4 py-2.5 text-white placeholder:text-zinc-600 focus:border-[#2DE2FF] focus:outline-none"
+                  placeholder="Exact prompt text for this trait. Leave blank to use the description."
                   rows={3}
                 />
               </div>

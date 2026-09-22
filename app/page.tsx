@@ -334,25 +334,25 @@ export default function HomePage() {
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
         {/* Header */}
         <header
-          className="flex items-center justify-between gap-4 mb-6 sm:mb-8 py-2"
+          className="flex items-center justify-between gap-3 mb-6 sm:mb-8 py-1"
           style={anim('0s')}
         >
-          <a href="#" className="flex items-center gap-2 shrink-0 group">
-            <Crown className="h-5 w-5 text-[#A855F7] group-hover:text-[#2DE2FF] transition-colors" />
+          <a href="#" className="flex items-center gap-2 shrink-0 group min-w-0">
+            <Crown className="h-5 w-5 text-[#A855F7] group-hover:text-[#2DE2FF] transition-colors shrink-0" />
             <span
-              className="hg-logo-text text-2xl sm:text-3xl leading-none"
+              className="hg-logo-text text-xl sm:text-3xl leading-none truncate"
               style={{ fontFamily: 'var(--f-display)' }}
             >
               HoodGFX
             </span>
           </a>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 shrink-0">
             <a
               href="https://x.com/Hood_GFX_"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-5 rounded-xl border border-[#2DE2FF]/45 bg-black/40 text-sm font-bold text-white hover:border-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-all"
+              className="inline-flex items-center justify-center gap-2 h-10 w-10 sm:w-auto sm:h-12 sm:px-5 rounded-full border border-[#2DE2FF]/45 bg-black/40 text-sm font-bold text-white hover:border-[#2DE2FF] hover:bg-[#2DE2FF]/10 transition-all"
               aria-label="Follow HoodGFX on X"
             >
               <svg className="w-4 h-4 text-[#2DE2FF]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -364,7 +364,7 @@ export default function HomePage() {
               href="https://discord.gg/Mj22fwakQ"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-5 rounded-xl border border-[#A855F7]/50 bg-black/40 text-sm font-bold text-white hover:border-[#A855F7] hover:bg-[#A855F7]/10 transition-all"
+              className="inline-flex items-center justify-center gap-2 h-10 w-10 sm:w-auto sm:h-12 sm:px-5 rounded-full border border-[#A855F7]/50 bg-black/40 text-sm font-bold text-white hover:border-[#A855F7] hover:bg-[#A855F7]/10 transition-all"
               aria-label="Join HoodGFX Discord"
             >
               <svg className="w-5 h-5 text-[#A855F7]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -376,20 +376,20 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => disconnect()}
-                className="inline-flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-5 rounded-xl border border-white/20 bg-black/40 text-sm font-bold text-white/80 hover:text-white hover:border-white/40 transition-all"
+                className="inline-flex items-center justify-center gap-2 h-10 sm:h-12 px-3 sm:px-5 rounded-full border border-white/20 bg-black/40 text-sm font-bold text-white/80 hover:text-white hover:border-white/40 transition-all"
               >
-                <Wallet className="w-4 h-4 text-[#2DE2FF]" />
-                <span className="font-mono text-[12px] sm:text-sm">{shortAddr(address)}</span>
+                <Wallet className="w-4 h-4 text-[#2DE2FF] shrink-0" />
+                <span className="hidden sm:inline font-mono text-sm">{shortAddr(address)}</span>
               </button>
             ) : (
               <button
                 type="button"
                 onClick={handleConnect}
                 disabled={connecting}
-                className="inline-flex items-center gap-2 h-11 sm:h-12 px-4 sm:px-5 rounded-xl border border-[#2DE2FF]/60 bg-gradient-to-r from-[#2DE2FF]/15 to-[#FF2BD6]/15 text-sm font-bold text-white hover:border-[#2DE2FF] transition-all disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 h-10 sm:h-12 px-3.5 sm:px-5 rounded-full border border-[#2DE2FF]/60 bg-gradient-to-r from-[#2DE2FF]/15 to-[#FF2BD6]/15 text-sm font-bold text-white hover:border-[#2DE2FF] transition-all disabled:opacity-60"
               >
-                <Wallet className="w-4 h-4 text-[#2DE2FF]" />
-                {connecting ? 'Connecting…' : 'Connect'}
+                <Wallet className="w-4 h-4 text-[#2DE2FF] shrink-0" />
+                <span className="truncate">{connecting ? '…' : 'Connect'}</span>
               </button>
             )}
           </div>
@@ -398,7 +398,7 @@ export default function HomePage() {
         {/* Hero grid */}
         <main
           id="create"
-          className="grid lg:grid-cols-[1.05fr_0.95fr_0.9fr] gap-8 lg:gap-6 items-center mb-10 sm:mb-14"
+          className="grid lg:grid-cols-[1.05fr_0.95fr_0.9fr] gap-8 lg:gap-6 items-center mb-8 sm:mb-14"
         >
           {/* Left copy */}
           <div className="space-y-5 sm:space-y-6 order-1" style={anim('0.05s')}>
@@ -413,7 +413,7 @@ export default function HomePage() {
               <div className="flex items-start gap-2 mb-1">
                 <Crown className="h-6 w-6 sm:h-7 sm:w-7 text-[#A855F7] mt-1 shrink-0" />
                 <h1
-                  className="hg-logo-text text-[3.2rem] sm:text-[4.2rem] lg:text-[4.6rem] leading-[0.92]"
+                  className="hg-logo-text text-[clamp(2.4rem,11vw,4.6rem)] leading-[0.92]"
                   style={{ fontFamily: 'var(--f-display)' }}
                 >
                   HoodGFX
@@ -435,7 +435,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={openJoinModal}
-              className="inline-flex items-center gap-3 h-14 sm:h-16 px-8 sm:px-10 rounded-full text-base sm:text-lg font-bold text-white transition-transform hover:scale-[1.02]"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-3 h-14 sm:h-16 px-8 sm:px-10 rounded-full text-base sm:text-lg font-bold text-white transition-transform hover:scale-[1.02]"
               style={{
                 background: `linear-gradient(90deg, ${PURPLE} 0%, ${CYAN} 100%)`,
                 boxShadow: '0 0 36px rgba(168, 85, 247, 0.35)',
@@ -448,11 +448,11 @@ export default function HomePage() {
 
           {/* Center logo stage */}
           <div
-            className="relative flex flex-col items-center justify-center order-2 py-4"
+            className="relative hidden sm:flex flex-col items-center justify-center order-2 py-4"
             style={anim('0.1s')}
           >
             <div
-              className="relative z-10 w-full max-w-[340px] sm:max-w-[380px]"
+              className="relative z-10 w-full max-w-[380px]"
               style={{ animation: 'hgFloat 5s ease-in-out infinite' }}
             >
               <Image
@@ -494,9 +494,28 @@ export default function HomePage() {
             className="order-3 space-y-4"
             style={anim('0.14s')}
           >
+            <div className="flex gap-2 overflow-x-auto pb-1 lg:hidden">
+              {[
+                { id: 'board' as const, label: 'Board' },
+                { id: 'spots' as const, label: 'My spots' },
+                { id: 'how' as const, label: 'How' },
+                { id: 'req' as const, label: 'Rules' },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setWlPanel(item.id)}
+                  className={`shrink-0 h-9 px-4 rounded-full text-sm font-semibold ${
+                    wlPanel === item.id ? 'bg-[#2DE2FF] text-[#0a0a0c]' : 'border border-white/15 text-white/70'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
             {/* Menu card */}
             <div
-              className="rounded-2xl border bg-black/50 backdrop-blur-md overflow-hidden"
+              className="hidden lg:block rounded-2xl border bg-black/50 backdrop-blur-md overflow-hidden"
               style={{
                 borderColor: 'rgba(168, 85, 247, 0.45)',
                 boxShadow: '0 0 30px rgba(168, 85, 247, 0.15)',
@@ -658,7 +677,7 @@ export default function HomePage() {
 
         {/* Features */}
         <section id="features" className="mb-10 sm:mb-12" style={anim('0.18s')}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-4 border-y border-white/[0.08] py-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-6 sm:gap-4 border-y border-white/[0.08] py-6 sm:py-8">
             {FEATURES.map((f, i) => {
               const Icon = f.icon
               return (
@@ -724,7 +743,7 @@ export default function HomePage() {
           }}
         >
           <div
-            className="relative w-full max-w-[440px] rounded-2xl border bg-[#08080a] p-6 sm:p-8 shadow-2xl"
+            className="relative w-full max-w-[440px] max-h-[min(92vh,720px)] overflow-y-auto rounded-2xl border bg-[#08080a] p-5 sm:p-8 shadow-2xl"
             style={{
               borderColor: 'rgba(255, 255, 255, 0.12)',
               boxShadow: '0 24px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(45,226,255,0.08)',

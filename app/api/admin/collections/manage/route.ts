@@ -49,6 +49,8 @@ export async function GET(request: NextRequest) {
     
     if (collectionStatus) {
       whereConditions.push(sql`COALESCE(c.collection_status, 'draft') = ${collectionStatus}`)
+    } else {
+      whereConditions.push(sql`COALESCE(c.collection_status, 'draft') <> 'deleted'`)
     }
     
     if (launchStatus) {

@@ -32,7 +32,7 @@ export async function POST(
     }
 
     const collections = (await sql`
-      SELECT id, name, symbol, supply, contract_address, owner_wallet
+      SELECT id, name, total_supply, contract_address, wallet_address
       FROM collections WHERE id = ${collectionId}::uuid
     `) as any[]
 
@@ -96,7 +96,7 @@ export async function POST(
           rh_factory_address = ${factory},
           deployment_status = 'deployed',
           deployed_at = NOW(),
-          deployed_by = ${wallet_address || collection.owner_wallet}
+          deployed_by = ${wallet_address || collection.wallet_address}
         WHERE id = ${collectionId}::uuid
       `
 
@@ -109,8 +109,8 @@ export async function POST(
     }
 
     const collectionName = name || collection.name || 'Collection'
-    const collectionSymbol = symbol || collection.symbol || 'ORD'
-    const maxSupply = BigInt(max_supply || collection.supply || 10000)
+    const collectionSymbol = symbol || 'ORD'
+    const maxSupply = BigInt(max_supply || collection.total_supply || 10000)
     const baseURI = base_uri || ''
 
     const data = encodeFunctionData({

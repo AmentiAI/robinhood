@@ -243,7 +243,7 @@ export default function CollectionDetailsPage() {
 
   return (
     <>
-  <div className="min-h-screen w-full bg-[#0a0a0c] pb-[500px]">
+  <div className="min-h-screen w-full bg-[#0a0a0c]">
       <ToolWorkspace>
           <CollectionHeader
             collection={collection}
@@ -270,10 +270,8 @@ export default function CollectionDetailsPage() {
             </div>
           </div>
         )}
+          <div className="space-y-6">
           <LayersSection collectionId={collection.id} layers={layers} onLayerDeleted={loadAllData} />
-
-          {/* Generate controls — always visible */}
-          <div className="mt-6">
             <GenerationSection
               collection={collection}
               layers={layers}
@@ -291,10 +289,8 @@ export default function CollectionDetailsPage() {
               onClearFilters={clearFilters}
               onFilterChange={handleFilterChange}
             />
-          </div>
 
-          {/* Studio tabs: manage images + compression */}
-          <div className="mt-8 mb-0">
+          <div className="min-w-0">
             <div className="inline-flex gap-1 p-1 rounded-full bg-[#0c0c10] border border-white/[0.08]">
               <button
                 type="button"
@@ -319,7 +315,6 @@ export default function CollectionDetailsPage() {
                 Compression
               </button>
             </div>
-          </div>
 
           {activeTab === 'generated' && (
             <div className="mt-4 space-y-5">
@@ -563,6 +558,8 @@ export default function CollectionDetailsPage() {
               <CompressionTable ordinals={ordinals} totalOrdinals={totalOrdinals} currentPage={currentPage} />
             </div>
           )}
+          </div>
+          </div>
       </ToolWorkspace>
       </div>
       <CompressionModal isOpen={showCompressionModal} ordinal={compressionModalOrdinal} sliderValue={compressionModalSlider} onClose={() => setShowCompressionModal(false)} onSliderChange={setCompressionModalSlider} />

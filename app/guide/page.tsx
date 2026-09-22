@@ -647,22 +647,22 @@ export default function GuidePage() {
                 ⚡
               </div>
               <div>
-                <h2 className="text-2xl font-semibold text-white">Self-Inscribing</h2>
-                <p className="text-[#a8a8b8]/80">Full control - inscribe directly to your wallet</p>
+                <h2 className="text-2xl font-semibold text-white">Self-inscribe</h2>
+                <p className="text-[#a8a8b8]/80">Mint your NFTs to a wallet on Robinhood Chain</p>
               </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
               <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] overflow-hidden">
                 <div className="bg-gradient-to-r from-[#A855F7]/10 to-[#A855F7]/5 px-6 py-4 border-b border-white/[0.08]">
-                  <h3 className="font-semibold text-white">The Inscription Process</h3>
+                  <h3 className="font-semibold text-white">The mint</h3>
                 </div>
                 <div className="p-6 space-y-6">
                   {[
-                    { icon: '📦', title: 'Select Batches', desc: 'Choose up to 10 ordinals per batch' },
-                    { icon: '✍️', title: 'Sign Commit TX', desc: 'Creates taproot addresses with content' },
-                    { icon: '📡', title: 'Broadcast Reveals', desc: 'Each ordinal revealed individually' },
-                    { icon: '✅', title: 'Export Metadata', desc: 'Download JSON with inscription IDs' },
+                    { icon: '📦', title: 'Select NFTs', desc: 'Pick the generated images you want to mint' },
+                    { icon: '👛', title: 'Choose a wallet', desc: 'Send them to any 0x address on Robinhood Chain' },
+                    { icon: '✍️', title: 'Approve in wallet', desc: 'You pay gas in ETH for each mint' },
+                    { icon: '✅', title: 'Export metadata', desc: 'Download JSON with token numbers and transactions' },
                   ].map((step, idx) => (
                     <div key={idx} className="flex gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-[#A855F7]/15 border border-[#A855F7]/30 flex items-center justify-center text-2xl flex-shrink-0">
@@ -682,9 +682,9 @@ export default function GuidePage() {
                 <div className="text-sm text-[#a8a8b8]/80 mb-3 font-medium">Preview: Batch Selection</div>
                 <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] overflow-hidden shadow-xl">
                   {[
-                    { batch: 1, status: 'complete', count: '10/10', cost: 52340 },
-                    { batch: 2, status: 'pending', count: '5/10', cost: 51280 },
-                    { batch: 3, status: 'ready', count: '0/10', cost: 53100 },
+                    { batch: 1, status: 'complete', count: '10/10', cost: 'Minted' },
+                    { batch: 2, status: 'pending', count: '5/10', cost: 'Selected' },
+                    { batch: 3, status: 'ready', count: '0/10', cost: 'Ready' },
                   ].map((row) => (
                     <div
                       key={row.batch}
@@ -707,13 +707,13 @@ export default function GuidePage() {
                       }`}>
                         {row.status === 'complete' ? `✓ ${row.count}` : row.status === 'pending' ? `⏳ ${row.count}` : 'Ready'}
                       </div>
-                      <div className="font-semibold text-[#2DE2FF]">{row.cost.toLocaleString()} sats</div>
+                      <div className="font-semibold text-[#2DE2FF]">{row.cost}</div>
                     </div>
                   ))}
                   <div className="px-4 py-4 bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md flex items-center justify-between">
                     <div className="text-sm text-[#a8a8b8]/80">3 batches selected</div>
                     <button className="px-4 py-2 bg-[#FF2BD6] text-white rounded-xl font-semibold text-sm hover:bg-[#d91fb8] transition-colors">
-                      Inscribe Selected
+                      Mint selected
                     </button>
                   </div>
                 </div>
@@ -722,9 +722,9 @@ export default function GuidePage() {
                   <div className="bg-[#131318] rounded-2xl border border-white/[0.08] rounded-xl p-4">
                     <div className="text-sm text-[#2DE2FF] font-medium">Advantages</div>
                     <div className="mt-2 text-sm text-[#a8a8b8] space-y-1">
-                      <div>✓ Own all inscriptions</div>
-                      <div>✓ Control fee rates</div>
-                      <div>✓ Batch processing</div>
+                      <div>✓ NFTs land in your wallet</div>
+                      <div>✓ You choose the recipient</div>
+                      <div>✓ Gas paid in ETH</div>
                     </div>
                   </div>
                   <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md border border-[#FF2BD6]/30 rounded-xl p-4">
@@ -764,10 +764,8 @@ export default function GuidePage() {
 {`[
   {
     "name": "My Collection #1",
-    "ordinal_number": 1,
-    "inscription_id": "abc123...i0",
-    "commit_tx": "def456...",
-    "reveal_tx": "ghi789...",
+    "token_number": 1,
+    "tx_hash": "0xabc123...",
     "attributes": [
       {
         "trait_type": "Background",
@@ -803,7 +801,7 @@ export default function GuidePage() {
                 <div className="bg-[#131318] rounded-2xl border border-white/[0.08] backdrop-blur-md rounded-2xl border border-white/[0.08] p-6">
                   <h3 className="font-semibold text-white mb-4">Included Fields</h3>
                   <div className="grid grid-cols-2 gap-3 text-sm">
-                    {['name', 'ordinal_number', 'inscription_id', 'commit_tx', 'reveal_tx', 'attributes', 'image_url', 'content_type'].map((field) => (
+                    {['name', 'token_number', 'image_url', 'tx_hash', 'attributes'].map((field) => (
                       <div key={field} className="flex items-center gap-2 text-white/70">
                         <span className="w-2 h-2 rounded-full bg-[#FF2BD6]" />
                         <code className="text-white">{field}</code>

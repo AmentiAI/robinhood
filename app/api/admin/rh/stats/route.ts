@@ -100,6 +100,7 @@ export async function GET(request: Request) {
         created_at
       FROM collections
       WHERE contract_address IS NOT NULL
+        AND COALESCE(collection_status, 'draft') <> 'deleted'
       ORDER BY created_at DESC
       LIMIT 50
     `) as any[]

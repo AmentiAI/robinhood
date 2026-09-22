@@ -77,6 +77,7 @@ export async function GET(request: NextRequest) {
         AND (go.hidden_from_homepage IS NULL OR go.hidden_from_homepage = FALSE)
         AND (c.hidden_from_homepage IS NULL OR c.hidden_from_homepage = FALSE)
         AND (c.created_at < '2025-12-15'::date OR c.force_show_on_homepage_ticker = TRUE)
+        AND COALESCE(c.collection_status, 'draft') <> 'deleted'
         AND c.id != ${excludedCollectionId}
       ORDER BY RANDOM()
       LIMIT ${limit}
