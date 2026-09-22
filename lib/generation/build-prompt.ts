@@ -85,141 +85,46 @@ export function normalizeCollectionSettings(
 }
 
 function facingOrientationBlock(facingDirection: string): string {
+  const readable =
+    'TEXT LOCK: Paint the pose already facing the correct way. Do not mirror or flip the image. Letters, numbers, and logos must read normally left to right.'
+
   const directionMap: Record<string, string> = {
-    left: `ORIENTATION LOCK (CRITICAL — HIGHEST PRIORITY):
-Character is facing LEFT (←).
-Body rotated 70–90° toward the LEFT edge of the image.
-Face turned LEFT, nose pointing toward left image boundary.
-Left shoulder is closer to the viewer than the right.
-Camera positioned left-side of the character.
+    left: `ORIENTATION LOCK (viewer looking at the picture):
+The character's nose points at the LEFT edge of the image.
+Three-quarter profile. We see more of the character's right cheek.
+The character's right shoulder is closer to the camera than the left shoulder.
+Eyes look toward the left border.
+Do not turn the nose toward the right border.
+${readable}`,
 
-TORSO & PELVIS ORIENTATION LOCK (CRITICAL):
-Torso, chest, AND pelvis all face the SAME direction (left).
-Spine aligned with body rotation — no twist.
-Chest plane angled 70–90° toward the LEFT image edge.
-Pelvis square with torso, NOT counter-rotated.
-NO contrapposto stance.
+    'left-front': `ORIENTATION LOCK (viewer looking at the picture):
+The character faces slightly toward the LEFT edge of the image, about 15 degrees, not a full side profile.
+The nose points toward the left border, not at the camera and not toward the right border.
+We see a little more of the character's right cheek than the left cheek.
+The character's right shoulder is slightly closer to the camera.
+${readable}`,
 
-NEGATIVE ORIENTATION:
-NOT facing right.
-NOT angled toward right edge.
-NOT mirrored.
-NOT right-leaning.
-NOT contrapposto.
-NOT torso twisted opposite the head.
-NOT hips facing right.
-NOT shoulders facing right while head faces left.
+    front: `ORIENTATION LOCK (viewer looking at the picture):
+The character faces the camera straight on.
+The nose points at the viewer, centered, not toward either side of the picture.
+Both cheeks and both shoulders are equally visible.
+Do not turn the head left or right.
+${readable}`,
 
-If orientation is incorrect, FLIP HORIZONTALLY so the character faces LEFT.
-Left-facing orientation takes absolute priority over all other pose details.`,
+    'right-front': `ORIENTATION LOCK (viewer looking at the picture):
+The character faces slightly toward the RIGHT edge of the image, about 15 degrees, not a full side profile.
+The nose points toward the right border, not at the camera and not toward the left border.
+We see a little more of the character's left cheek than the right cheek.
+The character's left shoulder is slightly closer to the camera.
+${readable}`,
 
-    'left-front': `ORIENTATION LOCK (CRITICAL — HIGHEST PRIORITY):
-Character is facing FRONT-LEFT (↖).
-Body rotated 10–20° toward the LEFT edge of the image.
-Face turned slightly LEFT, nose pointing toward left image boundary.
-Left shoulder is closer to the viewer than the right.
-Camera positioned front-left of the character.
-
-TORSO & PELVIS ORIENTATION LOCK (CRITICAL):
-Torso, chest, AND pelvis all face the SAME direction (front-left).
-Spine aligned with body rotation — no twist.
-Chest plane angled 10–20° toward the LEFT image edge.
-Pelvis square with torso, NOT counter-rotated.
-NO contrapposto stance.
-
-NEGATIVE ORIENTATION:
-NOT facing right.
-NOT angled toward right edge.
-NOT mirrored.
-NOT right-leaning.
-NOT contrapposto.
-NOT torso twisted opposite the head.
-NOT hips facing right.
-NOT shoulders facing right while head faces left.
-
-If orientation is incorrect, FLIP HORIZONTALLY so the character faces LEFT.
-Left-facing orientation takes absolute priority over all other pose details.`,
-
-    front: `ORIENTATION LOCK (CRITICAL — HIGHEST PRIORITY):
-Character is facing DIRECTLY FRONT (↑).
-Body rotated 0° - perfectly centered and symmetrical.
-Face turned directly forward, nose pointing straight at viewer.
-Both shoulders equidistant from viewer.
-Camera positioned directly in front of the character.
-
-TORSO & PELVIS ORIENTATION LOCK (CRITICAL):
-Torso, chest, AND pelvis all face the SAME direction (directly front).
-Spine aligned with body rotation — no twist.
-Chest plane perfectly centered, 0° rotation.
-Pelvis square with torso, NOT counter-rotated.
-NO contrapposto stance.
-
-NEGATIVE ORIENTATION:
-NOT facing left.
-NOT facing right.
-NOT angled toward either edge.
-NOT rotated.
-NOT contrapposto.
-NOT torso twisted.
-NOT hips rotated.
-NOT shoulders angled while head faces front.
-
-If orientation is incorrect, CENTER the character so they face DIRECTLY FRONT.
-Front-facing orientation takes absolute priority over all other pose details.`,
-
-    'right-front': `ORIENTATION LOCK (CRITICAL — HIGHEST PRIORITY):
-Character is facing FRONT-RIGHT (↗).
-Body rotated 10–20° toward the RIGHT edge of the image.
-Face turned slightly RIGHT, nose pointing toward right image boundary.
-Right shoulder is closer to the viewer than the left.
-Camera positioned front-right of the character.
-
-TORSO & PELVIS ORIENTATION LOCK (CRITICAL):
-Torso, chest, AND pelvis all face the SAME direction (front-right).
-Spine aligned with body rotation — no twist.
-Chest plane angled 10–20° toward the RIGHT image edge.
-Pelvis square with torso, NOT counter-rotated.
-NO contrapposto stance.
-
-NEGATIVE ORIENTATION:
-NOT facing left.
-NOT angled toward left edge.
-NOT mirrored.
-NOT left-leaning.
-NOT contrapposto.
-NOT torso twisted opposite the head.
-NOT hips facing left.
-NOT shoulders facing left while head faces right.
-
-If orientation is incorrect, FLIP HORIZONTALLY so the character faces RIGHT.
-Right-facing orientation takes absolute priority over all other pose details.`,
-
-    right: `ORIENTATION LOCK (CRITICAL — HIGHEST PRIORITY):
-Character is facing RIGHT (→).
-Body rotated 70–90° toward the RIGHT edge of the image.
-Face turned RIGHT, nose pointing toward right image boundary.
-Right shoulder is closer to the viewer than the left.
-Camera positioned right-side of the character.
-
-TORSO & PELVIS ORIENTATION LOCK (CRITICAL):
-Torso, chest, AND pelvis all face the SAME direction (right).
-Spine aligned with body rotation — no twist.
-Chest plane angled 70–90° toward the RIGHT image edge.
-Pelvis square with torso, NOT counter-rotated.
-NO contrapposto stance.
-
-NEGATIVE ORIENTATION:
-NOT facing left.
-NOT angled toward left edge.
-NOT mirrored.
-NOT left-leaning.
-NOT contrapposto.
-NOT torso twisted opposite the head.
-NOT hips facing left.
-NOT shoulders facing left while head faces right.
-
-If orientation is incorrect, FLIP HORIZONTALLY so the character faces RIGHT.
-Right-facing orientation takes absolute priority over all other pose details.`,
+    right: `ORIENTATION LOCK (viewer looking at the picture):
+The character's nose points at the RIGHT edge of the image.
+Three-quarter profile. We see more of the character's left cheek.
+The character's left shoulder is closer to the camera than the right shoulder.
+Eyes look toward the right border.
+Do not turn the nose toward the left border.
+${readable}`,
   }
 
   return directionMap[facingDirection] || directionMap.front
@@ -494,7 +399,7 @@ export function buildGenerationPrompt(
   if (isPfpCollection && !isAbstractStyle) {
     sections.push('')
     sections.push(
-      `FINAL ORIENTATION CHECK: Character MUST face ${facingDirection.toUpperCase()} as locked above. Do not override facing for trait visibility.`
+      `FINAL ORIENTATION CHECK: From the viewer's point of view the character must face ${facingDirection.toUpperCase()} exactly as locked above. Draw that pose directly. Do not flip or mirror the finished image. Any words on clothing or props must stay readable.`
     )
   }
 
